@@ -77,22 +77,22 @@ class ContextAwareModel(nn.Module):
         '''
         :param input_tensor: batchsize * seq_length
         :param target_idx: batchsize
-        :param max_length: max sequence length, 96
+        :param max_length: max sequence length, 77 in case of basil
         :return:
         '''
-        # original
-        # embedded = self.embedding(input).view(1, 1, -1)
-        # output, hidden = self.lstm(embedded, hidden)
-        # return output, hidden
-        input_length = input_tensor.size(1)
-        batch_size = target_idx.shape[0]
+        batch_size = input_tensor.shape[0]
+        input_length = input_tensor.shape[1]
 
-        encoder_outputs = torch.zeros(max_length, self.hidden_size * 2, device=self.device)
+        encoder_outputs = torch.zeros(input_length, self.hidden_size * 2, device=self.device)
         hidden = self.initHidden(batch_size)
-        # input tensor is batchsize * seq length
+
+        # loop through input
         for ei in range(input_length):
+            # get sentence embedding for that item
             embedded = self.embedding(input_tensor[:,ei]).view(1, batch_size, -1)
+            # make a pass for/from that item?
             output, hidden = self.lstm(embedded, hidden)
+            #
             encoder_outputs[ei] = output[0, 0]
 
         target_encoder_output = encoder_outputs[target_idx]
@@ -124,10 +124,7 @@ class ContextAwareClassifier():
         self.logger = logger
 
     def to_tensor(self, triples):
-        if self.batch_size == 1:
-            indexedsentences = [indexesFromSentence(self.input_lang, t[0][0], EOS_token) for t in triples]
-        else:
-            indexedsentences = [indexesFromSentence(self.input_lang, t[0], EOS_token) for t in triples]
+        indexedsentences = [indexesFromSentence(self.input_lang, t[0], EOS_token) for t in triples]
         input_tensor = torch.tensor(indexedsentences, dtype=torch.long, device=self.device)
         target_label_tensor = torch.tensor([t[1] for t in triples], dtype=torch.float, device=self.device)
         idx = torch.tensor([t[2] for t in triples], dtype=torch.long, device=self.device)
