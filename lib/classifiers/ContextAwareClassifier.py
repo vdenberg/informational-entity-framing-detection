@@ -270,7 +270,7 @@ class ContextAwareClassifier():
 
         metrics, metrics_df, metrics_string = my_eval('eval', y_true, y_pred)
         f1 = round(metrics['f1'] * 100, 2)
-        conf_mat = metrics_df[['tn', 'tp', 'fn', 'fp']].to_list()
+        conf_mat = {'tn': metrics['tn'], 'tp': metrics['tp'], 'fn': metrics['fn'], 'fp': metrics['fp']}
 
         if which == 'all':
             return metrics, metrics_df, metrics_string
