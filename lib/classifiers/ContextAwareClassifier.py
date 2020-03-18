@@ -92,15 +92,9 @@ class ContextAwareModel(nn.Module):
             embedded = self.embedding(input_tensor[:,ei]).view(1, batch_size, -1)
             # feed hidden of previous token/item, store in hidden again
             output, hidden = self.lstm(embedded, hidden) # output has shape 1 (for the token in question) * batch_size * hiddenx2
-            print(output.shape)
-            print(output[0])
-            print(encoder_outputs.shape)
-            print(target_idx.shape)
-            print(encoder_outputs[target_idx].shape)
-            print('----\n')
             encoder_outputs[ei] = output[0]
 
-        target_encoder_output = encoder_outputs[target_idx]
+        target_encoder_output = encoder_outputs[target_idx,:,:]
         output = self.out(target_encoder_output)
 
         return output
