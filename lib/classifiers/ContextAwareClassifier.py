@@ -135,7 +135,7 @@ class ContextAwareClassifier():
         return data
 
     def train(self, input_tensor, target_label_tensor, target_idx):
-        self.model.zero_grad()
+        #self.model.zero_grad()
         self.optimizer.zero_grad()
 
         loss = 0
@@ -204,7 +204,7 @@ class ContextAwareClassifier():
             loss_total += loss
 
             if (step % print_step_every == 0) & (step > 0):
-                update = f'\t\tFinished step {step} / {nr_steps} - loss: {loss}'
+                update = f'\t\tFinished step {step}/{nr_steps} - loss: {loss}, lr: {self.scheduler.get_lr()}'
                 self.logger.info(update)
         av_loss = loss_total / len(train_dataloader)
 
