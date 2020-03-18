@@ -140,7 +140,7 @@ class ContextAwareClassifier():
 
         loss = 0
         output = self.model(input_tensor, target_idx, self.max_length)
-        print(output.shape)
+        self.logger(output)
         loss += self.criterion(output, target_label_tensor)
         loss.backward()
 
