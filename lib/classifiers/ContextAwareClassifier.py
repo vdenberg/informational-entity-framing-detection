@@ -83,17 +83,16 @@ class ContextAwareModel(nn.Module):
         batch_size = input_tensor.shape[0]
         input_length = input_tensor.shape[1]
 
-        encoder_outputs = torch.zeros(input_length, self.hidden_size * 2, device=self.device)
+        encoder_outputs = torch.zeros(input_length, batch_size, self.hidden_size * 2, device=self.device)
         hidden = self.initHidden(batch_size)
 
         # loop through input
         for ei in range(input_length):
             # get sentence embedding for that item
             embedded = self.embedding(input_tensor[:,ei]).view(1, batch_size, -1)
-            # make a pass for/from that item?
-            output, hidden = self.lstm(embedded, hidden)
-            #
-            encoder_outputs[ei] = output[0, 0]
+            # feed hidden of previous token/item, store in hidden again
+            output, hidden = self.lstm(embedded, hidden) # output has shape 1 (for the token in question) * batch_size * hiddenx2
+            encoder_outputs[ei] = output[0]
 
         target_encoder_output = encoder_outputs[target_idx]
         output = self.out(target_encoder_output)
