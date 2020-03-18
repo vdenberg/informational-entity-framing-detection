@@ -84,10 +84,10 @@ class ContextAwareModel(nn.Module):
         # embedded = self.embedding(input).view(1, 1, -1)
         # output, hidden = self.lstm(embedded, hidden)
         # return output, hidden
-        input_length = input_tensor.size(0)
-        encoder_outputs = torch.zeros(max_length, self.hidden_size * 2, device=self.device)
+        input_length = input_tensor.size(1)
         batch_size = target_idx.shape[0]
 
+        encoder_outputs = torch.zeros(max_length, self.hidden_size * 2, device=self.device)
         hidden = self.initHidden(batch_size)
         # input tensor is batchsize * seq length
         for ei in range(input_length):
