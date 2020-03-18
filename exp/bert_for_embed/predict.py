@@ -29,7 +29,7 @@ if not os.path.exists(REPORTS_DIR):
 # HYPERPARAMETERS
 ################
 
-LOAD_PATH = sys.argv[1] if len(sys.argv) > 1 else 'models/checkpoints/bert_for_embed/epoch11'
+LOAD_PATH = sys.argv[1] if len(sys.argv) > 1 else 'models/checkpoints/bert_for_embed/epoch17/'
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 
