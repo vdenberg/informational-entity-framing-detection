@@ -44,6 +44,7 @@ if __name__ == '__main__':
     print(f'Loaded model from {LOAD_PATH}')
     #inferencer.eval(model, all_data, all_labels, name=f'{LOAD_PATH}')
     embeddings = inferencer.predict(model, all_data, return_embeddings=True)
+    print(len(embeddings))
     basil_w_BERT = pd.DataFrame(index=all_ids, columns=['avbert'])
     basil_w_BERT['avbert'] = embeddings
     basil_w_BERT.to_csv('data/basil_w_avBERT.csv')

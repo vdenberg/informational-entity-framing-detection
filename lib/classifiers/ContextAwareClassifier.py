@@ -118,7 +118,7 @@ class ContextAwareClassifier():
         self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)
         self.dev = dev
         self.cp_name = None # depends on split type and current fold
-        self.best_perf = {'it': 0, 'val': 30}
+        self.best_perf = {'ep': 0, 'val': 30}
         self.device = device
         self.cp_dir = cp_dir
         self.logger = logger
@@ -152,12 +152,12 @@ class ContextAwareClassifier():
                       'optimizer': self.optimizer.state_dict()}
         torch.save(checkpoint, os.path.join(cpdir, cpfn))
 
-    def update_lr(self, i, val_f1):
-        self.best_perf = {'it': i, 'val': val_f1}
+    def update_lr(self, best_ep, val_f1):
+        self.best_perf = {'ep': best_ep, 'val': val_f1}
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
-        print('\t\t{} - Updated LR: {} for f1 = {}'.format(i, new_lr, self.best_perf['val']))
-        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(i, new_lr, self.best_perf['val']))
+        print('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
+        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
 
     def check_performance(self, i):
         # check if its a good performance and whether to save / update LR
@@ -187,11 +187,6 @@ class ContextAwareClassifier():
 
     def train_batches(self, fold, print_step_every):
         self.cp_name = fold['name']
-        self.dev = fold['dev']
-        
-        plot_losses = []
-        plot_loss_total = 0  # Reset every plot_every
-        loss_total = 0  # Reset every print_every
 
         training_triples = self.to_tensor(fold['train'])
         train_sampler = RandomSampler(training_triples)
@@ -199,19 +194,19 @@ class ContextAwareClassifier():
 
         nr_steps = len(train_dataloader)
 
+        loss_total = 0
         for step, batch in enumerate(train_dataloader):
             batch = tuple(t.to(self.device) for t in batch)
             input_tensor, target_label_tensor, target_idx = batch
 
             loss = self.train(input_tensor, target_label_tensor, target_idx)
             loss_total += loss
-            plot_loss_total += loss
 
             if (step % print_step_every == 0) & (step > 0):
                 update = f'\t\tFinished step {step} / {nr_steps} - loss: {loss}'
                 self.logger.info(update)
-
         av_loss = loss_total / len(train_dataloader)
+
         return av_loss
 
     def train_epochs(self, fold, num_epochs, print_step_every, save_epoch_every):
@@ -274,7 +269,7 @@ class ContextAwareClassifier():
 
         metrics, metrics_df, metrics_string = my_eval('eval', y_true, y_pred)
         f1 = round(metrics['f1'] * 100, 2)
-        conf_mat = list(zip(['tn', 'tp', 'fn', 'fp'], metrics_df[['tn', 'tp', 'fn', 'fp']].values))
+        conf_mat = metrics_df[['tn', 'tp', 'fn', 'fp']].to_list()
 
         if which == 'all':
             return metrics, metrics_df, metrics_string
