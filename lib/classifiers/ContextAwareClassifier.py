@@ -94,9 +94,12 @@ class ContextAwareModel(nn.Module):
             output, hidden = self.lstm(embedded, hidden) # output has shape 1 (for the token in question) * batch_size * hiddenx2
             encoder_outputs[ei] = output[0]
 
-        target_encoder_output = encoder_outputs[target_idx,:,:]
-        output = self.out(target_encoder_output)
+        target_encoder_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
+        for item in range(batch_size):
+            my_idx = target_idx[item]
+            target_encoder_output[item] = encoder_outputs[my_idx,item,:]
 
+        output = self.out(target_encoder_output) # sigmoid function that returns batch_size * 1
         return output
 
     def initHidden(self, batch_size):
@@ -136,6 +139,9 @@ class ContextAwareClassifier():
 
         loss = 0
         output = self.model(input_tensor, target_idx, self.max_length)
+        #print(output)
+        #print(target_label_tensor)
+        #print(output.shape, target_label_tensor.shape)
         loss += self.criterion(output, target_label_tensor)
         loss.backward()
 
