@@ -227,13 +227,13 @@ class ContextAwareClassifier():
             start_time = time.time()
 
             epoch_av_loss = self.train_batches(fold, print_step_every)
-            val_f1, conf_mat_dict = self.evaluate(fold['dev'], which='f1')
             total_loss += epoch_av_loss
 
             elapsed = format_runtime(time.time()-start_time)
             if (ep % save_epoch_every == 0) & (ep > 0):
                 epochs_av_loss = total_loss / ep
-                update = f'\tEpoch {ep}/{num_epochs} (took {elapsed}): Av loss: {epoch_av_loss}, Val f1: {val_f1} ({conf_mat_dict})'
+                val_performance = self.evaluate(fold['dev'], which='string')
+                update = f'\tEpoch {ep}/{num_epochs} (took {elapsed}): Av loss: {epoch_av_loss}, Val performance: {val_performance})'
                 self.logger.info(update)
                 self.save_checkpoint(self.cp_dir, ep=ep)
                 self.decide_if_schedule_step(ep)
