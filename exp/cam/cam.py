@@ -142,6 +142,7 @@ LR = args.learning_rate
 START_CHECKPOINT = args.start_checkpoint
 SEED_VAL = args.seed_val
 EVAL = args.eval
+TRAIN = not EVAL
 mode = 'train' if not EVAL else 'eval'
 PRINT_STEP_EVERY = args.step_info_every  # steps
 SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
@@ -240,13 +241,12 @@ for fold_i, fold in enumerate(folds):
     model = cl.model
 
     if EVAL:
+        model.eval()
         for parameter in model.parameters():
             parameter.requires_grad = False
-        model.eval()
-    else:
-        model.train()
 
-    if not EVAL:
+    elif TRAIN:
+        model.train()
         cl.train_epochs(fold, num_epochs=N_EPOCHS, print_step_every=PRINT_STEP_EVERY, save_epoch_every=SAVE_EPOCH_EVERY)
 
     metrics, metrics_df, metrics_string = cl.evaluate(fold['test'], which='all')
