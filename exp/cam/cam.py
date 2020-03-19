@@ -103,7 +103,7 @@ def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
 
     for word, index in input_lang.word2index.items(): # word here is a sentence id like 91fox27
-        if (word == 'PAD') or (word == 'EOS'):
+        if (word == 'PAD') or (word == 'EOS') or (word == '11fox23'):
             pass
         else:
             embedding = sentence_embeddings[word]
