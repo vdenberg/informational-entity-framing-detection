@@ -232,9 +232,10 @@ logger.info(f"Starting LR: {LR}")
 eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold_i, fold in enumerate(folds):
 
-    cl = ContextAwareClassifier(input_lang, fold['dev'], split_type=SPL, logger=logger, weights_matrix=WEIGHTS_MATRIX,
-                                batch_size=BATCH_SIZE, cp_dir=CHECKPOINT_DIR, learning_rate=LR,
-                                start_checkpoint=START_CHECKPOINT, step_size=1, gamma=0.95)
+    cl = ContextAwareClassifier(input_lang, fold['dev'], split_type=SPL, logger=logger, cp_dir=CHECKPOINT_DIR,
+                                weights_matrix=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hidden_size=HIDDEN,
+                                batch_size=BATCH_SIZE, learning_rate=LR, start_checkpoint=START_CHECKPOINT,
+                                step_size=1, gamma=0.95)
 
     model = cl.model
 
