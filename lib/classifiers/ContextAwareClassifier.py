@@ -111,21 +111,35 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, model, input_lang, dev, device, split_type='fan', batch_size=None, logger=None, cp_dir='models/checkpoints/cam', learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
         self.start_epoch = start_checkpoint
-        self.model = model
-        self.input_lang = input_lang
+        self.cp_dir = cp_dir
+        self.best_cp_dir = os.path.join(cp_dir, 'best')
+        self.split_type = split_type
+        self.device = device
+        self.logger = logger
+
         self.batch_size = batch_size
+        self.input_lang = input_lang
         self.max_length = input_lang.max_len
         self.criterion = None # depends on classweight which should be set on input
+
+        if start_checkpoint > 0:
+            self.model = self.load_model_from_checkpoint()
+        else:
+            self.model = model
+
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)
         self.dev = dev
         self.cp_name = None # depends on split type and current fold
         self.best_perf = {'ep': 0, 'val': 30}
-        self.device = device
-        self.cp_dir = cp_dir
-        self.best_cp_dir = os.path.join(cp_dir, 'best')
-        self.logger = logger
-        self.split_type = split_type
+
+    def load_model_from_checkpoint(self):
+        cpfp = format_checkpoint_name(self.cp_dir, split_type=self.split_type, epoch_number=self.start_epoch)
+        self.logger.info('Loading model from', cpfp)
+        start_checkpoint = torch.load(cpfp)
+        model = start_checkpoint['model']
+        model.load_state_dict(start_checkpoint['state_dict'])
+        return model
 
     def to_tensor(self, triples):
         indexedsentences = [indexesFromSentence(self.input_lang, t[0], EOS_token) for t in triples]

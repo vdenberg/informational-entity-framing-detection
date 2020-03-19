@@ -112,16 +112,6 @@ def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
     #logging.info(f'Found embeddings for all but {words_not_found}')
     return weights_matrix
 
-
-def load_model_from_checkpoint(cp_dir, spl, fold_i, cp):
-    CPFN =
-    cpfp = os.path.join(cp_dir, cpfn)
-    logger.info('Loading model from', cpfp)
-    start_checkpoint = torch.load(cpfp)
-    model = start_checkpoint['model']
-    model.load_state_dict(start_checkpoint['state_dict'])
-    return model
-
 # =====================================================================================
 #                    GET PARAMETERS
 # =====================================================================================
