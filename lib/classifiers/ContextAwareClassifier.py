@@ -112,8 +112,8 @@ class ContextAwareClassifier():
     def __init__(self, input_lang, dev, logger=None,
                  emb_dim=768, hidden_size=32, weights_matrix=None,
                  batch_size=None, cp_dir='models/checkpoints/cam',
-                 learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
-        self.start_epoch = start_checkpoint
+                 learning_rate=0.001, start_epoch=0, step_size=1, gamma=0.75):
+        self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.best_cp_dir = os.path.join(cp_dir, 'best')
         self.device, self.USE_CUDA = get_torch_device()
@@ -126,7 +126,7 @@ class ContextAwareClassifier():
         self.max_length = input_lang.max_len
         self.criterion = None # depends on classweight which should be set on input
 
-        if start_checkpoint > 0:
+        if start_epoch > 0:
             self.model = self.load_model_from_checkpoint()
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,

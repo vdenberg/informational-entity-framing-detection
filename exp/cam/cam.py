@@ -125,7 +125,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
 # TRAINING PARAMS
 parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-spl', '--split_type', type=str, default='fan')
-parser.add_argument('-start', '--start_checkpoint', type=int, default=0)
+parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=250)
 
 # OPTIMIZING PARAMS
@@ -148,7 +148,7 @@ SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
 
 EVAL, TRAIN = args.eval, not args.eval
 SPLIT_TYPE = args.split_type
-START_CHECKPOINT = args.start_checkpoint
+START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
 
 BATCH_SIZE = args.batch_size
@@ -238,7 +238,7 @@ WEIGHTS_MATRIX = make_weight_matrix(input_lang, embed_fp, EMB_DIM)
 logger.info("***** Starting training *****")
 logger.info(f"Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f"Num epochs: {N_EPOCHS}")
-logger.info(f"Starting from: {START_CHECKPOINT}")
+logger.info(f"Starting from: {START_EPOCH}")
 logger.info(f"Batch size: {BATCH_SIZE}")
 logger.info(f"Starting LR: {LR}")
 
@@ -248,20 +248,20 @@ cross_val_df = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Ac
 for fold_i, fold in enumerate(folds):
 
     # initialise classifier with development data and all parameters
-    cl = ContextAwareClassifier(input_lang, fold['dev'], logger=logger, cp_dir=CHECKPOINT_DIR,
+    # loading from a checkpoint will happen automatically if you passed a starting checkpoint/epoch
+    cl = ContextAwareClassifier(input_lang, fold['dev'], start_epoch=START_EPOCH,
+                                logger=logger, cp_dir=CHECKPOINT_DIR,
                                 weights_matrix=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hidden_size=HIDDEN,
-                                batch_size=BATCH_SIZE, learning_rate=LR, start_checkpoint=START_CHECKPOINT,
+                                batch_size=BATCH_SIZE, learning_rate=LR,
                                 step_size=1, gamma=0.95)
 
-    model = cl.model
-
     if EVAL:
-        model.eval()
-        for parameter in model.parameters():
+        cl.model.eval()
+        for parameter in cl.model.parameters():
             parameter.requires_grad = False
 
     elif TRAIN:
-        model.train()
+        cl.model.train()
         cl.train_epochs(fold, num_epochs=N_EPOCHS, print_step_every=PRINT_STEP_EVERY, save_epoch_every=SAVE_EPOCH_EVERY)
 
     metrics, metrics_df, metrics_string = cl.evaluate(fold['test'], which='all')
