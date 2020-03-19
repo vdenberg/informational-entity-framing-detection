@@ -182,11 +182,11 @@ class ContextAwareClassifier():
             if val_f1 < 32:
                 # improvement has to be big
                 if diff >= 0.5:
-                    self.update_lr(i, val_f1)
+                    self.update_lr(ep, val_f1)
             else:
                 # improvement can be smaller
                 if diff >= 0.25:
-                    self.update_lr(i, val_f1)
+                    self.update_lr(ep, val_f1)
 
     def train_batches(self, fold, print_step_every):
         self.cp_name = fold['name']
