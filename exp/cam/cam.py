@@ -139,7 +139,7 @@ parser.add_argument('-g', '--gamma', type=float, default=.95)
 # NEURAL NETWORK DIMS
 parser.add_argument('-maxlen', '--max_length', type=int, default=76)
 parser.add_argument('-emb', '--embedding_type', type=str, default='avbert')
-parser.add_argument('-hid', '--hidden_size', type=float, default=32)
+parser.add_argument('-hid', '--hidden_size', type=int, default=32)
 
 # OTHER NN PARAMS
 parser.add_argument('-sv', '--seed_val', type=int, default=124)
