@@ -42,11 +42,11 @@ inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_C
 if __name__ == '__main__':
     model = BertForSequenceClassification.from_pretrained(LOAD_PATH, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)
-    print(f'Loaded data from {DATA_FP}')
-    print(f'Loaded model from {LOAD_PATH}')
+    logger.info(f'Loaded data from {DATA_FP}')
+    logger.info(f'Loaded model from {LOAD_PATH}')
     #inferencer.eval(model, all_data, all_labels, name=f'{LOAD_PATH}')
     embeddings = inferencer.predict(model, all_data, return_embeddings=True)
-    print(len(embeddings))
+    logger.info(f'Finished {len(embeddings)} embeddings')
     basil_w_BERT = pd.DataFrame(index=all_ids, columns=['avbert'])
     basil_w_BERT['avbert'] = embeddings
     basil_w_BERT.to_csv('data/basil_w_avBERT.csv')

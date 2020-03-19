@@ -227,7 +227,7 @@ class ContextAwareClassifier():
             start_time = time.time()
 
             epoch_av_loss = self.train_batches(fold, print_step_every)
-            val_f1, conf_mat_dict = self.evaluate(fold['dev'], which='f1', conf_mat=True)
+            val_f1, conf_mat_dict = self.evaluate(fold['dev'], which='f1')
             total_loss += epoch_av_loss
 
             elapsed = format_runtime(time.time()-start_time)
