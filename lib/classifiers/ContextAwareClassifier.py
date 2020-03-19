@@ -257,7 +257,7 @@ class ContextAwareClassifier():
     '''
 
     def predict(self, data):
-        test_triples = self.to_tensor(test)
+        test_triples = self.to_tensor(data)
         test_sampler = RandomSampler(test_triples)
         test_dataloader = DataLoader(test_triples, sampler=test_sampler, batch_size=self.batch_size)
         y_true = []
