@@ -162,7 +162,7 @@ class ContextAwareClassifier():
         self.best_perf['val_f1'] = val_f1
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
-        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val_f1']))
+        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(self.best_perf['ep'], new_lr, self.best_perf['val_f1']))
         val_performance = self.evaluate(self.dev, which='string')
         test_performance = self.evaluate(self.test, which='string')
         self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
