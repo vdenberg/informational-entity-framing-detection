@@ -60,23 +60,25 @@ class Lang:
             self.word2count[word] += 1
 
 
-def readArticles(fp, max_seq_length=95):
+def read_documents(fp, max_seq_length):
     global NO_PADDING
-    logger.info("Reading lines...")
+
+    max_seq_length += 1 # for EOS token
+
     # Read the file and split into lines
+    logger.info("Reading lines...")
     lines = open(fp, encoding='utf-8').read().strip().split('\n')
 
-    # Split every line into triples and normalize
+    # Split every line into triples and pad
     pairs = [[s.lower() for s in lin.split('\t')] for lin in lines]
 
-    # EB reshape to fit my task
     triples = []
     for p in pairs:
         id, article, label, index = p
 
         if not NO_PADDING:
             art_list = article.split(' ')
-            padding = ['PAD'] * (77 - len(art_list))
+            padding = ['PAD'] * (max_seq_length + 1 - len(art_list))
             art_list += padding
             article = " ".join(art_list)
         label_i = int(label)
@@ -135,6 +137,7 @@ parser.add_argument('-lr', '--learning_rate', type=float, default=2e-3)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
+parser.add_argument('-maxlen', '--max_length', type=int, default=76)
 parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
 parser.add_argument('-hid', '--hidden_size', type=float, default=32)
 
@@ -158,6 +161,7 @@ BATCH_SIZE = args.batch_size
 LR = args.learning_rate
 GAMMA = args.gamma
 
+MAX_LEN = args.max_length
 EMB_TYPE = args.embedding_type
 HIDDEN = args.hidden_size
 
@@ -209,7 +213,7 @@ logger.info(args)
 #                    DATA & EMBEDDINGS
 # =====================================================================================
 
-input_lang, triples = readArticles(DATA_FP)
+input_lang, triples = read_documents(DATA_FP, MAX_LEN)
 logger.info("***** Loading data *****")
 logger.info(f"Read {len(triples)} sentence triples")
 logger.info(f"Embedding type: {EMB_TYPE}")
