@@ -182,9 +182,9 @@ torch.cuda.manual_seed_all(SEED_VAL)
 # =====================================================================================
 
 DATA_FP = f'data/cam_input/{CONTEXT_TYPE}/basil.tsv'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
-REPORTS_DIR = f'reports/cam/{EMB_TYPE}'
+REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}'
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
