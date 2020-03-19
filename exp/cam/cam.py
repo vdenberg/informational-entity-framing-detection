@@ -177,7 +177,7 @@ torch.cuda.manual_seed_all(SEED_VAL)
 #                    DIRECTORIES
 # =====================================================================================
 
-DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}/basil.tsv'
+DATA_FP = f'data/cam_input/{CONTEXT_TYPE}/basil.tsv'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}'
