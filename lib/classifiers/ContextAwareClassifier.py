@@ -225,6 +225,7 @@ class ContextAwareClassifier():
         self.logger.info('Training...')
         total_loss = 0
         for ep in range(num_epochs):
+            ep = self.start_epoch + ep
             start_time = time.time()
 
             epoch_av_loss = self.train_batches(fold, print_step_every)
