@@ -129,16 +129,16 @@ parser.add_argument('-spl', '--split_type', type=str, default='fan')
 parser.add_argument('-context', '--context_type', type=str, default='article')
 parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=250)
+parser.add_argument('-ep', '--epochs', type=int, default=500)
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-3)
+parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
 parser.add_argument('-maxlen', '--max_length', type=int, default=76)
-parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
+parser.add_argument('-emb', '--embedding_type', type=str, default='avbert')
 parser.add_argument('-hid', '--hidden_size', type=float, default=32)
 
 # OTHER NN PARAMS
@@ -245,6 +245,7 @@ WEIGHTS_MATRIX = make_weight_matrix(input_lang, embed_fp, EMB_DIM)
 
 logger.info("***** Starting training *****")
 logger.info(f"Mode: {'train' if not EVAL else 'eval'}")
+logger.info(f"Context: {CONTEXT_TYPE}")
 logger.info(f"Num epochs: {N_EPOCHS}")
 logger.info(f"Starting from: {START_EPOCH}")
 logger.info(f"Batch size: {BATCH_SIZE}")
