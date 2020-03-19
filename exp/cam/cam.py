@@ -215,7 +215,7 @@ elif EMB_TYPE == 'sbert':
 elif EMB_TYPE == 'avbert':
     EMB_DIM = 768
     embed_fp = 'data/basil_w_avBERT.csv'
-weights_matrix = make_weight_matrix(input_lang, embed_fp, EMB_DIM)
+WEIGHTS_MATRIX = make_weight_matrix(input_lang, embed_fp, EMB_DIM)
 
 ######################################################################
 # Training
@@ -232,7 +232,7 @@ logger.info(f"Starting LR: {LR}")
 eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold_i, fold in enumerate(folds):
 
-    cl = ContextAwareClassifier(input_lang, fold['dev'], split_type=SPL, logger=logger,
+    cl = ContextAwareClassifier(input_lang, fold['dev'], split_type=SPL, logger=logger, weights_matrix=WEIGHTS_MATRIX,
                                 batch_size=BATCH_SIZE, cp_dir=CHECKPOINT_DIR, learning_rate=LR,
                                 start_checkpoint=START_CHECKPOINT, step_size=1, gamma=0.95)
 
