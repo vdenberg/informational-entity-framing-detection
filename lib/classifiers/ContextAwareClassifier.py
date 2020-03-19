@@ -109,7 +109,10 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, model, input_lang, dev, device, split_type='fan', batch_size=None, logger=None, cp_dir='models/checkpoints/cam', learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
+    def __init__(self, model, input_lang, dev, device=device,
+                 split_type='fan', emb_dim=768, hidden_size=32, weights_matrix=None,
+                 batch_size=None, logger=None, cp_dir='models/checkpoints/cam',
+                 learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
         self.start_epoch = start_checkpoint
         self.cp_dir = cp_dir
         self.best_cp_dir = os.path.join(cp_dir, 'best')
@@ -117,6 +120,8 @@ class ContextAwareClassifier():
         self.device = device
         self.logger = logger
 
+        self.emb_dim = emb_dim
+        self.hidden_size = hidden_size
         self.batch_size = batch_size
         self.input_lang = input_lang
         self.max_length = input_lang.max_len
@@ -125,7 +130,9 @@ class ContextAwareClassifier():
         if start_checkpoint > 0:
             self.model = self.load_model_from_checkpoint()
         else:
-            self.model = model
+            self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
+                                           weights_matrix=weights_matrix, device=self.device)
+        self.model = self.model.to(self.device)
 
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)

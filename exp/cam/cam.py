@@ -232,10 +232,11 @@ logger.info(f"Starting LR: {LR}")
 eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold_i, fold in enumerate(folds):
 
-    if START_CHECKPOINT > 0: model = load_model_from_checkpoint(CHECKPOINT_DIR, START_CHECKPOINT)
-    else: model = ContextAwareModel(input_size=EMB_DIM, hidden_size=HIDDEN, weights_matrix=weights_matrix, device=device)
+    cl = ContextAwareClassifier(model, input_lang, fold['dev'], split_type=SPL, logger=logger, device=device,
+                                batch_size=BATCH_SIZE, cp_dir=CHECKPOINT_DIR, learning_rate=LR,
+                                start_checkpoint=START_CHECKPOINT, step_size=1, gamma=0.95)
 
-    model.to(device)
+    model = cl.model
     if USE_CUDA: model.cuda()
 
     if EVAL:
@@ -244,10 +245,6 @@ for fold_i, fold in enumerate(folds):
         model.eval()
     else:
         model.train()
-
-    cl = ContextAwareClassifier(model, input_lang, fold['dev'], split_type=SPL, logger=logger, device=device,
-                                batch_size=BATCH_SIZE, cp_dir=CHECKPOINT_DIR, learning_rate=LR,
-                                start_checkpoint=START_CHECKPOINT, step_size=1, gamma=0.95)
 
     if not EVAL:
         cl.train_epochs(fold, num_epochs=N_EPOCHS, print_step_every=PRINT_STEP_EVERY, save_epoch_every=SAVE_EPOCH_EVERY)
