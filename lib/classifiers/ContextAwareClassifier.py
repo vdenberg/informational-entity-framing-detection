@@ -8,7 +8,7 @@ import random
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import matplotlib.pyplot as plt
 from lib.evaluate.StandardEval import my_eval
-from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name
+from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name, get_torch_device
 #plt.switch_backend('agg')
 import matplotlib.ticker as ticker
 import os
@@ -109,15 +109,15 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, model, input_lang, dev, device=device,
-                 split_type='fan', emb_dim=768, hidden_size=32, weights_matrix=None,
+    def __init__(self, input_lang, dev, split_type='fan',
+                 emb_dim=768, hidden_size=32, weights_matrix=None,
                  batch_size=None, logger=None, cp_dir='models/checkpoints/cam',
                  learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
         self.start_epoch = start_checkpoint
         self.cp_dir = cp_dir
         self.best_cp_dir = os.path.join(cp_dir, 'best')
         self.split_type = split_type
-        self.device = device
+        self.device, self.USE_CUDA = get_torch_device()
         self.logger = logger
 
         self.emb_dim = emb_dim
@@ -133,6 +133,7 @@ class ContextAwareClassifier():
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            weights_matrix=weights_matrix, device=self.device)
         self.model = self.model.to(self.device)
+        if self.USE_CUDA: self.model.cuda()
 
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)
