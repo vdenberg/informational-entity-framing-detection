@@ -33,7 +33,8 @@ LOAD_PATH = sys.argv[1] if len(sys.argv) > 1 else 'models/checkpoints/bert_for_e
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 
-with open(DATA_DIR + "basil_features.pkl", "rb") as f:
+DATA_FP = DATA_DIR + "basil_features.pkl"
+with open(DATA_FP, "rb") as f:
     all_features = pickle.load(f)
 all_ids, all_data, all_labels = to_tensor_for_bert(all_features, OUTPUT_MODE)
 
@@ -41,6 +42,7 @@ inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_C
 if __name__ == '__main__':
     model = BertForSequenceClassification.from_pretrained(LOAD_PATH, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)
+    print(f'Loaded data from {DATA_FP}')
     print(f'Loaded model from {LOAD_PATH}')
     #inferencer.eval(model, all_data, all_labels, name=f'{LOAD_PATH}')
     embeddings = inferencer.predict(model, all_data, return_embeddings=True)
