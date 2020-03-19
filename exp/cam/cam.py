@@ -247,7 +247,7 @@ cross_val_df = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Ac
 
 for fold_i, fold in enumerate(folds):
 
-    # initialise classifier with development data and all parameters
+    # initialise classifier with development data of this fold and all parameters
     # loading from a checkpoint will happen automatically if you passed a starting checkpoint/epoch
     cl = ContextAwareClassifier(input_lang, fold['dev'], start_epoch=START_EPOCH,
                                 logger=logger, cp_dir=CHECKPOINT_DIR,
@@ -255,18 +255,20 @@ for fold_i, fold in enumerate(folds):
                                 batch_size=BATCH_SIZE, learning_rate=LR,
                                 step_size=1, gamma=0.95)
 
+    # set model into eval mode, or train model
     if EVAL:
         cl.model.eval()
         for parameter in cl.model.parameters():
             parameter.requires_grad = False
-
     elif TRAIN:
         cl.model.train()
         cl.train_epochs(fold, num_epochs=N_EPOCHS, print_step_every=PRINT_STEP_EVERY, save_epoch_every=SAVE_EPOCH_EVERY)
 
+    # evaluate on test data of this fold
     metrics, metrics_df, metrics_string = cl.evaluate(fold['test'], which='all')
     logger.info(metrics_string)
     cross_val_df.loc[fold_i] = metrics_df[['acc', 'pred', 'rec', 'f1']]
 
+# average across folds
 cross_val_df.loc['mean'] = cross_val_df.mean()
 logger.info(cross_val_df)
