@@ -33,7 +33,7 @@ LOAD_PATH = sys.argv[1] if len(sys.argv) > 1 else 'models/checkpoints/bert_for_e
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 
-with open(DATA_DIR + "all_features.pkl", "rb") as f:
+with open(DATA_DIR + "basil_features.pkl", "rb") as f:
     all_features = pickle.load(f)
 all_ids, all_data, all_labels = to_tensor_for_bert(all_features, OUTPUT_MODE)
 
