@@ -131,7 +131,7 @@ parser.add_argument('-ep', '--epochs', type=int, default=250)
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-3)
-parser.add_argument('-g', '--gamma', type=float, default=2e-3)
+parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
 parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
