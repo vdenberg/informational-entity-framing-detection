@@ -60,14 +60,16 @@ class DataProcessor(object):
         raise NotImplementedError()
 
     @classmethod
-    def _read_tsv(cls, input_file, quotechar=None):
+    def _read_tsv(cls, input_file, sep='\t', quotechar=None):
         """Reads a tab separated value file."""
         with open(input_file, "r", encoding="utf-8") as f:
-            reader = csv.reader(f, delimiter="\t", quotechar=quotechar)
+            reader = csv.reader(f, delimiter=sep, quotechar=quotechar)
             lines = []
             for line in reader:
                 if sys.version_info[0] == 2:
                     line = list(cell for cell in line)
+                if input_file.endswith('basil.csv'):
+                    line = line[1:]
                 lines.append(line)
             return lines
 
@@ -75,10 +77,10 @@ class DataProcessor(object):
 class BinaryClassificationProcessor(DataProcessor):
     """Processor for binary classification dataset."""
 
-    def get_examples(self, fp, name):
+    def get_examples(self, fp, name, sep):
         """See base class."""
         return self._create_examples(
-            self._read_tsv(os.path.join(fp)), name)
+            self._read_tsv(os.path.join(fp), sep), name)
 
     def get_labels(self):
         """See base class."""
