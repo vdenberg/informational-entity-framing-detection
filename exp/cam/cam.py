@@ -113,41 +113,65 @@ def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
     return weights_matrix
 
 # =====================================================================================
-#                    GET PARAMETERS
+#                    PARAMETERS
 # =====================================================================================
 # Read arguments from command line
 
 parser = argparse.ArgumentParser()
-# NEURAL NETWORK PARAMS
-parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
+# PRINT/SAVE PARAMS
+parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
+parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
+
+# TRAINING PARAMS
+parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-spl', '--split_type', type=str, default='fan')
 parser.add_argument('-start', '--start_checkpoint', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=250)
+
+# OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
-parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
-parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-3)
+
+# NEURAL NETWORK DIMS
+parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
 parser.add_argument('-hid', '--hidden_size', type=float, default=32)
+
+# OTHER NN PARAMS
 parser.add_argument('-sv', '--seed_val', type=int, default=124)
-parser.add_argument('-mx', '--max_len', type=int, default=96)
-parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
+
 args = parser.parse_args()
 
-NO_PADDING = args.no_padding
-N_EPOCHS = args.epochs
-HIDDEN = args.hidden_size
-BATCH_SIZE = args.batch_size
-LR = args.learning_rate
-START_CHECKPOINT = args.start_checkpoint
-SEED_VAL = args.seed_val
-EVAL = args.eval
-TRAIN = not EVAL
-mode = 'train' if not EVAL else 'eval'
+# set to variables for readability
 PRINT_STEP_EVERY = args.step_info_every  # steps
 SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
-EMB_TYPE = args.embedding_type
+
+EVAL, TRAIN = args.eval, not args.eval
 SPL = args.split_type
+START_CHECKPOINT = args.start_checkpoint
+N_EPOCHS = args.epochs
+
+BATCH_SIZE = args.batch_size
+LR = args.learning_rate
+
+EMB_TYPE = args.embedding_type
+HIDDEN = args.hidden_size
+
+SEED_VAL = args.seed_val
+NO_PADDING = args.no_padding
+
+# =====================================================================================
+#                    SEED
+# =====================================================================================
+
+random.seed(SEED_VAL)
+np.random.seed(SEED_VAL)
+torch.manual_seed(SEED_VAL)
+torch.cuda.manual_seed_all(SEED_VAL)
+
+# =====================================================================================
+#                    DIRECTORIES
+# =====================================================================================
 
 DATA_FP = 'data/cam_input/basil.tsv'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}'
@@ -162,37 +186,24 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 
 # =====================================================================================
-#                    LOGGING INFO ...
+#                    LOGGER
 # =====================================================================================
-
-
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
 
 now = datetime.now()
 now_string = now.strftime(format='%b-%d-%Hh-%-M')
-log_name = f"{REPORTS_DIR}/{now_string}.log"
+LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
 console_hdlr = logging.StreamHandler(sys.stdout)
-file_hdlr = logging.FileHandler(filename=log_name)
+file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
-logger.info(f"Start Logging to {log_name}")
+
+logger.info(f"Start Logging to {LOG_NAME}")
 logger.info(args)
 
-######################################################################
-# Get device
-device, USE_CUDA = get_torch_device()
-random.seed(SEED_VAL)
-np.random.seed(SEED_VAL)
-torch.manual_seed(SEED_VAL)
-torch.cuda.manual_seed_all(SEED_VAL)
-
-
-######################################################################
-# Loading data & weights matrix
-# ==================
-#
+# =====================================================================================
+#                    DATA & EMBEDDINGS
+# =====================================================================================
 
 input_lang, triples = readArticles(DATA_FP)
 logger.info("***** Loading data *****")
@@ -218,18 +229,19 @@ elif EMB_TYPE == 'avbert':
     embed_fp = 'data/basil_w_avBERT.csv'
 WEIGHTS_MATRIX = make_weight_matrix(input_lang, embed_fp, EMB_DIM)
 
-######################################################################
-# Training
-# =======================
-#
+#######################################################################################
+# =====================================================================================
+#                    TRAINING
+# =====================================================================================
 
 logger.info("***** Starting training *****")
-logger.info(f"Mode: {mode}")
+logger.info(f"Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f"Num epochs: {N_EPOCHS}")
 logger.info(f"Starting from: {START_CHECKPOINT}")
 logger.info(f"Batch size: {BATCH_SIZE}")
 logger.info(f"Starting LR: {LR}")
 
+# loop through folds for cross_val
 eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold_i, fold in enumerate(folds):
 
