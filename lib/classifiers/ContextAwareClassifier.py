@@ -110,7 +110,7 @@ class ContextAwareModel(nn.Module):
 
 class ContextAwareClassifier():
     def __init__(self, model, input_lang, dev, device, batch_size=None, logger=None, cp_dir='models/checkpoints/cam', learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
-        self.start_iter = start_checkpoint
+        self.start_epoch = start_checkpoint
         self.model = model
         self.input_lang = input_lang
         self.batch_size = batch_size
@@ -161,11 +161,11 @@ class ContextAwareClassifier():
         print('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
         self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
 
-    def check_performance(self, i):
+    def decide_if_schedule_step(self, ep):
         # check if its a good performance and whether to save / update LR
 
         val_f1 = self.evaluate(self.dev, which='f1')
-        cpfn = 'cp_{}_{}_{}.pth'.format(self.cp_name, self.start_iter + i, val_f1)
+        cpfn = 'cp_{}_{}_{}.pth'.format(self.cp_name, self.start_epoch + ep, val_f1)
 
         if val_f1 < 30:
             # val too low, do nothing
@@ -178,7 +178,7 @@ class ContextAwareClassifier():
             self.save_checkpoint(self.cp_dir + '/best', cpfn)
 
             diff = val_f1 - self.best_perf['val']  # e.g. 35 - 34.5
-            if val_f1 < 32.5:
+            if val_f1 < 32:
                 # improvement has to be big
                 if diff >= 0.5:
                     self.update_lr(i, val_f1)
@@ -231,6 +231,7 @@ class ContextAwareClassifier():
                 update = f'\tEpoch {ep}/{num_epochs} (took {elapsed}): Av loss: {epoch_av_loss}, Val f1: {val_f1} ({conf_mat_dict})'
                 self.logger.info(update)
                 self.save_checkpoint(self.cp_dir, f"epoch{ep}")
+                self.decide_if_schedule_step(ep)
 
     '''
     def evaluate(self, test_triples, which='f1'):

@@ -163,10 +163,13 @@ SPL = args.split_type
 
 DATA_FP = 'data/cam_input/basil.tsv'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}'
+BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}'
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
+if not os.path.exists(BEST_CHECKPOINT_DIR):
+    os.makedirs(BEST_CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 
