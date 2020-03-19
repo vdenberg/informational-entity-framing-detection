@@ -1,6 +1,10 @@
 import torch
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-import os
+import os, math, time
+#plt.switch_backend('agg')
+#import matplotlib.pyplot as plt
+#import matplotlib.ticker as ticker
+
 
 def to_tensor_for_bert(features, OUTPUT_MODE):
     example_ids = [f.my_id for f in features]
@@ -45,6 +49,30 @@ def get_torch_device():
         device = torch.device("cpu")
     return device, use_cuda
 
+
+
+'''
+def showPlot(points):
+    # PLOTTING NOT CURRENTLY FUNCTIONING
+    plt.figure()
+    fig, ax = plt.subplots()
+    # this locator puts ticks at regular intervals
+    loc = ticker.MultipleLocator(base=0.2)
+    ax.yaxis.set_major_locator(loc)
+    plt.plot(points)
+
+def timeSince(since, percent):
+    now = time.time()
+    s = now - since
+    es = s / (percent)
+    rs = es - s
+    return '%s (- %s)' % (asMinutes(s), asMinutes(rs))
+
+def asMinutes(s): # other option for formatting time
+    m = math.floor(s / 60)
+    s -= m * 60
+    return '%dm %ds' % (m, s)
+'''
 
 def format_runtime(runtime):
     min = int(runtime // 60)

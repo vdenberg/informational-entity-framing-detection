@@ -2,19 +2,11 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 from torch import optim
-import time
-from datetime import timedelta
-import random
+from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-import matplotlib.pyplot as plt
 from lib.evaluate.StandardEval import my_eval
 from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name, get_torch_device
-#plt.switch_backend('agg')
-import matplotlib.ticker as ticker
 import os
-from torch.optim.lr_scheduler import StepLR
-import time
-import math
 
 SOS_token = 0
 EOS_token = 1
@@ -25,30 +17,7 @@ Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and 
 **Author**: `Sean Robertson <https://github.com/spro/practical-pytorch>`_
 """
 
-
-def asMinutes(s):
-    m = math.floor(s / 60)
-    s -= m * 60
-    return '%dm %ds' % (m, s)
-
-
-def timeSince(since, percent):
-    now = time.time()
-    s = now - since
-    es = s / (percent)
-    rs = es - s
-    return '%s (- %s)' % (asMinutes(s), asMinutes(rs))
-
-
-def showPlot(points):
-    plt.figure()
-    fig, ax = plt.subplots()
-    # this locator puts ticks at regular intervals
-    loc = ticker.MultipleLocator(base=0.2)
-    ax.yaxis.set_major_locator(loc)
-    plt.plot(points)
-
-
+'''
 class FFLayer(nn.Module):
     def __init__(self, hidden_size):
         super(FFLayer, self).__init__()
@@ -57,20 +26,29 @@ class FFLayer(nn.Module):
 
     def forward(self, input):
         return self.out(input)
+'''
 
 
 class ContextAwareModel(nn.Module):
     def __init__(self, input_size, hidden_size, weights_matrix, device):
         super(ContextAwareModel, self).__init__()
+        '''
+        :param input_size = sequence length / max length
+        :param hidden_size = typically 32
+        :param weights_matrix = vocab_size * embedding dimension (typically [7987, 768])
+        Structure of the model: 
+        i) enter pretrained embeddings (USE, avbert or sbert) (= weights_matrix)
+        ii) bi-LSTM pass for each token (=sentence) in sequence (=article), storing the hidden state corresponding to each token  
+        iii) return as output Linear + Sigmoid applied to hidden state of only the token (= sentence) in question
+        '''
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.device = device
 
-        # weight matrix has shape vocab_size * embedding dimension[7987, 768]
-        # input_size = sequence length = 96
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = nn.Embedding.from_pretrained(self.weights_matrix)
-        self.lstm = nn.LSTM(input_size, hidden_size, bidirectional=True)
+
+        self.lstm = nn.LSTM(self.input_size, self.hidden_size, bidirectional=True)
         self.out = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
     def forward(self, input_tensor, target_idx, max_length):
