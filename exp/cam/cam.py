@@ -182,7 +182,7 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 
 now = datetime.now()
-now_string = now.strftime(format='%b-%d-%Hh')
+now_string = now.strftime(format='%b-%d-%Hh-%-M')
 log_name = f"{REPORTS_DIR}/{now_string}.log"
 
 console_hdlr = logging.StreamHandler(sys.stdout)
