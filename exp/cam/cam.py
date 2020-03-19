@@ -248,7 +248,7 @@ for fold_i, fold in enumerate(folds):
 
     # initialise classifier with development data of this fold and all parameters
     # loading from a checkpoint will happen automatically if you passed a starting checkpoint/epoch
-    cl = ContextAwareClassifier(input_lang, fold['dev'], start_epoch=START_EPOCH,
+    cl = ContextAwareClassifier(input_lang, fold['dev'], fold['test'], start_epoch=START_EPOCH,
                                 logger=logger, cp_dir=CHECKPOINT_DIR,
                                 weights_matrix=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hidden_size=HIDDEN,
                                 batch_size=BATCH_SIZE, learning_rate=LR,

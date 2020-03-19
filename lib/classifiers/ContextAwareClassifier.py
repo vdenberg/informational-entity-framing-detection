@@ -115,6 +115,7 @@ class ContextAwareClassifier():
         self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)
         self.dev = dev
+        self.test = test
         self.cp_name = None # depends on split type and current fold
         self.best_perf = {'ep': 0, 'val': 30}
 
@@ -162,6 +163,9 @@ class ContextAwareClassifier():
         new_lr = self.scheduler.get_lr()
         print('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
         self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
+        test_prec, test_rec, test_f1 = self.evaluate(self.test, which='report')
+        self.logger.info(f'\t\t{best_ep} - Test performance: Prec: {test_prec}, Rec: {test_rec}, F1: {test_f1}')
+
 
     def decide_if_schedule_step(self, ep):
         # check if its a good performance and whether to save / update LR
@@ -279,7 +283,10 @@ class ContextAwareClassifier():
 
         if which == 'all':
             return metrics, metrics_df, metrics_string
+        elif which == 'report':
+            return metrics['prec'], metrics['rec'], metrics['f1']
         else:
+            outputs = ()
             if which == 'f1':
                 outputs = (f1,)
             if conf_mat:
