@@ -46,6 +46,9 @@ def my_eval(task_name, labels, preds, av_loss=None):
         metrics_df['average_loss'] = av_loss
         metrics_string += f" Av loss: {av_loss}"
 
+    conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
+    metrics_string += f" {conf_mat}"
+
     return metrics_dict, metrics_df, metrics_string
 
 

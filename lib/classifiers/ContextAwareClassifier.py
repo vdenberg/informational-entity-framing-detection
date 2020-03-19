@@ -117,7 +117,7 @@ class ContextAwareClassifier():
         self.dev = dev
         self.test = test
         self.cp_name = None # depends on split type and current fold
-        self.best_perf = {'ep': 0, 'val': 30}
+        self.best_perf = {'ep': 0, 'val_f1': 30}
 
     def load_model_from_checkpoint(self):
         cpfp = format_checkpoint_name(self.cp_dir, epoch_number=self.start_epoch)
@@ -162,28 +162,28 @@ class ContextAwareClassifier():
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
         self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
-        test_prec, test_rec, test_f1, conf_mat = self.evaluate(self.test, which='report')
-        self.logger.info(f'\t\t\t\tTest performance: Prec: {test_prec}, Rec: {test_rec}, F1: {test_f1}, Conf_mat: {conf_mat}')
+        val_performance = self.evaluate(self.dev, which='string')
+        test_performance = self.evaluate(self.test, which='string')
+        self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
+
 
 
     def decide_if_schedule_step(self, ep):
         # check if its a good performance and whether to save / update LR
 
-        eval_output = self.evaluate(self.dev, which='f1')
-        val_f1 = eval_output[0]
-        cpfn = 'cp_{}_{}_{}.pth'.format(self.cp_name, self.start_epoch + ep, val_f1)
+        val_f1 = self.evaluate(self.dev, which='f1')
 
         if val_f1 < 30:
             # val too low, do nothing
             pass
-        elif val_f1 < self.best_perf['val']:
+        elif val_f1 < self.best_perf['val_f1']:
             # val below best, do nothing
             pass
         else:
             # save this configuration and check if lr reduction is warranted
             self.save_checkpoint(cpdir=self.best_cp_dir, ep=ep)
 
-            diff = val_f1 - self.best_perf['val']  # e.g. 35 - 34.5
+            diff = val_f1 - self.best_perf['val_f1']  # e.g. 35 - 34.5
             if val_f1 < 32:
                 # improvement has to be big
                 if diff >= 0.5:
@@ -258,11 +258,10 @@ class ContextAwareClassifier():
                 return metrics, metrics_string
     '''
 
-    def evaluate(self, test, which='f1', conf_mat=False):
+    def predict(self, data):
         test_triples = self.to_tensor(test)
         test_sampler = RandomSampler(test_triples)
         test_dataloader = DataLoader(test_triples, sampler=test_sampler, batch_size=self.batch_size)
-
         y_true = []
         y_pred = []
         for batch in test_dataloader:
@@ -276,22 +275,19 @@ class ContextAwareClassifier():
             preds = [1 if output > 0.5 else 0 for output in outputs]
             y_true.extend([el for el in target_label_tensor.detach().cpu().numpy()])
             y_pred.extend(preds)
+        return y_true, y_pred
 
+    def evaluate(self, data, which='f1'):
+        y_true, y_pred = self.predict(data)
         metrics, metrics_df, metrics_string = my_eval('eval', y_true, y_pred)
         f1 = round(metrics['f1'] * 100, 2)
-        conf_mat = {'tn': metrics['tn'], 'tp': metrics['tp'], 'fn': metrics['fn'], 'fp': metrics['fp']}
 
         if which == 'all':
             return metrics, metrics_df, metrics_string
-        elif which == 'report':
-            return metrics['prec'], metrics['rec'], metrics['f1'], conf_mat
-        else:
-            outputs = ()
-            if which == 'f1':
-                outputs = (f1,)
-            if conf_mat:
-                outputs += (conf_mat,)
-            return outputs
+        elif which == 'f1':
+            return f1
+        elif which == 'string':
+            return metrics_string
 
 
 #_, USE_CUDA = get_torch_device()
