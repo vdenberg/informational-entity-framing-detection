@@ -6,7 +6,7 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name, get_torch_device
-import os
+import os, time
 
 SOS_token = 0
 EOS_token = 1
