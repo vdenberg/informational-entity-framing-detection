@@ -120,7 +120,7 @@ class ContextAwareClassifier():
         self.best_perf = {'ep': 0, 'val_f1': 30}
 
     def load_model_from_checkpoint(self):
-        cpfp = format_checkpoint_name(self.cp_dir, epoch_number=self.start_epoch)
+        cpfp = format_checkpoint_name(self.cp_dir, self.hidden_size, epoch_number=self.start_epoch)
         self.logger.info('Loading model from', cpfp)
         start_checkpoint = torch.load(cpfp)
         model = start_checkpoint['model']
@@ -154,7 +154,7 @@ class ContextAwareClassifier():
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
-        checkpoint_name = format_checkpoint_name(cpdir, epoch_number=ep)
+        checkpoint_name = format_checkpoint_name(cpdir, self.hidden_size, epoch_number=ep)
         torch.save(checkpoint, checkpoint_name)
 
     def update_lr(self, best_ep, val_f1):
