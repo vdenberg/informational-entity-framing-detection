@@ -158,10 +158,11 @@ class ContextAwareClassifier():
         torch.save(checkpoint, checkpoint_name)
 
     def update_lr(self, best_ep, val_f1):
-        self.best_perf = {'ep': best_ep, 'val': val_f1}
+        self.best_perf['ep'] = best_ep
+        self.best_perf['val_f1'] = val_f1
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
-        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
+        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val_f1']))
         val_performance = self.evaluate(self.dev, which='string')
         test_performance = self.evaluate(self.test, which='string')
         self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
