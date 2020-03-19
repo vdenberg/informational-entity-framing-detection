@@ -242,9 +242,8 @@ logger.info(f"Starting from: {START_EPOCH}")
 logger.info(f"Batch size: {BATCH_SIZE}")
 logger.info(f"Starting LR: {LR}")
 
-# loop through folds for cross validation
+# loop through folds for cross validation, note that if split_type is 'fan' there is only 1 fold
 cross_val_df = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
-
 for fold_i, fold in enumerate(folds):
 
     # initialise classifier with development data of this fold and all parameters
