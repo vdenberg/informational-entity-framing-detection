@@ -1,6 +1,6 @@
 import torch
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-
+import os
 
 def to_tensor_for_bert(features, OUTPUT_MODE):
     example_ids = [f.my_id for f in features]
@@ -50,3 +50,13 @@ def format_runtime(runtime):
     min = int(runtime // 60)
     sec = int(runtime % 60)
     return f'{min}m:{sec}s'
+
+
+def format_checkpoint_name(cp_dir, split_type=None, epoch_number=None):
+    if not split_type:
+        print("Give split type to checkpoint name")
+    if not epoch_number:
+        print("Give epoch number to checkpoint name")
+    cp_fn = f'{split_type}_epoch{ep}.model'
+    return os.path.join(cp_dir, cp_fn)
+

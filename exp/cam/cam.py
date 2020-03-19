@@ -114,10 +114,7 @@ def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
 
 
 def load_model_from_checkpoint(cp_dir, spl, fold_i, cp):
-    if spl == 'fan':
-        cpfn = 'cp_fan_{}.pth'.format(cp)
-    elif spl == 'berg':
-        cpfn = 'cp_{}_{}.pth'.format(fold_i, cp)
+    CPFN =
     cpfp = os.path.join(cp_dir, cpfn)
     logger.info('Loading model from', cpfp)
     start_checkpoint = torch.load(cpfp)
@@ -245,7 +242,7 @@ logger.info(f"Starting LR: {LR}")
 eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold_i, fold in enumerate(folds):
 
-    if START_CHECKPOINT > 0: model = load_model_from_checkpoint(CHECKPOINT_DIR, SPL, fold_i, START_CHECKPOINT)
+    if START_CHECKPOINT > 0: model = load_model_from_checkpoint(CHECKPOINT_DIR, START_CHECKPOINT)
     else: model = ContextAwareModel(input_size=EMB_DIM, hidden_size=HIDDEN, weights_matrix=weights_matrix, device=device)
 
     model.to(device)
@@ -258,7 +255,7 @@ for fold_i, fold in enumerate(folds):
     else:
         model.train()
 
-    cl = ContextAwareClassifier(model, input_lang, fold['dev'], logger=logger, device=device,
+    cl = ContextAwareClassifier(model, input_lang, fold['dev'], split_type=SPL, logger=logger, device=device,
                                 batch_size=BATCH_SIZE, cp_dir=CHECKPOINT_DIR, learning_rate=LR,
                                 start_checkpoint=START_CHECKPOINT, step_size=1, gamma=0.95)
 

@@ -8,7 +8,7 @@ import random
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import matplotlib.pyplot as plt
 from lib.evaluate.StandardEval import my_eval
-from lib.utils import indexesFromSentence, format_runtime
+from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name
 #plt.switch_backend('agg')
 import matplotlib.ticker as ticker
 import os
@@ -109,7 +109,7 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, model, input_lang, dev, device, batch_size=None, logger=None, cp_dir='models/checkpoints/cam', learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
+    def __init__(self, model, input_lang, dev, device, split_type='fan', batch_size=None, logger=None, cp_dir='models/checkpoints/cam', learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
         self.start_epoch = start_checkpoint
         self.model = model
         self.input_lang = input_lang
@@ -123,7 +123,9 @@ class ContextAwareClassifier():
         self.best_perf = {'ep': 0, 'val': 30}
         self.device = device
         self.cp_dir = cp_dir
+        self.best_cp_dir = os.path.join(cp_dir, 'best')
         self.logger = logger
+        self.split_type = split_type
 
     def to_tensor(self, triples):
         indexedsentences = [indexesFromSentence(self.input_lang, t[0], EOS_token) for t in triples]
@@ -148,11 +150,12 @@ class ContextAwareClassifier():
         self.optimizer.step()
         return loss.item()
 
-    def save_checkpoint(self, cpdir, cpfn):
+    def save_checkpoint(self, cpdir, ep):
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
-        torch.save(checkpoint, os.path.join(cpdir, cpfn))
+        checkpoint_name = format_checkpoint_name(cpdir, split_type=self.split_type, epoch_number=ep)
+        torch.save(checkpoint, checkpoint_name)
 
     def update_lr(self, best_ep, val_f1):
         self.best_perf = {'ep': best_ep, 'val': val_f1}
@@ -176,7 +179,7 @@ class ContextAwareClassifier():
             pass
         else:
             # save this configuration and check if lr reduction is warranted
-            self.save_checkpoint(self.cp_dir + '/best', cpfn)
+            self.save_checkpoint(cpdir=self.best_cp_dir, ep=ep)
 
             diff = val_f1 - self.best_perf['val']  # e.g. 35 - 34.5
             if val_f1 < 32:
@@ -231,7 +234,7 @@ class ContextAwareClassifier():
                 epochs_av_loss = total_loss / ep
                 update = f'\tEpoch {ep}/{num_epochs} (took {elapsed}): Av loss: {epoch_av_loss}, Val f1: {val_f1} ({conf_mat_dict})'
                 self.logger.info(update)
-                self.save_checkpoint(self.cp_dir, f"epoch{ep}")
+                self.save_checkpoint(self.cp_dir, ep=ep)
                 self.decide_if_schedule_step(ep)
 
     '''
