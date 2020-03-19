@@ -103,7 +103,7 @@ def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
 
     for word, index in input_lang.word2index.items(): # word here is a sentence id like 91fox27
-        if (word == 'PAD') or (word == 'EOS') or (word == '11fox23'):
+        if (word == 'PAD') or (word == 'EOS'): #or (word == '11fox23')
             pass
         else:
             embedding = sentence_embeddings[word]
@@ -123,8 +123,9 @@ parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
 
 # TRAINING PARAMS
-parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-spl', '--split_type', type=str, default='fan')
+parser.add_argument('-context', '--context_type', type=str, default='article')
+parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=250)
 
@@ -147,8 +148,9 @@ args = parser.parse_args()
 PRINT_STEP_EVERY = args.step_info_every  # steps
 SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
 
-EVAL, TRAIN = args.eval, not args.eval
 SPLIT_TYPE = args.split_type
+CONTEXT_TYPE = args.context_type
+EVAL, TRAIN = args.eval, not args.eval
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
 
@@ -175,7 +177,7 @@ torch.cuda.manual_seed_all(SEED_VAL)
 #                    DIRECTORIES
 # =====================================================================================
 
-DATA_FP = 'data/cam_input/basil.tsv'
+DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}/basil.tsv'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}'
