@@ -164,7 +164,8 @@ class ContextAwareClassifier():
     def decide_if_schedule_step(self, ep):
         # check if its a good performance and whether to save / update LR
 
-        val_f1 = self.evaluate(self.dev, which='f1')
+        eval_output = self.evaluate(self.dev, which='f1')
+        val_f1 = eval_output[0]
         cpfn = 'cp_{}_{}_{}.pth'.format(self.cp_name, self.start_epoch + ep, val_f1)
 
         if val_f1 < 30:
