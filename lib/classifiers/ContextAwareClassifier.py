@@ -166,8 +166,6 @@ class ContextAwareClassifier():
         test_performance = self.evaluate(self.test, which='string')
         self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
 
-
-
     def decide_if_schedule_step(self, ep):
         # check if its a good performance and whether to save / update LR
 

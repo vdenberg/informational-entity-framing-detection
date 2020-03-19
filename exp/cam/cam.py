@@ -131,6 +131,7 @@ parser.add_argument('-ep', '--epochs', type=int, default=250)
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-3)
+parser.add_argument('-g', '--gamma', type=float, default=2e-3)
 
 # NEURAL NETWORK DIMS
 parser.add_argument('-emb', '--embedding_type', type=str, default='USE')
@@ -153,6 +154,7 @@ N_EPOCHS = args.epochs
 
 BATCH_SIZE = args.batch_size
 LR = args.learning_rate
+GAMMA = args.gamma
 
 EMB_TYPE = args.embedding_type
 HIDDEN = args.hidden_size
@@ -252,7 +254,7 @@ for fold_i, fold in enumerate(folds):
                                 logger=logger, cp_dir=CHECKPOINT_DIR,
                                 weights_matrix=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hidden_size=HIDDEN,
                                 batch_size=BATCH_SIZE, learning_rate=LR,
-                                step_size=1, gamma=0.95)
+                                step_size=1, gamma=GAMMA)
 
     # set model into eval mode, or train model
     if EVAL:
