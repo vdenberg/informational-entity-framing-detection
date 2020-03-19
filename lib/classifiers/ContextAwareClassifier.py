@@ -162,8 +162,8 @@ class ContextAwareClassifier():
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
         self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(best_ep, new_lr, self.best_perf['val']))
-        test_prec, test_rec, test_f1 = self.evaluate(self.test, which='report')
-        self.logger.info(f'\t\t\t\tTest performance: Prec: {test_prec}, Rec: {test_rec}, F1: {test_f1}')
+        test_prec, test_rec, test_f1, conf_mat = self.evaluate(self.test, which='report')
+        self.logger.info(f'\t\t\t\tTest performance: Prec: {test_prec}, Rec: {test_rec}, F1: {test_f1}, Conf_mat: {conf_mat}')
 
 
     def decide_if_schedule_step(self, ep):
@@ -284,7 +284,7 @@ class ContextAwareClassifier():
         if which == 'all':
             return metrics, metrics_df, metrics_string
         elif which == 'report':
-            return metrics['prec'], metrics['rec'], metrics['f1']
+            return metrics['prec'], metrics['rec'], metrics['f1'], conf_mat
         else:
             outputs = ()
             if which == 'f1':
