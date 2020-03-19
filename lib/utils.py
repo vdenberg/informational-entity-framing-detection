@@ -52,11 +52,9 @@ def format_runtime(runtime):
     return f'{min}m:{sec}s'
 
 
-def format_checkpoint_name(cp_dir, split_type=None, epoch_number=None):
-    if not split_type:
-        print("Give split type to checkpoint name")
+def format_checkpoint_name(cp_dir, epoch_number=None):
     if not epoch_number:
         print("Give epoch number to checkpoint name")
-    cp_fn = f'{split_type}_epoch{epoch_number}.model'
+    cp_fn = f'epoch{epoch_number}.model'
     return os.path.join(cp_dir, cp_fn)
 

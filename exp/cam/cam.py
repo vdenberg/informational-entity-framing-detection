@@ -147,7 +147,7 @@ PRINT_STEP_EVERY = args.step_info_every  # steps
 SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
 
 EVAL, TRAIN = args.eval, not args.eval
-SPL = args.split_type
+SPLIT_TYPE = args.split_type
 START_CHECKPOINT = args.start_checkpoint
 N_EPOCHS = args.epochs
 
@@ -174,7 +174,7 @@ torch.cuda.manual_seed_all(SEED_VAL)
 # =====================================================================================
 
 DATA_FP = 'data/cam_input/basil.tsv'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}'
 
@@ -214,8 +214,9 @@ logger.info(f"Example: {random.choice(triples)}")
 
 # split data
 triple_dict = {trip[0].split(' ')[trip[-1]]: trip for trip in triples}
-spl = Split(triple_dict, which=SPL, tst=False)
+spl = Split(triple_dict, which=SPLIT_TYPE, tst=False)
 folds = spl.apply_split(features=['sentence'], input_as='pytorch', output_as='pytorch')
+NR_FOLDS = len(folds)
 
 # get embeddings
 if EMB_TYPE == 'USE':
@@ -241,11 +242,13 @@ logger.info(f"Starting from: {START_CHECKPOINT}")
 logger.info(f"Batch size: {BATCH_SIZE}")
 logger.info(f"Starting LR: {LR}")
 
-# loop through folds for cross_val
-eval_df = pd.DataFrame(index=list(range(len(folds))) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+# loop through folds for cross validation
+cross_val_df = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+
 for fold_i, fold in enumerate(folds):
 
-    cl = ContextAwareClassifier(input_lang, fold['dev'], split_type=SPL, logger=logger, cp_dir=CHECKPOINT_DIR,
+    # initialise classifier with development data and all parameters
+    cl = ContextAwareClassifier(input_lang, fold['dev'], logger=logger, cp_dir=CHECKPOINT_DIR,
                                 weights_matrix=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hidden_size=HIDDEN,
                                 batch_size=BATCH_SIZE, learning_rate=LR, start_checkpoint=START_CHECKPOINT,
                                 step_size=1, gamma=0.95)
@@ -263,7 +266,7 @@ for fold_i, fold in enumerate(folds):
 
     metrics, metrics_df, metrics_string = cl.evaluate(fold['test'], which='all')
     logger.info(metrics_string)
-    eval_df.loc[fold_i] = metrics_df[['acc', 'pred', 'rec', 'f1']]
+    cross_val_df.loc[fold_i] = metrics_df[['acc', 'pred', 'rec', 'f1']]
 
-eval_df.loc['mean'] = eval_df.mean()
-logger.info(eval_df)
+cross_val_df.loc['mean'] = cross_val_df.mean()
+logger.info(cross_val_df)

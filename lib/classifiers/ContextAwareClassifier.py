@@ -109,14 +109,13 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, input_lang, dev, logger=None, split_type='fan',
+    def __init__(self, input_lang, dev, logger=None,
                  emb_dim=768, hidden_size=32, weights_matrix=None,
                  batch_size=None, cp_dir='models/checkpoints/cam',
                  learning_rate=0.001, start_checkpoint=0, step_size=1, gamma=0.75):
         self.start_epoch = start_checkpoint
         self.cp_dir = cp_dir
         self.best_cp_dir = os.path.join(cp_dir, 'best')
-        self.split_type = split_type
         self.device, self.USE_CUDA = get_torch_device()
         self.logger = logger
 
@@ -142,7 +141,7 @@ class ContextAwareClassifier():
         self.best_perf = {'ep': 0, 'val': 30}
 
     def load_model_from_checkpoint(self):
-        cpfp = format_checkpoint_name(self.cp_dir, split_type=self.split_type, epoch_number=self.start_epoch)
+        cpfp = format_checkpoint_name(self.cp_dir, epoch_number=self.start_epoch)
         self.logger.info('Loading model from', cpfp)
         start_checkpoint = torch.load(cpfp)
         model = start_checkpoint['model']
@@ -176,7 +175,7 @@ class ContextAwareClassifier():
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
-        checkpoint_name = format_checkpoint_name(cpdir, split_type=self.split_type, epoch_number=ep)
+        checkpoint_name = format_checkpoint_name(cpdir, epoch_number=ep)
         torch.save(checkpoint, checkpoint_name)
 
     def update_lr(self, best_ep, val_f1):
