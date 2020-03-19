@@ -87,7 +87,7 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, input_lang, dev, logger=None,
+    def __init__(self, input_lang, dev, test, logger=None,
                  emb_dim=768, hidden_size=32, weights_matrix=None,
                  batch_size=None, cp_dir='models/checkpoints/cam',
                  learning_rate=0.001, start_epoch=0, step_size=1, gamma=0.75):
