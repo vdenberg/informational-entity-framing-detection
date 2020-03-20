@@ -1,4 +1,5 @@
-import argparse, random, os, sys, datetime, logging
+import argparse, random, os, sys, logging
+from datetime import datetime
 import torch
 import numpy as np
 import pandas as pd
