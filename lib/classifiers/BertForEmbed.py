@@ -114,7 +114,7 @@ class Inferencer():
         self.device = device
         self.use_cuda = use_cuda
 
-    def predict(self, model, data, return_embeddings=False, embedding_type='average'):
+    def predict(self, model, data, return_embeddings=False, embedding_type='avbert'):
         model.to(self.device)
         model.eval()
 
@@ -130,8 +130,7 @@ class Inferencer():
             with torch.no_grad():
                 outputs = model(input_ids, segment_ids, input_mask, labels=None)
                 logits, probs, sequence_output, pooled_output, (hidden_states), (attentions) = outputs
-                if embedding_type == 'average':
-                    pass #representation = sequence_output
+                if embedding_type == 'avbert':
                     representation = sequence_output.mean(axis=1) # (batch_size, sequence_length, hidden_size) ->  batch_size, hidden_size)
                 elif embedding_type == 'pooled_output':
                     representation = pooled_output  # (batch_size, hidden_size)

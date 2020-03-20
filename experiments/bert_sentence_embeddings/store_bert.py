@@ -36,7 +36,7 @@ if not os.path.exists(REPORTS_DIR):
 # Read arguments from command line
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-emb', '--embedding_type', type=str, default='avbert')
+parser.add_argument('-emb', '--embedding_type', type=str, help='options: avbert|poolbert', default='avbert')
 parser.add_argument('-pth', '--model_path', type=str, default='models/checkpoints/bert_for_embed/epoch17/')
 args = parser.parse_args()
 
