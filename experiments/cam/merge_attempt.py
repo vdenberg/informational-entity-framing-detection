@@ -5,6 +5,44 @@ import numpy as np
 import pandas as pd
 from transformers import BertTokenizer
 
+class Processor():
+    def __init__(self, sentence_ids, max_doc_length, max_sent_length):
+        self.sent_id_map = {my_id: i for i, my_id in enumerate(sentence_ids)}
+        #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
+        self.EOD_index = len(self.sent_id_map) + 1
+        self.PAD_index = self.EOD_index + 1
+        self.max_doc_length = max_doc_length + 1
+        self.max_sent_length = max_sent_length
+
+    def to_numeric_documents(self, documents):
+        numeric_context_docs = []
+        for doc in documents:
+            # to indexes
+            doc = [self.sent_id_map[sent] for sent in doc]
+            # with EOS token
+            doc += [self.EOD_index]
+            # padded
+            padding = [self.PAD_index] * (self.max_doc_length - len(doc))
+            doc += padding
+            numeric_context_docs.append(doc)
+        return numeric_context_docs
+
+    def to_numeric_sentences(self, sentences, from_preprocessed=True):
+        tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
+        numeric_sentences = []
+        for sent in sentences:
+            tokens = tokenizer.tokenize(sent)
+            segment_ids = [0] * len(tokens)
+            input_ids = tokenizer.convert_tokens_to_ids(tokens)
+            input_mask = [1] * len(input_ids)
+            padding = [0] * (self.max_sent_length - len(input_ids))
+            input_ids += padding
+            input_mask += padding
+            segment_ids += padding
+            numeric_sent = (input_ids, input_mask, segment_ids)
+            numeric_sentences.append(numeric_sent)
+        return numeric_sentences
+
 # =====================================================================================
 #                    PARAMETERS
 # =====================================================================================
@@ -109,49 +147,10 @@ logger.info(f"Max len: {MAX_DOC_LEN}")
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
 EMBED_FP = f'data/basil_w_{EMB_TYPE}.csv'
 
-class Processor():
-    def __init__(self, sentence_ids, max_doc_length, max_sent_length):
-        self.sent_id_map = {my_id: i for i, my_id in enumerate(sentence_ids)}
-        #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
-        self.EOD_index = len(self.sent_id_map) + 1
-        self.PAD_index = self.EOD_index + 1
-        self.max_doc_length = max_doc_length + 1
-        self.max_sent_length = max_sent_length
-
-    def to_numeric_documents(self, documents):
-        numeric_context_docs = []
-        for doc in documents:
-            # to indexes
-            doc = [self.sent_id_map[sent] for sent in doc]
-            # with EOS token
-            doc += [self.EOD_index]
-            # padded
-            padding = [self.PAD_index] * (self.max_doc_length - len(doc))
-            doc += padding
-            numeric_context_docs.append(doc)
-        return numeric_context_docs
-
-    def to_numeric_sentences(self, sentences, from_preprocessed=True):
-        tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
-        numeric_sentences = []
-        for sent in sentences:
-            tokens = tokenizer.tokenize(sent)
-            segment_ids = [0] * len(tokens)
-            input_ids = tokenizer.convert_tokens_to_ids(tokens)
-            input_mask = [1] * len(input_ids)
-            padding = [0] * (self.max_sent_length - len(input_ids))
-            input_ids += padding
-            input_mask += padding
-            segment_ids += padding
-            numeric_sent = (input_ids, input_mask, segment_ids)
-            numeric_sentences.append(numeric_sent)
-        return numeric_sentences
-
-
 if not os.path.exists(DATA_FP):
     string_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
     string_data = pd.read_csv(string_data_fp,
-                              columns=['sentence_ids', 'context_document', 'sentence', 'label', 'index'],
+                              names=['sentence_ids', 'context_document', 'sentence', 'label', 'index'],
                               dtype={'my_id': str, 'sentences': str, 'tokens': str, 'label': int, 'index': int})
     processor = Processor(sentence_ids=string_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN, max_sent_length=MAX_SENT_LEN)
     string_data['context_doc_num'] = processor.to_numeric_documents(string_data.context_document.values)
