@@ -129,12 +129,12 @@ parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn of
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=1000)
+parser.add_argument('-ep', '--epochs', type=int, default=100)
 
 # OPTIMIZING PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=24)
+parser.add_argument('-bs', '--batch_size', type=int, default=16)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
+parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
