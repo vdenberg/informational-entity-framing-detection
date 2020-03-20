@@ -83,14 +83,14 @@ class BertForSequenceClassification(BertPreTrainedModel):
             inputs_embeds=inputs_embeds,
         )
 
-        sequence_output = outputs[0] # according to pytorch doc: (batch_size, sequence_length, hidden_size)
+        sequence_output = outputs[0] # according to pytorch doc for BERTPretrainedModel: (batch_size, sequence_length, hidden_size)
         pooled_output = outputs[1]
 
-        pooled_output = self.dropout(pooled_output)
+        pooled_output = self.dropout(pooled_output) # according to pytorch doc for BERTPretrainedModel: (batch_size, hidden_size)
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output,) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs,) + (sequence_output, pooled_output,) + outputs[2:]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
@@ -102,7 +102,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, probs, sequence_ouput, (hidden_states), (attentions)
+        return outputs  # (loss), logits, probs, sequence_ouput, pooled_output, (hidden_states), (attentions)
 
 
 class Inferencer():
@@ -114,7 +114,7 @@ class Inferencer():
         self.device = device
         self.use_cuda = use_cuda
 
-    def predict(self, model, data, return_embeddings=False):
+    def predict(self, model, data, return_embeddings=False, embedding_type='average'):
         model.to(self.device)
         model.eval()
 
@@ -129,18 +129,22 @@ class Inferencer():
 
             with torch.no_grad():
                 outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits, probs, sequence_output, (hidden_states), (attentions) = outputs
+                logits, probs, sequence_output, pooled_output, (hidden_states), (attentions) = outputs
+                if embedding_type == 'average':
+                    pass #representation = sequence_output
+                    representation = sequence_output.mean(axis=1) # (batch_size, sequence_length, hidden_size) ->  batch_size, hidden_size)
+                elif embedding_type == 'pooled_output':
+                    representation = pooled_output  # (batch_size, hidden_size)
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
-            agg_hidden = sequence_output.mean(axis=1)
 
             if self.use_cuda:
-                agg_hidden = list(agg_hidden[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
+                representation = list(representation[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
             else:
-                agg_hidden = list(agg_hidden[0].numpy()) # .detach().cpu() necessary here on gpu
-            embeddings.append(agg_hidden)
+                representation = list(representation[0].numpy()) # .detach().cpu() necessary here on gpu
+            embeddings.append(representation)
 
             if len(preds) == 0:
                 preds.append(probs.detach().cpu().numpy())
@@ -191,8 +195,3 @@ def save_model(model_to_save, model_dir, identifier):
     model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
     torch.save(model_to_save.state_dict(), output_model_file)
     model_to_save.config.to_json_file(output_config_file)
-
-    #test again
-
-
-

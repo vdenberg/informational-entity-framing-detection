@@ -77,7 +77,7 @@ class ContextAwareModel(nn.Module):
             my_idx = target_idx[item]
             target_encoder_output[item] = encoder_outputs[my_idx,item,:]
 
-        output = self.out(target_encoder_output) # sigmoid function that returns batch_size * 1
+        output = self.out(target_encoder_output)  # sigmoid function that returns batch_size * 1
         return output
 
     def initHidden(self, batch_size):
@@ -89,7 +89,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, input_lang, dev, test, logger=None,
                  emb_dim=768, hidden_size=32, weights_matrix=None,
-                 batch_size=None, cp_dir='models/checkpoints/cam',
+                 batch_size=24, cp_dir='models/checkpoints/cam',
                  learning_rate=0.001, start_epoch=0, step_size=1, gamma=0.75):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
