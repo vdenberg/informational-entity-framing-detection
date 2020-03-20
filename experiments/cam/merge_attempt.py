@@ -8,7 +8,7 @@ from lib.utils import get_torch_device
 from lib.handle_data.SplitData import Split
 from lib.classifiers.MergeAttempt import BertForSequenceClassification
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-from transformers.optimization import AdamW
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.optim import lr_scheduler
 from lib.evaluate.StandardEval import my_eval
 
@@ -276,7 +276,9 @@ for fold_i, fold in enumerate(folds):
                                                output_hidden_states=False, output_attentions=False)
 
     bert_optimizer = AdamW(bert_model.parameters(), lr=LR, eps=1e-8)
-    bert_scheduler = lr_scheduler.CyclicLR(bert_optimizer, base_lr=LR, max_lr=0.1)
+    num_train_optimization_steps = len(train_batches) * N_EPOCHS
+    num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+    bert_scheduler = get_linear_schedule_with_warmup(bert_optimizer, num_warmup_steps=num_train_warmup_steps, num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
     bert_model.to(device)
     bert_model.train()
