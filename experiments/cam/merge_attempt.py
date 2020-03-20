@@ -129,12 +129,13 @@ parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn of
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-eval', '--eval', action='store_true', default=False)
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=100)
+parser.add_argument('-ep', '--epochs', type=int, default=1000)
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=16)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
+parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=1e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
@@ -161,6 +162,7 @@ N_EPOCHS = args.epochs
 BATCH_SIZE = args.batch_size
 WARMUP_PROPORTION = args.warmup_proportion
 LR = args.learning_rate
+BERT_LR = args.bert_learning_rate
 GAMMA = args.gamma
 
 MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
@@ -275,7 +277,7 @@ for fold_i, fold in enumerate(folds):
     bert_model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                output_hidden_states=False, output_attentions=False)
 
-    bert_optimizer = AdamW(bert_model.parameters(), lr=LR, eps=1e-8)
+    bert_optimizer = AdamW(bert_model.parameters(), lr=BERT_LR, eps=1e-8)
     num_train_optimization_steps = len(train_batches) * N_EPOCHS
     num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
     bert_scheduler = get_linear_schedule_with_warmup(bert_optimizer, num_warmup_steps=num_train_warmup_steps, num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
