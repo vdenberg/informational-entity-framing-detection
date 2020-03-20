@@ -318,7 +318,7 @@ for fold_i, fold in enumerate(folds):
         dev_preds = np.argmax(dev_preds[0], axis=1)
         bert_model.train()
 
-        _, _, val_perf_string = my_eval(fold['dev'].label, dev_preds)
+        _, val_perf_string = my_eval(fold['dev'].label, dev_preds)
         logger.info(f'epoch {ep} (took {elapsed}): Av loss = {epoch_loss / len(train_batches)}, Val perf: {val_perf_string}')
         save_bert_model(bert_model, CHECKPOINT_DIR, f'epoch{ep}')
 
