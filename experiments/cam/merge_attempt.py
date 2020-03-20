@@ -76,7 +76,7 @@ def make_weight_matrix(data, embed_fp, EMB_DIM):
 
 def to_tensors(split, device):
     # to arrays if needed
-    contexts = np.array([list(el) for el in split.context_document_num.values])
+    contexts = np.array([list(el) for el in split.context_doc_num.values])
     token_ids, token_mask, tok_seg_ids = [np.array(i) for i in zip(*[tuple(el) for el in split.sentence_num.values])]
 
     # to tensors
