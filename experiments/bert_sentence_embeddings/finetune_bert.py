@@ -17,7 +17,7 @@ logger = logging.getLogger()
 
 #######
 # FROM:
-# https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
+# ...
 #####
 
 
@@ -104,7 +104,6 @@ with open(DATA_DIR + "dev_features.pkl", "rb") as f:
 num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS
 num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 
-
 inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
 
 if __name__ == '__main__':
@@ -122,9 +121,8 @@ if __name__ == '__main__':
 
     model.to(device)
 
-    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=1e-8)
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps, num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
     global_step = 0
     nb_tr_steps = 0
@@ -149,9 +147,9 @@ if __name__ == '__main__':
             input_ids, input_mask, segment_ids, label_ids = batch
             #print(label_ids)
 
-            model.zero_grad()
+            model.zero_grad() # optim.zero_grad not needed
 
-            outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
+            outputs = model(input_ids=input_ids, attention_mask=input_mask, token_type_ids=segment_ids, labels=label_ids)
             #print(outputs)
             (loss), logits, probs, sequence_outputs, (hidden_states), (attentions) = outputs
             loss = outputs[0]

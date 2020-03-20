@@ -90,9 +90,9 @@ def seperate_sets(basil, sents, features, output_as='df', tst=False):
       train_sents, dev_sents, test_sents = train_sents[:50], dev_sents[:10], test_sents[:10]
 
     if output_as != 'huggingface':
-        train_data = basil.loc[train_sents, features + ['bias']]
-        dev_data = basil.loc[dev_sents, features + ['bias']]
-        test_data = basil.loc[test_sents, features + ['bias']]
+        train_data = basil.loc[dev_sents, features + ['label']]
+        dev_data = basil.loc[dev_sents, features + ['label']]
+        test_data = basil.loc[test_sents, features + ['label']]
 
     else:
         train_data = basil.loc[train_sents, features]
@@ -103,9 +103,9 @@ def seperate_sets(basil, sents, features, output_as='df', tst=False):
         return {'train': train_data, 'dev': dev_data, 'test': test_data}
 
     else:
-        train_X, train_y = train_data[features], train_data.bias
-        dev_X, dev_y = dev_data[features], dev_data.bias
-        test_X, test_y = test_data[features], test_data.bias
+        train_X, train_y = train_data[features], train_data.label
+        dev_X, dev_y = dev_data[features], dev_data.label
+        test_X, test_y = test_data[features], test_data.label
         sets = ((train_X, train_y), (dev_X, dev_y), (test_X, test_y))
         return sets
 
@@ -127,6 +127,7 @@ class BergSplit:
         self.split_fp = split_fp
         self.split_input = split_input
         self.basil = load_basil()
+        self.basil.index = [el.lower() for el in self.basil.index]
         self.split = self.load_split(self.split_fp)
         self.tst = tst
 
@@ -157,7 +158,7 @@ class BergSplit:
         by_st = self.basil.groupby('story')
         sent_by_st = {n: gr.index.to_list() for n, gr in by_st}
 
-        mapping = pd.DataFrame(self.basil.index, index=self.basil.index)
+        mapping = pd.DataFrame(self.basil.index, index=self.basil.index, columns=['uniq_id'])
         mapping['split'] = None
 
         for fold_i in range(10):
@@ -167,7 +168,7 @@ class BergSplit:
                     sents = sent_by_st[int(story)]
                     mapping.loc[sents,'split'] = str(fold_i) + '-' + section
 
-        mapping = mapping.set_index('split')['uniq_idx']
+        mapping = mapping.set_index('split')['uniq_id']
         return mapping
 
     def apply_split(self, features, input_as='df', output_as='df'):
@@ -266,6 +267,7 @@ class Split:
                 f['name'] = i
         elif self.which == 'fan':
             for i, f in enumerate(split_basil):
+                print(len(f))
                 f['name'] = 'fan'
         return split_basil
 

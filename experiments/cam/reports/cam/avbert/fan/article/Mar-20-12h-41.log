@@ -1,0 +1,7 @@
+INFO:root:Start Logging to reports/cam/avbert/fan/article/Mar-20-12h-41.log
+INFO:root:Namespace(batch_size=24, context_naive=False, context_type='article', embedding_type='avbert', epochs=1000, eval=False, gamma=0.95, hidden_size=50, learning_rate=0.0002, no_padding=False, save_epoch_cp_every=1, seed_val=124, split_type='fan', start_epoch=0, step_info_every=1000, warmup_proportion=0.1)
+INFO:root:***** Loading data *****
+INFO:root:Embedding type: avbert
+INFO:root:Context: article
+INFO:root:Split type: fan
+INFO:root:Max len: 76

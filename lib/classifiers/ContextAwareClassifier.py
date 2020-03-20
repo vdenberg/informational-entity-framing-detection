@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 from torch.autograd import Variable
-from torch import optim
-from torch.optim.lr_scheduler import StepLR
+from transformers.optimization import AdamW
+from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name, get_torch_device
@@ -111,8 +111,8 @@ class ContextAwareClassifier():
         self.model = self.model.to(self.device)
         if self.USE_CUDA: self.model.cuda()
 
-        self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
-        self.scheduler = StepLR(self.optimizer, step_size=step_size, gamma=gamma)
+        self.optimizer = AdamW(self.model.parameters(), lr=learning_rate, eps=1e-8)
+        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=learning_rate, max_lr=0.1) #StepLr: step_size=step_size, gamma=gamma)
         self.dev = dev
         self.test = test
         self.cp_name = None # depends on split type and current fold
@@ -147,6 +147,7 @@ class ContextAwareClassifier():
         loss.backward()
 
         self.optimizer.step()
+        self.scheduler.step()
         return loss.item()
 
     def save_checkpoint(self, cpdir, ep):
@@ -165,31 +166,6 @@ class ContextAwareClassifier():
         val_performance = self.evaluate(self.dev, which='string')
         test_performance = self.evaluate(self.test, which='string')
         self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
-
-    def decide_if_schedule_step(self, ep):
-        # check if its a good performance and whether to save / update LR
-
-        val_f1 = self.evaluate(self.dev, which='f1')
-
-        if val_f1 < 30:
-            # val too low, do nothing
-            pass
-        elif val_f1 < self.best_perf['val_f1']:
-            # val below best, do nothing
-            pass
-        else:
-            # save this configuration and check if lr reduction is warranted
-            self.save_checkpoint(cpdir=self.best_cp_dir, ep=ep)
-
-            diff = val_f1 - self.best_perf['val_f1']  # e.g. 35 - 34.5
-            if val_f1 < 32:
-                # improvement has to be big
-                if diff >= 0.5:
-                    self.update_lr(ep, val_f1)
-            else:
-                # improvement can be smaller
-                if diff >= 0.25:
-                    self.update_lr(ep, val_f1)
 
     def train_batches(self, fold, print_step_every):
         self.cp_name = fold['name']
@@ -230,6 +206,7 @@ class ContextAwareClassifier():
             total_loss += epoch_av_loss
 
             elapsed = format_runtime(time.time()-start_time)
+            self.scheduler.step()
             if (ep % save_epoch_every == 0) & (ep > 0):
                 epochs_av_loss = total_loss / ep
                 val_performance = self.evaluate(fold['dev'], which='string')

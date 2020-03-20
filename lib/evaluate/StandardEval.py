@@ -3,7 +3,7 @@ from sklearn.metrics import precision_recall_fscore_support
 import pandas as pd
 
 
-def get_metrics(task_name, labels, preds):
+def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
     #mcc = matthews_corrcoef(labels, preds)
@@ -17,7 +17,6 @@ def get_metrics(task_name, labels, preds):
 
     #"mcc": mcc
     return {
-        "task": task_name,
         "tp": tp,
         "tn": tn,
         "fp": fp,
@@ -29,8 +28,8 @@ def get_metrics(task_name, labels, preds):
     }
 
 
-def my_eval(task_name, labels, preds, av_loss=None):
-    metrics_dict = get_metrics(task_name, labels, preds)
+def my_eval(labels, preds, av_loss=None):
+    metrics_dict = get_metrics(labels, preds)
 
     # make string in the style that I like
     acc, f1 = metrics_dict['acc'], metrics_dict['f1']
@@ -39,7 +38,7 @@ def my_eval(task_name, labels, preds, av_loss=None):
     metrics_string = ['Acc: {:.4f}'.format(acc)] + metrics_string + ['F1: {:.4f}'.format(f1)]
     metrics_string = " ".join(metrics_string)
 
-    metrics_df = pd.DataFrame(metrics_dict, index=[metrics_dict['task']]).drop(columns=['task'])
+    metrics_df = pd.DataFrame(metrics_dict)
 
     if av_loss:
         metrics_dict['average_loss'] = av_loss

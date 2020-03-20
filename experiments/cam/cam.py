@@ -96,23 +96,7 @@ def read_documents(fp, max_seq_length):
     return input_lang, triples
 
 
-def make_weight_matrix(input_lang, embed_fp, EMB_DIM):
-    basil = pd.read_csv(embed_fp, index_col=0).fillna('')
-    basil = basil.rename(columns={'USE':'embeddings', 'sbert_pre':'embeddings', 'avbert':'embeddings'})
-    sentence_embeddings = {i.lower(): np.array(u.strip('[]').split(', ')) for i, u in zip(basil.index, basil.embeddings)}
 
-    matrix_len = input_lang.n_words
-    weights_matrix = np.zeros((matrix_len, EMB_DIM))
-
-    for word, index in input_lang.word2index.items(): # word here is a sentence id like 91fox27
-        if (word == 'PAD') or (word == 'EOS') or (word == '11fox23'):
-            pass
-        else:
-            embedding = sentence_embeddings[word]
-            weights_matrix[index] = embedding
-
-    #logging.info(f'Found embeddings for all but {words_not_found}')
-    return weights_matrix
 
 # =====================================================================================
 #                    PARAMETERS
