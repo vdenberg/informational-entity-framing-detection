@@ -28,7 +28,6 @@ class FFLayer(nn.Module):
         return self.out(input)
 '''
 
-
 class ContextAwareModel(nn.Module):
     def __init__(self, input_size, hidden_size, weights_matrix, device):
         super(ContextAwareModel, self).__init__()
