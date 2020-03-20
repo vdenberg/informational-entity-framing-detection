@@ -1,0 +1,11 @@
+*.dmb
+*.rsc
+*.int
+*.lk
+*.zip
+*.ipynb
+*.pkl
+create_data/emnlp19-BASIL/*
+*.DS_Store
+models/checkpoints/bert_for_embed/
+data/*.csv
