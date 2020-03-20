@@ -272,7 +272,7 @@ for fold_i, fold in enumerate(folds):
 
     #inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 
-    bert_model = BertForSequenceClassification(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+    bert_model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                output_hidden_states=False, output_attentions=False)
 
     bert_optimizer = AdamW(bert_model.parameters(), lr=LR, eps=1e-8)
