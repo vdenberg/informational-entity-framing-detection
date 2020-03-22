@@ -238,7 +238,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 # split data
-spl = Split(data, which=SPLIT_TYPE, tst=False)
+spl = Split(data, which=SPLIT_TYPE, tst=False, permutation=True)
 folds = spl.apply_split(features=['context_doc_num', 'sentence_num', 'position'], input_as='df', output_as='df')
 NR_FOLDS = len(folds)
 
@@ -246,8 +246,9 @@ NR_FOLDS = len(folds)
 WEIGHTS_MATRIX = make_weight_matrix(data, EMBED_FP, EMB_DIM)
 
 logger.info(f"--> Read {len(data)} data points")
-logger.info(f"--> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f"--> Example: {data.cut_and_mix_into_ten_folds(n=1).context_doc_num.values}")
 logger.info(f"--> Nr folds: {NR_FOLDS}")
+logger.info(f"--> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f"--> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 logger.info(f"--> Columns: {data.columns}")
 
