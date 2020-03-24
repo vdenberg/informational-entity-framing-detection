@@ -141,7 +141,7 @@ class BertWrapper:
         self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
 
-        token_ids, token_masks, tok_seg_ids, contexts, labels, positions = batch
+        token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
         loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids, attention_mask=token_masks,
                                                                     token_type_ids=tok_seg_ids, labels=labels)
@@ -180,7 +180,7 @@ class BertWrapper:
 
     def get_embedding_output(self, batch, emb_type):
         batch = tuple(t.to(self.device) for t in batch)
-        token_ids, token_masks, tok_seg_ids, contexts, labels, positions = batch
+        token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
         with torch.no_grad():
             loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids,

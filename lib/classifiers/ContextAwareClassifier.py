@@ -129,7 +129,7 @@ class ContextAwareClassifier():
         self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
 
-        _, _, _, documents, labels, positions = batch
+        _, _, _, documents, labels, labels_long, positions = batch
 
         sigm_output = self.model(documents, positions)
         #print(labels.type())
@@ -154,7 +154,7 @@ class ContextAwareClassifier():
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            _, _, _, documents, labels, positions = batch
+            _, _, _, documents, labels, labels_long, positions = batch
 
             with torch.no_grad():
                 sigm_output = self.model(documents, positions)
