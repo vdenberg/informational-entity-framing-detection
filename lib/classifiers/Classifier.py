@@ -16,6 +16,7 @@ class Classifier:
         self.patience = patience
         self.fig_dir = fig_dir
         self.model_name = model_name
+        self.print_every = 50
 
         # empty now and set during or after training
         self.train_time = 0
@@ -31,7 +32,9 @@ class Classifier:
         for step, batch in enumerate(train_batches):
 
             loss = self.model.train_on_batch(batch)
-            self.logger.info(f' > Step {step}: loss = {loss}')
+
+            if (step > 0) & (step % self.print_every):
+                self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {loss}')
 
             epoch_loss += loss
         elapsed = time.time() - start
