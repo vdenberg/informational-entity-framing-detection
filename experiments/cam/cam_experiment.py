@@ -292,13 +292,11 @@ if FT_EMB:
     finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 
     for fold in folds:
-        logger.info(f'> Finetuning on {fold["name"]} (sizes: {fold["sizes"]})')
-
-        logger.info(f'> Init BERT')
         bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
                            bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
                            n_train_batches=len(fold['train_batches']))
-        logger.info(f'> Init Classifier')
+
+        logger.info(f'> Finetuning on {fold["name"]} (sizes: {fold["sizes"]})')
         cl = Classifier(logger=logger, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
                         fig_dir=FIG_DIR, model_name='bert')
         cl.train_on_fold(fold)
@@ -344,13 +342,12 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 cam_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 for fold in folds:
-    logger.info(f' CAM Training on {fold["name"]} (sizes: {fold["sizes"]})')
-
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
                                  emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
                                  batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA)
 
+    logger.info(f' CAM Training on {fold["name"]} (sizes: {fold["sizes"]})')
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam')
     cl.train_on_fold(fold)
     cam_f1s.loc[fold['name']] = cl.test_perf
