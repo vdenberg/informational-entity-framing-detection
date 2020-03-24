@@ -31,6 +31,7 @@ class Classifier:
         for step, batch in enumerate(train_batches):
 
             loss = self.model.train_on_batch(batch)
+            self.logger.info(f' > Step {step}: loss = {loss}')
 
             epoch_loss += loss
         elapsed = time.time() - start
@@ -66,7 +67,6 @@ class Classifier:
         losses = []
         for ep in range(self.n_epochs):
             # ep = self.start_epoch + ep
-
             train_loss, ep_elapsed, val_loss, val_f1, val_perf_string = self.train_epoch_then_val(train_batches,
                                                                                                   dev_batches,
                                                                                                   dev_lables)
