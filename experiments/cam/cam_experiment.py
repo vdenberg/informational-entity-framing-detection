@@ -296,7 +296,7 @@ if FT_EMB:
                            bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
                            n_train_batches=len(fold['train_batches']))
 
-        logger.info(f'> Finetuning on {fold["name"]} (sizes: {fold["sizes"]})')
+        logger.info(f' Finetuning on {fold["name"]} (sizes: {fold["sizes"]})')
         cl = Classifier(logger=logger, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
                         fig_dir=FIG_DIR, model_name='bert')
         cl.train_on_fold(fold)

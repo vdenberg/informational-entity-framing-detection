@@ -33,7 +33,7 @@ class Classifier:
 
             loss = self.model.train_on_batch(batch)
 
-            if (step > 0) & (step % self.print_every):
+            if (step > 0) & (step % self.print_every == 0):
                 self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {loss}')
 
             epoch_loss += loss
