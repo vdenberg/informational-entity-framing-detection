@@ -108,8 +108,8 @@ parser.add_argument('-spl', '--split_type', type=str, default='berg')
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
 parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
                     help='Whether to finetune pretrained BERT embs')
-parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
+parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=1000)
@@ -251,7 +251,6 @@ logger.info(f" Max len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-
 # split data
 spl = Split(data, which=SPLIT_TYPE, tst=DEBUG, subset=SUBSET)
 
@@ -259,7 +258,6 @@ folds = spl.apply_split(features=['context_document', 'context_doc_num', 'token_
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
-
 
 # batch data
 for fold_i, fold in enumerate(folds):

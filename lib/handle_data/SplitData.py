@@ -189,6 +189,7 @@ class BergSplit:
             split_sent_ids = {}
             total = 0
             for set_type in ['train', 'dev', 'test']:
+                print(stories_split_one_way)
                 set_type_stories = stories_split_one_way[set_type]
 
                 set_type_sent_ids = []
