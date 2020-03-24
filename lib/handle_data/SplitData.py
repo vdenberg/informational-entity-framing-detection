@@ -12,7 +12,12 @@ def order_stories(basil):
 
 
 def cut_in_ten(ordered_stories):
-    splits = [ordered_stories[i:i+10] for i in range(0, 100, 10)]
+    n_stories = len(ordered_stories) # usually 100
+
+    cut_size = n_stories // 10
+    n_stories -= n_stories % 10
+
+    splits = [ordered_stories[i:i+cut_size] for i in range(0, n_stories, cut_size)]
     return splits
 
 
@@ -27,14 +32,17 @@ def mix_into_ten_folds(list_of_non_random_stories):
     for s in list_of_non_random_stories:
         random.shuffle(s)
 
-    # zip up to mix sizes and make list to enable shuffling
-    randomizes_stories = [list(tup) for tup in zip(*list_of_non_random_stories)]
+    # align size sections to form 10 sections that each contain 1 of each size bin
+    list_of_non_random_stories = zip(*list_of_non_random_stories)
 
-    # shuffle again just to be sure
-    for stories in randomizes_stories:
+    # turn into lists to allow use of random.shuffle
+    randomized_stories = [list(tup) for tup in list_of_non_random_stories]
+
+    # shuffle again to make sure an item of random size makes it into dev and test
+    for stories in randomized_stories:
         random.shuffle(stories)
 
-    return randomizes_stories
+    return randomized_stories
 
 
 # Fan split helpers
@@ -102,87 +110,106 @@ def load_basil_w_tokens():
 
 
 class BergSplit:
-    def __init__(self, split_input, split_dir='data/splits/berg_split', permutation=False):
-        self.split_dir = split_dir
+    def __init__(self, split_input, split_dir='data/splits/berg_split', subset=1.0):
+        split_fn = 'split.json'
+        self.split_fp = os.path.join(split_dir, split_fn)
         self.split_input = split_input
-        self.basil = load_basil()
-        self.split = self.load_berg_split(self.split_dir, permutation)
+        self.basil = load_basil().sample(frac=subset)
 
-    def create_split(self, permutation):
+    def create_split(self):
         # order stories from most to least sentences in a story
         ordered_stories = order_stories(self.basil)
 
-        if not permutation:
-            #make ten cuts
-            list_of_non_random_stories = cut_in_ten(ordered_stories)
-        else:
-            # make ten "cuts" that are just the same list that's gonna get mixed up to have varying sizes in dev and test
-            list_of_non_random_stories = [ordered_stories for i in range(10)]
+        # make ten cuts
+        list_of_non_random_stories = cut_in_ten(ordered_stories)
 
-        splits = mix_into_ten_folds(list_of_non_random_stories)
+        # mix them up
+        ten_folds = mix_into_ten_folds(list_of_non_random_stories)
 
-        # now there's 10 folds of either size = 10 stories or size = 100 stories depending on whether we cut in 10 or not
-        if not permutation:
-            split = {'train': list(zip(*splits[:-2])),
-                     'dev': [[el] for el in splits[-2]],  # 1 or 10 dev stories for each 8 or 80 training stories
-                     'test': [[el] for el in splits[-1]]}  # 1 or 10 test stories for each 8 or 80 training stories
-        else:
-            split = {'train': list(zip(*splits[:-20])),
-                     'dev': [[el] for el in splits[-20:-10]],  # 1dev stories for each 8 or 80 training stories
-                     'test': [[el] for el in splits[-10:]]}  # 1 or 10 test stories for each 8 or 80 training stories
+        # now there's 10 folds of each 10 stories
+        fold_orders = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+                       [2, 3, 4, 5, 6, 7, 8, 9, 0, 1],
+                       [3, 4, 5, 6, 7, 8, 9, 0, 1, 2],
+                       [4, 5, 6, 7, 8, 9, 0, 1, 2, 3],
+                       [5, 6, 7, 8, 9, 0, 1, 2, 3, 4],
+                       [6, 7, 8, 9, 0, 1, 2, 3, 4, 5],
+                       [7, 8, 9, 0, 1, 2, 3, 4, 5, 6],
+                       [8, 9, 0, 1, 2, 3, 4, 5, 6, 7],
+                       [9, 0, 1, 2, 3, 4, 5, 6, 7, 8],
+                       ]
 
-        with open(self.split_dir, 'w') as f:
-            string = json.dumps(split)
+        folds_in_ten_orders = []
+        for fold_order in fold_orders:
+            order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
+            folds_in_ten_orders.append(order_of_ten_folds)
+
+        # now there's ten permutations of the ten folds
+        stories_split_ten_ways = []
+        for ordered_folds in folds_in_ten_orders:
+            train_stories = []
+            train_stories_list = ordered_folds[:8]
+            for s in train_stories_list:
+                train_stories.extend(s)
+            dev_stories = ordered_folds[8]
+            test_stories = ordered_folds[9]
+            stories_split_one_way = {'train': train_stories, 'dev': dev_stories, 'test': test_stories}
+            stories_split_ten_ways.append(stories_split_one_way)
+
+        splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
+        with open(self.split_fp, 'w') as f:
+            string = json.dumps(splits_json)
             f.write(string)
 
-        return split
+        return splits_json
 
-    def load_berg_split(self, split_dir, permutation):
-        split_fn = 'split_permuted.json' if permutation else 'split.json'
-        split_fp = os.path.join(split_dir, split_fn)
-        if not os.path.exists(split_fp):
-            self.create_split(permutation)
+    def load_berg_story_split(self, recreate=False):
+        if not os.path.exists(self.split_fp):
+            self.create_split()
 
-        with open(split_fp, 'r') as f:
+        with open(self.split_fp, 'r') as f:
             return json.load(f)
 
-    def map_split_to_sentences(self):
+    def map_stories_to_sentences(self):
         by_st = self.basil.groupby('story')
-        sent_by_st = {n: gr.index.to_list() for n, gr in by_st}
-
-        mapping = pd.DataFrame(self.basil.index, index=self.basil.index, columns=['uniq_id'])
-        mapping['split'] = None
-
-        for fold_i in range(10):
-            for section in self.split:
-                stories = self.split[section][fold_i]
-                for story in stories:
-                    sents = sent_by_st[int(story)]
-                    mapping.loc[sents,'split'] = str(fold_i) + '-' + section
-
-        mapping = mapping.set_index('split')['uniq_id']
-        return mapping
+        sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
+        return sent_by_story
 
     def return_split(self):
-        mapping = self.map_split_to_sentences()
-        split = {}
-        for fold_i in range(10):
-            fold = split.setdefault(f'{fold_i}', {})
+        """ Returns list of folds and the sentence ids associated with their set types.
+        :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
+        """
+        # ...
+        story_split = self.load_berg_story_split(recreate=True)
 
-            train_sents = mapping.loc[str(fold_i) + '-train']
-            dev_sents = mapping.loc[str(fold_i) + '-dev']
-            test_sents = mapping.loc[str(fold_i) + '-test']
+        sent_by_story = self.map_stories_to_sentences()
 
-            fold['train'] = train_sents
-            fold['dev'] = dev_sents
-            fold['test'] = test_sents
-        return split
+        splits_w_sent_ids = []
+        for split_i, stories_split_one_way in story_split.items():
+            split_sent_ids = {}
+            total = 0
+            for set_type in ['train', 'dev', 'test']:
+                set_type_stories = stories_split_one_way[set_type]
+
+                set_type_sent_ids = []
+                for story in set_type_stories:
+
+                    if story in sent_by_story:
+                        sent_ids = sent_by_story[story]
+                        set_type_sent_ids.extend(sent_ids)
+
+                split_sent_ids[set_type] = set_type_sent_ids
+                total += len(set_type_sent_ids)
+
+            splits_w_sent_ids.append(split_sent_ids)
+
+        return splits_w_sent_ids
 
 
 class FanSplit:
-    def __init__(self, split_input, split_dir):
+    def __init__(self, split_input, split_dir, subset=1.0):
         self.split_input = split_input
-        self.basil = load_basil_w_tokens()
+        self.basil = load_basil_w_tokens().sample(frac=subset)
         self.split_dir = split_dir
 
     def load_fan_tokens(self, setname):
@@ -206,70 +233,72 @@ class FanSplit:
         return train_sents, dev_sents, test_sents
 
     def return_split(self):
+        """ Returns list of folds and the sentence ids associated with their set types.
+        :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
+        """
         train_sents, dev_sents, test_sents = self.match_fan()
-        return {'0': {'train': train_sents, 'dev': dev_sents, 'test': test_sents}}
+        return [{'train': train_sents, 'dev': dev_sents, 'test': test_sents}]
 
 
 class Split:
-    def __init__(self, split_input, which='berg', split_loc='data/splits/', tst=False, permutation=False):
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0):
         """
+        Splits input basil-like dataframe into folds.
 
-        :type which: string specifying whether fan split or own split should be used
-        :type feature: whether you want tokens, embeddings, or other from basil dataset
+        :param input_dataframe: dataframe with at least all the same fields as basil_raw
+        :param which: string specifying whether fan split or own split should be used
         """
-        #assert isinstance(split_input, dict)
+        assert isinstance(input_dataframe, pd.DataFrame)
 
-        self.split_input = split_input
+        self.input_dataframe = input_dataframe
         self.which = which
-        self.basil = load_basil()
         self.tst = tst
 
         if self.which == 'fan':
-            self.spl = FanSplit(split_input, split_dir=split_loc + '/fan_split', tst=tst)
-            self.nr_folds = 1
+            self.spl = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
 
         elif self.which == 'berg':
-            self.spl = BergSplit(split_input, split_dir=split_loc + '/berg_split', tst=tst, permutation=permutation)
-            self.nr_folds = 10
-
-        else:
-            print("Which split?")
-
-        self.split = self.spl.return_split()
+            self.spl = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
 
     def apply_split(self, features):
-        split = self.spl.return_split()
+        """
+        Applies nr of folds and order of fold content to the input dataframe.
 
-        applied_split = {}
-        for fold_i in range(self.nr_folds):
+        :param features: whether you want tokens, embeddings, or other from basil dataset
+        :return: (dict) a list of folds,
+         each a dict of set types (train, dev, test) containing slice of input df
+        """
+        empty_folds = self.spl.return_split()
 
-            train_sents = split[str(fold_i)]['train']
-            dev_sents = split[str(fold_i)]['dev']
-            test_sents = split[str(fold_i)]['test']
+        filled_folds = []
+        for i, empty_fold in enumerate(empty_folds):
 
-            if self.tst:
-                train_sents, dev_sents, test_sents = train_sents[:50], dev_sents[:10], test_sents[:10]
+            train_sent_ids = empty_fold['train']
+            dev_sent_ids = empty_fold['dev']
+            test_sent_ids = empty_fold['test']
 
-            #train_dict = [self.split_input[id.lower()] for id in train_sents]
-            #dev_dict = [self.split_input[id.lower()] for id in dev_sents]
-            #test_dict = [self.split_input[id.lower()] for id in test_sents]
+            # if bias -> label renaming not executed in other scripts, fix it here
+            if 'label' not in self.input_dataframe.columns:
+                if 'bias' in self.input_dataframe.columns:
+                    print('Please replace basil column name "bias" with "label."')
+                    self.input_dataframe.rename({'bias': 'label'})
 
-            train_df = self.basil.loc[dev_sents, features + ['label']]
-            dev_df = self.basil.loc[dev_sents, features + ['label']]
-            test_df = self.basil.loc[test_sents, features + ['label']]
+            train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
+            dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             #train_X, train_y = train_df[features], train_df.label
             #dev_X, dev_y = dev_df[features], dev_df.label
             #test_X, test_y = test_df[features], test_df.label
 
-            applied_split[fold_i]['train'] = {'as_dict': train_dict, 'as_df': train_df}
-            applied_split[fold_i]['dev'] = {'as_dict': dev_dict, 'as_df': dev_df}
-            applied_split[fold_i]['test'] = {'as_dict': test_dict, 'as_df': test_df}
+            filled_fold = {'train': train_df,
+                           'dev': dev_df,
+                           'test': test_df,
+                           'sizes': (len(train_df), len(dev_df), len(test_df)),
+                           'name': i}
+            filled_folds.append(filled_fold)
 
-            applied_split[fold_i]['sizes'] = (len(train_df), len(dev_df), len(test_df))
-
-        return applied_split
-
+        return filled_folds
 
 
 def split_input_for_bert():
@@ -277,8 +306,7 @@ def split_input_for_bert():
     data = pd.read_csv(infp, index_col=0)
 
     SPL = 'fan'
-    spl = Split(data, which=SPL, split_loc='data/splits/fan_split',
-                tst=False)
+    spl = Split(data, which=SPL, split_loc='data/splits/fan_split', tst=False)
     folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'], input_as='huggingface',
                             output_as='huggingface')
     for fold in folds:

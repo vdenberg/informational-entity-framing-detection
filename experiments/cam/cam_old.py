@@ -11,7 +11,7 @@ import random, os, sys
 import torch
 import numpy as np
 import pandas as pd
-from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier, ContextAwareModel
+from lib.classifiers.ContextAwareClassifier_old import ContextAwareClassifier, ContextAwareModel
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)

@@ -41,8 +41,8 @@ def my_eval(labels, preds, av_loss=None):
     #metrics_df = pd.DataFrame(metrics_dict)
 
     if av_loss:
-        metrics_dict['average_loss'] = av_loss
-        metrics_df['average_loss'] = av_loss
+        metrics_dict['loss'] = av_loss
+        #metrics_df['average_loss'] = av_loss
         metrics_string += f" Av loss: {av_loss}"
 
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}

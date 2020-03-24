@@ -1,13 +1,3 @@
-from transformers import BertPreTrainedModel, BertModel
-from torch.nn import Dropout, Linear
-from torch.nn import CrossEntropyLoss, MSELoss
-import torch
-from torch import nn
-import numpy as np
-from torch.utils.data import (DataLoader, SequentialSampler)
-from lib.evaluate.StandardEval import my_eval
-import os
-
 import torch
 from torch import nn
 from torch.autograd import Variable
@@ -15,83 +5,10 @@ from transformers.optimization import AdamW
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
-from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_name, get_torch_device
+from lib.utils import indexesFromSentence, format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time
 
-# model
-
-class BertForSequenceClassification(BertPreTrainedModel):
-    def __init__(self, config):
-        super().__init__(config)
-        self.num_labels = config.num_labels
-
-        self.bert = BertModel(config)
-        self.dropout = Dropout(config.hidden_dropout_prob)
-        self.classifier = Linear(config.hidden_size, self.config.num_labels)
-        self.sigm = nn.Sigmoid()
-
-        self.init_weights()
-
-    def forward(
-        self,
-        input_ids=None,
-        attention_mask=None,
-        token_type_ids=None,
-        position_ids=None,
-        head_mask=None,
-        inputs_embeds=None,
-        labels=None,
-    ):
-        r"""
-        labels (:obj:`torch.LongTensor` of shape :obj:`(batch_size,)`, `optional`, defaults to :obj:`None`):
-            Labels for computing the sequence classification/regression loss.
-            Indices should be in :obj:`[0, ..., config.num_labels - 1]`.
-            If :obj:`config.num_labels == 1` a regression loss is computed (Mean-Square loss),
-            If :obj:`config.num_labels > 1` a classification loss is computed (Cross-Entropy).
-
-    Returns:
-        :obj:`tuple(torch.FloatTensor)` comprising various elements depending on the configuration (:class:`~transformers.BertConfig`) and inputs:
-        loss (:obj:`torch.FloatTensor` of shape :obj:`(1,)`, `optional`, returned when :obj:`label` is provided):
-            Classification (or regression if config.num_labels==1) loss.
-        logits (:obj:`torch.FloatTensor` of shape :obj:`(batch_size, config.num_labels)`):
-            Classification (or regression if config.num_labels==1) scores (before SoftMax).
-        hidden_states (:obj:`tuple(torch.FloatTensor)`, `optional`, returned when ``config.output_hidden_states=True``):
-            Tuple of :obj:`torch.FloatTensor` (one for the output of the embeddings + one for the output of each layer)
-            of shape :obj:`(batch_size, sequence_length, hidden_size)`.
-
-            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-        attentions (:obj:`tuple(torch.FloatTensor)`, `optional`, returned when ``config.output_attentions=True``):
-            Tuple of :obj:`torch.FloatTensor` (one for each layer) of shape
-            :obj:`(batch_size, num_heads, sequence_length, sequence_length)`.
-
-            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention
-            heads.
-
-        """
-
-        outputs = self.bert(
-            input_ids,
-            attention_mask=attention_mask,
-            token_type_ids=token_type_ids,
-            position_ids=position_ids,
-            head_mask=head_mask,
-            inputs_embeds=inputs_embeds,
-        )
-
-        sequence_output = outputs[0] # (batch_size, sequence_length, hidden_size)
-        pooled_output = outputs[1]
-
-        dp_pooled_output = self.dropout(pooled_output) # (batch_size, hidden_size)
-        logits = self.classifier(dp_pooled_output)
-        probs = self.sigm(logits)
-
-        if labels is not None:
-            loss_fct = CrossEntropyLoss()
-            loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
-
-        return loss, probs, sequence_output, pooled_output # (loss), logits, probs, sequence_ouput, pooled_output
-
-
+SOS_token = 0
 EOS_token = 1
 
 """
@@ -149,16 +66,15 @@ class ContextAwareModel(nn.Module):
         # loop through input
         for ei in range(input_length):
             # get sentence embedding for that item
-            embedded = self.embedding(input_tensor[:, ei]).view(1, batch_size, -1)
+            embedded = self.embedding(input_tensor[:,ei]).view(1, batch_size, -1)
             # feed hidden of previous token/item, store in hidden again
-            output, hidden = self.lstm(embedded,
-                                       hidden)  # output has shape 1 (for the token in question) * batch_size * hiddenx2
+            output, hidden = self.lstm(embedded, hidden) # output has shape 1 (for the token in question) * batch_size * hiddenx2
             encoder_outputs[ei] = output[0]
 
         target_encoder_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
         for item in range(batch_size):
             my_idx = target_idx[item]
-            target_encoder_output[item] = encoder_outputs[my_idx, item, :]
+            target_encoder_output[item] = encoder_outputs[my_idx,item,:]
 
         output = self.out(target_encoder_output)  # sigmoid function that returns batch_size * 1
         return output
@@ -167,6 +83,7 @@ class ContextAwareModel(nn.Module):
         hidden = torch.zeros(2, batch_size, self.hidden_size, device=self.device)
         cell = torch.zeros(2, batch_size, self.hidden_size, device=self.device)
         return Variable(hidden), Variable(cell)
+
 
 class ContextAwareClassifier():
     def __init__(self, input_lang, dev, test, logger=None,
@@ -184,7 +101,7 @@ class ContextAwareClassifier():
         self.batch_size = batch_size
         self.input_lang = input_lang
         self.max_length = input_lang.max_len
-        self.criterion = None  # depends on classweight which should be set on input
+        self.criterion = None # depends on classweight which should be set on input
 
         if start_epoch > 0:
             self.model = self.load_model_from_checkpoint()
@@ -195,15 +112,14 @@ class ContextAwareClassifier():
         if self.USE_CUDA: self.model.cuda()
 
         self.optimizer = AdamW(self.model.parameters(), lr=learning_rate, eps=1e-8)
-        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=learning_rate,
-                                               max_lr=0.1)  # StepLr: step_size=step_size, gamma=gamma)
+        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=learning_rate, max_lr=0.1) #StepLr: step_size=step_size, gamma=gamma)
         self.dev = dev
         self.test = test
-        self.cp_name = None  # depends on split type and current fold
+        self.cp_name = None # depends on split type and current fold
         self.best_perf = {'ep': 0, 'val_f1': 30}
 
     def load_model_from_checkpoint(self):
-        cpfp = format_checkpoint_name(self.cp_dir, self.hidden_size, epoch_number=self.start_epoch)
+        cpfp = format_checkpoint_filepath(self.cp_dir, self.hidden_size, epoch_number=self.start_epoch)
         self.logger.info('Loading model from', cpfp)
         start_checkpoint = torch.load(cpfp)
         model = start_checkpoint['model']
@@ -219,14 +135,14 @@ class ContextAwareClassifier():
         return data
 
     def train(self, input_tensor, target_label_tensor, target_idx):
-        # self.model.zero_grad()
+        #self.model.zero_grad()
         self.optimizer.zero_grad()
 
         loss = 0
         output = self.model(input_tensor, target_idx, self.max_length)
-        # print(output)
-        # print(target_label_tensor)
-        # print(output.shape, target_label_tensor.shape)
+        #print(output)
+        #print(target_label_tensor)
+        #print(output.shape, target_label_tensor.shape)
         loss += self.criterion(output, target_label_tensor)
         loss.backward()
 
@@ -238,7 +154,7 @@ class ContextAwareClassifier():
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
-        checkpoint_name = format_checkpoint_name(cpdir, self.hidden_size, epoch_number=ep)
+        checkpoint_name = format_checkpoint_filepath(cpdir, self.hidden_size, epoch_number=ep)
         torch.save(checkpoint, checkpoint_name)
 
     def update_lr(self, best_ep, val_f1):
@@ -246,8 +162,7 @@ class ContextAwareClassifier():
         self.best_perf['val_f1'] = val_f1
         self.scheduler.step()
         new_lr = self.scheduler.get_lr()
-        self.logger.info(
-            '\t\t{} - Updated LR: {} for f1 = {}'.format(self.best_perf['ep'], new_lr, self.best_perf['val_f1']))
+        self.logger.info('\t\t{} - Updated LR: {} for f1 = {}'.format(self.best_perf['ep'], new_lr, self.best_perf['val_f1']))
         val_performance = self.evaluate(self.dev, which='string')
         test_performance = self.evaluate(self.test, which='string')
         self.logger.info(f'\t\t\t Val performance: {val_performance}, Test performance: {test_performance}')
@@ -290,7 +205,7 @@ class ContextAwareClassifier():
             epoch_av_loss = self.train_batches(fold, print_step_every)
             total_loss += epoch_av_loss
 
-            elapsed = format_runtime(time.time() - start_time)
+            elapsed = format_runtime(time.time()-start_time)
             self.scheduler.step()
             if (ep % save_epoch_every == 0) & (ep > 0):
                 epochs_av_loss = total_loss / ep
@@ -349,6 +264,7 @@ class ContextAwareClassifier():
         elif which == 'string':
             return metrics_string
 
-# _, USE_CUDA = get_torch_device()
-# LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor
-# FloatTensor = torch.cuda.FLoatTensor if USE_CUDA else torch.FloatTensor
+
+#_, USE_CUDA = get_torch_device()
+#LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor
+#FloatTensor = torch.cuda.FLoatTensor if USE_CUDA else torch.FloatTensor

@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
+from lib.classifiers.BertForEmbed_old import BertForSequenceClassification, Inferencer, save_model
 from tqdm import trange
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch

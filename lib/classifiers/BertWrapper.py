@@ -3,13 +3,11 @@ from torch.nn import Dropout, Linear
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
 from torch import nn
-import numpy as np
-from torch.utils.data import (DataLoader, SequentialSampler)
-from lib.evaluate.StandardEval import my_eval
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import os
+import numpy as np
+from lib.utils import get_torch_device
 
-
-# model
 
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config):
@@ -105,86 +103,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
         return outputs  # (loss), logits, probs, sequence_ouput, pooled_output, (hidden_states), (attentions)
 
 
-class Inferencer():
-    def __init__(self, reports_dir, output_mode, logger, device, use_cuda):
-        self.device = device
-        self.output_mode = output_mode
-        self.reports_dir = reports_dir
-        self.logger = logger
-        self.device = device
-        self.use_cuda = use_cuda
-
-    def predict(self, model, data, return_embeddings=False, embedding_type='avbert'):
-        model.to(self.device)
-        model.eval()
-
-        eval_sampler = SequentialSampler(data)
-        eval_dataloader = DataLoader(data, sampler=eval_sampler, batch_size=1)
-
-        preds = []
-        embeddings = []
-        for step, batch in enumerate(eval_dataloader):
-            batch = tuple(t.to(self.device) for t in batch)
-            input_ids, input_mask, segment_ids, label_ids = batch
-
-            with torch.no_grad():
-                outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output, (hidden_states), (attentions) = outputs
-                if embedding_type == 'avbert':
-                    representation = sequence_output.mean(axis=1) # (batch_size, sequence_length, hidden_size) ->  batch_size, hidden_size)
-                elif embedding_type == 'pooled_output':
-                    representation = pooled_output  # (batch_size, hidden_size)
-
-            # of last hidden state with size (batch_size, sequence_length, hidden_size)
-            # where batch_size=1, sequence_length=95, hidden_size=768)
-            # take average of sequence, size (batch_size, hidden_size)
-
-            if self.use_cuda:
-                representation = list(representation[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
-            else:
-                representation = list(representation[0].numpy()) # .detach().cpu() necessary here on gpu
-            embeddings.append(representation)
-
-            if len(preds) == 0:
-                preds.append(probs.detach().cpu().numpy())
-            else:
-                preds[0] = np.append(preds[0], probs.detach().cpu().numpy(), axis=0)
-
-        preds = preds[0]
-        if self.output_mode == "classification":
-            preds = np.argmax(preds, axis=1)
-        elif self.output_mode == "regression":
-            preds = np.squeeze(preds)
-
-        model.train()
-        if return_embeddings:
-            return embeddings
-        else:
-            return preds
-
-    def eval(self, model, data, labels, av_loss=None, name='Basil'):
-        preds = self.predict(model, data)
-        metrics_dict, metrics_df, metrics_string = my_eval(name, labels.numpy(), preds, av_loss=av_loss)
-
-        if av_loss:
-            metrics_df = metrics_df.rename(columns={'average_loss': 'validation_loss', 'f1': 'validation_f1'})
-            metrics_df = metrics_df[['tp', 'tn', 'fp', 'fn', 'acc', 'rec', 'prec', 'validation_loss', 'validation_f1']]
-        else:
-            metrics_df = metrics_df.rename(columns={'f1': 'validation_f1'})
-            metrics_df = metrics_df[['tp', 'tn', 'fp', 'fn', 'acc', 'rec', 'prec', 'validation_f1']]
-
-        output_eval_file = os.path.join(self.reports_dir, "eval_results.txt")
-        with open(output_eval_file, "w") as writer:
-            self.logger.info("\n***** Eval results *****")
-            self.logger.info(f'\n{metrics_df}')
-            #self.logger.info(f'Sample of predictions: {preds[:20]}')
-            for key in (metrics_dict.keys()):
-                writer.write("%s = %s\n" % (key, str(metrics_dict[key])))
-
-        return metrics_dict, metrics_string
-
-
-def save_model(model_to_save, model_dir, identifier):
+def save_bert_model(model_to_save, model_dir, identifier):
+    ''' Save finetuned (finished or intermediate) BERT model to a checkpoint. '''
     output_dir = os.path.join(model_dir, identifier)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
@@ -194,3 +114,95 @@ def save_model(model_to_save, model_dir, identifier):
     model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
     torch.save(model_to_save.state_dict(), output_model_file)
     model_to_save.config.to_json_file(output_config_file)
+
+
+class BertWrapper:
+    def __init__(self, bert_model, cache_dir, cp_dir, num_labels, bert_lr,
+                 warmup_proportion, n_epochs, n_train_batches):
+        self.model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir,
+                                                                   num_labels=num_labels,
+                                                                   output_hidden_states=False, output_attentions=False)
+        self.device, self.use_cuda = get_torch_device()
+        self.model.to(self.device)
+        if self.use_cuda: self.model.cuda()
+
+        self.cp_dir = cp_dir
+        self.warmup_proportion = warmup_proportion
+
+
+        # set optim and scheduler
+        self.optimizer = AdamW(self.model.parameters(), lr=bert_lr, eps=1e-8)
+        num_train_optimization_steps = n_train_batches * n_epochs
+        num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                         num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+
+    def train_on_batch(self, batch):
+        self.model.zero_grad()
+        batch = tuple(t.to(self.device) for t in batch)
+
+        token_ids, token_masks, tok_seg_ids, contexts, labels, positions = batch
+
+        loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids, attention_mask=token_masks,
+                                                                    token_type_ids=tok_seg_ids, labels=labels)
+
+        loss.backward()
+
+        self.optimizer.step()
+        self.scheduler.step()
+        return loss.item()
+
+    def predict(self, batches):
+        self.model.eval()
+
+        preds = []
+        sum_loss = 0
+        for step, batch in enumerate(batches):
+            batch = tuple(t.to(self.device) for t in batch)
+            token_ids, token_masks, tok_seg_ids, contexts, labels, positions = batch
+
+            with torch.no_grad():
+                loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids,
+                                                                            attention_mask=token_masks,
+                                                                            token_type_ids=tok_seg_ids, labels=labels)
+                probs = probs.detach().cpu().numpy()
+
+            if len(preds) == 0:
+                preds.append(probs)
+            else:
+                preds[0] = np.append(preds[0], probs, axis=0)
+            sum_loss += loss.item()
+
+        preds = np.argmax(preds[0], axis=1)
+
+        self.model.train()
+        return preds, sum_loss / len(batches)
+
+    def get_embedding_output(self, batch, emb_type):
+        batch = tuple(t.to(self.device) for t in batch)
+        token_ids, token_masks, tok_seg_ids, contexts, labels, positions = batch
+
+        with torch.no_grad():
+            loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids,
+                                                                     attention_mask=token_masks,
+                                                                     token_type_ids=tok_seg_ids, labels=labels)
+            if emb_type == 'avbert':
+                return sequence_output.mean(axis=1)
+
+            elif emb_type == 'poolbert':
+                return pooled_output
+
+    def get_embeddings(self, batches, emb_type):
+        self.model.eval()
+        embeddings = []
+        for step, batch in enumerate(batches):
+            emb_output = self.get_embedding_output(batch, emb_type)
+
+            if self.use_cuda:
+                emb_output = list(emb_output[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
+
+            else:
+                emb_output = list(emb_output[0].numpy())
+            embeddings.append(emb_output)
+
+        return embeddings

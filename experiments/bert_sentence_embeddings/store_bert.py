@@ -1,5 +1,5 @@
 from __future__ import absolute_import, division, print_function
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
+from lib.classifiers.BertForEmbed_old import BertForSequenceClassification, Inferencer
 from lib.handle_data.PreprocessForBert import InputFeatures
 import torch
 import pickle, logging, argparse
