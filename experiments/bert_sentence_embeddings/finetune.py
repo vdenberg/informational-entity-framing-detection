@@ -86,10 +86,10 @@ OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
-random.seed(SEED_VAL)
-np.random.seed(SEED_VAL)
-torch.manual_seed(SEED_VAL)
-torch.cuda.manual_seed_all(SEED_VAL)
+#random.seed(SEED_VAL)
+#np.random.seed(SEED_VAL)
+#torch.manual_seed(SEED_VAL)
+#torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
 
