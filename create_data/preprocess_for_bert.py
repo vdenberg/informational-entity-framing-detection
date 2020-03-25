@@ -22,14 +22,13 @@ OUTPUT_MODE = 'classification'
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 processor = BinaryClassificationProcessor()
 
-# load data
+# load and split data
 sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
 string_data = pd.read_csv(string_data_fp, sep='\t',
                           names=['id', 'context_document', 'label', 'position'],
                           dtype={'id': str, 'tokens': str, 'bias': int, 'position': int})
 string_data['sentence'] = sentences
 string_data['alpha'] = ['a']*len(string_data)
-
 spl = Split(string_data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'])
 
@@ -37,8 +36,9 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
+# start
 for fold in folds:
-    for set_type in ['train', 'dev', 'test']:
+    for set_type in ['train', 'dev']:
         infp = os.path.join(DATA_DIR, set_type + ".tsv")
         fold[set_type][['id', 'bias', 'alpha', 'sentence']].to_csv(infp)
 

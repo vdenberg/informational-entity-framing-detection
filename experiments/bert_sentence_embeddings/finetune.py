@@ -14,17 +14,16 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 
-def to_tensor(features, OUTPUT_MODE='classificatio'):
-    print(features)
-    example_ids = torch.tensor([f.my_id for f in features], dtype=torch.long)
+def to_tensor(features, OUTPUT_MODE='classification'):
+    example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
 
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
 
-    data = TensorDataset(example_ids, input_ids, input_mask, segment_ids, label_ids)
-    return data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
+    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
+    return data  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
 def save_model(model_to_save, model_dir):
