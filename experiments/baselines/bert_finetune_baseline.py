@@ -1,7 +1,7 @@
 # requirements:
 # !pip install --upgrade tensorflow
 # !pip install ktrain
-
+# !pip install git+https://github.com/amaiya/eli5@tfkeras_0_10_1
 ###
 
 import ktrain
@@ -45,6 +45,8 @@ model = t.get_classifier()
 if TRAIN:
     for fold in enumerate(folds):
         # for getting indices: fold['train'].index.values
+        print(fold['train'])
+        print(fold)
         x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['label'].values
         x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
         x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
