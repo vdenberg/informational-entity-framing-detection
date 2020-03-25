@@ -85,10 +85,10 @@ class Classifier:
             tr_metrics, tr_perf_string = self.predict_eval(train_batches, tr_labels)
             val_metrics, val_perf_string = self.predict_eval(dev_batches, dev_labels)
 
-            tr_loss = tr_metrics['loss']
-            tr_f1 = round(tr_metrics['f1'],4)
-            val_loss = val_metrics['loss']
-            val_f1 = val_metrics['f1']
+            tr_loss =  round(tr_metrics['loss'], 5)
+            tr_f1 = round(tr_metrics['f1'], 4)
+            val_loss = round(val_metrics['loss'], 5)
+            val_f1 = round(val_metrics['f1'], 4)
 
             if val_f1 > self.best_val_f1:
                 self.best_val_f1 = val_f1
