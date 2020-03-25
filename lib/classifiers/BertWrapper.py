@@ -203,6 +203,6 @@ class BertWrapper:
 
             else:
                 emb_output = list(emb_output[0].numpy())
-            embeddings.append(emb_output)
+            embeddings.extend(emb_output)
 
         return embeddings
