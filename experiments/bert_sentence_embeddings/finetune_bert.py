@@ -120,11 +120,11 @@ NR_FOLDS = len(folds)
     #train_feat_fp = os.path.join(FEAT_DIR, f"{fold['name']}_train_features.pkl")
     #dev_feat_fp = os.path.join(FEAT_DIR, f"{fold['name']}_train_features.pkl")
 
-with open(DATA_DIR + "train_features.pkl", "rb") as f:
+with open(FEAT_DIR + "train_features.pkl", "rb") as f:
     train_features = pickle.load(f)
     train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
 
-with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+with open(FEAT_DIR + "dev_features.pkl", "rb") as f:
     dev_features = pickle.load(f)
     dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
