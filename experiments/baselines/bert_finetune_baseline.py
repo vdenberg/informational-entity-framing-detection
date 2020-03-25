@@ -88,25 +88,25 @@ if INFER:
     neg_pos = []
     pos_neg = []
     pos_pos = []
-    for fold_i, fold in enumerate(folds):
+    for fold in folds:
         x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['bias'].values
         x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
         x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
 
-        print(fold_i, 'load predictor')
-        predictor = ktrain.load_predictor(PRED + '/fold{}'.format(fold_i))
+        print(fold['name'], 'load predictor')
+        predictor = ktrain.load_predictor(MODEL_DIR + '/fold{}'.format(fold_i))
         y_pred = predictor.predict(x_dev)
 
         # evaluate
-        print(fold_i, 'evaluate')
+        print(fold['name'], 'evaluate')
         y_pred = [int(el) for el in y_pred]
         y_dev = [int(el) for el in y_dev]
-        evalb, evalstr = evaluation(y_pred=y_pred, y_true=y_dev)
-        print(fold_i, evalstr, end='\n\n')
+        evalb, evalstr = my_eval(y_pred=y_pred, y_true=y_dev)
+        print(fold['name'], evalstr, end='\n\n')
 
-        print(fold_i, 'sample')
+        print(fold['name'], 'sample')
         compare = pd.DataFrame(zip(y_pred, y_dev), index=fold['dev'].index.values, columns=['y_pred', 'y_dev'])
-        basil.loc[fold['dev'].index.values, 'fold'] = fold_i
+        basil.loc[fold['dev'].index.values, 'fold'] = fold['name']
         t01 = compare[(compare['y_dev'] == 0) & (compare['y_pred'] == 1)]
         t11 = compare[(compare['y_dev'] == 1) & (compare['y_pred'] == 1)]
         t10 = compare[(compare['y_dev'] == 1) & (compare['y_pred'] == 0)]

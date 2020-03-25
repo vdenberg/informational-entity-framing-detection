@@ -100,20 +100,20 @@ def save_bert_model(model_to_save, model_dir, identifier):
 
 parser = argparse.ArgumentParser()
 # PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
-parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
+parser.add_argument('-inf', '--step_info_every', type=int, default=50)
+parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # TRAINING PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='both')
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
-parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
+parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=True,
                     help='Whether to finetune pretrained BERT embs')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='debug')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=50)
-parser.add_argument('-pat', '--patience', type=int, default=10)
+parser.add_argument('-ep', '--epochs', type=int, default=100)
+parser.add_argument('-pat', '--patience', type=int, default=5)
 #parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
@@ -125,7 +125,7 @@ parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
 parser.add_argument('-hid', '--hidden_size', type=int, default=50)
-parser.add_argument('-lay', '--bilstm_layers', type=int, default=5)
+parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
 parser.add_argument('-sv', '--seed_val', type=int, default=124)
@@ -139,13 +139,16 @@ args = parser.parse_args()
 PRINT_STEP_EVERY = args.step_info_every  # steps
 SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
 
-SPLIT_TYPE = args.split_type
-CONTEXT_TYPE = args.context_type
-SUBSET = args.subset_of_data
 MODE = args.mode
 TRAIN = True if args.mode != 'eval' else False
 EVAL = True if args.mode == 'eval' else False
 DEBUG = True if args.mode == 'debug' else False
+
+SPLIT_TYPE = args.split_type
+CONTEXT_TYPE = args.context_type
+SUBSET = args.subset_of_data
+if DEBUG:
+    SUBSET = 0.5
 
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
@@ -168,7 +171,7 @@ HIDDEN = args.hidden_size
 BILSTM_LAYERS = args.bilstm_layers
 if DEBUG:
     HIDDEN = 2
-    BILSTM_LAYERS = 5
+    BILSTM_LAYERS = 2
 
 SEED_VAL = args.seed_val
 BERT_MODEL = args.bert_model
@@ -252,7 +255,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 # split data
-spl = Split(data, which=SPLIT_TYPE, tst=DEBUG, subset=SUBSET)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 
 folds = spl.apply_split(features=['context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
 if DEBUG:

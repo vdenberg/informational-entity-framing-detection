@@ -22,7 +22,7 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, device):
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
@@ -35,6 +35,7 @@ class ContextAwareModel(nn.Module):
 
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
         self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
+        self.context_naive = context_naive
 
     def forward(self, input_tensor, target_idx):
         """
@@ -46,28 +47,31 @@ class ContextAwareModel(nn.Module):
         batch_size = input_tensor.shape[0]
         seq_length = input_tensor.shape[1]
 
-        encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
-        hidden = self.init_hidden(batch_size)
+        if self.context_naive:
+            target_embeddings = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
+            for item in range(batch_size):
+                my_idx = target_idx[item]
+                target_embeddings[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
 
-        # loop through input
-        for ei in range(seq_length):
+        else:
 
-            # get sentence embedding for that item
-            #print(input_tensor.shape)
-            embedded = self.embedding(input_tensor[:, ei]).view(1, batch_size, -1)
-            # feed hidden of previous token/item, store in hidden again
-            output, hidden = self.lstm(embedded,
-                                       hidden)  # output has shape 1 (for token in question) * batchsize * (hidden * 2)
+            context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
-            encoder_outputs[ei] = output[0]
+            # loop through input and update hidden
+            hidden = self.init_hidden(batch_size)
+            for ei in range(seq_length):
+                embedded = self.embedding(input_tensor[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
+                output, hidden = self.lstm(embedded, # feed hidden of previous token/item, store in hidden again
+                                           hidden)  # output has shape 1 (for token in question) * batchsize * (hidden * 2)
+                context_encoder_outputs[ei] = output[0]
 
-        # loop through batch to get token at desired index
-        target_encoder_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
-        for item in range(batch_size):
-            my_idx = target_idx[item]
-            target_encoder_output[item] = encoder_outputs[my_idx, item, :]
+            # loop through batch to get token at desired index
+            target_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
+            for item in range(batch_size):
+                my_idx = target_idx[item]
+                target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-        output = self.classifier(target_encoder_output)  # sigmoid function that returns batch_size * 1
+        output = self.classifier(target_output)  # sigmoid function that returns batch_size * 1
 
         return output.view(batch_size)
 

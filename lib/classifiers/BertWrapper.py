@@ -174,8 +174,6 @@ class BertWrapper:
             sum_loss += loss.item()
 
         preds = np.argmax(preds[0], axis=1)
-
-        self.model.train()
         return preds, sum_loss / len(batches)
 
     def get_embedding_output(self, batch, emb_type):
