@@ -38,7 +38,6 @@ class Classifier:
             if (step > 0) & (step % self.print_every == 0):
                 self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {epoch_loss/step}')
 
-
         av_epoch_loss = epoch_loss / len(train_batches)
 
         elapsed = format_runtime(time.time() - start)
