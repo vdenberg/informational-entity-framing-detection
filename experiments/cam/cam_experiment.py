@@ -298,7 +298,7 @@ if FT_EMB:
 
         logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
         cl = Classifier(logger=logger, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
-                        fig_dir=FIG_DIR, model_name='bert')
+                        fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
         cl.train_on_fold(fold)
         finetune_f1s.loc[fold['name']] = cl.test_perf
 
@@ -348,7 +348,8 @@ for fold in folds:
                                  batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA)
 
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
-    cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam')
+    cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam',
+                    print_every=PRINT_STEP_EVERY)
     cl.train_on_fold(fold)
     cam_f1s.loc[fold['name']] = cl.test_perf
 
