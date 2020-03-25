@@ -111,9 +111,10 @@ if __name__ == '__main__':
     if LOAD_FROM_EP:
         name = f'epoch{LOAD_FROM_EP}'
         load_dir = os.path.join(CHECKPOINT_DIR, name)
+        print(f'Loading model {load_dir}')
         model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
                                                               output_hidden_states=True, output_attentions=True)
-        print(f'Loaded model {load_dir}')
+        print(f'Loading model {load_dir}')
         inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
     else:
         load_dir = CACHE_DIR
