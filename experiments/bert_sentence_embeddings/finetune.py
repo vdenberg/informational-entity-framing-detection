@@ -34,7 +34,7 @@ def to_tensor(features, OUTPUT_MODE='classification'):
 # split_input() # only needs to happen once, can be found in split_data
 
 # find GPU if present
-device, USE_CUDA =  get_torch_device() #torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device, USE_CUDA = get_torch_device() #torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Bert pre-trained model selected from: bert-base-uncased, bert-large-uncased, bert-base-cased, bert-large-cased,
 # bert-base-multilingual-uncased, bert-base-multilingual-cased, bert-base-chinese.
@@ -117,9 +117,6 @@ if __name__ == '__main__':
             input_ids, input_mask, segment_ids, label_ids = batch
 
             (loss), logits, pooled_output = model(input_ids, segment_ids, input_mask, labels=label_ids)
-            #print(outputs)
-            #hidden_states = outputs[1]
-            #av_hidden_states = hidden_states.mean()
 
             if OUTPUT_MODE == "classification":
                 loss_fct = CrossEntropyLoss()

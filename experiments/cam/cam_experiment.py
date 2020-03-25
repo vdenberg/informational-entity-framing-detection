@@ -39,6 +39,7 @@ class Processor():
 
         all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
         max_sent_length = max([len(t) for t in all_tokens])
+        print("MAX SENT LEN:", max_sent_length)
 
         token_ids = []
         token_mask = []
