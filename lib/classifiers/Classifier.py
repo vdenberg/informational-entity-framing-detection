@@ -95,7 +95,7 @@ class Classifier:
 
             losses.append((tr_loss, val_loss))
             self.logger.info(f' > {self.model_name} Epoch {ep} (took {ep_elapsed}): '
-                             f'loss = {tr_loss}, Train perf: {tr_f1}, Val perf: {val_perf_string} '
+                             f'loss = {tr_loss}, Train f1: {tr_f1}, Val perf: {val_perf_string} '
                              f'(Best f1 so far: {self.best_val_f1})')
 
             # if save:
