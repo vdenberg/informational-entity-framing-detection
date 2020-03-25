@@ -89,9 +89,7 @@ if __name__ == '__main__':
     logger.info(f'Loaded model from {MODEL_PATH}')
     inferencer.eval(model, dev_data, dev_labels, name=f'{MODEL_PATH}-Dev')
     inferencer.eval(model, all_data, all_labels, name=f'{MODEL_PATH}-All')
-    embeddings = inferencer.predict(model, all_data, return_embeddings=True) #, embedding_type=EMB_TYPE)
-    print(len(embeddings))
-    print(embeddings.shape)
+    embeddings = inferencer.predict(model, all_data, return_embeddings=True) #, embedding_type=EMB_TYPE)ls
     logger.info(f'Finished {len(embeddings)} embeddings')
     basil_w_BERT = pd.DataFrame(index=all_labels)
     basil_w_BERT[EMB_TYPE] = embeddings

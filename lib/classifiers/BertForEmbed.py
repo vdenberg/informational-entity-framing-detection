@@ -139,7 +139,7 @@ class Inferencer():
                 preds.append(logits.detach().cpu().numpy())
             else:
                 preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
-            embeddings.extend(emb_output)
+            embeddings.append(emb_output)
 
         preds = preds[0]
         if self.output_mode == "classification":
