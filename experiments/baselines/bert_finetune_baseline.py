@@ -19,7 +19,7 @@ import tensorflow as tf
 GPU = True
 EPOCHS = 10
 BATCH_SIZE = 16
-TEST = True
+TEST = False
 SPL = 'fan'
 TRAIN = True
 INFER = True
