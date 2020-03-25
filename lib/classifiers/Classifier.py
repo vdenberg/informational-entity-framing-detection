@@ -57,11 +57,28 @@ class Classifier:
 
     def train_all_epochs(self, train_batches, tr_labels, dev_batches, dev_labels):
         train_start = time.time()
+
         losses = []
+        if self.model_name == 'BERT':
+            tr_metrics, tr_perf_string = self.predict_eval(train_batches, tr_labels)
+            val_metrics, val_perf_string = self.predict_eval(dev_batches, dev_labels)
+
+            tr_loss = tr_metrics['loss']
+            tr_f1 = tr_metrics['f1']
+            val_loss = val_metrics['loss']
+            val_f1 = val_metrics['f1']
+
+            if val_f1 > self.best_val_f1:
+                self.best_val_f1 = val_f1
+
+            losses.append((tr_loss, val_loss))
+            self.logger.info(f' > {self.model_name} Epoch {-1} (took 0m0s}): '
+                             f'loss = {tr_loss}, Train perf: {tr_f1}, Val perf: {val_perf_string} '
+                             f'(Best f1 so far: {self.best_val_f1})')
+
         for ep in range(self.n_epochs):
             self.wrapper.model.train()
 
-            # ep = self.start_epoch + ep
             av_loss, ep_elapsed = self.train_epoch(train_batches)
 
             tr_metrics, tr_perf_string = self.predict_eval(train_batches, tr_labels)
@@ -71,6 +88,9 @@ class Classifier:
             tr_f1 = tr_metrics['f1']
             val_loss = val_metrics['loss']
             val_f1 = val_metrics['f1']
+
+            if val_f1 > self.best_val_f1:
+                self.best_val_f1 = val_f1
 
             losses.append((tr_loss, val_loss))
             self.logger.info(f' > {self.model_name} Epoch {ep} (took {ep_elapsed}): '
@@ -84,8 +104,6 @@ class Classifier:
                 self.current_patience = self.full_patience
             else:
                 self.current_patience -= 1
-            if val_f1 > self.best_val_f1:
-                self.best_val_f1 = val_f1
 
             self.update_patience(val_f1)
 
@@ -100,6 +118,8 @@ class Classifier:
         return eps_elapsed, losses
 
     def train_on_fold(self, fold):
+        if self.model_name == 'BERT':
+
         train_elapsed, losses = self.train_all_epochs(fold['train_batches'],
                                                       fold['train'].label,
                                                       fold['dev_batches'],
@@ -117,7 +137,7 @@ class Classifier:
         self.test_perf_string = test_perf_string
         self.logger.info(f' Model {self.model_name} on Fold {fold["name"]} (took {self.train_time}): Test perf: {self.test_perf_string}')
 
-        cp_fp = format_checkpoint_filepath(self.cp_dir, bertcam='bert', epoch_number=ep)
-        save_model(self.model_name, self.model, cp_fp)
+        #cp_fp = format_checkpoint_filepath(self.cp_dir, bertcam='bert', epoch_number=ep)
+        #save_model(self.model_name, self.model, cp_fp)
 
 

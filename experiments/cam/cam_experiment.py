@@ -59,7 +59,6 @@ class Processor():
 
         return token_ids, token_mask, tok_seg_ids
 
-
 def make_weight_matrix(data, embed_df, EMB_DIM):
 
     sentence_embeddings = {i.lower(): np.array(u.strip('[]').split(', ')) for i, u in
