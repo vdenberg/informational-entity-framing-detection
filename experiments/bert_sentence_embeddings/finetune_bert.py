@@ -9,6 +9,7 @@ from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, Tens
 import os, sys, random
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
+from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device
 import time
 import logging
@@ -85,6 +86,15 @@ WARMUP_PROPORTION = 0.1
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
+DEBUG = True
+SPL = 'berg'
+SUBSET = 1.0
+
+# project structure
+CONTEXT_TYPE = 'article'
+DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}'
+FEAT_DIR = 'data/features_for_bert/'
+string_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
 
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
@@ -93,20 +103,34 @@ torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
 
-with open(DATA_DIR + "train_features.pkl", "rb") as f:
-    train_features = pickle.load(f)
-    train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+# load and split data
+string_data = pd.read_csv(string_data_fp, sep='\t',
+                          names=['id', 'context_document', 'label', 'position'],
+                          dtype={'id': str, 'tokens': str, 'bias': int, 'position': int})
+spl = Split(string_data, which=SPL, subset=SUBSET)
+folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'])
+if DEBUG:
+    folds = [folds[0], folds[1]]
+NR_FOLDS = len(folds)
 
-with open(DATA_DIR + "dev_features.pkl", "rb") as f:
-    dev_features = pickle.load(f)
-    dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+# start
+for fold in folds:
+    train_feat_fp = os.path.join(FEAT_DIR, f"{fold['name']}_train_features.pkl")
+    dev_feat_fp = os.path.join(FEAT_DIR, f"{fold['name']}_train_features.pkl")
 
-num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS
-num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+    with open(DATA_DIR + "train_features.pkl", "rb") as f:
+        train_features = pickle.load(f)
+        train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
 
-inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
+    with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+        dev_features = pickle.load(f)
+        dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
-if __name__ == '__main__':
+    num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS
+    num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+
+    inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
+
     if LOAD_FROM_EP:
         name = f'epoch{LOAD_FROM_EP}'
         load_dir = os.path.join(CHECKPOINT_DIR, name)
@@ -150,7 +174,7 @@ if __name__ == '__main__':
 
             model.zero_grad()
 
-            outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
+            outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
             (loss), logits, probs, sequence_ouput, pooled_output = outputs
 
             if OUTPUT_MODE == "classification":
