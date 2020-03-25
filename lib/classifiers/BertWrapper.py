@@ -4,7 +4,7 @@ from torch.nn import CrossEntropyLoss, MSELoss
 import torch
 from torch import nn
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-#from torch.optim.lr_scheduler import CyclicLR
+from torch.optim.lr_scheduler import CyclicLR
 import os
 import numpy as np
 from lib.utils import get_torch_device
@@ -133,10 +133,13 @@ class BertWrapper:
 
         # set optim and scheduler
         self.optimizer = AdamW(self.model.parameters(), lr=bert_lr, eps=1e-8)
-        num_train_optimization_steps = n_train_batches * n_epochs
-        num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
-        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                         num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+        #num_train_optimization_steps = n_train_batches * n_epochs
+        #num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
+        #self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+        #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+        stepsize = int(n_train_batches/2)
+        self.scheduler = CyclicLR(self.optimizer, base_lr=bert_lr, max_lr=bert_lr*3,
+                                  step_size_up=stepsize, cycle_momentum=False)
 
     def train_on_batch(self, batch):
         self.model.zero_grad()
