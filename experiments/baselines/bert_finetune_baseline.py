@@ -119,7 +119,7 @@ if INFER:
         # predictor.explain('')
 
 basil_err = basil.loc[basil['error'] != 'not_in_dev']
-basil_err[['error', 'fold', 'sentence', 'bias', 'lex_bias']].to_csv('data/basil_w_errors.csv')
+basil_err[['error', 'fold', 'sentence', 'label', 'lex_bias']].to_csv('data/basil_w_errors.csv')
 
 pd.set_option('display.max_colwidth', -1)
 pd.set_option('display.max_columns', 20)
