@@ -88,7 +88,7 @@ def match_set_to_basil(tokens, basil):
                 set_us.extend(handmade_mapping[t])
             except:
                 pass #print(t)
-
+    set_us = [s.lower() for s in set_us]
     return set_us
 
 

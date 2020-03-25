@@ -53,6 +53,7 @@ class ContextAwareModel(nn.Module):
         for ei in range(seq_length):
 
             # get sentence embedding for that item
+            #print(input_tensor.shape)
             embedded = self.embedding(input_tensor[:, ei]).view(1, batch_size, -1)
             # feed hidden of previous token/item, store in hidden again
             output, hidden = self.lstm(embedded,

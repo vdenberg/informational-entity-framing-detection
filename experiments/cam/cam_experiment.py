@@ -104,7 +104,7 @@ parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
 
 # TRAINING PARAMS
-parser.add_argument('-spl', '--split_type', type=str, default='berg')
+parser.add_argument('-spl', '--split_type', type=str, default='fan')
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
 parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
                     help='Whether to finetune pretrained BERT embs')
@@ -254,7 +254,7 @@ data.index = data.sentence_ids.values
 # split data
 spl = Split(data, which=SPLIT_TYPE, tst=DEBUG, subset=SUBSET)
 
-folds = spl.apply_split(features=['context_document', 'context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
+folds = spl.apply_split(features=['context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
