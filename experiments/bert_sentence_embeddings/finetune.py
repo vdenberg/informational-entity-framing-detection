@@ -82,13 +82,14 @@ LOAD_FROM_EP = float(sys.argv[3]) if len(sys.argv) > 3 else None
 SEED_VAL = 124
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
+OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
-#random.seed(SEED_VAL)
-#np.random.seed(SEED_VAL)
-#torch.manual_seed(SEED_VAL)
-#torch.cuda.manual_seed_all(SEED_VAL)
+random.seed(SEED_VAL)
+np.random.seed(SEED_VAL)
+torch.manual_seed(SEED_VAL)
+torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
 
@@ -116,7 +117,8 @@ if __name__ == '__main__':
         inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
     else:
         load_dir = CACHE_DIR
-        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS)
+        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+                                                              output_hidden_states=True, output_attentions=True)
 
     model.to(device)
 
@@ -140,18 +142,18 @@ if __name__ == '__main__':
 
     t0 = time.time()
     for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
-        if LOAD_FROM_EP: ep += LOAD_FROM_EP
         tr_loss = 0
         nb_tr_examples, nb_tr_steps = 0, 0
         for step, batch in enumerate(train_dataloader):
             batch = tuple(t.to(device) for t in batch)
             input_ids, input_mask, segment_ids, label_ids = batch
+            #print(label_ids)
 
             model.zero_grad()
 
             outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
             #print(outputs)
-            (loss), logits, probs, sequence_outputs, (hidden_states), (attentions) = outputs
+            (loss), logits, probs, (hidden_states), (attentions) = outputs
             loss = outputs[0]
             #print(probs)
             #av_hidden_states = hidden_states.mean()
