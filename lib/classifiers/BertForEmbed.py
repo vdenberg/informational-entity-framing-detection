@@ -138,7 +138,7 @@ class Inferencer():
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
 
             else:
-                emb_output = list(emb_output[0].numpy())embeddings.append(agg_hidden)
+                emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
 
             if len(preds) == 0:
