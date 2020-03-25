@@ -15,6 +15,7 @@ logger = logging.getLogger()
 
 
 def to_tensor(features, OUTPUT_MODE='classificatio'):
+    print(features)
     example_ids = torch.tensor([f.my_id for f in features], dtype=torch.long)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
