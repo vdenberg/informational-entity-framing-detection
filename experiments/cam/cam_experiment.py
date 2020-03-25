@@ -104,15 +104,15 @@ parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=1)
 
 # TRAINING PARAMS
-parser.add_argument('-spl', '--split_type', type=str, default='fan')
+parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='both')
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
 parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
                     help='Whether to finetune pretrained BERT embs')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
-parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
+parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='debug')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=1000)
+parser.add_argument('-ep', '--epochs', type=int, default=50)
 parser.add_argument('-pat', '--patience', type=int, default=3)
 #parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
@@ -168,7 +168,7 @@ HIDDEN = args.hidden_size
 BILSTM_LAYERS = args.bilstm_layers
 if DEBUG:
     HIDDEN = 2
-    BILSTM_LAYERS = 1
+    BILSTM_LAYERS = 5
 
 SEED_VAL = args.seed_val
 BERT_MODEL = args.bert_model
@@ -336,6 +336,7 @@ logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 logger.info("============ TRAINING =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
+logger.info(f" Nr layers: {BILSTM_LAYERS}")
 logger.info(f" Batch size: {BATCH_SIZE}")
 logger.info(f" Starting LR: {LR}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")

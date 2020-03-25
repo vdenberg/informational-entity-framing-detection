@@ -260,6 +260,11 @@ class Split:
         elif self.which == 'berg':
             self.spl = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
 
+        if self.which == 'both':
+            fan_spl = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
+            berg_spl = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
+            self.spl = fan_spl.extend(berg_spl)
+
     def apply_split(self, features):
         """
         Applies nr of folds and order of fold content to the input dataframe.
@@ -268,7 +273,8 @@ class Split:
         :return: (dict) a list of folds,
          each a dict of set types (train, dev, test) containing slice of input df
         """
-        empty_folds = self.spl.return_split()
+        empty_folds = self.fan_spl.return_split()
+        empty_folds = self.berg_spl.return_split()
 
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):

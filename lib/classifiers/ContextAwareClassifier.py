@@ -72,8 +72,8 @@ class ContextAwareModel(nn.Module):
         return output.view(batch_size)
 
     def init_hidden(self, batch_size):
-        hidden = torch.zeros(2, batch_size, self.hidden_size, device=self.device)
-        cell = torch.zeros(2, batch_size, self.hidden_size, device=self.device)
+        hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
+        cell = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
         return Variable(hidden), Variable(cell)
 
 

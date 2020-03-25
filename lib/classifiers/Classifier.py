@@ -16,7 +16,7 @@ class Classifier:
         self.patience = patience
         self.fig_dir = fig_dir
         self.model_name = model_name
-        self.print_every = 50
+        self.print_every = print_every
 
         # empty now and set during or after training
         self.train_time = 0
