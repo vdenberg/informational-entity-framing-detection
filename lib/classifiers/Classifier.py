@@ -21,6 +21,7 @@ class Classifier:
         # empty now and set during or after training
         self.train_time = 0
         self.prev_val_f1 = 0
+        self.best_val_f1 = 0
         self.full_patience = patience
         self.current_patience = self.full_patience
         self.test_perf = []
@@ -74,7 +75,8 @@ class Classifier:
                                                                                                   dev_batches,
                                                                                                   dev_lables)
             losses.append((train_loss, val_loss))
-            self.logger.info(f' > Epoch {ep} (took {ep_elapsed}): Av loss = {train_loss}, Val perf: {val_perf_string}')
+            self.logger.info(f' > Epoch {ep} (took {ep_elapsed}): Av loss = {train_loss}, '
+                             f'Val perf: {val_perf_string} (Best f1 so far: {self.best_val_f1})')
 
             # if save:
             #    self.model.save_bert_model(self.model, self.cp_dir, f'epoch{ep}')
@@ -83,6 +85,8 @@ class Classifier:
                 self.current_patience = self.full_patience
             else:
                 self.current_patience -= 1
+            if val_f1 > self.best_val_f1:
+                self.best_val_f1 = val_f1
 
             self.update_patience(val_f1)
 
