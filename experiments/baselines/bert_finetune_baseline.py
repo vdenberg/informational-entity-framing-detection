@@ -19,6 +19,7 @@ import tensorflow as tf
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=16)
+parser.add_argument('-mode', '--mode', type=str, default='train')
 args = parser.parse_args()
 
 GPU = True
@@ -26,8 +27,8 @@ EPOCHS = 10
 BATCH_SIZE = args.batch_size
 TEST = False
 SPL = 'fan'
-TRAIN = True
-INFER = True
+TRAIN = (args.mode == 'train')
+INFER = (args.mode == 'eval')
 
 device_name = tf.test.gpu_device_name()
 if device_name == '/device:GPU:0':
