@@ -23,7 +23,7 @@ args = parser.parse_args()
 
 GPU = True
 EPOCHS = 10
-BATCH_SIZE = args.bs
+BATCH_SIZE = args.batch_size
 TEST = False
 SPL = 'fan'
 TRAIN = True
