@@ -43,26 +43,26 @@ t = text.Transformer('bert-base-uncased', maxlen=512, classes=['0', '1'])
 model = t.get_classifier()
 
 if TRAIN:
-    for fold_i, fold in enumerate(folds):
+    for fold in enumerate(folds):
         # for getting indices: fold['train'].index.values
         x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['label'].values
         x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
         x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
 
-        print(fold_i, 'preprocess')
+        print(fold['name'], 'preprocess')
         trn = t.preprocess_train(x_train, y_train)
         val = t.preprocess_test(x_dev, y_dev)
 
-        print(fold_i, 'learn')
+        print(fold['name'], 'learn')
         start_time = time.time()
         learner = ktrain.get_learner(model, train_data=trn, val_data=val, batch_size=BATCH_SIZE)
         learner.fit_onecycle(2e-5, EPOCHS)
         print("--- %s seconds ---" % (time.time() - start_time))
 
-        print(fold_i, 'validate')
+        print(fold['name'], 'validate')
         learner.validate(class_names=t.get_classes())
 
-        print(fold_i, 'save predictor')
+        print(fold['name'], 'save predictor')
         predictor = ktrain.get_predictor(model, preproc=t)
         predictor.save(os.join.path(MODEL_DIR, f'predictor_{SPL}_fold{fold["name"]}'))
 
