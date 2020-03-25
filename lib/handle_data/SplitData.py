@@ -255,15 +255,22 @@ class Split:
         self.tst = tst
 
         if self.which == 'fan':
-            self.spl = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
+            splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
+            self.spl = splitter.return_split()
 
         elif self.which == 'berg':
-            self.spl = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
+            splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
+            self.spl = splitter.return_split()
 
         if self.which == 'both':
-            fan_spl = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
-            berg_spl = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
+            fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
+            berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
+            fan_spl = fan_splitter.return_split()
+            berg_spl = berg_splitter.return_split()
             self.spl = fan_spl.extend(berg_spl)
+
+        self.spl = self.spl.return_split()
+
 
     def apply_split(self, features):
         """
@@ -273,8 +280,7 @@ class Split:
         :return: (dict) a list of folds,
          each a dict of set types (train, dev, test) containing slice of input df
         """
-        empty_folds = self.fan_spl.return_split()
-        empty_folds = self.berg_spl.return_split()
+        empty_folds = self.spl
 
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):

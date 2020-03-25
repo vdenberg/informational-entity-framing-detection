@@ -113,7 +113,7 @@ parser.add_argument('-context', '--context_type', type=str, help='Options: artic
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='debug')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=50)
-parser.add_argument('-pat', '--patience', type=int, default=3)
+parser.add_argument('-pat', '--patience', type=int, default=10)
 #parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
