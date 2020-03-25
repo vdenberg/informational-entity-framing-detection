@@ -142,6 +142,7 @@ if __name__ == '__main__':
 
     t0 = time.time()
     for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
+        if LOAD_FROM_EP: ep += LOAD_FROM_EP
         tr_loss = 0
         nb_tr_examples, nb_tr_steps = 0, 0
         for step, batch in enumerate(train_dataloader):
@@ -152,11 +153,8 @@ if __name__ == '__main__':
             model.zero_grad()
 
             outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
-            #print(outputs)
-            (loss), logits, probs, (hidden_states), (attentions) = outputs
+            (loss), logits, pooled_output = outputs
             loss = outputs[0]
-            #print(probs)
-            #av_hidden_states = hidden_states.mean()
 
             if OUTPUT_MODE == "classification":
                 loss_fct = CrossEntropyLoss()
