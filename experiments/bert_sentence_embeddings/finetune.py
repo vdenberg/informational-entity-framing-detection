@@ -90,6 +90,10 @@ with open(DATA_DIR + "dev_features.pkl", "rb") as f:
     dev_features = pickle.load(f)
     dev_data, dev_labels = to_tensor(dev_features)
 
+with open(DATA_DIR + "all_features.pkl", "rb") as f:
+    dev_features = pickle.load(f)
+    all_data, all_labels = to_tensor(dev_features)
+
 num_train_optimization_steps = int(len(train_features) / BATCH_SIZE / GRADIENT_ACCUMULATION_STEPS) * NUM_TRAIN_EPOCHS
 num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 

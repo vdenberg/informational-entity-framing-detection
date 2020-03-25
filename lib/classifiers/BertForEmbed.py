@@ -127,8 +127,7 @@ class Inferencer():
             input_ids, input_mask, segment_ids, label_ids = batch
 
             with torch.no_grad():
-                outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits, pooled_output, (hidden_states), (attentions) = outputs
+                logits, pooled_output = model(input_ids, segment_ids, input_mask, labels=None)
 
             if self.use_cuda:
                 emb_output = list(pooled_output[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
