@@ -5,7 +5,7 @@ from torch.utils.data import (DataLoader, RandomSampler, TensorDataset)
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.nn import CrossEntropyLoss, MSELoss
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
 from lib.handle_data.PreprocessForBert import InputFeatures
 from lib.utils import get_torch_device
 from tqdm import trange
@@ -24,18 +24,6 @@ def to_tensor(features, OUTPUT_MODE='classification'):
 
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return data, label_ids # example_ids, input_ids, input_mask, segment_ids, label_ids
-
-
-def save_model(model_to_save, model_dir):
-    model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
-
-    config_name = f"config.json"
-    weights_name = f"pytorch_model.bin"
-    output_model_file = os.path.join(model_dir, weights_name)
-    output_config_file = os.path.join(model_dir, config_name)
-
-    torch.save(model_to_save.state_dict(), output_model_file)
-    model_to_save.config.to_json_file(output_config_file)
 
 
 #######
