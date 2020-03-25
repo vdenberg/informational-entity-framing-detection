@@ -23,7 +23,7 @@ def to_tensor(features, OUTPUT_MODE='classification'):
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
 
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
-    return data  # example_ids, input_ids, input_mask, segment_ids, label_ids
+    return data, label_ids # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
 def save_model(model_to_save, model_dir):
@@ -84,7 +84,7 @@ output_mode = OUTPUT_MODE
 
 with open(DATA_DIR + "train_features.pkl", "rb") as f:
     train_features = pickle.load(f)
-    train_data, train_ids = to_tensor(train_features)
+    train_data, train_labels = to_tensor(train_features)
 
 with open(DATA_DIR + "dev_features.pkl", "rb") as f:
     dev_features = pickle.load(f)
