@@ -9,7 +9,7 @@ class Classifier:
     """
     Generic Classifier that performs recurring machine learning tasks
     """
-    def __init__(self, model, n_epochs, logger, patience, fig_dir, model_name):
+    def __init__(self, model, n_epochs, logger, patience, fig_dir, model_name, print_every):
         self.model = model
         self.n_epochs = n_epochs
         self.logger = logger
@@ -75,7 +75,7 @@ class Classifier:
                                                                                                   dev_batches,
                                                                                                   dev_lables)
             losses.append((train_loss, val_loss))
-            self.logger.info(f' > Epoch {ep} (took {ep_elapsed}): Av loss = {train_loss}, '
+            self.logger.info(f' > {self.model_name.upper()} Epoch {ep} (took {ep_elapsed}): Av loss = {train_loss}, '
                              f'Val perf: {val_perf_string} (Best f1 so far: {self.best_val_f1})')
 
             # if save:
