@@ -82,7 +82,6 @@ LOAD_FROM_EP = float(sys.argv[3]) if len(sys.argv) > 3 else None
 SEED_VAL = 124
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
-OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
@@ -117,8 +116,7 @@ if __name__ == '__main__':
         inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
     else:
         load_dir = CACHE_DIR
-        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                              output_hidden_states=True, output_attentions=True)
+        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS)
 
     model.to(device)
 
@@ -142,6 +140,7 @@ if __name__ == '__main__':
 
     t0 = time.time()
     for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
+        if LOAD_FROM_EP: ep += LOAD_FROM_EP
         tr_loss = 0
         nb_tr_examples, nb_tr_steps = 0, 0
         for step, batch in enumerate(train_dataloader):
