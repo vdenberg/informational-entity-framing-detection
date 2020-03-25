@@ -90,9 +90,9 @@ if INFER:
     pos_neg = []
     pos_pos = []
     for fold in folds:
-        x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['bias'].values
-        x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
-        x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
+        x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['label'].values
+        x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
+        x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
 
         print(fold['name'], 'load predictor')
         predictor = ktrain.load_predictor(MODEL_DIR + '/fold{}'.format(fold['name']))
