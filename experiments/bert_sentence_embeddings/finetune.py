@@ -26,7 +26,7 @@ def to_tensor(features, OUTPUT_MODE='classificatio'):
     return data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
-def save_model(model_to_save, model_dir, identifier):
+def save_model(model_to_save, model_dir):
     model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
 
     config_name = f"config.json"
@@ -54,7 +54,6 @@ BERT_MODEL = 'bert-base-cased'
 
 # structure of project
 DATA_DIR = 'data/features_for_bert/'
-OUTPUT_DIR = f'outputs/'
 CHECKPOINT_DIR = f'checkpoints/bert_for_embed/'
 REPORTS_DIR = f'reports/bert_for_embed_evaluation_report/'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
@@ -67,11 +66,6 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
     REPORTS_DIR += f'/report_{len(os.listdir(REPORTS_DIR))}'
     os.makedirs(REPORTS_DIR)
-
-if os.path.exists(OUTPUT_DIR) and os.listdir(OUTPUT_DIR):
-    raise ValueError("Output directory ({}) already exists and is not empty.".format(OUTPUT_DIR))
-if not os.path.exists(OUTPUT_DIR):
-    os.makedirs(OUTPUT_DIR)
 
 ################
 # HYPERPARAMETERS
