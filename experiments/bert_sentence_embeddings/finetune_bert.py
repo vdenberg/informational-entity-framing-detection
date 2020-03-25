@@ -104,8 +104,7 @@ with open(DATA_DIR + "dev_features.pkl", "rb") as f:
 num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS
 num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 
-
-inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=True)
+inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device)
 
 if __name__ == '__main__':
     if LOAD_FROM_EP:
