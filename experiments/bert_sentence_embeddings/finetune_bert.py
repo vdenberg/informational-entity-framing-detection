@@ -132,7 +132,7 @@ for fold in folds:
     inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
 
     if LOAD_FROM_EP:
-        name = f'epoch{LOAD_FROM_EP}'
+        name = f'epoch{LOAD_FROM_EP}_lr{LEARNING_RATE}'
         load_dir = os.path.join(CHECKPOINT_DIR, name)
         model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
                                                               output_hidden_states=True, output_attentions=True)
@@ -174,7 +174,7 @@ for fold in folds:
 
             model.zero_grad()
 
-            outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
+            outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
             (loss), logits, probs, sequence_ouput, pooled_output = outputs
 
             if OUTPUT_MODE == "classification":
