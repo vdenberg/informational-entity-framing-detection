@@ -166,7 +166,7 @@ class BertWrapper:
             token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
             with torch.no_grad():
-                loss, logits, probs, sequence_output, pooled_output = self.model(input_ids=token_ids,
+                (loss), logits, probs, sequence_output, pooled_output = self.model(input_ids=token_ids,
                                                                    attention_mask=token_masks,
                                                                    token_type_ids=tok_seg_ids, labels=labels)
                 probs = probs.detach().cpu().numpy()
