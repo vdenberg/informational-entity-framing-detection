@@ -14,16 +14,13 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
 
-def to_tensor(features, OUTPUT_MODE):
+def to_tensor(features, OUTPUT_MODE='classificatio'):
     example_ids = torch.tensor([f.my_id for f in features], dtype=torch.long)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
 
-    if OUTPUT_MODE == "classification":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    elif OUTPUT_MODE == "regression":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
+    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
 
     data = TensorDataset(example_ids, input_ids, input_mask, segment_ids, label_ids)
     return data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
@@ -57,9 +54,9 @@ BERT_MODEL = 'bert-base-cased'
 
 # structure of project
 DATA_DIR = 'data/features_for_bert/'
-OUTPUT_DIR = f'outputs/{TASK_NAME}/'
+OUTPUT_DIR = f'outputs/'
 CHECKPOINT_DIR = f'checkpoints/bert_for_embed/'
-REPORTS_DIR = f'reports/{TASK_NAME}_evaluation_report/'
+REPORTS_DIR = f'reports/bert_for_embed_evaluation_report/'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 cache_dir = CACHE_DIR
