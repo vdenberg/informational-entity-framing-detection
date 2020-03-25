@@ -58,7 +58,7 @@ BERT_MODEL = 'bert-base-cased'
 # structure of project
 MAIN_DIR = './' #sys.argv[1]
 TASK_NAME = 'basil'
-DATA_DIR = MAIN_DIR + 'data/'
+DATA_DIR = MAIN_DIR + 'data/features_for_bert/'
 OUTPUT_DIR = MAIN_DIR + f'outputs/{TASK_NAME}/'
 CHECKPOINT_DIR = MAIN_DIR + f'checkpoints/{TASK_NAME}/'
 REPORTS_DIR = MAIN_DIR + f'reports/{TASK_NAME}_evaluation_report/'
