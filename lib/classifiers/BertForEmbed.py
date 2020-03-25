@@ -154,7 +154,6 @@ class Inferencer():
             return preds
 
     def eval(self, model, data, labels, av_loss=None, name='Basil'):
-        print(len(preds))
         preds = self.predict(model, data)
 
         metrics_dict, metrics_string = my_eval(labels.numpy(), preds)
