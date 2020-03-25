@@ -151,11 +151,7 @@ if __name__ == '__main__':
             model.zero_grad()
 
             outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
-            #print(outputs)
-            (loss), logits, probs, sequence_outputs, _, (hidden_states), (attentions) = outputs
-            loss = outputs[0]
-            #print(probs)
-            #av_hidden_states = hidden_states.mean()
+            loss, logits, probs, sequence_ouput, pooled_output = outputs
 
             if OUTPUT_MODE == "classification":
                 loss_fct = CrossEntropyLoss()
