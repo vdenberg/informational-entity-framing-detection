@@ -124,7 +124,7 @@ if __name__ == '__main__':
             batch = tuple(t.to(device) for t in batch)
             input_ids, input_mask, segment_ids, label_ids = batch
 
-            (loss), logits, pooled_output = model(input_ids, segment_ids, input_mask, labels=None)
+            (loss), logits, pooled_output = model(input_ids, segment_ids, input_mask, labels=label_ids)
             #print(outputs)
             #hidden_states = outputs[1]
             #av_hidden_states = hidden_states.mean()
