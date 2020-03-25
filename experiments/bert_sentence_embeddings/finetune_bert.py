@@ -17,7 +17,7 @@ logger = logging.getLogger()
 
 #######
 # FROM:
-# https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
+# https://medium.com/swlh/a-simple-guide-on-using-bert-for-text-classification-bbf041ac8d04
 #####
 
 
