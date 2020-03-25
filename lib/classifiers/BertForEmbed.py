@@ -83,14 +83,13 @@ class BertForSequenceClassification(BertPreTrainedModel):
             inputs_embeds=inputs_embeds,
         )
 
-        sequence_output = outputs[0] # according to pytorch doc: (batch_size, sequence_length, hidden_size)
         pooled_output = outputs[1]
 
         pooled_output = self.dropout(pooled_output)
         logits = self.classifier(pooled_output)
-        probs = self.sigm(logits)
+        output = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output, pooled_output)  #+ outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, pooled_output) #+ outputs[2:]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
@@ -102,19 +101,19 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, probs, sequence_ouput, # (hidden_states), (attentions)
+        return outputs  # (loss), logits, pooled_output, (hidden_states), (attentions)
 
 
 class Inferencer():
-    def __init__(self, reports_dir, output_mode, logger, device, USE_CUDA):
+    def __init__(self, reports_dir, output_mode, logger, device, use_cuda):
         self.device = device
         self.output_mode = output_mode
         self.reports_dir = reports_dir
         self.logger = logger
         self.device = device
-        self.use_cuda = USE_CUDA
+        self.use_cuda = device
 
-    def predict(self, model, data, return_embeddings=False, emb_type='poolBERT'):
+    def predict(self, model, data, return_embeddings=False):
         model.to(self.device)
         model.eval()
 
@@ -129,24 +128,19 @@ class Inferencer():
 
             with torch.no_grad():
                 outputs = model(input_ids, segment_ids, input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output = outputs
+                logits, pooled_output, (hidden_states), (attentions) = outputs
 
-            # of last hidden state with size (batch_size, sequence_length, hidden_size)
-            # where batch_size=1, sequence_length=95, hidden_size=768)
-            # take average of sequence, size (batch_size, hidden_size)
-            if emb_type == 'poolBERT':
-                agg_hidden = pooled_output
-            else:
-                agg_hidden = sequence_output.mean(axis=1)
             if self.use_cuda:
-                agg_hidden = agg_hidden[0].detach().cpu()
-            agg_hidden = agg_hidden.numpy() # .detach().cpu() necessary here on gpu
-            embeddings.append(agg_hidden)
+                emb_output = list(pooled_output[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
+
+            else:
+                emb_output = list(pooled_output[0].numpy())
 
             if len(preds) == 0:
-                preds.append(probs.detach().cpu().numpy())
+                preds.append(logits.detach().cpu().numpy())
             else:
-                preds[0] = np.append(preds[0], probs.detach().cpu().numpy(), axis=0)
+                preds[0] = np.append(preds[0], logits.detach().cpu().numpy(), axis=0)
+            embeddings.extend(emb_output)
 
         preds = preds[0]
         if self.output_mode == "classification":
@@ -162,15 +156,13 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, name='Basil'):
         preds = self.predict(model, data)
-        metrics_dict, metrics_string = my_eval(labels.numpy(), preds, av_loss=av_loss)
-        metrics_dict['name'] = name
+        metrics_dict, metrics_df, metrics_string = my_eval(name, labels.numpy(), preds, av_loss=av_loss)
 
         output_eval_file = os.path.join(self.reports_dir, "eval_results.txt")
         with open(output_eval_file, "w") as writer:
-            self.logger.info("\n***** Eval results *****")
-            self.logger.info(f'\n{name}')
-            self.logger.info(f'\n{metrics_string}')
-            #self.logger.info(f'Sample of predictions: {preds[:20]}')
+            self.logger.info("***** Eval results *****")
+            self.logger.info(f'\n{metrics_df}')
+            self.logger.info(f'Sample of predictions: {preds[:20]}')
             for key in (metrics_dict.keys()):
                 writer.write("%s = %s\n" % (key, str(metrics_dict[key])))
 
@@ -187,8 +179,6 @@ def save_model(model_to_save, model_dir, identifier):
     model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
     torch.save(model_to_save.state_dict(), output_model_file)
     model_to_save.config.to_json_file(output_config_file)
-
-    #test again
 
 
 
