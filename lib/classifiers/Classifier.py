@@ -86,7 +86,7 @@ class Classifier:
             val_metrics, val_perf_string = self.predict_eval(dev_batches, dev_labels)
 
             tr_loss = tr_metrics['loss']
-            tr_f1 = tr_metrics['f1']
+            tr_f1 = round(tr_metrics['f1'],4)
             val_loss = val_metrics['loss']
             val_f1 = val_metrics['f1']
 
