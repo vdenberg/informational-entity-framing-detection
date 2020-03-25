@@ -79,7 +79,7 @@ if not os.path.exists(REPORTS_DIR):
 BATCH_SIZE = 24 #24
 NUM_TRAIN_EPOCHS = int(sys.argv[1]) if len(sys.argv) > 1 else 2
 LEARNING_RATE = float(sys.argv[2]) if len(sys.argv) > 1 else 2e-5 #2e-5
-LOAD_FROM_EP = float(sys.argv[3]) if len(sys.argv) > 3 else None
+LOAD_FROM_EP = int(sys.argv[3]) if len(sys.argv) > 3 else None
 SEED_VAL = 124
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
@@ -104,6 +104,7 @@ torch.cuda.manual_seed_all(SEED_VAL)
 output_mode = OUTPUT_MODE
 
 # load and split data
+"""
 string_data = pd.read_csv(string_data_fp, sep='\t',
                           names=['id', 'context_document', 'label', 'position'],
                           dtype={'id': str, 'tokens': str, 'bias': int, 'position': int})
@@ -112,6 +113,7 @@ folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
+"""
 
 # start
 #for fold in folds:
