@@ -117,7 +117,7 @@ class Classifier:
         self.test_perf_string = test_perf_string
         self.logger.info(f' Model {self.model_name} on Fold {fold["name"]} (took {self.train_time}): Test perf: {self.test_perf_string}')
 
-        #cp_fp = format_checkpoint_filepath(self.cp_dir, bertcam='bert', epoch_number=ep)
-        #save_bert_model(self.model, cp_fp)
+        cp_fp = format_checkpoint_filepath(self.cp_dir, bertcam='bert', epoch_number=ep)
+        save_model(self.model_name, self.model, cp_fp)
 
 
