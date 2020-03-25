@@ -33,11 +33,12 @@ class Classifier:
         for step, batch in enumerate(train_batches):
 
             loss = self.wrapper.train_on_batch(batch)
+            epoch_loss += loss
 
             if (step > 0) & (step % self.print_every == 0):
-                self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {loss}')
+                self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {epoch_loss/step}')
 
-            epoch_loss += loss
+
         av_epoch_loss = epoch_loss / len(train_batches)
 
         elapsed = format_runtime(time.time() - start)
@@ -74,7 +75,7 @@ class Classifier:
 
             losses.append((tr_loss, val_loss))
             self.logger.info(f' > {self.model_name} Epoch {ep} (took {ep_elapsed}): '
-                             f'Av loss = {tr_loss}, Train perf: {tr_f1}, Val perf: {val_perf_string} '
+                             f'loss = {tr_loss}, Train perf: {tr_f1}, Val perf: {val_perf_string} '
                              f'(Best f1 so far: {self.best_val_f1})')
 
             # if save:
