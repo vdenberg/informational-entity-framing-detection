@@ -6,7 +6,8 @@
 
 import ktrain
 from ktrain import text
-from helpers import Split, evaluation
+from lib.handle_data.SplitData import Split
+from lib.evaluate.StandardEval import my_eval
 import pandas as pd
 import time
 import os
@@ -16,45 +17,27 @@ import tensorflow as tf
 ###
 
 GPU = True
-DIR = '.'
 EPOCHS = 10
-BATCH_SIZE = 6
-TEST = False
-SPL = 'berg'
+BATCH_SIZE = 16
+TEST = True
+SPL = 'fan'
 TRAIN = True
 INFER = True
 
-if GPU:
-    device_name = tf.test.gpu_device_name()
-    if device_name == '/device:GPU:0':
-        print('Found GPU at: {}'.format(device_name))
-    else:
-        raise SystemError('GPU device not found')
+device_name = tf.test.gpu_device_name()
+if device_name == '/device:GPU:0':
+    print('Found GPU at: {}'.format(device_name))
+else:
+    pass
 
-BASIL = DIR + '/basil_w_features.csv'
-if not os.path.exists(DIR + '/models'):
-    os.mkdir(DIR + '/models')
-if not os.path.exists(DIR + '/models/berg'):
-    os.mkdir(DIR + '/models/berg')
-if not os.path.exists(DIR + '/models/fan'):
-    os.mkdir(DIR + '/models/fan')
+DATA_FP = 'data/basil.csv'
+MODEL_DIR = 'models/ktrain/'
 
-assert os.path.exists(DIR + '/basil_w_features.json')
-assert os.path.exists(DIR + '/split.json')
-assert os.path.exists(DIR + '/test_tokens.txt')
-assert os.path.exists(DIR + '/train_tokens.txt')
-assert os.path.exists(DIR + '/test_tokens.txt')
-
-PRED = DIR + '/models'
-if SPL == 'fan':
-    PRED += '/fan'
-if SPL == 'berg':
-    PRED += '/berg'
-
-basil = pd.read_csv(BASIL, index_col=0).fillna('')
-basil.bias = basil.bias.astype(str)
-spl = Split(basil, which=SPL, split_loc=DIR, tst=TEST)
-folds = spl.apply_split(features=['sentence'], output_as='df')
+basil = pd.read_csv(DATA_FP, index_col=0).fillna('')
+basil['label'] = basil.bias.astype(str)
+basil.index = [x.lower() for x in basil.index]
+spl = Split(basil, which=SPL, tst=TEST)
+folds = spl.apply_split(features=['sentence'])
 
 t = text.Transformer('bert-base-uncased', maxlen=512, classes=['0', '1'])
 model = t.get_classifier()
@@ -62,9 +45,9 @@ model = t.get_classifier()
 if TRAIN:
     for fold_i, fold in enumerate(folds):
         # for getting indices: fold['train'].index.values
-        x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['bias'].values
-        x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
-        x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
+        x_train, y_train = fold['train']['sentence'].to_list(), fold['train']['label'].values
+        x_dev, y_dev = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
+        x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['label'].values
 
         print(fold_i, 'preprocess')
         trn = t.preprocess_train(x_train, y_train)
@@ -81,10 +64,18 @@ if TRAIN:
 
         print(fold_i, 'save predictor')
         predictor = ktrain.get_predictor(model, preproc=t)
-        predictor.save(PRED + '/fold{}'.format(fold_i))
+        predictor.save(os.join.path(MODEL_DIR, f'predictor_{SPL}_fold{fold["name"]}'))
 
-        #print(fold_i, 'analyze losses')
-        #learner.view_top_losses(n=10, preproc=t)
+        """
+        print(fold_i, 'analyze losses')
+        losses = top_losses = learner.view_top_losses(n=10, preproc=t) # loss = [idx, loss, truth, pred]
+        indices, losses, _, preds = zip(*losses)
+        losses_df = fold['dev'].iloc[indices]
+        losses_df['loss'] = losses
+        losses_df['pred'] = preds
+
+        predictor.explain(n=10, preproc=t)
+        """
 
 basil['error'] = ['not_in_dev'] * len(basil)
 
