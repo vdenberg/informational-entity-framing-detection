@@ -151,7 +151,7 @@ if __name__ == '__main__':
             model.zero_grad()
 
             outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
-            loss, logits, probs, sequence_ouput, pooled_output = outputs
+            (loss), logits, probs, sequence_ouput, pooled_output = outputs
 
             if OUTPUT_MODE == "classification":
                 loss_fct = CrossEntropyLoss()
@@ -180,8 +180,9 @@ if __name__ == '__main__':
                 #logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
         # Save after Epoch
-        epoch_name = f'epoch{ep}'
+        epoch_name = f'epoch{ep}_lr{LEARNING_RATE}'
         av_loss = tr_loss / len(train_dataloader)
+        #print(av_loss)
         logger.info(f'{epoch_name}: average training loss = {av_loss}')
         save_model(model, CHECKPOINT_DIR, epoch_name)
         inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, name=epoch_name)
