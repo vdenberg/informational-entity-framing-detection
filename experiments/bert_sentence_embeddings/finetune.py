@@ -153,7 +153,7 @@ if __name__ == '__main__':
             model.zero_grad()
 
             outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
-            (loss), logits, pooled_output = outputs
+            (loss), logits, probs, pooled_output = outputs
             loss = outputs[0]
 
             if OUTPUT_MODE == "classification":
