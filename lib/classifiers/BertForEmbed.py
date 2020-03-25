@@ -153,11 +153,11 @@ class Inferencer():
         else:
             return preds
 
-    def eval(self, model, data, labels, name='Basil'):
+    def eval(self, model, data, labels, av_loss=None, name='Basil'):
         print(len(preds))
         preds = self.predict(model, data)
 
-        metrics_dict, metrics_string = my_eval(name, labels.numpy(), preds)
+        metrics_dict, metrics_string = my_eval(labels.numpy(), preds)
 
         output_eval_file = os.path.join(self.reports_dir, "eval_results.txt")
         with open(output_eval_file, "w") as writer:
