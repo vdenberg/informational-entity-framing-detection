@@ -62,6 +62,7 @@ OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 
 DATA_FP = DATA_DIR + "basil_features.pkl"
+DEV_DATA_FP = DATA_DIR + "dev_features.pkl"
 
 # =====================================================================================
 #                    DATA
@@ -70,7 +71,10 @@ DATA_FP = DATA_DIR + "basil_features.pkl"
 
 with open(DATA_FP, "rb") as f:
     all_features = pickle.load(f)
+with open(DEV_DATA_FP, "rb") as f:
+    all_features = pickle.load(f)
 all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
+dev_ids, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
 
 # =====================================================================================
 #                    PREDICT
@@ -83,8 +87,11 @@ if __name__ == '__main__':
                                                           output_hidden_states=True, output_attentions=True)
     logger.info(f'Loaded data from {DATA_FP}')
     logger.info(f'Loaded model from {MODEL_PATH}')
-    inferencer.eval(model, all_data, all_labels, name=f'{MODEL_PATH}')
+    inferencer.eval(model, dev_data, dev_labels, name=f'{MODEL_PATH}-Dev')
+    inferencer.eval(model, all_data, all_labels, name=f'{MODEL_PATH}-All')
     embeddings = inferencer.predict(model, all_data, return_embeddings=True) #, embedding_type=EMB_TYPE)
+    print(len(embeddings))
+    print(embeddings.shape)
     logger.info(f'Finished {len(embeddings)} embeddings')
     basil_w_BERT = pd.DataFrame(index=all_labels)
     basil_w_BERT[EMB_TYPE] = embeddings
