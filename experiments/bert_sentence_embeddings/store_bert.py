@@ -77,7 +77,7 @@ all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
 # =====================================================================================
 # Read arguments from command line
 
-inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device)
+inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
 if __name__ == '__main__':
     model = BertForSequenceClassification.from_pretrained(MODEL_PATH, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)

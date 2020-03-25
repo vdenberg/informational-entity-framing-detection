@@ -90,7 +90,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output, pooled_output) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs,) + (sequence_output, pooled_output)  #+ outputs[2:]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
@@ -102,16 +102,17 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, probs, sequence_ouput, (hidden_states), (attentions)
+        return outputs  # (loss), logits, probs, sequence_ouput, # (hidden_states), (attentions)
 
 
 class Inferencer():
-    def __init__(self, reports_dir, output_mode, logger, device):
+    def __init__(self, reports_dir, output_mode, logger, device, USE_CUDA):
         self.device = device
         self.output_mode = output_mode
         self.reports_dir = reports_dir
         self.logger = logger
         self.device = device
+        self.use_cuda = USE_CUDA
 
     def predict(self, model, data, return_embeddings=False, emb_type='poolBERT'):
         model.to(self.device)
@@ -128,7 +129,7 @@ class Inferencer():
 
             with torch.no_grad():
                 outputs = model(input_ids, attention_mask=input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output, (hidden_states), (attentions) = outputs
+                logits, probs, sequence_output, pooled_output = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
@@ -137,7 +138,9 @@ class Inferencer():
                 agg_hidden = pooled_output
             else:
                 agg_hidden = sequence_output.mean(axis=1)
-            agg_hidden = list(agg_hidden[0].numpy()) # .detach().cpu() necessary here on gpu
+            if self.use_cuda:
+                agg_hidden = agg_hidden[0].detach().cpu()
+            agg_hidden = agg_hidden.numpy() # .detach().cpu() necessary here on gpu
             embeddings.append(agg_hidden)
 
             if len(preds) == 0:

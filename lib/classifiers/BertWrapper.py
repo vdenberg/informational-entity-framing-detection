@@ -89,7 +89,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output, pooled_output,) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs,) + (sequence_output, pooled_output,) # + outputs[2:]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
@@ -101,7 +101,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, probs, sequence_ouput, pooled_output, (hidden_states), (attentions)
+        return outputs  # (loss), logits, probs, sequence_ouput, pooled_output, # (hidden_states), (attentions)
 
 
 def save_bert_model(model_to_save, model_dir, identifier):
@@ -147,8 +147,8 @@ class BertWrapper:
 
         token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
-        loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids, attention_mask=token_masks,
-                                                                    token_type_ids=tok_seg_ids, labels=labels)
+        outputs = self.model(input_ids=token_ids, attention_mask=token_masks, token_type_ids=tok_seg_ids, labels=labels)
+        loss, logits, probs, sequence_ouput, pooled_output = outputs
 
         loss.backward()
 
@@ -166,9 +166,9 @@ class BertWrapper:
             token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
             with torch.no_grad():
-                loss, probs, sequence_output, pooled_output, _ = self.model(input_ids=token_ids,
-                                                                            attention_mask=token_masks,
-                                                                            token_type_ids=tok_seg_ids, labels=labels)
+                probs, sequence_output, pooled_output = self.model(input_ids=token_ids,
+                                                                   attention_mask=token_masks,
+                                                                   token_type_ids=tok_seg_ids, labels=None)
                 probs = probs.detach().cpu().numpy()
 
             if len(preds) == 0:
