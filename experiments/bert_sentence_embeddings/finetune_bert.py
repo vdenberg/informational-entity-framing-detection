@@ -168,7 +168,7 @@ model.train()
 
 t0 = time.time()
 for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
-    ep += LOAD_FROM_EP
+    if LOAD_FROM_EP: ep += LOAD_FROM_EP
     tr_loss = 0
     nb_tr_examples, nb_tr_steps = 0, 0
     for step, batch in enumerate(train_dataloader):
