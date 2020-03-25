@@ -16,9 +16,14 @@ import tensorflow as tf
 
 ###
 
+parser = argparse.ArgumentParser()
+# TRAINING PARAMS
+parser.add_argument('-bs', '--batch_size', type=int, default=16)
+args = parser.parse_args()
+
 GPU = True
 EPOCHS = 10
-BATCH_SIZE = 16
+BATCH_SIZE = args.bs
 TEST = False
 SPL = 'fan'
 TRAIN = True
