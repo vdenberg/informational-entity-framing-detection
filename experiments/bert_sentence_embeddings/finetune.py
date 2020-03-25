@@ -6,9 +6,9 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.nn import CrossEntropyLoss, MSELoss
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
+from lib.handle_data.PreprocessForBert import InputFeatures
 from lib.utils import get_torch_device
 from tqdm import trange
-
 import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
