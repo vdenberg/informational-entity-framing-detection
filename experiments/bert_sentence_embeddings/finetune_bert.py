@@ -152,7 +152,7 @@ if __name__ == '__main__':
 
             outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
             #print(outputs)
-            (loss), logits, probs, sequence_outputs, (hidden_states), (attentions) = outputs
+            (loss), logits, probs, sequence_outputs, _, (hidden_states), (attentions) = outputs
             loss = outputs[0]
             #print(probs)
             #av_hidden_states = hidden_states.mean()
