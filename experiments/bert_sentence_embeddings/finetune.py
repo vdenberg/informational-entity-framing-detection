@@ -32,8 +32,8 @@ def to_tensor(features, OUTPUT_MODE):
 def save_model(model_to_save, model_dir, identifier):
     model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
 
-    config_name = f"{identifier}_config.json"
-    weights_name = f"{identifier}_pytorch_model.bin"
+    config_name = f"config.json"
+    weights_name = f"pytorch_model.bin"
     output_model_file = os.path.join(model_dir, weights_name)
     output_config_file = os.path.join(model_dir, config_name)
 
@@ -56,13 +56,11 @@ device, USE_CUDA =  get_torch_device() #torch.device("cuda" if torch.cuda.is_ava
 BERT_MODEL = 'bert-base-cased'
 
 # structure of project
-MAIN_DIR = './' #sys.argv[1]
-TASK_NAME = 'basil'
-DATA_DIR = MAIN_DIR + 'data/features_for_bert/'
-OUTPUT_DIR = MAIN_DIR + f'outputs/{TASK_NAME}/'
-CHECKPOINT_DIR = MAIN_DIR + f'checkpoints/{TASK_NAME}/'
-REPORTS_DIR = MAIN_DIR + f'reports/{TASK_NAME}_evaluation_report/'
-CACHE_DIR = MAIN_DIR + 'cache/' # This is where BERT will look for pre-trained models to load parameters from.
+DATA_DIR = 'data/features_for_bert/'
+OUTPUT_DIR = f'outputs/{TASK_NAME}/'
+CHECKPOINT_DIR = f'checkpoints/bert_for_embed/'
+REPORTS_DIR = f'reports/{TASK_NAME}_evaluation_report/'
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 cache_dir = CACHE_DIR
 if os.path.exists(REPORTS_DIR) and os.listdir(REPORTS_DIR):
@@ -109,7 +107,6 @@ inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
 if __name__ == '__main__':
     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS)
     model.to(device)
-    model.set_saving_info(CACHE_DIR, CHECKPOINT_DIR, OUTPUT_DIR)
 
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
                       correct_bias=False)  # To reproduce BertAdam specific behavior set correct_bias=False
