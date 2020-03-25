@@ -94,7 +94,7 @@ if INFER:
         x_test, y_test = fold['dev']['sentence'].to_list(), fold['dev']['bias'].values
 
         print(fold['name'], 'load predictor')
-        predictor = ktrain.load_predictor(MODEL_DIR + '/fold{}'.format(fold_i))
+        predictor = ktrain.load_predictor(MODEL_DIR + '/fold{}'.format(fold['name']))
         y_pred = predictor.predict(x_dev)
 
         # evaluate
@@ -118,7 +118,7 @@ if INFER:
         # predictor.explain('')
 
 basil_err = basil.loc[basil['error'] != 'not_in_dev']
-basil_err[['error', 'fold', 'sentence', 'bias', 'lex_bias']].to_csv(DIR + '/basil_w_errors.csv')
+basil_err[['error', 'fold', 'sentence', 'bias', 'lex_bias']].to_csv('data/basil_w_errors.csv')
 
 pd.set_option('display.max_colwidth', -1)
 pd.set_option('display.max_columns', 20)
