@@ -106,12 +106,13 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
 
 class Inferencer():
-    def __init__(self, reports_dir, output_mode, logger, device):
+    def __init__(self, reports_dir, output_mode, logger, device, use_cuda):
         self.device = device
         self.output_mode = output_mode
         self.reports_dir = reports_dir
         self.logger = logger
         self.device = device
+        self.use_cuda = use_cuda
 
     def predict(self, model, data, return_embeddings=False):
         model.to(self.device)
