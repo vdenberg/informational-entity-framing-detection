@@ -78,7 +78,7 @@ if not os.path.exists(REPORTS_DIR):
 BATCH_SIZE = 24 #24
 NUM_TRAIN_EPOCHS = int(sys.argv[1]) if len(sys.argv) > 1 else 2
 LEARNING_RATE = float(sys.argv[2]) if len(sys.argv) > 1 else 2e-5 #2e-5
-LOAD_FROM_EP = float(sys.argv[3]) if len(sys.argv) > 3 else None
+LOAD_FROM_EP = int(sys.argv[3]) if len(sys.argv) > 3 else None
 SEED_VAL = 124
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
