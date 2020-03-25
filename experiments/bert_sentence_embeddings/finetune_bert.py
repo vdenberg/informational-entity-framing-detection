@@ -178,7 +178,7 @@ for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
 
         model.zero_grad()
 
-        outputs = model(input_ids, attention_mask=input_mask, labels=label_ids)
+        outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
         (loss), logits, probs, sequence_ouput, pooled_output = outputs
 
         if OUTPUT_MODE == "classification":

@@ -128,7 +128,7 @@ class Inferencer():
             input_ids, input_mask, segment_ids, label_ids = batch
 
             with torch.no_grad():
-                outputs = model(input_ids, attention_mask=input_mask, labels=None)
+                outputs = model(input_ids, segment_ids, input_mask, labels=None)
                 logits, probs, sequence_output, pooled_output = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
