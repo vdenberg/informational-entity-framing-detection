@@ -8,5 +8,5 @@
 create_data/emnlp19-BASIL/*
 *.DS_Store
 models/checkpoints/bert_for_embed/
-reports/bert_baseline/bert_baseline_results_table.csv/
+reports/bert_baseline/bert_baseline_results_table.csv
 data/*.csv
