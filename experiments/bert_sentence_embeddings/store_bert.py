@@ -90,6 +90,6 @@ if __name__ == '__main__':
     inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'{MODEL_PATH}-All')
     embeddings = inferencer.predict(model, all_data, return_embeddings=True) #, embedding_type=EMB_TYPE)ls
     logger.info(f'Finished {len(embeddings)} embeddings')
-    basil_w_BERT = pd.DataFrame(index=all_labels)
+    basil_w_BERT = pd.DataFrame(index=all_ids)
     basil_w_BERT[EMB_TYPE] = embeddings
     basil_w_BERT.to_csv(f'data/basil_w_{EMB_TYPE}.csv')
