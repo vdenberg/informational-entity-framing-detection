@@ -145,10 +145,11 @@ class BertWrapper:
         self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
 
-        token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
+        token_ids, token_masks, tok_seg_ids, _, _, labels, _ = batch
 
         outputs = self.model(input_ids=token_ids, attention_mask=token_masks, token_type_ids=tok_seg_ids, labels=labels)
-        loss, logits, probs, sequence_ouput, pooled_output = outputs
+        (loss), logits, probs, sequence_ouput, pooled_output = outputs
+        loss = outputs[0]
 
         loss.backward()
 
