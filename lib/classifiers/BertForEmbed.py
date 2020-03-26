@@ -165,8 +165,8 @@ class Inferencer():
 
         output_eval_file = os.path.join(self.reports_dir, "eval_results.txt")
         with open(output_eval_file, "w") as writer:
-            self.logger.info(f"\n***** Eval results {name} *****")
-            self.logger.info(f'{metrics_string}')
+            self.logger.info(f" ***** Eval results {name} *****")
+            self.logger.info(f' {metrics_string}')
             #self.logger.info(f'Sample of predictions: {preds[:20]}')
             for key in (metrics_dict.keys()):
                 writer.write("%s = %s\n" % (key, str(metrics_dict[key])))

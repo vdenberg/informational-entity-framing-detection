@@ -100,7 +100,6 @@ if SEED:
         SEED_VAL = random.randint(0, 300)
     else:
         SEED_VAL = SEED
-    logger.info(f"Setting seed: {SEED_VAL}")
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
     torch.manual_seed(SEED_VAL)
@@ -214,10 +213,10 @@ if __name__ == '__main__':
             epoch_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
-            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, name=epoch_name)
+            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, name='val ' + epoch_name)
 
         # Save final model
         final_name = f'bert_for_embed_finetuned'
         save_model(model, 'models/', final_name)
-        inferencer.eval(model, dev_data, dev_labels, name=final_name)
+        inferencer.eval(model, dev_data, dev_labels, name='val ' + final_name)
 

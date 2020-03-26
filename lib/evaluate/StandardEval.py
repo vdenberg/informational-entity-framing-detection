@@ -29,30 +29,33 @@ def get_metrics(labels, preds):
 
 
 def my_eval(labels, preds, av_loss=None, name=""):
+    # METRICS_DICT
     metrics_dict = get_metrics(labels, preds)
-
-    # make string in the style that I like
-    acc, f1 = metrics_dict['acc'], metrics_dict['f1']
-    select_metrics = [metrics_dict['prec'], metrics_dict['rec']]
-    metrics_string = ['{:.4f}'.format(met) for met in select_metrics]
-    metrics_string = ['Acc: {:.4f}'.format(acc)] + metrics_string + ['F1: {:.4f}'.format(f1)]
-    metrics_string = " ".join(metrics_string)
-
-    #metrics_df = pd.DataFrame(metrics_dict)
-
     if av_loss:
         metrics_dict['loss'] = av_loss
-        #metrics_df['average_loss'] = av_loss
-        metrics_string += ' Loss: {:.4f}'.format(av_loss)
 
+    # METRICS_DF
+    # metrics_df = pd.DataFrame(metrics_dict)
+
+    # METRICS_STRING
+    # select values
+    if av_loss:
+        metrics = [metrics_dict['loss'], metrics_dict['acc'], ['prec'], metrics_dict['rec'], metrics_dict['f1']]
+    else:
+        metrics = [metrics_dict['acc'], ['prec'], metrics_dict['rec'], metrics_dict['f1']]
+    # round values
+    metrics = ['{:.4f}'.format(met) for met in metrics]
+
+    # make conf_mat
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
-    metrics_string += f" {conf_mat}"
 
-
+    metrics_string = f"{name}: Conf mat: {conf_mat}, Acc: {metrics['acc']}, Prec: {metrics['prec']}, Rec: {metrics['rec']}" \
+                     f", Loss: {metrics['loss']}, F1: {metrics['f1']}"
 
     return metrics_dict, metrics_string
 
 
+'''
 # old eval helper
 
 def evaluation(y_true, y_pred):
@@ -71,3 +74,4 @@ def evaluation(y_true, y_pred):
     metrics_string = " ".join(metrics_string)
 
     return metrics, metrics_string
+'''
