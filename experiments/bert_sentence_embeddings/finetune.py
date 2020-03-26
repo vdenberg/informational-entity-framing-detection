@@ -249,3 +249,4 @@ if __name__ == '__main__':
     test_mets['set_type'] = 'test'
     results_df.append(best_val_perf, ignore_index=True)
     results_df.append(test_mets, ignore_index=True)
+    results_df.to_csv('reports/bert_baseline/bert_baseline_results_table.csv', index=False)
