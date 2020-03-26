@@ -16,11 +16,11 @@ from lib.utils import get_torch_device, to_tensors, to_batches
 
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
-        self.sent_id_map = {my_id.lower(): i for i, my_id in enumerate(sentence_ids)}
+        self.sent_id_map = {my_id.lower(): i+1 for i, my_id in enumerate(sentence_ids)}
         #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
         self.EOD_index = len(self.sent_id_map)
-        self.PAD_index = self.EOD_index + 1
-        self.max_doc_length = max_doc_length + 1
+        self.max_doc_length = max_doc_length + 1 # add 1 for EOD_index
+        self.PAD_index = 0
 
     def to_numeric_documents(self, documents):
         numeric_context_docs = []
@@ -48,6 +48,7 @@ class Processor():
         tok_seg_ids = []
 
         for tokens in all_tokens:
+            tokens = ["[CLS]"] + tokens + ["[SEP]"]
             segment_ids = [0] * len(tokens)
             input_ids = tokenizer.convert_tokens_to_ids(tokens)
             input_mask = [1] * len(input_ids)
