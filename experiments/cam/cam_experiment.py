@@ -12,7 +12,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.BertWrapper import BertWrapper
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
-from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
+#from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
 
 
 class Processor():
@@ -275,7 +275,7 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 
 if FT_EMB:
-
+    pass
     """
     logger.info("============ FINETUNE EMBEDDINGS =============")
     logger.info(f" Embedding type: {EMB_TYPE}")
@@ -301,17 +301,18 @@ if FT_EMB:
 
     finetune_f1s.loc['mean'] = finetune_f1s.mean()
     logger.info(f'Finetuning results:\n{finetune_f1s}')
-    """
+   
 
-    ft = OldFinetuner(logger=logger, n_epochs=10,
-                      lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
-    ft.fan()
+    #ft = OldFinetuner(logger=logger, n_epochs=10,
+    #                  lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
+    #ft.fan()
     bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
                 n_train_batches=len(fold['train_batches']))
     all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
     data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
     data_w_embeds = data
     data_w_embeds.to_csv(EMBED_FP)
+    """
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
