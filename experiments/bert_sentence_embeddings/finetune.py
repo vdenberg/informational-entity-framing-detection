@@ -228,13 +228,29 @@ class OldFinetuner:
         self.test(test_data, test_labels)
 
     def berg(self):
-        pass
-        #for foldname in ['fan']: #, '0', '1', '2']:
-            #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
-            #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
+        for fold_name in range(0,10):
+            train_fp = os.path.join(self.DATA_DIR, 'folds', f"{fold_name}_train_features.pkl")
+            dev_fp = os.path.join(self.DATA_DIR, 'folds', f"{fold_name}_dev_features.pkl")
+            test_fp = os.path.join(self.DATA_DIR, 'folds', f"{fold_name}_test_features.pkl")
 
-            #with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
+            with open(test_fp, "rb") as f:
+                # with open(self.DATA_DIR + "test_features.pkl", "rb") as f:
+                test_features = pickle.load(f)
+                test_ids, test_data, test_labels = to_tensor(test_features, self.OUTPUT_MODE)
 
+            # with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
+            with open(train_fp, "rb") as f:
+                train_features = pickle.load(f)
+                train_ids, train_data, train_labels = to_tensor(train_features, self.OUTPUT_MODE)
+
+            # with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
+            with open(dev_fp, "rb") as f:
+                dev_features = pickle.load(f)
+                dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
+
+            n_train_batches = int(len(train_features) / self.BATCH_SIZE)
+            self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
+            self.test(test_data, test_labels)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -256,6 +272,7 @@ if __name__ == '__main__':
 
     logger.info(f"Start Logging to {LOG_NAME}")
     logger.info(args)
-    #for seed in [111, 6, 263, 124, 1123]:
-    ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=args.sv, load_from_ep=0)
-    ft.fan()
+    for seed in [111, 6, 263, 124, 1123]:
+        ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=seed, load_from_ep=0)
+        ft.fan()
+        ft.berg()
