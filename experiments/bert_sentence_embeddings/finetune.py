@@ -86,7 +86,6 @@ args = parser.parse_args()
 
 NUM_TRAIN_EPOCHS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED = args.sv
 LOAD_FROM_EP = args.load_from_ep
 
 BATCH_SIZE = 24
@@ -105,7 +104,6 @@ torch.cuda.manual_seed_all(SEED_VAL)
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
 
-
 FOLDS = False
 if __name__ == '__main__':
 
@@ -113,10 +111,17 @@ if __name__ == '__main__':
         #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
         #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
 
-        #with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
         with open(DATA_DIR + "train_features.pkl", "rb") as f:
             train_features = pickle.load(f)
             train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+
+        print(train_data[:5])
+
+        with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
+            train_features = pickle.load(f)
+            train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+
+        print(train_data[:5])
 
         #with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
         with open(DATA_DIR + "dev_features.pkl", "rb") as f:
