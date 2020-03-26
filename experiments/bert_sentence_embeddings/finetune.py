@@ -77,7 +77,7 @@ if not os.path.exists(REPORTS_DIR):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=10)
+parser.add_argument('-ep', '--n_epochs', type=int, default=3)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-s', '--seed', type=int, default=True)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
@@ -111,19 +111,24 @@ FOLDS = False
 if __name__ == '__main__':
 
     for foldname in ['fan']: #, '0', '1', '2']:
-        logger.info(f"***** Training on Fold {foldname} *****")
         #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
         #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
 
-        with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
-        #with open(DATA_DIR + "train_features.pkl", "rb") as f:
+        #with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
+        with open(DATA_DIR + "train_features.pkl", "rb") as f:
             train_features = pickle.load(f)
             train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
 
-        with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
-        #with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+        #with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
+        with open(DATA_DIR + "dev_features.pkl", "rb") as f:
             dev_features = pickle.load(f)
             dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+
+        logger.info(f"***** Training on Fold {foldname} *****")
+        logger.info("  Num examples = %d", len(train_features))
+        logger.info("  Batch size = %d", BATCH_SIZE)
+        logger.info("  Learning rate = %d", LEARNING_RATE)
+        logger.info("  SEED = %d", SEED_VAL)
 
         num_train_optimization_steps = int(
             len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
@@ -153,11 +158,6 @@ if __name__ == '__main__':
         global_step = 0
         nb_tr_steps = 0
         tr_loss = 0
-
-        logger.info("***** Running training *****")
-        logger.info("  Num examples = %d", len(train_features))
-        logger.info("  Batch size = %d", BATCH_SIZE)
-        logger.info("  Num steps = %d", num_train_optimization_steps)
 
         train_sampler = RandomSampler(train_data)
         train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)

@@ -28,7 +28,7 @@ def get_metrics(labels, preds):
     }
 
 
-def my_eval(labels, preds, av_loss=None):
+def my_eval(labels, preds, av_loss=None, name=""):
     metrics_dict = get_metrics(labels, preds)
 
     # make string in the style that I like
@@ -48,6 +48,8 @@ def my_eval(labels, preds, av_loss=None):
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
     metrics_string += f" {conf_mat}"
 
+
+
     return metrics_dict, metrics_string
 
 
@@ -65,7 +67,7 @@ def evaluation(y_true, y_pred):
     metrics_string = ['{:.4f}'.format(met) for met in metrics]
 
     metrics = [acc] + metrics + [f1]
-    metrics_string = ['Acc: {:.4f}'.format(acc)] + metrics_string + ['F1: {:.4f}'.format(f1)]
+    metrics_string = [' Acc: {:.4f}'.format(acc)] + metrics_string + ['F1: {:.4f}'.format(f1)]
     metrics_string = " ".join(metrics_string)
 
     return metrics, metrics_string
