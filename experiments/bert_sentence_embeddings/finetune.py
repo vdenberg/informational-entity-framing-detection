@@ -232,7 +232,7 @@ if __name__ == '__main__':
         av_loss = tr_loss / len(train_dataloader)
         save_model(model, CHECKPOINT_DIR, epoch_name)
         dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
-        if dev_mets['val_f1'] > best_val:
+        if dev_mets['f1'] > best_val:
             best_val_perf = dev_mets
 
     # Save final model
