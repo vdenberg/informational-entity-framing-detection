@@ -96,15 +96,14 @@ OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
-if SEED:
-    if SEED == 0:
-        SEED_VAL = random.randint(0, 300)
-    else:
-        SEED_VAL = SEED
-    random.seed(SEED_VAL)
-    np.random.seed(SEED_VAL)
-    torch.manual_seed(SEED_VAL)
-    torch.cuda.manual_seed_all(SEED_VAL)
+if SEED == 0:
+    SEED_VAL = random.randint(0, 300)
+else:
+    SEED_VAL = SEED
+random.seed(SEED_VAL)
+np.random.seed(SEED_VAL)
+torch.manual_seed(SEED_VAL)
+torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
