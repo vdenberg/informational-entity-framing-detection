@@ -117,7 +117,7 @@ logger.info(args)
 
 fold_name = args.fold
 if __name__ == '__main__':
-    for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9']:
+    for fold_name in ['fan', '3', '4', '5', '6', '7', '8', '9']: #'fan', '1', '2',
         if fold_name == 'orig':
             train_fp = os.path.join(DATA_DIR, "train_features.pkl")
             dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
