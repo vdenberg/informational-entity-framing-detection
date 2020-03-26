@@ -23,7 +23,7 @@ parser.add_argument('-mode', '--mode', type=str, default='train')
 args = parser.parse_args()
 
 GPU = True
-EPOCHS = 10
+EPOCHS = 5
 BATCH_SIZE = args.batch_size
 TEST = False
 SPL = 'fan'
