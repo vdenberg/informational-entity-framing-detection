@@ -101,7 +101,7 @@ with open(DATA_DIR + "dev_features.pkl", "rb") as f:
     dev_features = pickle.load(f)
     dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
-num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS
+num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS # / GRADIENT_ACCUMULATION_STEPS
 num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 
 
@@ -123,6 +123,7 @@ if __name__ == '__main__':
 
     model.to(device)
 
+    #optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
@@ -173,6 +174,7 @@ if __name__ == '__main__':
             nb_tr_examples += input_ids.size(0)
             nb_tr_steps += 1
 
+            #if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
             optimizer.step()
             scheduler.step()
             global_step += 1
