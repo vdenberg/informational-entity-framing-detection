@@ -17,13 +17,11 @@ def split_input():
     SPL = 'fan'
     spl = Split(data, which=SPL, split_loc='/Users/ester/Projects/PhD/InformationalBiasDetection/data/fan_split',
                 tst=False)
-    folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'], input_as='huggingface',
-                            output_as='huggingface')
+    folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'])
     for fold in folds:
         fold['train'].to_csv('data/train.tsv', sep='\t', index=False, header=False)
         fold['dev'].to_csv('data/dev.tsv', sep='\t', index=False, header=False)
         fold['test'].to_csv('data/test.tsv', sep='\t', index=False, header=False)
-        # note: data/all.tsv was made by hand
 
 
 class InputExample(object):
@@ -169,6 +167,7 @@ def convert_example_to_feature(example_row):
     assert len(segment_ids) == max_seq_length
 
     if output_mode == "classification":
+        #print(vars(example))
         label_id = label_map[example.label]
     elif output_mode == "regression":
         label_id = float(example.label)
