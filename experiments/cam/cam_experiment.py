@@ -305,7 +305,8 @@ if FT_EMB:
 
     ft = OldFinetuner(logger=logger)
     ft.fan()
-
+    bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
+                n_train_batches=len(fold['train_batches']))
     all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
     data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
     data_w_embeds = data

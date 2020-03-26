@@ -84,6 +84,7 @@ class OldFinetuner:
         self.WARMUP_PROPORTION = 0.1
         self.NUM_LABELS = 2
         self.PRINT_EVERY = 50
+        self.trained_model = None
 
         if self.SEED == 0:
             SEED_VAL = random.randint(0, 300)
@@ -203,6 +204,7 @@ class OldFinetuner:
         # Save final model
         final_name = f'bert_for_embed_finetuned'
         save_model(model, 'models/', final_name)
+        self.trained_model = model
         #bertwrapper.save_model('models/', final_name)
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
 
