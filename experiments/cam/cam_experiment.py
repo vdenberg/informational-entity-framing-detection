@@ -297,9 +297,10 @@ if FT_EMB:
     finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 
     for fold in folds:
+        LOAD_FROM_EP = None
         bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
                            bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
-                           n_train_batches=len(fold['train_batches']))
+                           n_train_batches=len(fold['train_batches']), load_from_ep=LOAD_FROM_EP)
 
         logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
         cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,

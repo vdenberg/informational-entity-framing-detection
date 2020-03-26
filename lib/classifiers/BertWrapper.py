@@ -119,27 +119,27 @@ def save_bert_model(model_to_save, model_dir, identifier):
 
 class BertWrapper:
     def __init__(self, bert_model, cache_dir, cp_dir, num_labels, bert_lr,
-                 warmup_proportion, n_epochs, n_train_batches):
-        self.model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir,
-                                                                   num_labels=num_labels,
-                                                                   output_hidden_states=False, output_attentions=False)
-        self.device, self.use_cuda = get_torch_device()
-        self.model.to(self.device)
-        if self.use_cuda: self.model.cuda()
-
-        self.cp_dir = cp_dir
+                 warmup_proportion, n_train_batches, n_epochs, load_from_ep=0):
         self.warmup_proportion = warmup_proportion
+        self.device, self.use_cuda = get_torch_device()
+        self.cache_dir = cache_dir
+        self.cp_dir = cp_dir
+        self.num_labels = num_labels
 
+        self.model = self.load_model(bert_model, load_from_ep)
+        self.model.to(self.device)
+        if self.use_cuda:
+            self.model.cuda()
 
         # set optim and scheduler
         self.optimizer = AdamW(self.model.parameters(), lr=bert_lr, eps=1e-8)
-        #num_train_optimization_steps = n_train_batches * n_epochs
-        #num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
-        #self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
-        #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
-        stepsize = int(n_train_batches/2)
-        self.scheduler = CyclicLR(self.optimizer, base_lr=bert_lr, max_lr=bert_lr*3,
-                                  step_size_up=stepsize, cycle_momentum=False)
+        num_train_optimization_steps = n_train_batches * n_epochs
+        num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                         num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+        #stepsize = int(n_train_batches/2)
+        #self.scheduler = CyclicLR(self.optimizer, base_lr=bert_lr, max_lr=bert_lr*3,
+        #                          step_size_up=stepsize, cycle_momentum=False)
 
     def train_on_batch(self, batch):
         self.model.zero_grad()
@@ -227,3 +227,16 @@ class BertWrapper:
         model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)
+
+    def load_model(self, bert_model, load_from_ep):
+        if not load_from_ep:
+            return BertForSequenceClassification.from_pretrained(bert_model, cache_dir=self.cache_dir,
+                                                                 num_labels=self.num_labels,
+                                                                 output_hidden_states=False,
+                                                                 output_attentions=False)
+        else:
+            load_dir = os.path.join(self.cp_dir, load_from_ep)
+            return BertForSequenceClassification.from_pretrained(load_dir, num_labels=self.num_labels,
+                                                                 output_hidden_states=False,
+                                                                 output_attentions=False)
+

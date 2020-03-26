@@ -1,4 +1,4 @@
-import time
+import time, os
 from lib.utils import format_runtime, plot_scores
 from lib.evaluate.StandardEval import my_eval
 

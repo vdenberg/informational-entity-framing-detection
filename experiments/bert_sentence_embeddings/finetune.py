@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
                 model.zero_grad()
 
-                outputs = model(input_ids, input_mask, segment_ids, labels=label_ids)
+                outputs = model(input_ids, segment_ids, input_mask, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
 
