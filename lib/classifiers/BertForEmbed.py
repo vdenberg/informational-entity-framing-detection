@@ -163,10 +163,10 @@ class Inferencer():
         preds = self.predict(model, data)
         metrics_dict, metrics_string = my_eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
 
-        output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
+        #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         self.logger.info(f'\n {metrics_string}')
-        with open(output_eval_file, 'w') as f:
-            f.write{metrics_string + '\n'}
+        #with open(output_eval_file, 'w') as f:
+        #    f.write{metrics_string + '\n'}
 
         return metrics_dict['f1']
 

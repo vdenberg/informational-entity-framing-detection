@@ -105,7 +105,7 @@ inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_C
 
 # set logger
 now = datetime.now()
-now_string = now.strftime(format=f'%b-%d-%Hh-%-M_seed{args.sv}')
+now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold{args.fold}_seed{args.sv}')
 LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
 console_hdlr = logging.StreamHandler(sys.stdout)
