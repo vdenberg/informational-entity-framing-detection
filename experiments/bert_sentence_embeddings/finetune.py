@@ -82,6 +82,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-sv', '--sv', type=int, default=0)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-f', '--fold_name', type=str, default='fan')
 args = parser.parse_args()
 
 NUM_TRAIN_EPOCHS = args.n_epochs
@@ -96,6 +97,8 @@ NUM_LABELS = 2
 PRINT_EVERY = 50
 
 SEED_VAL = args.sv
+FOLD_NAME = args.fold_name
+fold_name = FOLD_NAME
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
 torch.manual_seed(SEED_VAL)
@@ -107,105 +110,105 @@ inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_C
 FOLDS = False
 if __name__ == '__main__':
 
-    for foldname in ['fan']: #, '0', '1', '2']:
-        train_fp = os.path.join(DATA_DIR, f"folds/{foldname}_train_features.pkl")
-        dev_fp = os.path.join(DATA_DIR,  f"folds/{foldname}_dev_features.pkl")
-        test_fp = os.path.join(DATA_DIR, f"folds/{foldname}_test_features.pkl")
+    #for foldname in ['fan']: #, '0', '1', '2']:
+    train_fp = os.path.join(DATA_DIR, f"folds/{foldname}_train_features.pkl")
+    dev_fp = os.path.join(DATA_DIR,  f"folds/{foldname}_dev_features.pkl")
+    test_fp = os.path.join(DATA_DIR, f"folds/{foldname}_test_features.pkl")
 
-        with open(train_fp, "rb") as f:
-            train_features = pickle.load(f)
-            _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
-        with open(dev_fp, "rb") as f:
-            dev_features = pickle.load(f)
-            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
-        with open(test_fp, "rb") as f:
-            test_features = pickle.load(f)
-            _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
+    with open(train_fp, "rb") as f:
+        train_features = pickle.load(f)
+        _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+    with open(dev_fp, "rb") as f:
+        dev_features = pickle.load(f)
+        _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+    with open(test_fp, "rb") as f:
+        test_features = pickle.load(f)
+        _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
-        logger.info(f"***** Training on Fold {foldname} *****")
-        logger.info(f"  Fold = {foldname}")
-        logger.info(f"  SEED = {SEED_VAL}")
+    logger.info(f"***** Training on Fold {foldname} *****")
+    logger.info(f"  Fold = {foldname}")
+    logger.info(f"  SEED = {SEED_VAL}")
 
-        num_train_optimization_steps = int(
-            len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-        num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+    num_train_optimization_steps = int(
+        len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+    num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 
-        if LOAD_FROM_EP:
-            name = f'epoch{LOAD_FROM_EP}'
-            load_dir = os.path.join(CHECKPOINT_DIR, name)
-            logger.info(f'Loading model {load_dir}')
-            model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
-                                                                  output_hidden_states=True, output_attentions=True)
-            logger.info(f'Loaded model {load_dir}')
-            inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
-        else:
-            load_dir = CACHE_DIR
-            model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                                  output_hidden_states=True, output_attentions=True)
+    if LOAD_FROM_EP:
+        name = f'epoch{LOAD_FROM_EP}'
+        load_dir = os.path.join(CHECKPOINT_DIR, name)
+        logger.info(f'Loading model {load_dir}')
+        model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
+                                                              output_hidden_states=True, output_attentions=True)
+        logger.info(f'Loaded model {load_dir}')
+        inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
+    else:
+        load_dir = CACHE_DIR
+        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+                                                              output_hidden_states=True, output_attentions=True)
 
-        model.to(device)
-        # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-        optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
-                          eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                    num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+    model.to(device)
+    # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
+                      eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
-        train_sampler = RandomSampler(train_data)
-        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
+    train_sampler = RandomSampler(train_data)
+    train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
 
-        model.train()
-        t0 = time.time()
-        for ep in range(int(NUM_TRAIN_EPOCHS)):
+    model.train()
+    t0 = time.time()
+    for ep in range(int(NUM_TRAIN_EPOCHS)):
+        patience = 3
+        prev_val_f1 = 0
+
+        if LOAD_FROM_EP: ep += LOAD_FROM_EP
+        tr_loss = 0
+        for step, batch in enumerate(train_dataloader):
+            batch = tuple(t.to(device) for t in batch)
+            input_ids, input_mask, segment_ids, label_ids = batch
+            # print(label_ids)
+
+            model.zero_grad()
+            outputs = model(input_ids, input_mask, labels=label_ids)
+            (loss), logits, probs, sequence_output, pooled_output = outputs
+            loss = outputs[0]
+
+            if OUTPUT_MODE == "classification":
+                loss_fct = CrossEntropyLoss()
+                loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+            elif OUTPUT_MODE == "regression":
+                loss_fct = MSELoss()
+                loss = loss_fct(logits.view(-1), label_ids.view(-1))
+
+            if GRADIENT_ACCUMULATION_STEPS > 1:
+                loss = loss / GRADIENT_ACCUMULATION_STEPS
+
+            loss.backward()
+
+            tr_loss += loss.item()
+
+            # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
+            optimizer.step()
+            scheduler.step()
+
+        # Save after Epoch
+        epoch_name = f'fold{foldname}_sv{SEED_VAL}_ep{ep}'
+        av_loss = tr_loss / len(train_dataloader)
+        save_model(model, CHECKPOINT_DIR, epoch_name)
+        val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+
+        if val_f1 > prev_val_f1:
             patience = 3
-            prev_val_f1 = 0
+        else:
+            patience -= 1
+        if (not patience > 0) and (val_f1 > 0.20):
+            logger.info("Stopping training")
+            break
+        prev_val_f1 = val_f1
 
-            if LOAD_FROM_EP: ep += LOAD_FROM_EP
-            tr_loss = 0
-            for step, batch in enumerate(train_dataloader):
-                batch = tuple(t.to(device) for t in batch)
-                input_ids, input_mask, segment_ids, label_ids = batch
-                # print(label_ids)
-
-                model.zero_grad()
-                outputs = model(input_ids, input_mask, labels=label_ids)
-                (loss), logits, probs, sequence_output, pooled_output = outputs
-                loss = outputs[0]
-
-                if OUTPUT_MODE == "classification":
-                    loss_fct = CrossEntropyLoss()
-                    loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-                elif OUTPUT_MODE == "regression":
-                    loss_fct = MSELoss()
-                    loss = loss_fct(logits.view(-1), label_ids.view(-1))
-
-                if GRADIENT_ACCUMULATION_STEPS > 1:
-                    loss = loss / GRADIENT_ACCUMULATION_STEPS
-
-                loss.backward()
-
-                tr_loss += loss.item()
-
-                # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
-                optimizer.step()
-                scheduler.step()
-
-            # Save after Epoch
-            epoch_name = f'fold{foldname}_sv{SEED_VAL}_ep{ep}'
-            av_loss = tr_loss / len(train_dataloader)
-            save_model(model, CHECKPOINT_DIR, epoch_name)
-            val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
-
-            if val_f1 > prev_val_f1:
-                patience = 3
-            else:
-                patience -= 1
-            if (not patience > 0) and (val_f1 > 0.20):
-                logger.info("Stopping training")
-                break
-            prev_val_f1 = val_f1
-
-        # Save final model
-        name = f'fold{foldname}_sv{SEED_VAL}_fin_ep_of_{NUM_TRAIN_EPOCHS}'
-        save_model(model, 'models/', name)
-        inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + name)
+    # Save final model
+    name = f'fold{foldname}_sv{SEED_VAL}_fin_ep_of_{NUM_TRAIN_EPOCHS}'
+    save_model(model, 'models/', name)
+    inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + name)
 
