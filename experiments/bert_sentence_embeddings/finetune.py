@@ -178,7 +178,10 @@ if __name__ == '__main__':
 
                 model.zero_grad()
                 if step % PRINT_EVERY == 0 and step != 0:
+                    print(input_ids)
                     print(input_mask)
+                    print(segment_ids)
+                    print(label_ids)
                 outputs = model(input_ids, input_mask, segment_ids, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
