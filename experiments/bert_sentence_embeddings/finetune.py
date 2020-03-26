@@ -79,13 +79,13 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=3)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-s', '--seed', type=int, default=True)
+parser.add_argument('-s', '--seed', type=int, default='random')
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 NUM_TRAIN_EPOCHS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SET_SEED = args.seed
+SEED = args.seed
 LOAD_FROM_EP = args.load_from_ep
 
 BATCH_SIZE = 24
@@ -95,8 +95,11 @@ OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
-if SET_SEED:
-    SEED_VAL = random.randint(0, 300)
+if SEED:
+    if SEED == 'random':
+        SEED_VAL = random.randint(0, 300)
+    else:
+        SEED_VAL = SEED
     logger.info(f"Setting seed: {SEED_VAL}")
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
