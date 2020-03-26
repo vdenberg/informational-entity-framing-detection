@@ -208,3 +208,21 @@ class BertWrapper:
             embeddings.append(emb_output)
 
         return embeddings
+
+    def save_model(self, model_dir, name):
+        """
+        Save bert model.
+        :param model_dir: usually models/bert_for_embed/etc.
+        :param name: usually number of current epoch
+        """
+        model_to_save = self.model
+
+        output_dir = os.path.join(model_dir, name)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+        output_model_file = os.path.join(output_dir, "pytorch_model.bin")
+        output_config_file = os.path.join(output_dir, "config.json")
+
+        model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
+        torch.save(model_to_save.state_dict(), output_model_file)
+        model_to_save.config.to_json_file(output_config_file)

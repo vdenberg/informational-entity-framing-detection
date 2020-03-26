@@ -77,7 +77,7 @@ if not os.path.exists(REPORTS_DIR):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=3)
+parser.add_argument('-ep', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-s', '--seed', type=int, default='random')
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
@@ -213,10 +213,10 @@ if __name__ == '__main__':
             epoch_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
-            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, name='val ' + epoch_name)
+            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
 
         # Save final model
         final_name = f'bert_for_embed_finetuned'
         save_model(model, 'models/', final_name)
-        inferencer.eval(model, dev_data, dev_labels, name='val ' + final_name)
+        inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
 

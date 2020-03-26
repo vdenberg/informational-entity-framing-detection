@@ -128,7 +128,7 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=50)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
-parser.add_argument('-sv', '--seed_val', type=int, default=124)
+parser.add_argument('-sv', '--seed_val', type=int, default=263)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -300,7 +300,7 @@ if FT_EMB:
                            n_train_batches=len(fold['train_batches']))
 
         logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
-        cl = Classifier(logger=logger, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
+        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
                         fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
         cl.train_on_fold(fold)
         finetune_f1s.loc[fold['name']] = cl.test_perf

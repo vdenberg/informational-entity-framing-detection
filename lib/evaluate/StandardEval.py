@@ -28,7 +28,18 @@ def get_metrics(labels, preds):
     }
 
 
-def my_eval(labels, preds, av_loss=None, name=""):
+def my_eval(labels, preds, av_loss=None, set_type="", name=""):
+    """
+    Compares labels to predictions, Loss can be added to also
+    display the loss associated to the model that made those predictions
+    bzw. the loss associated with those predictions.
+    :param labels: self-explan.
+    :param preds: self-explan.
+    :param av_loss: loss, e.g. train loss, or val loss
+    :param set_type: are the labels train dev or test labels?
+    :param name: name of model that's being evaled, e.g. 'bert_epochx'
+    :return:
+    """
     # METRICS_DICT
     metrics_dict = get_metrics(labels, preds)
     if av_loss:
@@ -49,7 +60,7 @@ def my_eval(labels, preds, av_loss=None, name=""):
     # make conf_mat
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
 
-    metrics_string = f"{name}: Conf mat: {conf_mat}, Acc: {metrics['acc']}, Prec: {metrics['prec']}, Rec: {metrics['rec']}" \
+    metrics_string = f"Model {name} performance on {set_type}: Conf mat: {conf_mat}, Acc: {metrics['acc']}, Prec: {metrics['prec']}, Rec: {metrics['rec']}" \
                      f", Loss: {metrics['loss']}, F1: {metrics['f1']}"
 
     return metrics_dict, metrics_string
