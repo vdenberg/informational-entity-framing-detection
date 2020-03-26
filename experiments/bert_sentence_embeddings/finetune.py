@@ -184,7 +184,7 @@ if __name__ == '__main__':
             t0 = time.time()
             best_val = 0
             best_val_mets = {}
-            for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
+            for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
                 if LOAD_FROM_EP: ep += LOAD_FROM_EP
                 tr_loss = 0
                 nb_tr_examples, nb_tr_steps = 0, 0

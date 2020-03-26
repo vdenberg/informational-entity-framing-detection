@@ -72,9 +72,9 @@ DEV_DATA_FP = DATA_DIR + "dev_features.pkl"
 with open(DATA_FP, "rb") as f:
     all_features = pickle.load(f)
 with open(DEV_DATA_FP, "rb") as f:
-    all_features = pickle.load(f)
+    dev_features = pickle.load(f)
 all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
-dev_ids, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
+dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
 # =====================================================================================
 #                    PREDICT
