@@ -192,7 +192,6 @@ def train(train_data, train_labels, dev_data, dev_labels):
         # Save after Epoch
         epoch_name = f'epoch{ep}'
         av_loss = tr_loss / len(train_dataloader)
-        logger.info(f'{epoch_name}: average training loss = {av_loss}')
         save_model(model, CHECKPOINT_DIR, epoch_name)
         inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, name=epoch_name)
 
