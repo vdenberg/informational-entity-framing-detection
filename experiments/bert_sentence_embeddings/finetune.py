@@ -176,11 +176,9 @@ if __name__ == '__main__':
                 # print(label_ids)
 
                 model.zero_grad()
-                if step % PRINT_EVERY == 0 and step != 0:
-                    logger.info(input_ids)
-                    logger.info(input_mask)
-                    logger.info(segment_ids)
-                    logger.info(label_ids)
+                #if step % PRINT_EVERY == 0 and step != 0:
+                #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
+                #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
                 outputs = model(input_ids, input_mask, segment_ids, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
