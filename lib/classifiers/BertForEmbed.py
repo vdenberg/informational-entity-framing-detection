@@ -104,7 +104,6 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
         return outputs  # (loss), logits, probs, sequence_ouput,pooled_output), # (hidden_states), (attentions)
 
-
 class Inferencer():
     def __init__(self, reports_dir, output_mode, logger, device, use_cuda):
         self.device = device

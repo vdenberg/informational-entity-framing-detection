@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
+#from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
 from tqdm import trange
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
@@ -127,10 +128,9 @@ if __name__ == '__main__':
             dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
         logger.info(f"***** Training on Fold {foldname} *****")
-        logger.info("  Num examples = %d", len(train_features))
-        logger.info("  Batch size = %d", BATCH_SIZE)
-        logger.info("  Learning rate = %d", LEARNING_RATE)
-        logger.info("  SEED = %d", SEED_VAL)
+        logger.info(f"  Batch size = {BATCH_SIZE}")
+        logger.info(f"  Learning rate = {LEARNING_RATE}")
+        logger.info(f"  SEED = {SEED_VAL}")
 
         num_train_optimization_steps = int(
             len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
@@ -142,7 +142,7 @@ if __name__ == '__main__':
             logger.info(f'Loading model {load_dir}')
             model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
                                                                   output_hidden_states=True, output_attentions=True)
-            logger.info(f'Loading model {load_dir}')
+            logger.info(f'Loaded model {load_dir}')
             inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
         else:
             load_dir = CACHE_DIR
