@@ -94,6 +94,7 @@ class OldFinetuner:
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
+        self.SEED_VAL = SEED_VAL
 
         self.OUTPUT_MODE = 'classification'
 
