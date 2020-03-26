@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
         t0 = time.time()
         best_val = 0
-        best_val_perf = []
+        best_val_mets = {}
         for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
             if LOAD_FROM_EP: ep += LOAD_FROM_EP
             tr_loss = 0
