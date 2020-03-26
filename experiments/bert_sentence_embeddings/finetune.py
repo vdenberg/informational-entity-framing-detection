@@ -192,7 +192,7 @@ class OldFinetuner:
 
             dev_preds = self.inferencer.predict(model, dev_data)
             dev_mets, dev_perf = my_eval(dev_labels.numpy(), dev_preds, av_loss=av_loss, set_type='dev', name=ep_name)
-            self.logger.info(f" > Epoch{ep_name} (took {elapsed}): {dev_perf}")
+            self.logger.info(f" > Epoch {ep} (took {elapsed}): {dev_perf}")
             #bertwrapper.model = model
             #bertwrapper.save_model('models/', final_name)
 
@@ -208,15 +208,18 @@ class OldFinetuner:
         self.logger.info(f' {test_perf}')
 
     def fan(self):
-        with open(self.DATA_DIR + "test_features.pkl", "rb") as f:
+        with open(self.DATA_DIR + "folds/fan_test_features.pkl", "rb") as f:
+        #with open(self.DATA_DIR + "test_features.pkl", "rb") as f:
             test_features = pickle.load(f)
             test_ids, test_data, test_labels = to_tensor(test_features, self.OUTPUT_MODE)
 
-        with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
+        #with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
+        with open(self.DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
             train_features = pickle.load(f)
             train_ids, train_data, train_labels = to_tensor(train_features, self.OUTPUT_MODE)
 
-        with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
+        #with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
+        with open(self.DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
             dev_features = pickle.load(f)
             dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
 
@@ -253,5 +256,6 @@ if __name__ == '__main__':
 
     logger.info(f"Start Logging to {LOG_NAME}")
     logger.info(args)
+    #for seed in [111, 6, 263, 124, 1123]:
     ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=args.sv, load_from_ep=0)
     ft.fan()
