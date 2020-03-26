@@ -10,14 +10,14 @@ CONTEXT_TYPE = 'article'
 DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}'
 string_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
 TASK_NAME = 'bert_for_embed'
-FEAT_DIR = 'data/features_for_bert/'
+FEAT_DIR = 'data/features_for_bert/folds/'
 SPLIT_TYPE = 'both'
 DEBUG = True
 SUBSET = 1.0 if not DEBUG else 0.1
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
-MAX_SEQ_LENGTH = 95
+MAX_SEQ_LENGTH = 122
 OUTPUT_MODE = 'classification'
 tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 processor = BinaryClassificationProcessor()
