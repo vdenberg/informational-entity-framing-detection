@@ -192,7 +192,7 @@ def train(train_data, train_labels, dev_data, dev_labels):
     save_model(model, 'models/', final_name)
     inferencer.eval(model, dev_data, dev_labels, name=final_name)
 
-FOLDS = True
+FOLDS = False
 if __name__ == '__main__':
 
     if not FOLDS:
