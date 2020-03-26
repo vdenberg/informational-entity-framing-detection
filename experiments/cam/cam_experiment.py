@@ -40,6 +40,7 @@ class Processor():
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
         all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
+        all_tokens = [["[CLS]"] + tokens + ["[SEP]"] for tokens in all_tokens]
         max_sent_length = max([len(t) for t in all_tokens])
         print("MAX SENT LEN:", max_sent_length)
 
@@ -48,7 +49,6 @@ class Processor():
         tok_seg_ids = []
 
         for tokens in all_tokens:
-            tokens = ["[CLS]"] + tokens + ["[SEP]"]
             segment_ids = [0] * len(tokens)
             input_ids = tokenizer.convert_tokens_to_ids(tokens)
             input_mask = [1] * len(input_ids)

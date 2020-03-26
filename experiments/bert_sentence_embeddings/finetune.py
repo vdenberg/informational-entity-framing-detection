@@ -92,7 +92,6 @@ LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
-OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
@@ -102,10 +101,11 @@ else:
     SEED_VAL = SEED
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
+#torch.random(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
-output_mode = OUTPUT_MODE
+output_mode = 'classification'
 inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
 
 
