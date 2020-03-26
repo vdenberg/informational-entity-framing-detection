@@ -1,5 +1,7 @@
 import argparse, os, sys, logging
 from datetime import datetime
+import random
+
 import torch
 import numpy as np
 import pandas as pd
@@ -178,10 +180,10 @@ BERT_MODEL = args.bert_model
 NUM_LABELS = 2
 
 # set seed
-#random.seed(SEED_VAL)
-#np.random.seed(SEED_VAL)
-#torch.manual_seed(SEED_VAL)
-#torch.cuda.manual_seed_all(SEED_VAL)
+random.seed(SEED_VAL)
+np.random.seed(SEED_VAL)
+torch.manual_seed(SEED_VAL)
+torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
 DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}'
