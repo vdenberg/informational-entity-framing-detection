@@ -190,10 +190,10 @@ if __name__ == '__main__':
                 scheduler.step()
 
             # Save after Epoch
-            epoch_name = f'epoch{ep}'
+            epoch_name = f'fold{foldname}_epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
-            val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
+            val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
             if val_f1 > prev_val_f1:
                 patience = 3
@@ -205,7 +205,7 @@ if __name__ == '__main__':
             prev_val_f1 = val_f1
 
         # Save final model
-        final_name = f'bert_for_embed_finetuned'
-        save_model(model, 'models/', final_name)
-        inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + final_name)
+        name = f'fold{foldname}_epochs{NUM_TRAIN_EPOCHS}'
+        save_model(model, 'models/', name)
+        inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + name)
 

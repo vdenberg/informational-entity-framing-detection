@@ -160,14 +160,10 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil'):
         preds = self.predict(model, data)
-        metrics_dict, metrics_string = my_eval(labels.numpy(), preds, set_type='dev', av_loss=av_loss, name=name)
+        metrics_dict, metrics_string = my_eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
 
         output_eval_file = os.path.join(self.reports_dir, "eval_results.txt")
-        with open(output_eval_file, "w") as writer:
-            self.logger.info(f'\n {metrics_string}')
-            #self.logger.info(f'Sample of predictions: {preds[:20]}')
-            for key in (metrics_dict.keys()):
-                writer.write("%s = %s\n" % (key, str(metrics_dict[key])))
+        self.logger.info(f'\n {metrics_string}')
 
         return metrics_dict['f1']
 
