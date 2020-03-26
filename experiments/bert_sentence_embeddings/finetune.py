@@ -103,22 +103,22 @@ OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
-# set logger
-now = datetime.now()
-now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{args.fold}_seed-{args.sv}')
-LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
-
-console_hdlr = logging.StreamHandler(sys.stdout)
-file_hdlr = logging.FileHandler(filename=LOG_NAME)
-logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
-logger = logging.getLogger()
-
-logger.info(args)
-
-fold_name = args.fold
 if __name__ == '__main__':
-    for SEED_VAL in [111]:
-        for fold_name in ['6', '7', '8', '9', '10']: #'fan', '1', '2',
+    for SEED_VAL in [263, 124, 6, 1001]:
+        for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']: #'fan', '1', '2',
+
+            # set logger
+            now = datetime.now()
+            now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{args.fold}_seed-{args.sv}')
+            LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+
+            console_hdlr = logging.StreamHandler(sys.stdout)
+            file_hdlr = logging.FileHandler(filename=LOG_NAME)
+            logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
+            logger = logging.getLogger()
+
+            logger.info(args)
+
             if fold_name == 'orig':
                 train_fp = os.path.join(DATA_DIR, "train_features.pkl")
                 dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
