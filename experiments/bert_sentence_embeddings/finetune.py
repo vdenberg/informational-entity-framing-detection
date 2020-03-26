@@ -102,7 +102,7 @@ class OldFinetuner:
         self.logger = logger
         self.inferencer = Inferencer(self.REPORTS_DIR, self.OUTPUT_MODE, logger, self.device, use_cuda=self.USE_CUDA)
 
-    def train(self, train_data, train_labels, dev_data, dev_labels, n_train_batches):
+    def train(self, train_data, train_labels, dev_data, dev_labels, n_train_batches, name):
 
         logger.info(f"***** Training on Fold {'fan'} *****")
         logger.info(f"  Batch size = {self.BATCH_SIZE}")
@@ -192,7 +192,7 @@ class OldFinetuner:
 
             dev_preds = self.inferencer.predict(model, dev_data)
             dev_mets, dev_perf = my_eval(dev_labels.numpy(), dev_preds, av_loss=av_loss, set_type='dev', name=ep_name)
-            self.logger.info(f" > Epoch {ep} (took {elapsed}): {dev_perf}")
+            self.logger.info(f" > BERT on {name} Epoch {ep} (took {elapsed}): {dev_perf}")
             #bertwrapper.model = model
             #bertwrapper.save_model('models/', final_name)
 
@@ -223,7 +223,7 @@ class OldFinetuner:
             dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
 
         n_train_batches = int(len(train_features) / self.BATCH_SIZE)
-        self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
+        self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches, name='fan')
         self.test(test_data, test_labels, name='fan')
 
     def berg(self):
@@ -248,7 +248,7 @@ class OldFinetuner:
                 dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
 
             n_train_batches = int(len(train_features) / self.BATCH_SIZE)
-            self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
+            self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches, name=f'fold{fold_name}')
             self.test(test_data, test_labels, name=f'fold{fold_name}')
 
 if __name__ == '__main__':
