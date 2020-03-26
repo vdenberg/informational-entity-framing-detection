@@ -325,7 +325,8 @@ logger.info(f" Embedding type: {EMB_TYPE}")
 data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
 data_w_embeds = data_w_embeds.rename(
     columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
+print(data_w_embeds.head())
+#data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
 
 # transform into matrix
 WEIGHTS_MATRIX = make_weight_matrix(data, data_w_embeds, EMB_DIM)
