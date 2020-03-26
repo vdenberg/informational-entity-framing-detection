@@ -108,9 +108,9 @@ FOLDS = False
 if __name__ == '__main__':
 
     for foldname in ['fan']: #, '0', '1', '2']:
-        train_fp = os.path.join(DATA_DIR, "train_features.pkl")
-        dev_fp = os.path.join(DATA_DIR,  "dev_features.pkl")
-        test_fp = os.path.join(DATA_DIR, "test_features.pkl")
+        train_fp = os.path.join(DATA_DIR, "folds/fan_train_features.pkl")
+        dev_fp = os.path.join(DATA_DIR,  "folds/fan_dev_features.pkl")
+        test_fp = os.path.join(DATA_DIR, "folds/fan_test_features.pkl")
 
         with open(train_fp) as f:
             train_features = pickle.load(f)
