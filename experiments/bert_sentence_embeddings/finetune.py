@@ -14,8 +14,6 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import time
 import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
 
 #######
 # FROM:
@@ -58,20 +56,14 @@ device, USE_CUDA = get_torch_device()
 BERT_MODEL = 'bert-base-cased'
 
 # structure of project
-TASK_NAME = 'bert_for_embed'
+TASK_NAME = 'bert_baseline'
 DATA_DIR = 'data/features_for_bert/'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/bert_baseline'
+REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 cache_dir = CACHE_DIR
-if os.path.exists(REPORTS_DIR) and os.listdir(REPORTS_DIR):
-    REPORTS_DIR += f'/report_{len(os.listdir(REPORTS_DIR))}'
-    os.makedirs(REPORTS_DIR)
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-    REPORTS_DIR += f'/report_{len(os.listdir(REPORTS_DIR))}'
-    os.makedirs(REPORTS_DIR)
+
 
 ################
 # HYPERPARAMETERS
@@ -121,7 +113,6 @@ file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
 
-logger.info(f"Start Logging to {LOG_NAME}")
 logger.info(args)
 
 fold_name = args.fold
@@ -153,6 +144,7 @@ if __name__ == '__main__':
     logger.info(f"  Batch size = {BATCH_SIZE}")
     logger.info(f"  Learning rate = {LEARNING_RATE}")
     logger.info(f"  SEED = {SEED_VAL}")
+    logger.info(f"  Logging to {LOG_NAME}")
 
     num_train_optimization_steps = int(
         len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
