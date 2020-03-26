@@ -88,7 +88,7 @@ args = parser.parse_args()
 
 NUM_TRAIN_EPOCHS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED = args.seed
+SEED = args.sv
 LOAD_FROM_EP = args.load_from_ep
 
 BATCH_SIZE = 24
@@ -124,7 +124,6 @@ logger = logging.getLogger()
 logger.info(f"Start Logging to {LOG_NAME}")
 logger.info(args)
 
-FOLDS = False
 if __name__ == '__main__':
 
     for foldname in ['fan']: #, '0', '1', '2']:
