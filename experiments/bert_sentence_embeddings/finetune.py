@@ -87,6 +87,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 50
 
 if SET_SEED:
+    print('Setting seed')
     SEED_VAL = random.randint(0, 300)
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)

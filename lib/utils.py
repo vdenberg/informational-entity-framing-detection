@@ -14,9 +14,12 @@ def to_tensors(split, device):
     """ Tmp. """
     # to array if needed
     contexts = np.array([list(el) for el in split.context_doc_num.values])
-    token_ids = np.array([list(el) for el in split.token_ids.values])
-    token_mask = np.array([list(el) for el in split.token_mask.values])
-    tok_seg_ids = np.array([list(el) for el in split.tok_seg_ids.values])
+    token_ids = [list(el) for el in split.token_ids.values]
+    token_mask = [list(el) for el in split.token_mask.values]
+    tok_seg_ids = [list(el) for el in split.tok_seg_ids.values]
+    #token_ids = np.array([list(el) for el in split.token_ids.values])
+    #token_mask = np.array([list(el) for el in split.token_mask.values])
+    #tok_seg_ids = np.array([list(el) for el in split.tok_seg_ids.values])
 
     # to tensors
     token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
