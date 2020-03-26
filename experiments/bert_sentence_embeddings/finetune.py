@@ -183,6 +183,7 @@ if __name__ == '__main__':
 
             t0 = time.time()
             best_val_mets = {'f1': 0}
+            best_model_loc = ''
             for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
                 if LOAD_FROM_EP: ep += LOAD_FROM_EP
                 tr_loss = 0
@@ -234,11 +235,16 @@ if __name__ == '__main__':
                 dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
                 if dev_mets['f1'] > best_val_mets['f1']:
                     best_val_mets = dev_mets
+                    best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
             # Save final model
+            best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                  output_hidden_states=True, output_attentions=True)
+            logger.info(f'Loaded best model from {best_model_loc}')
+
             name = f'bert_fold{fold_name}_finepof{NUM_TRAIN_EPOCHS}'
-            save_model(model, CHECKPOINT_DIR, name)
-            test_mets = inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
+            #save_model(model, CHECKPOINT_DIR, name)
+            test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
             logger.info(f"  Logged to {LOG_NAME}")
 
             results_df = pd.read_csv('reports/bert_baseline/results_table.csv', index_col=False)
