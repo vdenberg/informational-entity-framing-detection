@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-from lib.classifiers.BertWrapper import BertWrapper #BertForSequenceClassification
+from lib.classifiers.BertForEmbed import Inferencer, save_model, BertForSequenceClassification
+#from lib.classifiers.BertWrapper import BertWrapper, BertForSequenceClassification
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
@@ -48,125 +48,95 @@ def to_tensor(features, OUTPUT_MODE):
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
-# split_input() # only needs to happen once, can be found in split_data
 
-# find GPU if present
-device, USE_CUDA = get_torch_device()
+# =====================================================================================
+#                    PARAMETERS
+# =====================================================================================
 
-# Bert pre-trained model selected from: bert-base-uncased, bert-large-uncased, bert-base-cased, bert-large-cased,
-# bert-base-multilingual-uncased, bert-base-multilingual-cased, bert-base-chinese.
-BERT_MODEL = 'bert-base-cased'
+# Read arguments from command line
 
-# structure of project
-TASK_NAME = 'bert_for_embed'
-DATA_DIR = 'data/features_for_bert/'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}_evaluation_report/'
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+class OldFinetuner:
+    def __init__(self, logger, n_epochs=5, lr=2e-5, seed=6, load_from_ep=0):
+        self.device, self.USE_CUDA = get_torch_device()
+        self.BERT_MODEL = 'bert-base-cased'
+        self.TASK_NAME = 'bert_for_embed'
+        self.DATA_DIR = 'data/features_for_bert/'
+        self.CHECKPOINT_DIR = f'models/checkpoints/bert_for_embed/'
+        self.REPORTS_DIR = f'reports/bert_for_embed_evaluation_report/'
+        self.CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
-cache_dir = CACHE_DIR
-if os.path.exists(REPORTS_DIR) and os.listdir(REPORTS_DIR):
-    REPORTS_DIR += f'/report_{len(os.listdir(REPORTS_DIR))}'
-    os.makedirs(REPORTS_DIR)
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-    REPORTS_DIR += f'/report_{len(os.listdir(REPORTS_DIR))}'
-    os.makedirs(REPORTS_DIR)
+        cache_dir = self.CACHE_DIR
+        if os.path.exists(self.REPORTS_DIR) and os.listdir(self.REPORTS_DIR):
+            self.REPORTS_DIR += f'/report_{len(os.listdir(self.REPORTS_DIR))}'
+            os.makedirs(self.REPORTS_DIR)
+        if not os.path.exists(self.REPORTS_DIR):
+            os.makedirs(self.REPORTS_DIR)
+            self.REPORTS_DIR += f'/report_{len(os.listdir(self.REPORTS_DIR))}'
+            os.makedirs(self.REPORTS_DIR)
 
-################
-# HYPERPARAMETERS
-################
+        self.NUM_TRAIN_EPOCHS = n_epochs
+        self.LEARNING_RATE = lr
+        self.SEED = seed
+        self.LOAD_FROM_EP = load_from_ep
 
-parser = argparse.ArgumentParser()
-# TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=5)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-s', '--seed', type=int, default=6)
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
-args = parser.parse_args()
+        self.BATCH_SIZE = 24
+        self.GRADIENT_ACCUMULATION_STEPS = 1
+        self.WARMUP_PROPORTION = 0.1
+        self.NUM_LABELS = 2
+        self.PRINT_EVERY = 50
 
-NUM_TRAIN_EPOCHS = args.n_epochs
-LEARNING_RATE = args.learning_rate
-SEED = args.seed
-LOAD_FROM_EP = args.load_from_ep
+        if self.SEED == 0:
+            SEED_VAL = random.randint(0, 300)
+        else:
+            SEED_VAL = self.SEED
+        random.seed(SEED_VAL)
+        np.random.seed(SEED_VAL)
+        torch.manual_seed(SEED_VAL)
+        torch.cuda.manual_seed_all(SEED_VAL)
 
-BATCH_SIZE = 24
-GRADIENT_ACCUMULATION_STEPS = 1
-WARMUP_PROPORTION = 0.1
-NUM_LABELS = 2
-PRINT_EVERY = 50
+        OUTPUT_MODE = 'classification'
 
-if SEED == 0:
-    SEED_VAL = random.randint(0, 300)
-else:
-    SEED_VAL = SEED
-random.seed(SEED_VAL)
-np.random.seed(SEED_VAL)
-torch.manual_seed(SEED_VAL)
-torch.cuda.manual_seed_all(SEED_VAL)
+        self.logger = logger
 
-OUTPUT_MODE = 'classification'
-output_mode = OUTPUT_MODE
-
-# set logger
-now = datetime.now()
-now_string = now.strftime(format='%b-%d-%Hh-%-M')
-LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
-
-console_hdlr = logging.StreamHandler(sys.stdout)
-file_hdlr = logging.FileHandler(filename=LOG_NAME)
-logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
-logger = logging.getLogger()
-
-logger.info(f"Start Logging to {LOG_NAME}")
-logger.info(args)
-
-FOLDS = False
-if __name__ == '__main__':
-
-    for foldname in ['fan']: #, '0', '1', '2']:
-        #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
-        #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
-
-        #with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
-        with open(DATA_DIR + "train_features.pkl", "rb") as f:
+    def fan(self):
+        with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
             train_features = pickle.load(f)
-            train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+            train_ids, train_data, train_labels = to_tensor(train_features, self.OUTPUT_MODE)
 
         #with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
-        with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+        with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
             dev_features = pickle.load(f)
-            dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+            dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
 
-        logger.info(f"***** Training on Fold {foldname} *****")
-        logger.info(f"  Batch size = {BATCH_SIZE}")
-        logger.info(f"  Learning rate = {LEARNING_RATE}")
-        logger.info(f"  SEED = {SEED_VAL}")
+        logger.info(f"***** Training on Fold {'fan'} *****")
+        logger.info(f"  Batch size = {self.BATCH_SIZE}")
+        logger.info(f"  Learning rate = {self.LEARNING_RATE}")
+        logger.info(f"  SEED = {self.SEED_VAL}")
 
         num_train_optimization_steps = int(
-            len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-        num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+            len(train_features) / self.BATCH_SIZE) * self.NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+        num_train_warmup_steps = int(self.WARMUP_PROPORTION * num_train_optimization_steps)
 
-        inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
-        bertwrapper = BertWrapper(CHECKPOINT_DIR, NUM_TRAIN_EPOCHS, len(train_features) / BATCH_SIZE, LOAD_FROM_EP)
+        inferencer = Inferencer(self.REPORTS_DIR, self.OUTPUT_MODE, logger, self.device, use_cuda=self.USE_CUDA)
+        bertwrapper = BertWrapper(self.CHECKPOINT_DIR, self.NUM_TRAIN_EPOCHS, len(train_features) / self.BATCH_SIZE, self.LOAD_FROM_EP)
 
-        if LOAD_FROM_EP:
-            name = f'epoch{LOAD_FROM_EP}'
-            load_dir = os.path.join(CHECKPOINT_DIR, name)
+        if self.LOAD_FROM_EP:
+            name = f'epoch{self.LOAD_FROM_EP}'
+            load_dir = os.path.join(self.CHECKPOINT_DIR, name)
             logger.info(f'Loading model {load_dir}')
-            model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
+            model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=self.NUM_LABELS,
                                                                   output_hidden_states=True, output_attentions=True)
             logger.info(f'Loaded model {load_dir}')
-            inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
+            inferencer.eval(model, dev_data, dev_labels, name=f'epoch{self.LOAD_FROM_EP}')
         else:
-            load_dir = CACHE_DIR
-            model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+            load_dir = self.CACHE_DIR
+            model = BertForSequenceClassification.from_pretrained(self.BERT_MODEL, cache_dir=load_dir, num_labels=self.NUM_LABELS,
                                                                   output_hidden_states=True, output_attentions=True)
 
-        model.to(device)
+        model.to(self.device)
 
         # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-        optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
+        optimizer = AdamW(model.parameters(), lr=self.LEARNING_RATE,
                           eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
@@ -181,12 +151,12 @@ if __name__ == '__main__':
         model.train()
 
         t0 = time.time()
-        for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
-            if LOAD_FROM_EP: ep += LOAD_FROM_EP
+        for ep in trange(int(self.NUM_TRAIN_EPOCHS), desc="Epoch"):
+            if self.LOAD_FROM_EP: ep += self.LOAD_FROM_EP
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
             for step, batch in enumerate(train_dataloader):
-                batch = tuple(t.to(device) for t in batch)
+                batch = tuple(t.to(self.device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
                 # print(label_ids)
 
@@ -195,15 +165,15 @@ if __name__ == '__main__':
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
 
-                if OUTPUT_MODE == "classification":
+                if self.OUTPUT_MODE == "classification":
                     loss_fct = CrossEntropyLoss()
-                    loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-                elif OUTPUT_MODE == "regression":
+                    loss = loss_fct(logits.view(-1, self.NUM_LABELS), label_ids.view(-1))
+                elif self.OUTPUT_MODE == "regression":
                     loss_fct = MSELoss()
                     loss = loss_fct(logits.view(-1), label_ids.view(-1))
 
-                if GRADIENT_ACCUMULATION_STEPS > 1:
-                    loss = loss / GRADIENT_ACCUMULATION_STEPS
+                if self.GRADIENT_ACCUMULATION_STEPS > 1:
+                    loss = loss / self.GRADIENT_ACCUMULATION_STEPS
 
                 loss.backward()
 
@@ -216,7 +186,7 @@ if __name__ == '__main__':
                 scheduler.step()
                 global_step += 1
 
-                if step % PRINT_EVERY == 0 and step != 0:
+                if step % self.PRINT_EVERY == 0 and step != 0:
                     # Calculate elapsed time in minutes.
                     elapsed = time.time() - t0
                     # Report progress.
@@ -225,7 +195,7 @@ if __name__ == '__main__':
             # Save after Epoch
             epoch_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
-            save_model(model, CHECKPOINT_DIR, epoch_name)
+            save_model(model, self.CHECKPOINT_DIR, epoch_name)
             # bertwrapper.model = model
             # bertwrapper.save_model('models/', final_name)
             inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
@@ -236,3 +206,32 @@ if __name__ == '__main__':
         #bertwrapper.save_model('models/', final_name)
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
 
+    def berg(self):
+        pass
+        #for foldname in ['fan']: #, '0', '1', '2']:
+            #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
+            #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
+
+            #with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
+
+
+if __name__ == '__main__':
+    # set logger
+    now = datetime.now()
+    now_string = now.strftime(format='%b-%d-%Hh-%-M')
+    EMB_TYPE='poolbert'
+    SPLIT_TYPE='fan'
+    CONTEXT_TYPE='article'
+    SUBSET=1.0
+    REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
+    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+
+    console_hdlr = logging.StreamHandler(sys.stdout)
+    file_hdlr = logging.FileHandler(filename=LOG_NAME)
+    logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
+    logger = logging.getLogger()
+
+    logger.info(f"Start Logging to {LOG_NAME}")
+    #logger.info(args)
+    ft = OldFinetuner(logger=logger)
+    ft.fan()

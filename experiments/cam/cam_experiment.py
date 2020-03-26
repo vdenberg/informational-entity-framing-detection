@@ -12,6 +12,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.BertWrapper import BertWrapper
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
+from experiments.bert_sentence_embeddings.finetune import OldFinetuner
 
 
 class Processor():
@@ -80,19 +81,6 @@ def make_weight_matrix(data, embed_df, EMB_DIM):
             weights_matrix[index] = embedding
 
     return weights_matrix
-
-
-def save_bert_model(model_to_save, model_dir, identifier):
-    ''' Save finetuned (finished or intermediate) model to a checkpoint. '''
-    output_dir = os.path.join(model_dir, identifier)
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-    output_model_file = os.path.join(output_dir, "pytorch_model.bin")
-    output_config_file = os.path.join(output_dir, "config.json")
-
-    model_to_save = model_to_save.module if hasattr(model_to_save, 'module') else model_to_save  # Only save the model it-self
-    torch.save(model_to_save.state_dict(), output_model_file)
-    model_to_save.config.to_json_file(output_config_file)
 
 
 # =====================================================================================
@@ -288,6 +276,7 @@ logger.info(f" --> Columns: {list(data.columns)}")
 
 if FT_EMB:
 
+    """
     logger.info("============ FINETUNE EMBEDDINGS =============")
     logger.info(f" Embedding type: {EMB_TYPE}")
     logger.info(f" Finetuning LR: {BERT_LR}")
@@ -312,6 +301,10 @@ if FT_EMB:
 
     finetune_f1s.loc['mean'] = finetune_f1s.mean()
     logger.info(f'Finetuning results:\n{finetune_f1s}')
+    """
+
+    ft = OldFinetuner(logger=logger)
+    ft.fan()
 
     all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
     data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
