@@ -296,6 +296,7 @@ if FT_EMB:
     logger.info(f" Mode: {MODE}")
 
     finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 
     for fold in folds:
         LOAD_FROM_EP = None

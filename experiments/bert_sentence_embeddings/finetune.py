@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-#from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertWrapper import BertWrapper #BertForSequenceClassification
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
@@ -81,7 +81,7 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-s', '--seed', type=int, default=0)
+parser.add_argument('-s', '--seed', type=int, default=6)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
@@ -102,13 +102,12 @@ else:
     SEED_VAL = SEED
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
-#torch.random(SEED_VAL)
+torch.random(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
 OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
-inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
 # set logger
 now = datetime.now()
@@ -148,6 +147,9 @@ if __name__ == '__main__':
         num_train_optimization_steps = int(
             len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
         num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+
+        inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
+        bertwrapper = BertWrapper(CHECKPOINT_DIR, NUM_TRAIN_EPOCHS, len(train_features) / BATCH_SIZE, LOAD_FROM_EP)
 
         if LOAD_FROM_EP:
             name = f'epoch{LOAD_FROM_EP}'
@@ -190,9 +192,6 @@ if __name__ == '__main__':
                 # print(label_ids)
 
                 model.zero_grad()
-                #if step % PRINT_EVERY == 0 and step != 0:
-                #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
-                #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
                 outputs = model(input_ids, input_mask, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
@@ -228,10 +227,13 @@ if __name__ == '__main__':
             epoch_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
+            # bertwrapper.model = model
+            # bertwrapper.save_model('models/', final_name)
             inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
 
         # Save final model
         final_name = f'bert_for_embed_finetuned'
         save_model(model, 'models/', final_name)
+        #bertwrapper.save_model('models/', final_name)
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
 
