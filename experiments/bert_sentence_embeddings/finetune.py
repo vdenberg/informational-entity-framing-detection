@@ -111,9 +111,9 @@ FOLDS = False
 if __name__ == '__main__':
 
     #for foldname in ['fan']: #, '0', '1', '2']:
-    train_fp = os.path.join(DATA_DIR, f"folds/{foldname}_train_features.pkl")
-    dev_fp = os.path.join(DATA_DIR,  f"folds/{foldname}_dev_features.pkl")
-    test_fp = os.path.join(DATA_DIR, f"folds/{foldname}_test_features.pkl")
+    train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
+    dev_fp = os.path.join(DATA_DIR,  f"folds/{fold_name}_dev_features.pkl")
+    test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
@@ -125,8 +125,8 @@ if __name__ == '__main__':
         test_features = pickle.load(f)
         _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
-    logger.info(f"***** Training on Fold {foldname} *****")
-    logger.info(f"  Fold = {foldname}")
+    logger.info(f"***** Training on Fold {fold_name} *****")
+    logger.info(f"  Fold = {fold_name}")
     logger.info(f"  SEED = {SEED_VAL}")
 
     num_train_optimization_steps = int(
@@ -193,7 +193,7 @@ if __name__ == '__main__':
             scheduler.step()
 
         # Save after Epoch
-        epoch_name = f'fold{foldname}_sv{SEED_VAL}_ep{ep}'
+        epoch_name = f'fold{fold_name}_sv{SEED_VAL}_ep{ep}'
         av_loss = tr_loss / len(train_dataloader)
         save_model(model, CHECKPOINT_DIR, epoch_name)
         val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
@@ -208,7 +208,7 @@ if __name__ == '__main__':
         prev_val_f1 = val_f1
 
     # Save final model
-    name = f'fold{foldname}_sv{SEED_VAL}_fin_ep_of_{NUM_TRAIN_EPOCHS}'
+    name = f'fold{fold_name}_sv{SEED_VAL}_fin_ep_of_{NUM_TRAIN_EPOCHS}'
     save_model(model, 'models/', name)
     inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + name)
 
