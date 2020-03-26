@@ -199,8 +199,7 @@ class OldFinetuner:
         self.trained_model = model
         return model
 
-    def test(self, test_data, test_labels):
-        name = f'bert_for_embed_finetuned'
+    def test(self, test_data, test_labels, name):
         save_model(self.trained_model, self.CHECKPOINT_DIR, name)
         preds = self.inferencer.predict(self.trained_model, test_data)
         test_mets, test_perf = my_eval(test_labels.numpy(), preds, set_type='test', name=name)
@@ -225,7 +224,7 @@ class OldFinetuner:
 
         n_train_batches = int(len(train_features) / self.BATCH_SIZE)
         self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
-        self.test(test_data, test_labels)
+        self.test(test_data, test_labels, name='fan')
 
     def berg(self):
         for fold_name in range(0,10):
@@ -250,13 +249,13 @@ class OldFinetuner:
 
             n_train_batches = int(len(train_features) / self.BATCH_SIZE)
             self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
-            self.test(test_data, test_labels)
+            self.test(test_data, test_labels, name=f'fold{fold_name}')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-sv', '--sv', type=int, default=111)
     parser.add_argument('-lr', '--lr', type=float, default=2e-5)
-    parser.add_argument('-ep', '--ep', type=int, default=10)
+    parser.add_argument('-ep', '--ep', type=int, default=5)
     args = parser.parse_args()
 
     # set logger
