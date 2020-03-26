@@ -187,9 +187,8 @@ class BertWrapper:
         token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
 
         with torch.no_grad():
-            probs, sequence_output, pooled_output = self.model(input_ids=token_ids,
-                                                                     attention_mask=token_masks,
-                                                                     token_type_ids=tok_seg_ids, labels=None)
+            probs, sequence_output, pooled_output = self.model(input_ids=token_ids, attention_mask=token_masks,
+                                                               labels=None) #token_type_ids=tok_seg_ids,
             if emb_type == 'avbert':
                 return sequence_output.mean(axis=1)
 

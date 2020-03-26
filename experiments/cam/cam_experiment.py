@@ -303,7 +303,8 @@ if FT_EMB:
     logger.info(f'Finetuning results:\n{finetune_f1s}')
     """
 
-    ft = OldFinetuner(logger=logger)
+    ft = OldFinetuner(logger=logger, n_epochs=10,
+                      lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
     ft.fan()
     bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
                 n_train_batches=len(fold['train_batches']))
