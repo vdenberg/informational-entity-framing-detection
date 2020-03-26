@@ -118,7 +118,7 @@ class OldFinetuner:
         num_train_warmup_steps = int(self.WARMUP_PROPORTION * num_train_optimization_steps)
 
         inferencer = Inferencer(self.REPORTS_DIR, self.OUTPUT_MODE, logger, self.device, use_cuda=self.USE_CUDA)
-        bertwrapper = BertWrapper(self.CHECKPOINT_DIR, self.NUM_TRAIN_EPOCHS, len(train_features) / self.BATCH_SIZE, self.LOAD_FROM_EP)
+        #bertwrapper = BertWrapper(self.CHECKPOINT_DIR, self.NUM_TRAIN_EPOCHS, len(train_features) / self.BATCH_SIZE, self.LOAD_FROM_EP)
 
         if self.LOAD_FROM_EP:
             name = f'epoch{self.LOAD_FROM_EP}'
@@ -146,7 +146,7 @@ class OldFinetuner:
         tr_loss = 0
 
         train_sampler = RandomSampler(train_data)
-        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
+        train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=self.BATCH_SIZE)
 
         model.train()
 
