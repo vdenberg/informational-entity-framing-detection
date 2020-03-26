@@ -95,7 +95,7 @@ class OldFinetuner:
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        OUTPUT_MODE = 'classification'
+        self.OUTPUT_MODE = 'classification'
 
         self.logger = logger
 
@@ -218,6 +218,12 @@ class OldFinetuner:
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-sv', '--sv', type=int, default=0)
+    parser.add_argument('-lr', '--lr', type=int, default=0)
+    parser.add_argument('-ep', '--ep', type=int, default=10)
+    args = parser.parse_args()
+
     # set logger
     now = datetime.now()
     now_string = now.strftime(format='%b-%d-%Hh-%-M')
@@ -235,5 +241,5 @@ if __name__ == '__main__':
 
     logger.info(f"Start Logging to {LOG_NAME}")
     #logger.info(args)
-    ft = OldFinetuner(logger=logger)
+    ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=args.sv, load_from_ep=0)
     ft.fan()
