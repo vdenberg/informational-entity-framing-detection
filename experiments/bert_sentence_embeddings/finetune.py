@@ -105,7 +105,7 @@ inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_C
 
 # set logger
 now = datetime.now()
-now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold{args.fold}_seed{args.sv}')
+now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{args.fold}_seed-{args.sv}')
 LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
 console_hdlr = logging.StreamHandler(sys.stdout)
@@ -181,6 +181,8 @@ if __name__ == '__main__':
     model.train()
 
     t0 = time.time()
+    best_val = 0
+    best_val_perf = []
     for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
         if LOAD_FROM_EP: ep += LOAD_FROM_EP
         tr_loss = 0
@@ -229,10 +231,21 @@ if __name__ == '__main__':
         epoch_name = f'bert_fold{fold_name}_ep{ep}'
         av_loss = tr_loss / len(train_dataloader)
         save_model(model, CHECKPOINT_DIR, epoch_name)
-        inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+        dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+        if dev_mets['val_f1'] > best_val:
+            best_val_perf = dev_mets
 
     # Save final model
     name = f'bert_fold{fold_name}_finepof{NUM_TRAIN_EPOCHS}'
     save_model(model, CHECKPOINT_DIR, name)
-    inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
+    test_mets = inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
 
+    results_df = pd.read_csv('reports/bert_baseline/bert_baseline_results_table.csv')
+    best_val_perf['seed'] = SEED_VAL
+    best_val_perf['fold'] = fold_name
+    best_val_perf['set_type'] = 'dev'
+    test_mets['seed'] = SEED_VAL
+    test_mets['fold'] = fold_name
+    test_mets['set_type'] = 'test'
+    results_df.append(best_val_perf, ignore_index=True)
+    results_df.append(test_mets, ignore_index=True)

@@ -168,7 +168,7 @@ class Inferencer():
         #with open(output_eval_file, 'w') as f:
         #    f.write{metrics_string + '\n'}
 
-        return metrics_dict['f1']
+        return metrics_dict
 
 
 def save_model(model_to_save, model_dir, identifier):
