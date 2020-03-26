@@ -77,19 +77,21 @@ if not os.path.exists(REPORTS_DIR):
 
 BATCH_SIZE = 24 #24
 NUM_TRAIN_EPOCHS = int(sys.argv[1]) if len(sys.argv) > 1 else 2
-LEARNING_RATE = float(sys.argv[2]) if len(sys.argv) > 1 else 2e-5 #2e-5
-LOAD_FROM_EP = int(sys.argv[3]) if len(sys.argv) > 3 else None
-SEED_VAL = 124
+LEARNING_RATE = float(sys.argv[2]) if len(sys.argv) > 2 else 2e-5 #2e-5
+SET_SEED = bool(sys.argv[3]) if len(sys.argv) > 3 else False
+LOAD_FROM_EP = int(sys.argv[4]) if len(sys.argv) > 4 else None
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
-#random.seed(SEED_VAL)
-#np.random.seed(SEED_VAL)
-#torch.manual_seed(SEED_VAL)
-#torch.cuda.manual_seed_all(SEED_VAL)
+if SET_SEED:
+    SEED_VAL = random.randint(0, 300)
+    random.seed(SEED_VAL)
+    np.random.seed(SEED_VAL)
+    torch.manual_seed(SEED_VAL)
+    torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
 
