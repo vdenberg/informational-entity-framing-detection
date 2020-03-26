@@ -97,7 +97,7 @@ PRINT_EVERY = 50
 
 if SET_SEED:
     SEED_VAL = random.randint(0, 300)
-    print('Setting seed:', SEED_VAL)
+    logger.info('Setting seed:', SEED_VAL)
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
     torch.manual_seed(SEED_VAL)
