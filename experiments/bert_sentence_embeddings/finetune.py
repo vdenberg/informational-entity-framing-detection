@@ -124,17 +124,17 @@ logger = logging.getLogger()
 logger.info(f"Start Logging to {LOG_NAME}")
 logger.info(args)
 
-fold = args.fold
+fold_name = args.fold
 if __name__ == '__main__':
 
-    if fold == 'orig':
+    if fold_name == 'orig':
         train_fp = os.path.join(DATA_DIR, "train_features.pkl")
         dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
         test_fp = os.path.join(DATA_DIR, "test_features.pkl")
     else:
-        train_fp = os.path.join(DATA_DIR, f"folds/{fold}_train_features.pkl")
-        dev_fp = os.path.join(DATA_DIR, f"folds/{fold}_dev_features.pkl")
-        test_fp = os.path.join(DATA_DIR, f"folds/{fold}_test_features.pkl")
+        train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
+        dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
+        test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
@@ -142,13 +142,13 @@ if __name__ == '__main__':
 
     with open(dev_fp, "rb") as f:
         dev_features = pickle.load(f)
-        dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+        _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
     with open(test_fp, "rb") as f:
         test_features = pickle.load(f)
         _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
-    logger.info(f"***** Training on Fold {foldname} *****")
+    logger.info(f"***** Training on Fold {fold_name} *****")
     logger.info(f"  Batch size = {BATCH_SIZE}")
     logger.info(f"  Learning rate = {LEARNING_RATE}")
     logger.info(f"  SEED = {SEED_VAL}")
@@ -233,13 +233,13 @@ if __name__ == '__main__':
                 # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
         # Save after Epoch
-        epoch_name = f'bert_fold{foldname}_ep{ep}'
+        epoch_name = f'bert_fold{fold_name}_ep{ep}'
         av_loss = tr_loss / len(train_dataloader)
         save_model(model, CHECKPOINT_DIR, epoch_name)
         inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
     # Save final model
-    name = f'bert_fold{foldname}_finepof{NUM_TRAIN_EPOCHS}'
+    name = f'bert_fold{fold_name}_finepof{NUM_TRAIN_EPOCHS}'
     save_model(model, CHECKPOINT_DIR, name)
     inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
 
