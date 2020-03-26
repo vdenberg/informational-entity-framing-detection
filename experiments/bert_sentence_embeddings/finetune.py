@@ -261,7 +261,7 @@ if __name__ == '__main__':
     # set logger
     now = datetime.now()
     now_string = now.strftime(format='%b-%d-%Hh-%-M')
-    REPORTS_DIR = 'reports/bertbaseline/'
+    REPORTS_DIR = 'reports/bertbaseline'
     LOG_NAME = f"{REPORTS_DIR}/{now_string}_{args.sv}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
