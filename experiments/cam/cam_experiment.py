@@ -12,7 +12,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.BertWrapper import BertWrapper
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
-from experiments.bert_sentence_embeddings.finetune import OldFinetuner
+from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
 
 
 class Processor():
