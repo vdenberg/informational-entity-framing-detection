@@ -80,7 +80,7 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-s', '--seed', type=int, default='random')
+parser.add_argument('-s', '--seed', type=int, default=0)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
@@ -97,7 +97,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 50
 
 if SEED:
-    if SEED == 'random':
+    if SEED == 0:
         SEED_VAL = random.randint(0, 300)
     else:
         SEED_VAL = SEED
