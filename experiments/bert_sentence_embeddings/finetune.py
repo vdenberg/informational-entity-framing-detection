@@ -86,7 +86,7 @@ args = parser.parse_args()
 
 NUM_TRAIN_EPOCHS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED = args.seed
+SEED = args.sv
 LOAD_FROM_EP = args.load_from_ep
 
 BATCH_SIZE = 24
