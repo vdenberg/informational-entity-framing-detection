@@ -55,7 +55,7 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     else:
         metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
     # round values
-    metrics = ['{:.4f}'.format(met) for met in metrics]
+    metrics = [str(round(met*100,2)) for met in metrics]
 
     # make conf_mat
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
