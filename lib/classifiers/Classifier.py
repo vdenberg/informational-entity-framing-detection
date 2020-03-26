@@ -9,7 +9,7 @@ class Classifier:
     """
     Generic Classifier that performs recurring machine learning tasks
     """
-    def __init__(self, model, n_epochs, logger, patience, cp_dir, fig_dir, model_name, print_every):
+    def __init__(self, model, n_epochs, logger, patience, cp_dir, fig_dir, model_name, print_every, load_from_ep=None):
         self.wrapper = model
         self.n_epochs = n_epochs
         self.logger = logger
@@ -18,6 +18,14 @@ class Classifier:
         self.cp_dir = cp_dir
         self.model_name = model_name.upper()
         self.print_every = print_every
+
+        # load
+        self.epochs = range(n_epochs)
+        if load_from_ep:
+            self.n_epochs += load_from_ep
+            self.epochs = range(load_from_ep, self.n_epochs)
+        else:
+            self.epochs = range(self.n_epochs)
 
         # empty now and set during or after training
         self.train_time = 0
@@ -86,7 +94,7 @@ class Classifier:
             tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold)
             losses.append((tr_mets['loss'], val_mets['loss']))
 
-        for ep in range(self.n_epochs):
+        for ep in self.epochs:
             self.wrapper.model.train()
 
             av_tr_loss, ep_elapsed = self.train_epoch(tr_bs)

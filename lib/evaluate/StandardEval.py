@@ -51,7 +51,7 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     # METRICS_STRING
     # select values
     if av_loss:
-        metrics = [metrics_dict['loss'], metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
+        metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1'], metrics_dict['loss']]
     else:
         metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
     # round values
@@ -60,8 +60,12 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     # make conf_mat
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
 
-    metrics_string = f"Model {name} performance on {set_type}: Conf mat: {conf_mat}, Acc: {metrics['acc']}, Prec: {metrics['prec']}, Rec: {metrics['rec']}" \
-                     f", Loss: {metrics['loss']}, F1: {metrics['f1']}"
+    if av_loss:
+        metrics_string = f"Model {name} performance on {set_type}: Conf mat: {conf_mat}, Acc: {metrics[0]}, Prec: {metrics[1]}, Rec: {metrics[2]}" \
+                         f", Loss: {metrics[4]}, F1: {metrics[3]}"
+    else:
+        metrics_string = f"Model {name} performance on {set_type}: Conf mat: {conf_mat}, Acc: {metrics[0]}, Prec: {metrics[1]}, Rec: {metrics[2]}" \
+                         f", F1: {metrics[3]}"
 
     return metrics_dict, metrics_string
 
