@@ -71,7 +71,7 @@ cache_dir = CACHE_DIR
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=5)
+parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-sv', '--sv', type=int, default=0)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
