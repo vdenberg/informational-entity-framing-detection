@@ -182,8 +182,7 @@ if __name__ == '__main__':
             model.train()
 
             t0 = time.time()
-            best_val = 0
-            best_val_mets = {}
+            best_val_mets = {'f1': 0}
             for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
                 if LOAD_FROM_EP: ep += LOAD_FROM_EP
                 tr_loss = 0
@@ -233,7 +232,7 @@ if __name__ == '__main__':
                 av_loss = tr_loss / len(train_dataloader)
                 save_model(model, CHECKPOINT_DIR, epoch_name)
                 dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
-                if dev_mets['f1'] > best_val:
+                if dev_mets['f1'] > best_val_mets['f1']:
                     best_val_mets = dev_mets
 
             # Save final model
