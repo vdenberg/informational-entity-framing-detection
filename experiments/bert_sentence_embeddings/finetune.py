@@ -131,6 +131,7 @@ if __name__ == '__main__':
         train_fp = os.path.join(DATA_DIR, "train_features.pkl")
         dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
         test_fp = os.path.join(DATA_DIR, "test_features.pkl")
+        all_fp = os.path.join(DATA_DIR, "all_features.pkl")
     else:
         train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
         dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
