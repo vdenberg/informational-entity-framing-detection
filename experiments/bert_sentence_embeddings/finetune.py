@@ -220,7 +220,7 @@ class OldFinetuner:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-sv', '--sv', type=int, default=0)
-    parser.add_argument('-lr', '--lr', type=int, default=2e-5)
+    parser.add_argument('-lr', '--lr', type=float, default=2e-5)
     parser.add_argument('-ep', '--ep', type=int, default=10)
     args = parser.parse_args()
 
