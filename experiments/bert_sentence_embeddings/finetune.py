@@ -108,17 +108,17 @@ FOLDS = False
 if __name__ == '__main__':
 
     for foldname in ['fan']: #, '0', '1', '2']:
-        train_fp = os.path.join(DATA_DIR, "folds/fan_train_features.pkl")
-        dev_fp = os.path.join(DATA_DIR,  "folds/fan_dev_features.pkl")
-        test_fp = os.path.join(DATA_DIR, "folds/fan_test_features.pkl")
+        train_fp = os.path.join(DATA_DIR, f"folds/{foldname}_train_features.pkl")
+        dev_fp = os.path.join(DATA_DIR,  f"folds/{foldname}_dev_features.pkl")
+        test_fp = os.path.join(DATA_DIR, f"folds/{foldname}_test_features.pkl")
 
-        with open(train_fp) as f:
+        with open(train_fp, "rb") as f:
             train_features = pickle.load(f)
-            train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
-        with open(dev_fp) as f:
+            _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+        with open(dev_fp, "rb") as f:
             dev_features = pickle.load(f)
-            dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
-        with open(test_fp) as f:
+            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+        with open(test_fp, "rb") as f:
             test_features = pickle.load(f)
             _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
