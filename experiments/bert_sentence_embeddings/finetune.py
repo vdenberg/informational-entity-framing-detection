@@ -108,25 +108,19 @@ FOLDS = False
 if __name__ == '__main__':
 
     for foldname in ['fan']: #, '0', '1', '2']:
-        #train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
-        #dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
+        train_fp = os.path.join(DATA_DIR, "train_features.pkl")
+        dev_fp = os.path.join(DATA_DIR,  "dev_features.pkl")
+        test_fp = os.path.join(DATA_DIR, "test_features.pkl")
 
-        with open(DATA_DIR + "train_features.pkl", "rb") as f:
+        with open(train_fp) as f:
             train_features = pickle.load(f)
             train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
-
-        print(train_data[:5])
-
-        with open(DATA_DIR + "folds/fan_train_features.pkl", "rb") as f:
-            train_features = pickle.load(f)
-            train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
-
-        print(train_data[:5])
-
-        #with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
-        with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+        with open(dev_fp) as f:
             dev_features = pickle.load(f)
             dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+        with open(test_fp) as f:
+            test_features = pickle.load(f)
+            _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
         logger.info(f"***** Training on Fold {foldname} *****")
         logger.info(f"  Batch size = {BATCH_SIZE}")
@@ -178,9 +172,6 @@ if __name__ == '__main__':
                 # print(label_ids)
 
                 model.zero_grad()
-                #if step % PRINT_EVERY == 0 and step != 0:
-                #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
-                #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
                 outputs = model(input_ids, input_mask, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
                 loss = outputs[0]
@@ -221,5 +212,5 @@ if __name__ == '__main__':
         # Save final model
         final_name = f'bert_for_embed_finetuned'
         save_model(model, 'models/', final_name)
-        inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
+        inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + final_name)
 
