@@ -87,30 +87,22 @@ NUM_LABELS = 2
 PRINT_EVERY = 50
 
 if SET_SEED:
-    print('Setting seed')
     SEED_VAL = random.randint(0, 300)
+    print('Setting seed:', SEED_VAL)
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
     torch.manual_seed(SEED_VAL)
     torch.cuda.manual_seed_all(SEED_VAL)
 
 output_mode = OUTPUT_MODE
-
-with open(DATA_DIR + "train_features.pkl", "rb") as f:
-    train_features = pickle.load(f)
-    train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
-
-with open(DATA_DIR + "dev_features.pkl", "rb") as f:
-    dev_features = pickle.load(f)
-    dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
-
-num_train_optimization_steps = int(len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS # / GRADIENT_ACCUMULATION_STEPS
-num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
-
-
 inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
 
-if __name__ == '__main__':
+
+def train(train_data, train_labels, dev_data, dev_labels):
+    num_train_optimization_steps = int(
+        len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+    num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+
     if LOAD_FROM_EP:
         name = f'epoch{LOAD_FROM_EP}'
         load_dir = os.path.join(CHECKPOINT_DIR, name)
@@ -199,3 +191,32 @@ if __name__ == '__main__':
     final_name = f'bert_for_embed_finetuned'
     save_model(model, 'models/', final_name)
     inferencer.eval(model, dev_data, dev_labels, name=final_name)
+
+FOLDS = True
+if __name__ == '__main__':
+
+    if not FOLDS:
+        with open(DATA_DIR + "train_features.pkl", "rb") as f:
+            train_features = pickle.load(f)
+            train_ids, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+
+        with open(DATA_DIR + "dev_features.pkl", "rb") as f:
+            dev_features = pickle.load(f)
+            dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+
+        train(train_data, train_labels, dev_data, dev_labels)
+
+    elif FOLDS:
+        for foldname in ['fan', '0', '1', '2']:
+            train_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_train_features.pkl")
+            dev_fp = os.path.join(DATA_DIR, 'folds', f"{foldname}_dev_features.pkl")
+            with open(train_fp, "rb") as f:
+                train_features = pickle.load(f)
+            with open(dev_fp, "rb") as f:
+                dev_features = pickle.load(f)
+            _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+
+            logger.info(f"***** Training on Fold {foldname} *****")
+            train(train_data, train_labels, dev_data, dev_labels)
+
