@@ -3,6 +3,7 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model, BertForSequenceClassification
 #from lib.classifiers.BertWrapper import BertWrapper, BertForSequenceClassification
+from lib.evaluate.StandardEval import my_eval
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
@@ -99,27 +100,15 @@ class OldFinetuner:
         self.OUTPUT_MODE = 'classification'
 
         self.logger = logger
+        self.inferencer = Inferencer(self.REPORTS_DIR, self.OUTPUT_MODE, logger, self.device, use_cuda=self.USE_CUDA)
 
-    def fan(self):
-        with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
-            train_features = pickle.load(f)
-            train_ids, train_data, train_labels = to_tensor(train_features, self.OUTPUT_MODE)
-
-        #with open(DATA_DIR + "folds/fan_dev_features.pkl", "rb") as f:
-        with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
-            dev_features = pickle.load(f)
-            dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
+    def train(self, train_data, train_labels, dev_data, dev_labels, n_train_batches):
 
         logger.info(f"***** Training on Fold {'fan'} *****")
         logger.info(f"  Batch size = {self.BATCH_SIZE}")
         logger.info(f"  Learning rate = {self.LEARNING_RATE}")
         logger.info(f"  SEED = {self.SEED_VAL}")
 
-        num_train_optimization_steps = int(
-            len(train_features) / self.BATCH_SIZE) * self.NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-        num_train_warmup_steps = int(self.WARMUP_PROPORTION * num_train_optimization_steps)
-
-        inferencer = Inferencer(self.REPORTS_DIR, self.OUTPUT_MODE, logger, self.device, use_cuda=self.USE_CUDA)
         #bertwrapper = BertWrapper(self.CHECKPOINT_DIR, self.NUM_TRAIN_EPOCHS, len(train_features) / self.BATCH_SIZE, self.LOAD_FROM_EP)
 
         if self.LOAD_FROM_EP:
@@ -129,7 +118,7 @@ class OldFinetuner:
             model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=self.NUM_LABELS,
                                                                   output_hidden_states=True, output_attentions=True)
             logger.info(f'Loaded model {load_dir}')
-            inferencer.eval(model, dev_data, dev_labels, name=f'epoch{self.LOAD_FROM_EP}')
+            self.inferencer.eval(model, dev_data, dev_labels, name=f'epoch{self.LOAD_FROM_EP}')
         else:
             load_dir = self.CACHE_DIR
             model = BertForSequenceClassification.from_pretrained(self.BERT_MODEL, cache_dir=load_dir, num_labels=self.NUM_LABELS,
@@ -138,6 +127,9 @@ class OldFinetuner:
         model.to(self.device)
 
         # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+        num_train_optimization_steps = n_train_batches * self.NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+        num_train_warmup_steps = int(self.WARMUP_PROPORTION * num_train_optimization_steps)
+
         optimizer = AdamW(model.parameters(), lr=self.LEARNING_RATE,
                           eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
@@ -195,19 +187,42 @@ class OldFinetuner:
                     # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
             # Save after Epoch
-            epoch_name = f'epoch{ep}'
+            ep_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
-            save_model(model, self.CHECKPOINT_DIR, epoch_name)
-            # bertwrapper.model = model
-            # bertwrapper.save_model('models/', final_name)
-            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
 
-        # Save final model
-        final_name = f'bert_for_embed_finetuned'
-        save_model(model, 'models/', final_name)
+            dev_preds = self.inferencer.predict(model, dev_data)
+            dev_mets, dev_perf = my_eval(dev_labels.numpy(), dev_preds, av_loss=av_loss, set_type='dev', name=ep_name)
+            self.logger.info(f" > Epoch{ep_name} (took {elapsed}): {dev_perf}")
+            #bertwrapper.model = model
+            #bertwrapper.save_model('models/', final_name)
+
         self.trained_model = model
-        #bertwrapper.save_model('models/', final_name)
-        inferencer.eval(model, dev_data, dev_labels, set_type='dev', name='val ' + final_name)
+        return model
+
+    def test(self, test_data, test_labels):
+        name = f'bert_for_embed_finetuned'
+        save_model(self.trained_model, self.CHECKPOINT_DIR, name)
+        preds = self.inferencer.predict(self.trained_model, test_data)
+        test_mets, test_perf = my_eval(test_labels.numpy(), preds, set_type='test', name=name)
+        self.logger.info(f' FINISHED training {name} (took {self.train_time})')
+        self.logger.info(f' {test_perf}')
+
+    def fan(self):
+        with open(self.DATA_DIR + "test_features.pkl", "rb") as f:
+            test_features = pickle.load(f)
+            test_ids, test_data, test_labels = to_tensor(test_features, self.OUTPUT_MODE)
+
+        with open(self.DATA_DIR + "train_features.pkl", "rb") as f:
+            train_features = pickle.load(f)
+            train_ids, train_data, train_labels = to_tensor(train_features, self.OUTPUT_MODE)
+
+        with open(self.DATA_DIR + "dev_features.pkl", "rb") as f:
+            dev_features = pickle.load(f)
+            dev_ids, dev_data, dev_labels = to_tensor(dev_features, self.OUTPUT_MODE)
+
+        n_train_batches = int(len(train_features) / self.BATCH_SIZE)
+        self.train(train_data, train_labels, dev_data, dev_labels, n_train_batches=n_train_batches)
+        self.test(test_data, test_labels)
 
     def berg(self):
         pass
@@ -220,7 +235,7 @@ class OldFinetuner:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-sv', '--sv', type=int, default=0)
+    parser.add_argument('-sv', '--sv', type=int, default=111)
     parser.add_argument('-lr', '--lr', type=float, default=2e-5)
     parser.add_argument('-ep', '--ep', type=int, default=10)
     args = parser.parse_args()
@@ -228,11 +243,7 @@ if __name__ == '__main__':
     # set logger
     now = datetime.now()
     now_string = now.strftime(format='%b-%d-%Hh-%-M')
-    EMB_TYPE='poolbert'
-    SPLIT_TYPE='fan'
-    CONTEXT_TYPE='article'
-    SUBSET=1.0
-    REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
+    REPORTS_DIR = 'reports/bert_for_embed/'
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
@@ -241,6 +252,6 @@ if __name__ == '__main__':
     logger = logging.getLogger()
 
     logger.info(f"Start Logging to {LOG_NAME}")
-    #logger.info(args)
+    logger.info(args)
     ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=args.sv, load_from_ep=0)
     ft.fan()
