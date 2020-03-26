@@ -96,6 +96,7 @@ OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 PRINT_EVERY = 50
 
+SEED_VAL = args.sv
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
 torch.manual_seed(SEED_VAL)
