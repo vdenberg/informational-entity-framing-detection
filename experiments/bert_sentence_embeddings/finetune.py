@@ -190,7 +190,7 @@ if __name__ == '__main__':
                 scheduler.step()
 
             # Save after Epoch
-            epoch_name = f'fold{foldname}_epoch{ep}'
+            epoch_name = f'fold{foldname}_sv{SEED_VAL}_ep{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
             val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
@@ -205,7 +205,7 @@ if __name__ == '__main__':
             prev_val_f1 = val_f1
 
         # Save final model
-        name = f'fold{foldname}_epochs{NUM_TRAIN_EPOCHS}'
+        name = f'fold{foldname}_sv{SEED_VAL}_fin_ep_of_{NUM_TRAIN_EPOCHS}'
         save_model(model, 'models/', name)
         inferencer.eval(model, test_data, test_labels, set_type='test', name='val ' + name)
 
