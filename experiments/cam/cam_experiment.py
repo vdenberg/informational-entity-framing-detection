@@ -117,10 +117,10 @@ parser.add_argument('-pat', '--patience', type=int, default=5)
 #parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=16)
+parser.add_argument('-bs', '--batch_size', type=int, default=24)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=1e-5)
+parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=2e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS

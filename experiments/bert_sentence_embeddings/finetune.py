@@ -6,7 +6,7 @@ from tqdm import trange
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-import os, sys, random
+import os, sys, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
@@ -75,11 +75,20 @@ if not os.path.exists(REPORTS_DIR):
 # HYPERPARAMETERS
 ################
 
-BATCH_SIZE = 24 #24
-NUM_TRAIN_EPOCHS = int(sys.argv[1]) if len(sys.argv) > 1 else 2
-LEARNING_RATE = float(sys.argv[2]) if len(sys.argv) > 2 else 2e-5 #2e-5
-SET_SEED = bool(sys.argv[3]) if len(sys.argv) > 3 else False
-LOAD_FROM_EP = int(sys.argv[4]) if len(sys.argv) > 4 else None
+parser = argparse.ArgumentParser()
+# TRAINING PARAMS
+parser.add_argument('-ep', '--n_epochs', type=int, default=10)
+parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
+parser.add_argument('-s', '--seed', type=float, default=True)
+parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+args = parser.parse_args()
+
+NUM_TRAIN_EPOCHS = args.n_epochs
+LEARNING_RATE = args.learning_rate
+SET_SEED = args.seed
+LOAD_FROM_EP = args.load_from_ep
+
+BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 OUTPUT_MODE = 'classification'
