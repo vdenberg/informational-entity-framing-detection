@@ -99,7 +99,7 @@ class Classifier:
 
             av_tr_loss, ep_elapsed = self.train_epoch(tr_bs)
 
-            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_poch(ep, ep_elapsed, fold)
+            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(ep, ep_elapsed, fold)
             losses.append((av_tr_loss, val_mets['loss']))
 
             self.update_patience(val_mets['f1'])
