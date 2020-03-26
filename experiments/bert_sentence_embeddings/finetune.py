@@ -262,7 +262,7 @@ if __name__ == '__main__':
     now = datetime.now()
     now_string = now.strftime(format='%b-%d-%Hh-%-M')
     REPORTS_DIR = 'reports/bertbaseline/'
-    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+    LOG_NAME = f"{REPORTS_DIR}/{now_string}_{args.sv}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
@@ -271,7 +271,6 @@ if __name__ == '__main__':
 
     logger.info(f"Start Logging to {LOG_NAME}")
     logger.info(args)
-    for seed in [111, 6, 263, 124, 1123]:
-        ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.lr, seed=seed, load_from_ep=0)
-        ft.fan()
-        ft.berg()
+    ft = OldFinetuner(logger=logger, n_epochs=args.ep, lr=args.sv, seed=args.sv, load_from_ep=0)
+    ft.fan()
+    ft.berg()
