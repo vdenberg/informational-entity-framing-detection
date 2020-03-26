@@ -240,7 +240,7 @@ if __name__ == '__main__':
     save_model(model, CHECKPOINT_DIR, name)
     test_mets = inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
 
-    results_df = pd.read_csv('reports/bert_baseline/bert_baseline_results_table.csv')
+    results_df = pd.read_csv('reports/bert_baseline/results_table.csv')
     best_val_perf['seed'] = SEED_VAL
     best_val_perf['fold'] = fold_name
     best_val_perf['set_type'] = 'dev'
@@ -249,4 +249,4 @@ if __name__ == '__main__':
     test_mets['set_type'] = 'test'
     results_df.append(best_val_perf, ignore_index=True)
     results_df.append(test_mets, ignore_index=True)
-    results_df.to_csv('reports/bert_baseline/bert_baseline_results_table.csv', index=False)
+    results_df.to_csv('reports/bert_baseline/results_table.csv', index=False)
