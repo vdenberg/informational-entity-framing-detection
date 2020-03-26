@@ -4,6 +4,7 @@ import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
 #from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
 from tqdm import trange
+from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
@@ -105,9 +106,22 @@ np.random.seed(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
-output_mode = 'classification'
-inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, use_cuda=USE_CUDA)
+OUTPUT_MODE = 'classification'
+output_mode = OUTPUT_MODE
+inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
+# set logger
+now = datetime.now()
+now_string = now.strftime(format='%b-%d-%Hh-%-M')
+LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+
+console_hdlr = logging.StreamHandler(sys.stdout)
+file_hdlr = logging.FileHandler(filename=LOG_NAME)
+logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
+logger = logging.getLogger()
+
+logger.info(f"Start Logging to {LOG_NAME}")
+logger.info(args)
 
 FOLDS = False
 if __name__ == '__main__':
