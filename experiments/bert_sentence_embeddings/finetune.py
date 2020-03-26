@@ -97,7 +97,7 @@ PRINT_EVERY = 50
 
 if SET_SEED:
     SEED_VAL = random.randint(0, 300)
-    logger.info('Setting seed:', SEED_VAL)
+    logger.info(f"Setting seed: {SEED_VAL}")
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
     torch.manual_seed(SEED_VAL)
@@ -115,10 +115,10 @@ def train(train_data, train_labels, dev_data, dev_labels):
     if LOAD_FROM_EP:
         name = f'epoch{LOAD_FROM_EP}'
         load_dir = os.path.join(CHECKPOINT_DIR, name)
-        print(f'Loading model {load_dir}')
+        logger.info(f'Loading model {load_dir}')
         model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
                                                               output_hidden_states=True, output_attentions=True)
-        print(f'Loading model {load_dir}')
+        logger.info(f'Loading model {load_dir}')
         inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
     else:
         load_dir = CACHE_DIR
