@@ -233,20 +233,20 @@ if __name__ == '__main__':
         save_model(model, CHECKPOINT_DIR, epoch_name)
         dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
         if dev_mets['f1'] > best_val:
-            best_val_perf = dev_mets
+            best_val_mets = dev_mets
 
     # Save final model
     name = f'bert_fold{fold_name}_finepof{NUM_TRAIN_EPOCHS}'
     save_model(model, CHECKPOINT_DIR, name)
     test_mets = inferencer.eval(model, test_data, test_labels, set_type='test', name='test ' + name)
 
-    results_df = pd.read_csv('reports/bert_baseline/results_table.csv')
-    best_val_perf['seed'] = SEED_VAL
-    best_val_perf['fold'] = fold_name
-    best_val_perf['set_type'] = 'dev'
+    results_df = pd.read_csv('reports/bert_baseline/results_table.csv', index=False)
+    best_val_mets['seed'] = SEED_VAL
+    best_val_mets['fold'] = fold_name
+    best_val_mets['set_type'] = 'val'
     test_mets['seed'] = SEED_VAL
     test_mets['fold'] = fold_name
     test_mets['set_type'] = 'test'
-    results_df.append(best_val_perf, ignore_index=True)
+    results_df.append(best_val_mets, ignore_index=True)
     results_df.append(test_mets, ignore_index=True)
     results_df.to_csv('reports/bert_baseline/results_table.csv', index=False)
