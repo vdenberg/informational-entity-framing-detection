@@ -78,7 +78,7 @@ if not os.path.exists(REPORTS_DIR):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=5)
+parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
 parser.add_argument('-sv', '--sv', type=int, default=0)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
@@ -123,8 +123,7 @@ if __name__ == '__main__':
             _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
         logger.info(f"***** Training on Fold {foldname} *****")
-        logger.info(f"  Batch size = {BATCH_SIZE}")
-        logger.info(f"  Learning rate = {LEARNING_RATE}")
+        logger.info(f"  Fold = {foldname}")
         logger.info(f"  SEED = {SEED_VAL}")
 
         num_train_optimization_steps = int(
@@ -145,27 +144,23 @@ if __name__ == '__main__':
                                                                   output_hidden_states=True, output_attentions=True)
 
         model.to(device)
-
         # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
         optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
                           eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
-        global_step = 0
-        nb_tr_steps = 0
-        tr_loss = 0
-
         train_sampler = RandomSampler(train_data)
         train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
 
         model.train()
-
         t0 = time.time()
-        for ep in trange(int(NUM_TRAIN_EPOCHS), desc="Epoch"):
+        for ep in range(int(NUM_TRAIN_EPOCHS)):
+            patience = 3
+            prev_val_f1 = 0
+
             if LOAD_FROM_EP: ep += LOAD_FROM_EP
             tr_loss = 0
-            nb_tr_examples, nb_tr_steps = 0, 0
             for step, batch in enumerate(train_dataloader):
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
@@ -189,25 +184,25 @@ if __name__ == '__main__':
                 loss.backward()
 
                 tr_loss += loss.item()
-                nb_tr_examples += input_ids.size(0)
-                nb_tr_steps += 1
 
                 # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
                 optimizer.step()
                 scheduler.step()
-                global_step += 1
-
-                if step % PRINT_EVERY == 0 and step != 0:
-                    # Calculate elapsed time in minutes.
-                    elapsed = time.time() - t0
-                    # Report progress.
-                    # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
             # Save after Epoch
             epoch_name = f'epoch{ep}'
             av_loss = tr_loss / len(train_dataloader)
             save_model(model, CHECKPOINT_DIR, epoch_name)
-            inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
+            val_f1 = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name='val ' + epoch_name)
+
+            if val_f1 > prev_val_f1:
+                patience = 3
+            else:
+                patience -= 1
+            if (not patience > 0) and (val_f1 > 0.20):
+                logger.info("Stopping training")
+                break
+            prev_val_f1 = val_f1
 
         # Save final model
         final_name = f'bert_for_embed_finetuned'
