@@ -106,10 +106,10 @@ inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_C
 if __name__ == '__main__':
     for SEED_VAL in [263, 124, 6, 1001]:
         for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']: #'fan', '1', '2',
-
+            name_base = f"bert{SEED_VAL}_fold{fold_name}"
             # set logger
             now = datetime.now()
-            now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{args.fold}_seed-{args.sv}')
+            now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{fold_name}_seed-{SEED_VAL}')
             LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
             console_hdlr = logging.StreamHandler(sys.stdout)
@@ -229,7 +229,7 @@ if __name__ == '__main__':
                         # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
                 # Save after Epoch
-                epoch_name = f'bert_fold{fold_name}_ep{ep}'
+                epoch_name = name_base + f"_ep{ep}"
                 av_loss = tr_loss / len(train_dataloader)
                 save_model(model, CHECKPOINT_DIR, epoch_name)
                 dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
@@ -242,7 +242,7 @@ if __name__ == '__main__':
                                                                   output_hidden_states=True, output_attentions=True)
             logger.info(f'Loaded best model from {best_model_loc}')
 
-            name = f'bert_fold{fold_name}_finepof{NUM_TRAIN_EPOCHS}'
+            name =  name_base + f"_TEST_{NUM_TRAIN_EPOCHS}"
             #save_model(model, CHECKPOINT_DIR, name)
             test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
             logger.info(f"  Logged to {LOG_NAME}")
