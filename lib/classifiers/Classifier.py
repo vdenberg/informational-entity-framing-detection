@@ -46,7 +46,7 @@ class Classifier:
             epoch_loss += loss
 
             if (step > 0) & (step % self.print_every == 0):
-                self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {epoch_loss/step}')
+                self.logger.info(f' > Step {step}/{len(train_batches)}: loss = {round(epoch_loss/step,4)}')
 
         av_epoch_loss = epoch_loss / len(train_batches)
         elapsed = format_runtime(time.time() - start)
@@ -73,10 +73,10 @@ class Classifier:
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
         tr_preds, tr_loss = self.wrapper.predict(tr_bs)
-        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='Train', av_loss=tr_loss, name="")
+        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
         val_preds, val_loss = self.wrapper.predict(dev_bs)
-        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='Val', av_loss=val_loss, name="")
+        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
 
         if val_mets['f1'] > self.best_val_mets['f1']:
             self.best_val_mets = val_mets
