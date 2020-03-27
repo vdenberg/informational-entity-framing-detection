@@ -94,12 +94,16 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-inf', '--step_info_every', type=int, default=50)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
-# TRAINING PARAMS
-parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='both')
-parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
-parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=True,
-                    help='Whether to finetune pretrained BERT embs')
+# DATA PARAMS
+parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
+
+# EMBEDDING PARAMS
+parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
+parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
+                    help='Whether to finetune pretrained BERT embs')
+
+# TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='debug')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
@@ -325,8 +329,8 @@ logger.info(f" Embedding type: {EMB_TYPE}")
 data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
 data_w_embeds = data_w_embeds.rename(
     columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
 print(data_w_embeds.head())
-#data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
 
 # transform into matrix
 WEIGHTS_MATRIX = make_weight_matrix(data, data_w_embeds, EMB_DIM)
