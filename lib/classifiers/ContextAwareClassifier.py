@@ -150,7 +150,7 @@ class ContextAwareClassifier():
         self.scheduler.step()
         return loss.item()
 
-    def save_checkpoint(self, name):
+    def save_model(self, name):
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
