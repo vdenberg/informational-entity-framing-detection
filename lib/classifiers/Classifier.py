@@ -29,7 +29,7 @@ class Classifier:
         # empty now and set during or after training
         self.train_time = 0
         self.prev_val_f1 = 0
-        self.best_val_mets = {}
+        self.best_val_mets = {'f1':0}
         self.full_patience = patience
         self.current_patience = self.full_patience
         self.test_mets = {}
