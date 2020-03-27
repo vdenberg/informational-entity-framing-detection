@@ -21,6 +21,7 @@ class Processor():
         #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
         self.EOD_index = len(self.sent_id_map)
         self.max_doc_length = max_doc_length + 1 # add 1 for EOD_index
+        self.max_sent_length = None # set after processing
         self.PAD_index = 0
 
     def to_numeric_documents(self, documents):
@@ -43,7 +44,7 @@ class Processor():
         all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
         all_tokens = [["[CLS]"] + tokens + ["[SEP]"] for tokens in all_tokens]
         max_sent_length = max([len(t) for t in all_tokens])
-        print("MAX SENT LEN:", max_sent_length)
+        self.max_sent_length = max_sent_length
 
         token_ids = []
         token_mask = []
@@ -244,7 +245,7 @@ string_data.to_json(DATA_FP)
 logger.info("============ LOADING DATA =============")
 logger.info(f" Context: {CONTEXT_TYPE}")
 logger.info(f" Split type: {SPLIT_TYPE}")
-logger.info(f" Max len: {MAX_DOC_LEN}")
+logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
