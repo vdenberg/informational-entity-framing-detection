@@ -57,7 +57,7 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
     metrics = [str(round(met * 100, 2)) for met in metrics]
     if av_loss:
-        av_loss = round([metrics_dict['loss'], 4)
+        av_loss = round(metrics_dict['loss'], 4)
         metrics += [av_loss]
 
     # make conf_mat
