@@ -351,7 +351,7 @@ logger.info(f" Starting LR: {LR}")
 logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
-cam_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+cam_results_table = pd.read('reports/cam/results_table.csv')
 for fold in folds:
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
@@ -361,9 +361,18 @@ for fold in folds:
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam',
                     print_every=PRINT_STEP_EVERY, cp_dir=CHECKPOINT_DIR)
-    cl.train_on_fold(fold)
-    cam_f1s.loc[fold['name']] = cl.test_perf
+    best_val_mets, test_mets = cl.train_on_fold(fold)
+
+    best_val_mets['seed'] = SEED_VAL
+    best_val_mets['fold'] = fold["name"]
+
+    test_mets['seed'] = SEED_VAL
+    test_mets['fold'] = fold["name"]
+
+    cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
+    cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
+
+    cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
 
 # final results of cross validation
-cam_f1s.loc['mean'] = cam_f1s.mean()
-logger.info(f' CAM Results:\n{cam_f1s}')
+logger.info(f' CAM Results:\n{cam_results_table}')

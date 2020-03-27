@@ -30,10 +30,10 @@ class Classifier:
         # empty now and set during or after training
         self.train_time = 0
         self.prev_val_f1 = 0
-        self.best_val_f1 = 0
+        self.best_val_mets = {}
         self.full_patience = patience
         self.current_patience = self.full_patience
-        self.test_perf = []
+        self.test_mets = {}
         self.test_perf_string = ''
         self.cur_fold = ''
 
@@ -77,8 +77,9 @@ class Classifier:
         val_preds, val_loss = self.wrapper.predict(dev_bs)
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name=ep_name)
 
-        if val_mets['f1'] > self.best_val_f1:
-            self.best_val_f1 = val_mets['f1']
+        if val_mets['f1'] > self.best_val_mets['f1']:
+            self.best_val_mets = val_mets
+            self.best_val_mets['epoch'] = ep
 
         self.logger.info(f" > Epoch{ep_name} (took {elapsed}): {tr_perf}, {val_perf} (Best f1 so far: {self.best_val_f1})")
         self.wrapper.save_model(self.cp_dir, name=ep_name)
@@ -130,13 +131,11 @@ class Classifier:
         # test_model
         test_mets, test_perf = self.test_model(fold, name)
 
-        self.test_perf = [test_mets['acc'], test_mets['prec'], test_mets['rec'], test_mets['f1']]
-        self.test_perf = test_perf
-
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
-        self.logger.info(f" {self.test_perf}")
+        self.logger.info(f" {self.test_mets}")
 
         self.wrapper.save_model(self.cp_dir, name=name)
+        return self.best_val_mets, test_mets
 
 
 

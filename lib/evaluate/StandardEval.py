@@ -42,8 +42,12 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     """
     # METRICS_DICT
     metrics_dict = get_metrics(labels, preds)
+
     if av_loss:
         metrics_dict['loss'] = av_loss
+
+    if set_type:
+        metrics_dict['set_type'] = set_type
 
     # METRICS_DF
     # metrics_df = pd.DataFrame(metrics_dict)
