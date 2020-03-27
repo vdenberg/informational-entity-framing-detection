@@ -206,7 +206,7 @@ if __name__ == '__main__':
                                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
                     elif schedule == 'cyclic':
                         schedule = CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
-                                            cycle_momentum=False)
+                                            cycle_momentum=False, max_lr=LEARNING_RATE*2)
 
                     global_step = 0
                     nb_tr_steps = 0
