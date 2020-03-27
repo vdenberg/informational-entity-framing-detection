@@ -205,7 +205,7 @@ if __name__ == '__main__':
                         scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
                     elif schedule == 'cyclic':
-                        schedule = CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
+                        scheduler = CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
                                             cycle_momentum=False, max_lr=LEARNING_RATE*2)
 
                     global_step = 0
