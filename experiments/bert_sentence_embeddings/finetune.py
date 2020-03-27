@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+from torch.optim.lr_scheduler import CyclicLR
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
 #from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
@@ -104,157 +105,192 @@ output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
 if __name__ == '__main__':
-    for SEED_VAL in [1001]:
-        for fold_name in ['4', '5', '6', '7', '8', '9', '10']: #'fan', '1', '2',
-            name_base = f"bert{SEED_VAL}_fold{fold_name}"
-            # set logger
-            now = datetime.now()
-            now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{fold_name}_seed-{SEED_VAL}')
-            LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
-            console_hdlr = logging.StreamHandler(sys.stdout)
-            file_hdlr = logging.FileHandler(filename=LOG_NAME)
-            logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
-            logger = logging.getLogger()
+    '''
+    Set up for BERT baseline:
+    5 seeds
+    10 folds
+    
+    for SEED_VAL in [111, 263, 6, 124, 1001]:
+        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']: #'fan', 
+    
+    '''
 
-            logger.info(args)
+    '''
+    Set up for embeddings production:
+    -- experiment with Cyclic LR
+    -- experiment with batchsize
+    seeds: 111 and 263
+    folds: 1, 2, 6
 
-            if fold_name == 'orig':
-                train_fp = os.path.join(DATA_DIR, "train_features.pkl")
-                dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
-                test_fp = os.path.join(DATA_DIR, "test_features.pkl")
-                all_fp = os.path.join(DATA_DIR, "all_features.pkl")
-            else:
-                train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
-                dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
-                test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
+    for SEED_VAL in [111, 263]:
+        for fold_name in ['1', '2', '6']: 
+            for schedule in ['cyclic', 'warmup']:
+                for BATCH_SIZE in [8, 16, 24]:
+                    name_base = f"bert{SEED_VAL}_fold{fold_name}_sch{schedule}_bs{batchsize}":
+                    
 
-            with open(train_fp, "rb") as f:
-                train_features = pickle.load(f)
-                _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+    '''
+    for SEED_VAL in [111, 263]:
+        for fold_name in ['1', '2', '6']:
+            for schedule in ['cyclic', 'warmup']:
+                for BATCH_SIZE in [8, 16, 24]:
+                    name_base = f"bert{SEED_VAL}_fold{fold_name}_sch{schedule}_bs{BATCH_SIZE}"
 
-            with open(dev_fp, "rb") as f:
-                dev_features = pickle.load(f)
-                _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
-            with open(test_fp, "rb") as f:
-                test_features = pickle.load(f)
-                _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
+                    # set logger
+                    now = datetime.now()
+                    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{name_base}')
+                    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
-            logger.info(f"***** Training on Fold {fold_name} *****")
-            logger.info(f"  Batch size = {BATCH_SIZE}")
-            logger.info(f"  Learning rate = {LEARNING_RATE}")
-            logger.info(f"  SEED = {SEED_VAL}")
-            logger.info(f"  Logging to {LOG_NAME}")
+                    console_hdlr = logging.StreamHandler(sys.stdout)
+                    file_hdlr = logging.FileHandler(filename=LOG_NAME)
+                    logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
+                    logger = logging.getLogger()
 
-            num_train_optimization_steps = int(
-                len(train_features) / BATCH_SIZE) * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-            num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+                    logger.info(args)
 
-            if LOAD_FROM_EP:
-                name = f'epoch{LOAD_FROM_EP}'
-                load_dir = os.path.join(CHECKPOINT_DIR, name)
-                logger.info(f'Loading model {load_dir}')
-                model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
-                                                                      output_hidden_states=True, output_attentions=True)
-                logger.info(f'Loaded model {load_dir}')
-                inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
-            else:
-                load_dir = CACHE_DIR
-                model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                                      output_hidden_states=True, output_attentions=True)
+                    if fold_name == 'orig':
+                        train_fp = os.path.join(DATA_DIR, "train_features.pkl")
+                        dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
+                        test_fp = os.path.join(DATA_DIR, "test_features.pkl")
+                        all_fp = os.path.join(DATA_DIR, "all_features.pkl")
+                    else:
+                        train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
+                        dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
+                        test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
 
-            model.to(device)
+                    with open(train_fp, "rb") as f:
+                        train_features = pickle.load(f)
+                        _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
 
-            # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-            optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
-                              eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-            scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                        num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+                    with open(dev_fp, "rb") as f:
+                        dev_features = pickle.load(f)
+                        _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 
-            global_step = 0
-            nb_tr_steps = 0
-            tr_loss = 0
+                    with open(test_fp, "rb") as f:
+                        test_features = pickle.load(f)
+                        _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
 
-            train_sampler = RandomSampler(train_data)
-            train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
+                    logger.info(f"***** Training on Fold {fold_name} *****")
+                    logger.info(f"  Batch size = {BATCH_SIZE}")
+                    logger.info(f"  Learning rate = {LEARNING_RATE}")
+                    logger.info(f"  SEED = {SEED_VAL}")
+                    logger.info(f"  Logging to {LOG_NAME}")
 
-            model.train()
+                    n_train_batches = int(len(train_features) / BATCH_SIZE)
+                    half_train_batches = int(n_train_batches / 2)
+                    num_train_optimization_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+                    num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
 
-            t0 = time.time()
-            best_val_mets = {'f1': 0}
-            best_model_loc = ''
-            for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
-                if LOAD_FROM_EP: ep += LOAD_FROM_EP
-                tr_loss = 0
-                nb_tr_examples, nb_tr_steps = 0, 0
-                for step, batch in enumerate(train_dataloader):
-                    batch = tuple(t.to(device) for t in batch)
-                    input_ids, input_mask, segment_ids, label_ids = batch
-                    # print(label_ids)
+                    if LOAD_FROM_EP:
+                        name = f'epoch{LOAD_FROM_EP}'
+                        load_dir = os.path.join(CHECKPOINT_DIR, name)
+                        logger.info(f'Loading model {load_dir}')
+                        model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
+                                                                              output_hidden_states=True, output_attentions=True)
+                        logger.info(f'Loaded model {load_dir}')
+                        inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
+                    else:
+                        load_dir = CACHE_DIR
+                        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+                                                                              output_hidden_states=True, output_attentions=True)
 
-                    model.zero_grad()
-                    #if step % PRINT_EVERY == 0 and step != 0:
-                    #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
-                    #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
-                    outputs = model(input_ids, input_mask, labels=label_ids)
-                    (loss), logits, probs, sequence_output, pooled_output = outputs
-                    loss = outputs[0]
+                    model.to(device)
 
-                    if OUTPUT_MODE == "classification":
-                        loss_fct = CrossEntropyLoss()
-                        loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-                    elif OUTPUT_MODE == "regression":
-                        loss_fct = MSELoss()
-                        loss = loss_fct(logits.view(-1), label_ids.view(-1))
+                    # optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, correct_bias=False) #, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
+                                      eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+                    if schedule == 'warmup':
+                        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                                    num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+                    elif schedule == 'cyclic':
+                        schedule = CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
+                                            cycle_momentum=False)
 
-                    if GRADIENT_ACCUMULATION_STEPS > 1:
-                        loss = loss / GRADIENT_ACCUMULATION_STEPS
+                    global_step = 0
+                    nb_tr_steps = 0
+                    tr_loss = 0
 
-                    loss.backward()
+                    train_sampler = RandomSampler(train_data)
+                    train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
 
-                    tr_loss += loss.item()
-                    nb_tr_examples += input_ids.size(0)
-                    nb_tr_steps += 1
+                    model.train()
 
-                    # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
-                    optimizer.step()
-                    scheduler.step()
-                    global_step += 1
+                    t0 = time.time()
+                    best_val_mets = {'f1': 0}
+                    best_model_loc = ''
+                    for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
+                        if LOAD_FROM_EP: ep += LOAD_FROM_EP
+                        tr_loss = 0
+                        nb_tr_examples, nb_tr_steps = 0, 0
+                        for step, batch in enumerate(train_dataloader):
+                            batch = tuple(t.to(device) for t in batch)
+                            input_ids, input_mask, segment_ids, label_ids = batch
+                            # print(label_ids)
 
-                    if step % PRINT_EVERY == 0 and step != 0:
-                        # Calculate elapsed time in minutes.
-                        elapsed = time.time() - t0
-                        # Report progress.
-                        # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
+                            model.zero_grad()
+                            #if step % PRINT_EVERY == 0 and step != 0:
+                            #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
+                            #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
+                            outputs = model(input_ids, input_mask, labels=label_ids)
+                            (loss), logits, probs, sequence_output, pooled_output = outputs
+                            loss = outputs[0]
 
-                # Save after Epoch
-                epoch_name = name_base + f"_ep{ep}"
-                av_loss = tr_loss / len(train_dataloader)
-                save_model(model, CHECKPOINT_DIR, epoch_name)
-                dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
-                if dev_mets['f1'] > best_val_mets['f1']:
-                    best_val_mets = dev_mets
-                    best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+                            if OUTPUT_MODE == "classification":
+                                loss_fct = CrossEntropyLoss()
+                                loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+                            elif OUTPUT_MODE == "regression":
+                                loss_fct = MSELoss()
+                                loss = loss_fct(logits.view(-1), label_ids.view(-1))
 
-            # Save final model
-            best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                  output_hidden_states=True, output_attentions=True)
-            logger.info(f'Loaded best model from {best_model_loc}')
+                            if GRADIENT_ACCUMULATION_STEPS > 1:
+                                loss = loss / GRADIENT_ACCUMULATION_STEPS
 
-            name =  name_base + f"_TEST_{NUM_TRAIN_EPOCHS}"
-            #save_model(model, CHECKPOINT_DIR, name)
-            test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
-            logger.info(f"  Logged to {LOG_NAME}")
+                            loss.backward()
 
-            results_df = pd.read_csv('reports/bert_baseline/results_table.csv', index_col=False)
-            best_val_mets['seed'] = SEED_VAL
-            best_val_mets['fold'] = fold_name
-            best_val_mets['set_type'] = 'val'
-            test_mets['seed'] = SEED_VAL
-            test_mets['fold'] = fold_name
-            test_mets['set_type'] = 'test'
-            results_df = results_df.append(best_val_mets, ignore_index=True)
-            results_df = results_df.append(test_mets, ignore_index=True)
-            results_df.to_csv(f'reports/bert_baseline/results_table_{fold_name}_{SEED_VAL}.csv', index=False)
-            results_df.to_csv('reports/bert_baseline/results_table.csv', index=False)
+                            tr_loss += loss.item()
+                            nb_tr_examples += input_ids.size(0)
+                            nb_tr_steps += 1
+
+                            # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
+                            optimizer.step()
+                            scheduler.step()
+                            global_step += 1
+
+                            if step % PRINT_EVERY == 0 and step != 0:
+                                # Calculate elapsed time in minutes.
+                                elapsed = time.time() - t0
+                                # Report progress.
+                                # logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
+
+                        # Save after Epoch
+                        epoch_name = name_base + f"_ep{ep}"
+                        av_loss = tr_loss / len(train_dataloader)
+                        save_model(model, CHECKPOINT_DIR, epoch_name)
+                        dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+                        if dev_mets['f1'] > best_val_mets['f1']:
+                            best_val_mets = dev_mets
+                            best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+
+                    # Save final model
+                    best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                          output_hidden_states=True, output_attentions=True)
+                    logger.info(f'Loaded best model from {best_model_loc}')
+
+                    name =  name_base + f"_TEST_{NUM_TRAIN_EPOCHS}"
+                    #save_model(model, CHECKPOINT_DIR, name)
+                    test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
+                    logger.info(f"  Logged to {LOG_NAME}")
+
+                    results_df = pd.read_csv('reports/bert_baseline/results_table.csv', index_col=False)
+                    best_val_mets['seed'] = SEED_VAL
+                    best_val_mets['fold'] = fold_name
+                    best_val_mets['set_type'] = 'val'
+                    test_mets['seed'] = SEED_VAL
+                    test_mets['fold'] = fold_name
+                    test_mets['set_type'] = 'test'
+                    results_df = results_df.append(best_val_mets, ignore_index=True)
+                    results_df = results_df.append(test_mets, ignore_index=True)
+                    results_df.to_csv(f'reports/bert_baseline/results_table_{fold_name}_{SEED_VAL}.csv', index=False)
+                    results_df.to_csv('reports/bert_baseline/results_table.csv', index=False)
