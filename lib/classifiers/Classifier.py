@@ -78,13 +78,16 @@ class Classifier:
         val_preds, val_loss = self.wrapper.predict(dev_bs)
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
 
+
+        best_log = ''
         if val_mets['f1'] > self.best_val_mets['f1']:
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
             self.best_model_loc = ep_name
+            best_log = '(HIGH SCORE)'
 
         self.logger.info(f" Epoch {ep} ({self.model_name.replace('_', ' ')}) ({elapsed}): "
-                         f"{tr_perf} - {val_perf} (best so far: {self.best_val_mets['f1']})")
+                         f"{tr_perf} - {val_perf} {best_log}")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
