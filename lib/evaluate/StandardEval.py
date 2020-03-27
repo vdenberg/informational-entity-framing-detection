@@ -54,12 +54,11 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
 
     # METRICS_STRING
     # select values
+    metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
+    metrics = [str(round(met * 100, 2)) for met in metrics]
     if av_loss:
-        metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1'], metrics_dict['loss']]
-    else:
-        metrics = [metrics_dict['acc'], metrics_dict['prec'], metrics_dict['rec'], metrics_dict['f1']]
-    # round values
-    metrics = [str(round(met*100,2)) for met in metrics]
+        metrics += round(metrics_dict['loss']], 4)
+
 
     # make conf_mat
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
