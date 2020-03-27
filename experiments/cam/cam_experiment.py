@@ -355,7 +355,7 @@ for fold in folds:
 
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam',
-                    print_every=PRINT_STEP_EVERY)
+                    print_every=PRINT_STEP_EVERY, cp_dir=CHECKPOINT_DIR)
     cl.train_on_fold(fold)
     cam_f1s.loc[fold['name']] = cl.test_perf
 
