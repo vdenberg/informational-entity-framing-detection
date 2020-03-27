@@ -133,7 +133,7 @@ if __name__ == '__main__':
     '''
     for SEED_VAL in [263, 124]:
         for fold_name in ['2', '8']:
-            for schedule in ['cyclic']: #, 'warmup']:
+            for schedule in ['warmup']: #, 'warmup']:
                 BATCH_SIZE = 8
                 name_base = f"bert{SEED_VAL}_f{fold_name}_{schedule}_bs{BATCH_SIZE}"
 
@@ -278,7 +278,7 @@ if __name__ == '__main__':
                                                                       output_hidden_states=True, output_attentions=True)
                 logger.info(f'Loaded best model from {best_model_loc}')
 
-                name =  name_base + f"_TEST_{NUM_TRAIN_EPOCHS}"
+                name =  name_base + f"_fin{NUM_TRAIN_EPOCHS}"
                 #save_model(model, CHECKPOINT_DIR, name)
                 test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
                 logger.info(f"  Logged to {LOG_NAME}")
