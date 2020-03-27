@@ -85,7 +85,7 @@ class Classifier:
 
         if ep % 5 == 0:
             self.logger.info(f" > Ep {ep} ({elapsed}) ({ep_name.replace('_', ' ')} {tr_perf} {val_perf} "
-                         f"(Best f1 so far: {self.best_val_mets['f1']})")
+                         f"(Top f1 so far: {self.best_val_mets['f1']})")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
