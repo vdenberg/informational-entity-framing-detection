@@ -353,14 +353,15 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 cam_results_table = pd.read('reports/cam/results_table.csv')
 for fold in folds:
+    name_base = f"cam{SEED_VAL}_fold{fold['name']}_sch{'cyclic'}_bs{BATCH_SIZE}"
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
                                  emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
                                  batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=False)
 
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
-    cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam',
-                    print_every=PRINT_STEP_EVERY, cp_dir=CHECKPOINT_DIR)
+    cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
+                    print_every=PRINT_STEP_EVERY)
     best_val_mets, test_mets = cl.train_on_fold(fold)
 
     best_val_mets['seed'] = SEED_VAL

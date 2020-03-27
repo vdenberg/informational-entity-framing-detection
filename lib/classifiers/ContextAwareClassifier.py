@@ -87,7 +87,6 @@ class ContextAwareClassifier():
                  learning_rate=0.001, start_epoch=0, patience=3, step_size=1, gamma=0.75, context_naive=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
-        self.best_cp_dir = os.path.join(cp_dir, 'best')
         self.device, self.use_cuda = get_torch_device()
 
         self.emb_dim = emb_dim
@@ -96,7 +95,7 @@ class ContextAwareClassifier():
         self.criterion = None  # depends on classweight which should be set on input
 
         if start_epoch > 0:
-            self.model = self.load_model_from_checkpoint()
+            self.model = self.load_model()
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=bilstm_layers, weights_matrix=weights_matrix,
@@ -126,12 +125,14 @@ class ContextAwareClassifier():
         class_weight = 1 - (n_pos / len(train_labels))
         self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
 
-    def load_model_from_checkpoint(self):
-        cpfp = format_checkpoint_filepath(self.cp_dir, self.hidden_size, epoch_number=self.start_epoch)
-        self.logger.info('Loading model from', cpfp)
-        start_checkpoint = torch.load(cpfp)
-        model = start_checkpoint['model']
-        model.load_state_dict(start_checkpoint['state_dict'])
+    def load_model(self, name):
+        cpfp = os.path.join(self.cp_dir, name)
+        cp = torch.load(cpfp)
+        model = cp['model']
+        model.load_state_dict(cp['state_dict'])
+        self.model = model
+        self.model.to(self.device)
+        if self.use_cuda: self.model.cuda()
         return model
 
     def train_on_batch(self, batch):
@@ -149,12 +150,12 @@ class ContextAwareClassifier():
         self.scheduler.step()
         return loss.item()
 
-    def save_checkpoint(self, cpdir, ep):
+    def save_checkpoint(self, name):
         checkpoint = {'model': self.model,
                       'state_dict': self.model.state_dict(),
                       'optimizer': self.optimizer.state_dict()}
-        checkpoint_name = format_checkpoint_filepath(cpdir, self.hidden_size, epoch_number=ep)
-        torch.save(checkpoint, checkpoint_name)
+        cpfp = os.path.join(self.cp_dir, name)
+        torch.save(checkpoint, cpfp)
 
     def predict(self, batches):
         self.model.eval()
@@ -178,7 +179,6 @@ class ContextAwareClassifier():
 
         self.model.train()
         return y_pred, sum_loss / len(batches)
-
 
 # _, USE_CUDA = get_torch_device()
 # LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor

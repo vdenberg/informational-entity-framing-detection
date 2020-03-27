@@ -9,13 +9,12 @@ class Classifier:
     """
     Generic Classifier that performs recurring machine learning tasks
     """
-    def __init__(self, model, n_epochs, logger, patience, cp_dir, fig_dir, model_name, print_every, load_from_ep=None):
+    def __init__(self, model, n_epochs, logger, patience, fig_dir, model_name, print_every, load_from_ep=None):
         self.wrapper = model
         self.n_epochs = n_epochs
         self.logger = logger
         self.patience = patience
         self.fig_dir = fig_dir
-        self.cp_dir = cp_dir
         self.model_name = model_name.upper()
         self.print_every = print_every
 
@@ -36,6 +35,7 @@ class Classifier:
         self.test_mets = {}
         self.test_perf_string = ''
         self.cur_fold = ''
+        self.best_model_loc = ''
 
     def train_epoch(self, train_batches):
         start = time.time()
@@ -68,8 +68,9 @@ class Classifier:
         return tr_bs, tr_lbs, dev_bs, dev_lbs
 
     def validate_after_epoch(self, ep, elapsed, fold):
+        ep_name = self.model_name + f"_ep{ep}"
+
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
-        ep_name = f"{self.model_name}_fold{self.cur_fold}_ep{ep}"
 
         tr_preds, tr_loss = self.wrapper.predict(tr_bs)
         tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name=ep_name)
@@ -80,9 +81,11 @@ class Classifier:
         if val_mets['f1'] > self.best_val_mets['f1']:
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
+            self.best_model_loc = ep_name
 
-        self.logger.info(f" > Epoch{ep_name} (took {elapsed}): {tr_perf}, {val_perf} (Best f1 so far: {self.best_val_f1})")
-        self.wrapper.save_model(self.cp_dir, name=ep_name)
+        self.logger.info(f" > Epoch{ep_name} (took {elapsed}): {tr_perf}, {val_perf} "
+                         f"(Best f1 so far: {self.best_val_mets['f1']})")
+        self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
     def train_all_epochs(self, fold):
@@ -119,22 +122,22 @@ class Classifier:
 
     def train_on_fold(self, fold):
         self.cur_fold = fold['name']
-        name = f"{self.model_name}_fold{self.cur_fold}_finep{self.n_epochs}"
-
         train_elapsed, losses = self.train_all_epochs(fold)
         self.train_time = train_elapsed
 
         # plot learning curve
         loss_plt = plot_scores(losses)
-        loss_plt.savefig(self.fig_dir + f'/{name}_trainval_loss.png', bbox_inches='tight')
+        loss_plt.savefig(self.fig_dir + f'/{self.model_name}_trainval_loss.png', bbox_inches='tight')
 
         # test_model
+        self.wrapper.load_model(self.best_model_loc)
+        self.logger.info(f'Loaded best model from {self.best_model_loc}')
+
+        name = self.model_name + f"_TEST_{self.n_epochs}"
         test_mets, test_perf = self.test_model(fold, name)
 
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
         self.logger.info(f" {self.test_mets}")
-
-        self.wrapper.save_model(self.cp_dir, name=name)
         return self.best_val_mets, test_mets
 
 
