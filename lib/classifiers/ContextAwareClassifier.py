@@ -114,8 +114,12 @@ class ContextAwareClassifier():
         self.test_perf_string = ''
 
         # set optim and scheduler
+        nr_train_instances = len(train_labels)
+        nr_train_batches = int(nr_train_instances / batch_size)
+        half_tr_bs = int(nr_train_instances/2)
         self.optimizer = AdamW(self.model.parameters(), lr=learning_rate, eps=1e-8)
-        self.scheduler = lr_scheduler.LambdaLR(self.optimizer, lambda epoch: 0.6 ** epoch)
+        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=learning_rate, step_size_up=half_tr_bs,
+                                               cycle_momentum=False, max_lr=learning_rate*2)
 
         # set criterion
         n_pos = len([l for l in train_labels if l == 1])
