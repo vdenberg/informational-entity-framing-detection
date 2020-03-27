@@ -305,7 +305,7 @@ class Split:
                            'dev': dev_df,
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
-                           'name': 'fan' if i == 0 else i}
+                           'name': i+1}
             filled_folds.append(filled_fold)
 
         return filled_folds
