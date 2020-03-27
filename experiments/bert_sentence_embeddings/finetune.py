@@ -134,7 +134,7 @@ if __name__ == '__main__':
     for SEED_VAL in [263, 124]:
         for fold_name in ['2', '8']:
             for schedule in ['cyclic']: #, 'warmup']:
-                #for BATCH_SIZE in [8, 16, 24]:
+                BATCH_SIZE = 8
                 name_base = f"bert{SEED_VAL}_fold{fold_name}_sch{schedule}_bs{BATCH_SIZE}"
 
 
