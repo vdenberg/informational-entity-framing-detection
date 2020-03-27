@@ -84,7 +84,7 @@ class Classifier:
             self.best_model_loc = ep_name
 
         self.logger.info(f" Epoch {ep} ({self.model_name.replace('_', ' ')}) ({elapsed}): "
-                         f"{tr_perf} - {val_perf} (best so far: {self.best_val_mets['f1']}")
+                         f"{tr_perf} - {val_perf} (best so far: {self.best_val_mets['f1']})")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
