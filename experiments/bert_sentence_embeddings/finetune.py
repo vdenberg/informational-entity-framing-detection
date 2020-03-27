@@ -104,8 +104,8 @@ output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
 if __name__ == '__main__':
-    for SEED_VAL in [263, 124, 6, 1001]:
-        for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']: #'fan', '1', '2',
+    for SEED_VAL in [1001]:
+        for fold_name in ['4', '5', '6', '7', '8', '9', '10']: #'fan', '1', '2',
             name_base = f"bert{SEED_VAL}_fold{fold_name}"
             # set logger
             now = datetime.now()
