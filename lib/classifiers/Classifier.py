@@ -78,6 +78,7 @@ class Classifier:
         val_preds, val_loss = self.wrapper.predict(dev_bs)
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name=ep_name)
 
+        print(val_mets, self.best_val_mets)
         print(val_mets['f1'])
         print(self.best_val_mets['f1'])
         if val_mets['f1'] > self.best_val_mets['f1']:
