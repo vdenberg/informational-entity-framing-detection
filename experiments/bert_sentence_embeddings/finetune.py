@@ -135,7 +135,7 @@ if __name__ == '__main__':
         for fold_name in ['2', '8']:
             for schedule in ['cyclic']: #, 'warmup']:
                 BATCH_SIZE = 8
-                name_base = f"bert{SEED_VAL}_fold{fold_name}_sch{schedule}_bs{BATCH_SIZE}"
+                name_base = f"bert{SEED_VAL}_f{fold_name}_{schedule}_bs{BATCH_SIZE}"
 
 
                 # set logger
