@@ -351,7 +351,7 @@ for fold in folds:
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
                                  emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                                 batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA)
+                                 batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=False)
 
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name='cam',

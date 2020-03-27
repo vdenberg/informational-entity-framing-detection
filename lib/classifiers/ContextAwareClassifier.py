@@ -84,7 +84,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hidden_size=32, bilstm_layers=1, weights_matrix=None, train_labels=None,
                  batch_size=24, cp_dir='models/checkpoints/cam',
-                 learning_rate=0.001, start_epoch=0, patience=3, step_size=1, gamma=0.75):
+                 learning_rate=0.001, start_epoch=0, patience=3, step_size=1, gamma=0.75, context_naive=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.best_cp_dir = os.path.join(cp_dir, 'best')
@@ -100,7 +100,7 @@ class ContextAwareClassifier():
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=bilstm_layers, weights_matrix=weights_matrix,
-                                           device=self.device)
+                                           device=self.device, context_naive=context_naive)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
