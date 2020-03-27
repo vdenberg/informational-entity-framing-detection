@@ -287,8 +287,8 @@ if __name__ == '__main__':
                 best_val_mets['seed'] = SEED_VAL
                 best_val_mets['fold'] = fold_name
                 best_val_mets['set_type'] = 'val'
-                best_val_mets['sch'] = 'cyclic'
-                test_mets['sch'] = 'cyclic'
+                best_val_mets['sch'] = schedule
+                test_mets['sch'] = schedule
                 test_mets['seed'] = SEED_VAL
                 test_mets['fold'] = fold_name
                 test_mets['set_type'] = 'test'
