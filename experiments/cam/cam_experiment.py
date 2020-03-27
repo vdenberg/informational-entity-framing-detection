@@ -350,6 +350,7 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 logger.info(f" Batch size: {BATCH_SIZE}")
 logger.info(f" Starting LR: {LR}")
 logger.info(f" Seed: {SEED_VAL}")
+logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 cam_results_table = pd.read_csv('reports/cam/results_table.csv')
