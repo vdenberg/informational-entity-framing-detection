@@ -348,6 +348,7 @@ logger.info(f" Starting from: {START_EPOCH}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
 logger.info(f" Batch size: {BATCH_SIZE}")
 logger.info(f" Starting LR: {LR}")
+logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 cam_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
