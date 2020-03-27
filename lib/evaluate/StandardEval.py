@@ -63,11 +63,9 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     conf_mat = {'tn': metrics_dict['tn'], 'tp': metrics_dict['tp'], 'fn': metrics_dict['fn'], 'fp': metrics_dict['fp']}
 
     if av_loss:
-        metrics_string = f"Model {name} performance: {set_type} Conf mat: {conf_mat}, {set_type} Loss: {metrics[4]}, {set_type} Acc: {metrics[0]}, {set_type} Prec: {metrics[1]}, {set_type} Rec: {metrics[2]}" \
-                         f", {set_type} F1: {metrics[3]}"
+        metrics_string = f"On {set_type} ({conf_mat}): {set_type} loss: {metrics[4]}, Acc: {metrics[0]}, Prec: {metrics[1]},  Rec: {metrics[2]}, {set_type} F1: {metrics[3]}"
     else:
-        metrics_string = f"Model {name} performance on {set_type}: Conf mat: {conf_mat}, {set_type} Acc: {metrics[0]}, {set_type} Prec: {metrics[1]}, {set_type} Rec: {metrics[2]}" \
-                         f", {set_type} F1: {metrics[3]}"
+        metrics_string = f"On {set_type} ({conf_mat}): Acc: {metrics[0]}, Prec: {metrics[1]}, Rec: {metrics[2]}, {set_type} f1: {metrics[3]}"
 
     return metrics_dict, metrics_string
 

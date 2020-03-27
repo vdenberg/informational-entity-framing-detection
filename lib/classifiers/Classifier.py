@@ -73,17 +73,18 @@ class Classifier:
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
         tr_preds, tr_loss = self.wrapper.predict(tr_bs)
-        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name=ep_name)
+        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='Train', av_loss=tr_loss, name="")
 
         val_preds, val_loss = self.wrapper.predict(dev_bs)
-        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name=ep_name)
+        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='Val', av_loss=val_loss, name="")
 
         if val_mets['f1'] > self.best_val_mets['f1']:
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
             self.best_model_loc = ep_name
 
-        self.logger.info(f" > Epoch{ep_name} (took {elapsed}): \n{tr_perf} \n{val_perf} "
+        if ep % 5 == 0:
+            self.logger.info(f" > Ep {ep} ({elapsed}) ({ep_name.replace('_', ' ')} {tr_perf} {val_perf} "
                          f"(Best f1 so far: {self.best_val_mets['f1']})")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
