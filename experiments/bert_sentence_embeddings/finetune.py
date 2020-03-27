@@ -276,12 +276,13 @@ if __name__ == '__main__':
                 # Save final model
                 best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                       output_hidden_states=True, output_attentions=True)
-                logger.info(f'Loaded best model from {best_model_loc}')
 
                 logger.info(f"***** Testing on Fold {fold_name} *****")
+                logger.info(f"  Model = {best_model_loc}")
                 logger.info(f"  Batch size = {BATCH_SIZE}")
                 logger.info(f"  Learning rate = {LEARNING_RATE}")
                 logger.info(f"  SEED = {SEED_VAL}")
+                logger.info(f"  Schedule = {schedule}")
                 logger.info(f"  Logging to {LOG_NAME}")
 
                 name =  name_base + f"_fin{NUM_TRAIN_EPOCHS}"
