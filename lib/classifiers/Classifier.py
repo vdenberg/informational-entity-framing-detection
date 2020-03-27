@@ -84,7 +84,7 @@ class Classifier:
             self.best_model_loc = ep_name
 
         if ep % 5 == 0:
-            self.logger.info(f" > Ep {ep} ({elapsed}) ({ep_name.replace('_', ' ')} {tr_perf} {val_perf} "
+            self.logger.info(f" Ep {ep} ({elapsed}) ({ep_name.replace('_', ' ')} {tr_perf} {val_perf} "
                          f"(Top f1 so far: {self.best_val_mets['f1']})")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
