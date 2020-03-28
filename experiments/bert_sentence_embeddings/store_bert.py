@@ -61,15 +61,14 @@ EMB_TYPE = args.embedding_type
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
 
-DEV_DATA_FP = DATA_DIR + "folds/fan_dev_features.pkl"
+
 ALL_DATA_FP = DATA_DIR + "folds/all_features.pkl"
 
 # =====================================================================================
 #                    DATA
 # =====================================================================================
 # Read arguments from command line
-with open(DEV_DATA_FP, "rb") as f:
-    dev_features = pickle.load(f)
+
 with open(ALL_DATA_FP, "rb") as f:
     all_features = pickle.load(f)
 dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
@@ -86,10 +85,19 @@ if __name__ == '__main__':
                                                           output_hidden_states=True, output_attentions=True)
     logger.info(f'Loaded data from {ALL_DATA_FP}')
     logger.info(f'Loaded model from {MODEL_PATH}')
-    inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'{MODEL_PATH}-Dev')
-    inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'{MODEL_PATH}-All')
-    embeddings = inferencer.predict(model, all_data, return_embeddings=True) #, embedding_type=EMB_TYPE)ls
-    logger.info(f'Finished {len(embeddings)} embeddings')
-    basil_w_BERT = pd.DataFrame(index=all_ids)
-    basil_w_BERT[EMB_TYPE] = embeddings
-    basil_w_BERT.to_csv(f'data/basil_w_{EMB_TYPE}.csv')
+
+    for fold in range(1,11):
+        dev_data_fp = os.path.join(DATA_DIR, f"folds/{fold}_all_features.pkl")
+        with open(dev_data_fp, "rb") as f:
+            dev_features = pickle.load(f)
+        inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
+
+    inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'best model on all')
+
+    for EMB_TYPE in ['poolbert', 'avbert']:
+
+        embeddings = inferencer.predict(model, all_data, return_embeddings=True, embedding_type=EMB_TYPE)
+        logger.info(f'Finished {len(embeddings)} embeddings')
+        basil_w_BERT = pd.DataFrame(index=all_ids)
+        basil_w_BERT[EMB_TYPE] = embeddings
+        basil_w_BERT.to_csv(f'data/basil_w_{EMB_TYPE}.csv')

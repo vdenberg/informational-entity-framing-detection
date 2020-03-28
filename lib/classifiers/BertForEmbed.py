@@ -114,7 +114,7 @@ class Inferencer():
         self.device = device
         self.use_cuda = use_cuda
 
-    def predict(self, model, data, return_embeddings=False):
+    def predict(self, model, data, return_embeddings=False, emb_type='poolbert'):
         model.to(self.device)
         model.eval()
 
@@ -134,7 +134,11 @@ class Inferencer():
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
-            emb_output = pooled_output
+            if emb_type == 'poolbert':
+                emb_output = pooled_output
+            elif emb_type == "avbert":
+                emb_output = sequence_output.mean(axis=1)
+
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
 
