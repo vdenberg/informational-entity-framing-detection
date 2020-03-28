@@ -148,12 +148,10 @@ if __name__ == '__main__':
 
     logger.info(args)
 
-    for SEED_VAL in [263, 111, 4556]:
-        for fold_name in ['2', '8', '4']:
+    for SEED_VAL in [263, 111]:
+        for fold_name in ['2', '8']:
             for schedule in ['warmup']:
                 name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
-
-
 
                 if fold_name == 'orig':
                     train_fp = os.path.join(DATA_DIR, "train_features.pkl")
@@ -280,7 +278,6 @@ if __name__ == '__main__':
                         best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
                     logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
-                logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
 
                 BASELINE = False
                 if BASELINE:
@@ -313,3 +310,5 @@ if __name__ == '__main__':
                     results_df = results_df.append(test_mets, ignore_index=True)
                     #results_df.to_csv(f'reports/bert_baseline/results_table_{fold_name}_{SEED_VAL}.csv', index=False)
                     results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
+
+    logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
