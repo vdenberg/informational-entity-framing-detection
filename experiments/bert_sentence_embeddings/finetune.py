@@ -135,22 +135,25 @@ if __name__ == '__main__':
     best_val_mets = {'f1': 0}
     best_val_perf = ''
     best_model_loc = ''
-    for SEED_VAL in [263, 111]:
-        for fold_name in ['2', '8']:
+
+    # set logger
+    now = datetime.now()
+    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{"finding good dev model"}')
+    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+
+    console_hdlr = logging.StreamHandler(sys.stdout)
+    file_hdlr = logging.FileHandler(filename=LOG_NAME)
+    logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
+    logger = logging.getLogger()
+
+    logger.info(args)
+
+    for SEED_VAL in [263, 111, 4556]:
+        for fold_name in ['2', '8', '4']:
             for schedule in ['warmup']:
                 name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
-                # set logger
-                now = datetime.now()
-                now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{name_base}')
-                LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
-                console_hdlr = logging.StreamHandler(sys.stdout)
-                file_hdlr = logging.FileHandler(filename=LOG_NAME)
-                logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
-                logger = logging.getLogger()
-
-                logger.info(args)
 
                 if fold_name == 'orig':
                     train_fp = os.path.join(DATA_DIR, "train_features.pkl")
