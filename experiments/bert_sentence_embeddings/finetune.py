@@ -118,8 +118,8 @@ if __name__ == '__main__':
 
     '''
     Set up for embeddings production:
-    -- experiment with Cyclic LR
-    -- experiment with batchsize
+    -- experiment with Cyclic LR -> not clearly better
+    -- experiment with batchsize -> looks good
     seeds: 111 and 263
     folds: 1, 2, 6
 
@@ -131,16 +131,19 @@ if __name__ == '__main__':
                     
 
     '''
-    for SEED_VAL in [263, 124]:
-        for fold_name in ['2', '8']:
-            for schedule in ['warmup']: #, 'warmup']:
-                BATCH_SIZE = 8
-                name_base = f"bert{SEED_VAL}_f{fold_name}_{schedule}_bs{BATCH_SIZE}"
 
+    best_val_mets = {'f1': 0}
+    best_val_perf = ''
+    best_model_loc = ''
+    for SEED_VAL in [263, 111]:
+        for fold_name in ['2', '8']:
+            for schedule in ['warmup']:
+                BATCH_SIZE = 24
+                name_base = f"bert{SEED_VAL}_f{fold_name}_{schedule}_bs{BATCH_SIZE}"
 
                 # set logger
                 now = datetime.now()
-                now_string = now.strftime(format=f'%b-%d-%Hh-%-M_fold-{name_base}')
+                now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{name_base}')
                 LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
                 console_hdlr = logging.StreamHandler(sys.stdout)
@@ -218,8 +221,6 @@ if __name__ == '__main__':
                 model.train()
 
                 t0 = time.time()
-                best_val_mets = {'f1': 0}
-                best_model_loc = ''
                 for ep in trange(1, int(NUM_TRAIN_EPOCHS+1), desc="Epoch"):
                     if LOAD_FROM_EP: ep += LOAD_FROM_EP
                     tr_loss = 0
@@ -268,37 +269,45 @@ if __name__ == '__main__':
                     epoch_name = name_base + f"_ep{ep}"
                     av_loss = tr_loss / len(train_dataloader)
                     save_model(model, CHECKPOINT_DIR, epoch_name)
-                    dev_mets = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+                    dev_mets, dev_perf = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+
+                    # check if best
                     if dev_mets['f1'] > best_val_mets['f1']:
                         best_val_mets = dev_mets
+                        best_val_perf = dev_perf
                         best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
-                # Save final model
-                best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                      output_hidden_states=True, output_attentions=True)
+                    logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+                logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
 
-                logger.info(f"***** Testing on Fold {fold_name} *****")
-                logger.info(f"  Model = {best_model_loc}")
-                logger.info(f"  Batch size = {BATCH_SIZE}")
-                logger.info(f"  Learning rate = {LEARNING_RATE}")
-                logger.info(f"  SEED = {SEED_VAL}")
-                logger.info(f"  Schedule = {schedule}")
-                logger.info(f"  Logging to {LOG_NAME}")
+                BASELINE = False
+                if BASELINE:
+                    # Save final model
+                    best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                          output_hidden_states=True, output_attentions=True)
 
-                name =  name_base + f"_fin{NUM_TRAIN_EPOCHS}"
-                #save_model(model, CHECKPOINT_DIR, name)
-                test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
+                    logger.info(f"***** Testing on Fold {fold_name} *****")
+                    logger.info(f"  Model = {best_model_loc}")
+                    logger.info(f"  Batch size = {BATCH_SIZE}")
+                    logger.info(f"  Learning rate = {LEARNING_RATE}")
+                    logger.info(f"  SEED = {SEED_VAL}")
+                    logger.info(f"  Schedule = {schedule}")
+                    logger.info(f"  Logging to {LOG_NAME}")
 
-                results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
-                best_val_mets['seed'] = SEED_VAL
-                best_val_mets['fold'] = fold_name
-                best_val_mets['set_type'] = 'val'
-                best_val_mets['sch'] = schedule
-                test_mets['sch'] = schedule
-                test_mets['seed'] = SEED_VAL
-                test_mets['fold'] = fold_name
-                test_mets['set_type'] = 'test'
-                results_df = results_df.append(best_val_mets, ignore_index=True)
-                results_df = results_df.append(test_mets, ignore_index=True)
-                #results_df.to_csv(f'reports/bert_baseline/results_table_{fold_name}_{SEED_VAL}.csv', index=False)
-                results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
+                    name =  name_base + f"_fin{NUM_TRAIN_EPOCHS}"
+                    #save_model(model, CHECKPOINT_DIR, name)
+                    test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
+
+                    results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
+                    best_val_mets['seed'] = SEED_VAL
+                    best_val_mets['fold'] = fold_name
+                    best_val_mets['set_type'] = 'val'
+                    best_val_mets['sch'] = schedule
+                    test_mets['sch'] = schedule
+                    test_mets['seed'] = SEED_VAL
+                    test_mets['fold'] = fold_name
+                    test_mets['set_type'] = 'test'
+                    results_df = results_df.append(best_val_mets, ignore_index=True)
+                    results_df = results_df.append(test_mets, ignore_index=True)
+                    #results_df.to_csv(f'reports/bert_baseline/results_table_{fold_name}_{SEED_VAL}.csv', index=False)
+                    results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
