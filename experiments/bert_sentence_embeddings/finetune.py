@@ -138,8 +138,7 @@ if __name__ == '__main__':
     for SEED_VAL in [263, 111]:
         for fold_name in ['2', '8']:
             for schedule in ['warmup']:
-                BATCH_SIZE = 24
-                name_base = f"bert{SEED_VAL}_f{fold_name}_{schedule}_bs{BATCH_SIZE}"
+                name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
                 # set logger
                 now = datetime.now()
