@@ -312,3 +312,4 @@ if __name__ == '__main__':
                     results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
 
     logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
+    logger.info(f"Logged to: {LOG_NAME}.")
