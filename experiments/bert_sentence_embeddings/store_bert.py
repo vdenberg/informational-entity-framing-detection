@@ -90,7 +90,7 @@ if __name__ == '__main__':
     logger.info(f'Loaded model from {MODEL_PATH}')
 
     for fold in range(1,11):
-        dev_data_fp = os.path.join(DATA_DIR, f"folds/{fold}_all_features.pkl")
+        dev_data_fp = os.path.join(DATA_DIR, f"folds/{fold}_dev_features.pkl")
         with open(dev_data_fp, "rb") as f:
             dev_features = pickle.load(f)
             _, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
