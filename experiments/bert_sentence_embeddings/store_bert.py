@@ -92,7 +92,7 @@ if __name__ == '__main__':
         dev_data_fp = os.path.join(DATA_DIR, f"folds/{fold}_dev_features.pkl")
         with open(dev_data_fp, "rb") as f:
             dev_features = pickle.load(f)
-            _, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
+            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
             logger.info(f'Loaded data from {dev_data_fp} (size: {len(dev_data)})')
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
 
