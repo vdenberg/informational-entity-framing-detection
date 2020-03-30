@@ -54,9 +54,13 @@ def to_tensor(features, OUTPUT_MODE):
 parser = argparse.ArgumentParser()
 parser.add_argument('-emb', '--embedding_type', type=str, help='options: avbert|poolbert', default='poolbert')
 parser.add_argument('-pth', '--model_path', type=str, default='models/checkpoints/bert_baseline/good_dev_model') #models/checkpoints/bert_for_embed/epoch17/
+parser.add_argument('-cheat', '--cheat', action='store_true', default=False)
+#
 args = parser.parse_args()
 
 MODEL_PATH = args.model_path
+if args.cheat:
+    MODEL_PATH = 'models/checkpoints/bert_for_embed/epoch17/'
 EMB_TYPE = args.embedding_type
 OUTPUT_MODE = 'classification'
 NUM_LABELS = 2
