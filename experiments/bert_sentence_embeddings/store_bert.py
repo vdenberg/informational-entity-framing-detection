@@ -53,7 +53,7 @@ def to_tensor(features, OUTPUT_MODE):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-emb', '--embedding_type', type=str, help='options: avbert|poolbert', default='poolbert')
-parser.add_argument('-pth', '--model_path', type=str, default='models/checkpoints/bert_for_embed/epoch17/')
+parser.add_argument('-pth', '--model_path', type=str, default='models/checkpoints/bert_baseline/good_dev_model') #models/checkpoints/bert_for_embed/epoch17/
 args = parser.parse_args()
 
 MODEL_PATH = args.model_path
@@ -71,7 +71,6 @@ ALL_DATA_FP = DATA_DIR + "folds/all_features.pkl"
 
 with open(ALL_DATA_FP, "rb") as f:
     all_features = pickle.load(f)
-dev_ids, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
 all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
 
 # =====================================================================================
@@ -90,6 +89,7 @@ if __name__ == '__main__':
         dev_data_fp = os.path.join(DATA_DIR, f"folds/{fold}_all_features.pkl")
         with open(dev_data_fp, "rb") as f:
             dev_features = pickle.load(f)
+            _, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
 
     inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'best model on all')
