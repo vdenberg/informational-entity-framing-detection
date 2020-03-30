@@ -86,7 +86,6 @@ inferencer = Inferencer(REPORTS_DIR, OUTPUT_MODE, logger, device, USE_CUDA)
 if __name__ == '__main__':
     model = BertForSequenceClassification.from_pretrained(MODEL_PATH, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)
-    logger.info(f'Loaded data from {ALL_DATA_FP}')
     logger.info(f'Loaded model from {MODEL_PATH}')
 
     for fold in range(1,11):
@@ -94,6 +93,7 @@ if __name__ == '__main__':
         with open(dev_data_fp, "rb") as f:
             dev_features = pickle.load(f)
             _, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
+            logger.info(f'Loaded data from {dev_data_fp}')
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
 
     inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'best model on all')
