@@ -93,7 +93,7 @@ if __name__ == '__main__':
         with open(dev_data_fp, "rb") as f:
             dev_features = pickle.load(f)
             _, dev_data, dev_labels = to_tensor(all_features, OUTPUT_MODE)
-            logger.info(f'Loaded data from {dev_data_fp}')
+            logger.info(f'Loaded data from {dev_data_fp} (size: {len(dev_data)})')
         inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
 
     inferencer.eval(model, all_data, all_labels, set_type='all',  name=f'best model on all')
