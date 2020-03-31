@@ -398,14 +398,14 @@ for bert_batch in bert_dev_batches:
     with torch.no_grad():
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
-    bert_probs.append(probs.numpy())
+    bert_probs.append(probs.detach().cpu().numpy())
 
 cam_probs = []
 for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
     with torch.no_grad():
         logits, probs = cnm.model(ids, documents, positions)
-    cam_probs.append(probs.numpy())
+    cam_probs.append(probs.detach().cpu().numpy())
 
 print(bert_probs)
 print(cam_probs)
