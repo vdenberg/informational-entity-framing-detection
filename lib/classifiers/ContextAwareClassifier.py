@@ -58,13 +58,13 @@ class ContextAwareModel(nn.Module):
             print("====")
             print('Input:', input_tensor.shape)
             print('Indices:', target_idx.shape)
-            target_embeddings = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
+            target_embeddings = torch.zeros(batch_size, 768, device=self.device)
             print('Storing embeddings in:', target_embeddings.shape)
             print('For item in ', range(batch_size))
             for item in range(batch_size):
                 my_idx = target_idx[item]
-                print("idx", my_idx)
-                print('Input at that index', input_tensor[item, my_idx])
+                print("\tidx", my_idx)
+                print('\tInput at that index', input_tensor[item, my_idx])
                 target_embeddings[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
