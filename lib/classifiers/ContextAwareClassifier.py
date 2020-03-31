@@ -59,7 +59,6 @@ class ContextAwareModel(nn.Module):
             for item in range(batch_size):
                 my_idx = target_idx[item]
                 target_embeddings[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
-            target_output = self.dropout(target_embeddings)
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
@@ -79,7 +78,7 @@ class ContextAwareModel(nn.Module):
 
         logits = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
         probs = self.sigm(logits)
-        return (logits, probs)
+        return logits, probs
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
@@ -178,7 +177,7 @@ class ContextAwareClassifier():
                 logits, probs = self.model(documents, positions)
                 #loss = self.criterion(sigm_output, labels)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
-                sigm_output = sigm_output.detach().cpu().numpy()
+                #sigm_output = sigm_output.detach().cpu().numpy()
 
             if len(y_pred) == 0:
                 y_pred.append(probs.detach().cpu().numpy())

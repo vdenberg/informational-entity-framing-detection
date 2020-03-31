@@ -359,17 +359,38 @@ logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
-cam_results_table = pd.read_csv('reports/cam/results_table.csv')
-inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
-folds = [folds[1]]
-for fold in folds:
-    model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=NUM_LABELS,
-                                                          output_hidden_states=True, output_attentions=True)
-    with open(f"data/folds/2_dev_features.pkl", "rb") as f:
-        dev_features = pickle.load(f)
-        _, dev_data, dev_labels = to_tensor(dev_features, 'classification')
-    inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
 
+# =====================================================================================
+#                    REPEAT BERT
+# =====================================================================================
+
+# pick fold bert was trained on:
+fold = [fold for fold in folds if fold['name'] == '2'][0]
+
+# repeat BERT result
+
+# apply bert
+bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=2,
+                                                           output_hidden_states=True, output_attentions=True)
+inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
+
+with open(f"data/folds/2_dev_features.pkl", "rb") as f:
+    bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
+inferencer.eval(bert_model, bert_dev_data, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
+
+# aply context naive model
+cnm = ContextAwareClassifier(train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
+                             learning_rate=LR, gamma=GAMMA, context_naive=True)
+
+dev_batches = fold['dev_batches']
+cnm_dev_preds, dev_loss = cnm.predict(dev_batches)
+val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold['name'}")
+logger.info(val_perf)
+
+
+'''
+cam_results_table = pd.read_csv('reports/cam/results_table.csv')
+for folf in folds:
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
@@ -380,23 +401,21 @@ for fold in folds:
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
                     print_every=PRINT_STEP_EVERY)
 
-    tr_bs, tr_lbs, dev_bs, dev_lbs = cl.unpack_fold(fold)
-    dev_preds, dev_loss = cl.wrapper.predict(fold['dev_batches'])
-    val_mets, val_perf = my_eval(dev_lbs, dev_preds, set_type='val', av_loss=dev_loss, name="")
-    logger.info(val_perf)
 
-    #best_val_mets, test_mets = cl.train_on_fold(fold)
 
-    #best_val_mets['seed'] = SEED_VAL
-    #best_val_mets['fold'] = fold["name"]
+    best_val_mets, test_mets = cl.train_on_fold(fold)
 
-    #test_mets['seed'] = SEED_VAL
-    #test_mets['fold'] = fold["name"]
+    best_val_mets['seed'] = SEED_VAL
+    best_val_mets['fold'] = fold["name"]
 
-    #cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
-    #cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
+    test_mets['seed'] = SEED_VAL
+    test_mets['fold'] = fold["name"]
+
+    cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
+    cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
 
     cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
 
 # final results of cross validation
 logger.info(f' CAM Results:\n{cam_results_table}')
+'''
