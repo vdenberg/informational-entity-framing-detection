@@ -35,12 +35,12 @@ class ContextAwareModel(nn.Module):
 
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = nn.Embedding.from_pretrained(self.weights_matrix)
-
+        self.emb_size = weights_matrix.shape[1]
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
 
         self.dropout = nn.Dropout(0.1)
         #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
-        self.classifier = nn.Linear(self.hidden_size * 2, 2)
+        self.classifier = nn.Linear(self.emb_size, 2)
         self.sigm = nn.Sigmoid()
         self.context_naive = context_naive
 
@@ -55,7 +55,7 @@ class ContextAwareModel(nn.Module):
         seq_length = input_tensor.shape[1]
 
         if self.context_naive:
-            target_output = torch.zeros(batch_size, 768, device=self.device)
+            target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
             for item in range(batch_size):
                 my_idx = target_idx[item]
                 target_output[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
