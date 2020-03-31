@@ -44,7 +44,7 @@ class ContextAwareModel(nn.Module):
         self.sigm = nn.Sigmoid()
         self.context_naive = context_naive
 
-    def forward(self, input_tensor, target_idx):
+    def forward(self, id_tensor, input_tensor, target_idx):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
@@ -57,9 +57,10 @@ class ContextAwareModel(nn.Module):
         if self.context_naive:
             target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
             for item in range(batch_size):
-                my_idx = target_idx[item]
-                embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
-                target_output[item] = embedded[0]
+                #my_idx = target_idx[item]
+                #embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)[0]
+                embedded = self.embedding(id_tensor[item]).view(1, -1)
+                target_output[item] = embedded
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
@@ -171,11 +172,12 @@ class ContextAwareClassifier():
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            _, _, _, documents, labels, labels_long, positions = batch
+
+            ids, _, _, _, documents, labels, labels_long, positions = batch
 
             with torch.no_grad():
                 #sigm_output = self.model(documents, positions)
-                logits, probs = self.model(documents, positions)
+                logits, probs = self.model(ids, documents, positions)
                 #loss = self.criterion(sigm_output, labels)
                 loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
                 #sigm_output = sigm_output.detach().cpu().numpy()

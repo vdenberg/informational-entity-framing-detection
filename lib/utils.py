@@ -29,9 +29,10 @@ def to_tensors(split, device):
     labels_fl = torch.tensor(split.label.to_numpy(), dtype=torch.float, device=device)
     labels_long = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
     positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
+    ids = torch.tensor(split.index.to_numpy(), dtype=torch.long, device=device)
 
     # to dataset
-    tensors = TensorDataset(token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
+    tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
 
     return tensors
 
