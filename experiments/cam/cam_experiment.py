@@ -384,7 +384,7 @@ cnm = ContextAwareClassifier(train_labels=fold['train'].label.values, weights_ma
 
 dev_batches = fold['dev_batches']
 cnm_dev_preds, dev_loss = cnm.predict(dev_batches)
-val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold['name'}")
+val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold['name']}")
 logger.info(val_perf)
 
 
