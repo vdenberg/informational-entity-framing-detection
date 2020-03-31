@@ -102,6 +102,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         pooled_output = outputs[1]
 
         pooled_output = self.dropout(pooled_output)
+        print(pooled_output.shape)
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
