@@ -61,6 +61,7 @@ class ContextAwareModel(nn.Module):
                 #embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)[0]
                 embedded = self.embedding(id_tensor[item]).view(1, -1)
                 target_output[item] = embedded
+            logits = self.classifier(target_output)
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
@@ -78,7 +79,7 @@ class ContextAwareModel(nn.Module):
                 my_idx = target_idx[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-        logits = self.classifier(target_output) #.view(batch_size)  # sigmoid function that returns batch_size * 1
+            logits = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
         probs = self.sigm(logits)
         return logits, probs, target_output
 
@@ -100,6 +101,7 @@ class ContextAwareClassifier():
         self.hidden_size = hidden_size
         self.batch_size = batch_size
         self.criterion = None  # depends on classweight which should be set on input
+        self.context_naive = context_naive
 
         if start_epoch > 0:
             self.model = self.load_model()
@@ -130,8 +132,10 @@ class ContextAwareClassifier():
         # set criterion
         n_pos = len([l for l in train_labels if l == 1])
         class_weight = 1 - (n_pos / len(train_labels))
-        #self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
-        self.criterion = CrossEntropyLoss()
+        if self.context_naive:
+            self.criterion = CrossEntropyLoss()
+        else:
+            self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
@@ -176,11 +180,13 @@ class ContextAwareClassifier():
             ids, _, _, _, documents, labels, labels_long, positions = batch
 
             with torch.no_grad():
-                #sigm_output = self.model(documents, positions)
-                logits, probs = self.model(ids, documents, positions)
-                #loss = self.criterion(sigm_output, labels)
-                loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
-                #sigm_output = sigm_output.detach().cpu().numpy()
+                if self.context_naive:
+                    logits, probs, target_output = self.model(ids, documents, positions)
+                    loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
+                else:
+                    logits, probs, target_output  = self.model(documents, positions)
+                    sigm_output = probs.detach().cpu().numpy()
+                    loss = self.criterion(sigm_output, labels)
 
             if len(y_pred) == 0:
                 y_pred.append(probs.detach().cpu().numpy())
