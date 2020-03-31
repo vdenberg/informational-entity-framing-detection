@@ -238,6 +238,7 @@ string_data = pd.read_csv(string_data_fp, sep='\t',
                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
 processor = Processor(sentence_ids=string_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
 string_data['sentence'] = sentences
+string_data['id_num'] = [processor.sent_id_map[i] for i in string_data.sentence_ids.values]
 string_data['context_doc_num'] = processor.to_numeric_documents(string_data.context_document.values)
 token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(string_data.sentence.values)
 string_data['token_ids'], string_data['token_mask'], string_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
@@ -259,13 +260,14 @@ data.index = data.sentence_ids.values
 # split data
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 
-folds = spl.apply_split(features=['context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
+folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
 # batch data
 for fold_i, fold in enumerate(folds):
+    print(fold['train'])
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
     dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
     test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
