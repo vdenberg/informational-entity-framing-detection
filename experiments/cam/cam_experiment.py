@@ -407,8 +407,8 @@ for cam_batch in cam_dev_batches:
         logits, probs = cnm.model(ids, documents, positions)
     cam_probs.append(probs.detach().cpu().numpy())
 
-print(bert_probs)
-print(cam_probs)
+print(bert_probs[:10])
+print(cam_probs[:10])
 exit(0)
 
 
