@@ -39,10 +39,12 @@ class ContextAwareModel(nn.Module):
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
 
         self.dropout = nn.Dropout(0.1)
-        #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
-        self.classifier = nn.Linear(self.emb_size, 2)
-        self.sigm = nn.Sigmoid()
         self.context_naive = context_naive
+        if self.context_naive:
+            self.classifier = nn.Linear(self.emb_size, 2)
+            self.sigm = nn.Sigmoid()
+        else:
+            self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
     def forward(self, id_tensor, input_tensor, target_idx):
         """
@@ -62,6 +64,8 @@ class ContextAwareModel(nn.Module):
                 embedded = self.embedding(id_tensor[item]).view(1, -1)
                 target_output[item] = embedded
             logits = self.classifier(target_output)
+            probs = self.sigm(logits)
+            return logits, probs, target_output
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
@@ -79,9 +83,8 @@ class ContextAwareModel(nn.Module):
                 my_idx = target_idx[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-            logits = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
-        probs = self.sigm(logits)
-        return logits, probs, target_output
+            sigm_output = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
+            return sigm_output
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
@@ -153,7 +156,10 @@ class ContextAwareClassifier():
 
         ids, _, _, _, documents, labels, labels_long, positions = batch
 
-        logits, probs = self.model(ids, documents, positions)
+        if self.context_naive:
+            logits, probs, target_output = self.model(ids, documents, positions)
+        else:
+            probs = self.model(ids, documents, positions)
         #print(labels.type())
         loss = self.criterion(probs, labels)
         loss.backward()
@@ -184,8 +190,8 @@ class ContextAwareClassifier():
                     logits, probs, target_output = self.model(ids, documents, positions)
                     loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
                 else:
-                    logits, probs, target_output  = self.model(documents, positions)
-                    sigm_output = probs.detach().cpu().numpy()
+                    sigm_output  = self.model(documents, positions)
+                    #sigm_output = sigm_output.detach().cpu().numpy()
                     loss = self.criterion(sigm_output, labels)
 
             if self.context_naive:
@@ -201,8 +207,9 @@ class ContextAwareClassifier():
 
             sum_loss += loss.item()
 
-        y_pred = y_pred[0]
-        y_pred = np.argmax(y_pred, axis=1)
+        if self.context_naive:
+            y_pred = y_pred[0]
+            y_pred = np.argmax(y_pred, axis=1)
 
         self.model.train()
         return y_pred, sum_loss / len(batches)
