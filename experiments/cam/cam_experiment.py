@@ -365,6 +365,7 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 # =====================================================================================
 
 # pick fold bert was trained on:
+print([fold['name'] for fold in folds])
 fold = [fold for fold in folds if fold['name'] == '2'][0]
 
 # repeat BERT result
