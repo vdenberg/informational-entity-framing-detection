@@ -392,21 +392,21 @@ cnm.model.eval()
 # loss function
 loss_fct = CrossEntropyLoss()
 
+bert_probs = []
 for bert_batch in bert_dev_batches:
     input_ids, input_mask, segment_ids, label_ids = bert_batch
     bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
     logits, probs, sequence_output, pooled_output = bert_outputs
-    print(logits)
+    bert_probs.append(probs.numpy())
 
-print('=======')
-exit(0)
+cam_probs = []
 for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
     logits, probs = cnm.model(ids, documents, positions)
-    print(logits)
-    loss = loss_fct(logits.view(-1, 2), labels.view(-1))
+    cam_probs.append(probs.numpy())
 
-
+print(bert_probs)
+print(cam_probs)
 exit(0)
 
 
