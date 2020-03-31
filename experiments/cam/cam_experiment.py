@@ -11,6 +11,7 @@ from lib.handle_data.SplitData import Split
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
+from lib.evaluate.StandardEval import my_eval
 import pickle
 
 from lib.classifiers.Classifier import Classifier
@@ -113,7 +114,7 @@ parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=100)
 parser.add_argument('-pat', '--patience', type=int, default=5)
-#parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
+parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=True)
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
@@ -165,6 +166,8 @@ MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
 EMB_TYPE = args.embedding_type
 FT_EMB = args.finetune_embeddings
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
+
+CN = args.context_naive
 
 HIDDEN = args.hidden_size
 BILSTM_LAYERS = args.bilstm_layers
@@ -371,21 +374,27 @@ for fold in folds:
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
                                  emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                                 batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=False)
+                                 batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=CN)
 
     logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
     cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
                     print_every=PRINT_STEP_EVERY)
-    best_val_mets, test_mets = cl.train_on_fold(fold)
 
-    best_val_mets['seed'] = SEED_VAL
-    best_val_mets['fold'] = fold["name"]
+    tr_bs, tr_lbs, dev_bs, dev_lbs = cl.unpack_fold(fold)
+    dev_preds, dev_loss = cl.wrapper.predict(fold['dev_batches'])
+    val_mets, val_perf = my_eval(dev_lbs, dev_preds, set_type='val', av_loss=dev_loss, name="")
+    logger.info(val_perf)
 
-    test_mets['seed'] = SEED_VAL
-    test_mets['fold'] = fold["name"]
+    #best_val_mets, test_mets = cl.train_on_fold(fold)
 
-    cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
-    cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
+    #best_val_mets['seed'] = SEED_VAL
+    #best_val_mets['fold'] = fold["name"]
+
+    #test_mets['seed'] = SEED_VAL
+    #test_mets['fold'] = fold["name"]
+
+    #cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
+    #cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
 
     cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
 

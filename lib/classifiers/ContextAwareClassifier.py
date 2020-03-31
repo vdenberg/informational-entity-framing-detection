@@ -7,6 +7,9 @@ from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, Tens
 from lib.evaluate.StandardEval import my_eval
 from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time
+import numpy as np
+
+from torch.nn import CrossEntropyLoss
 
 """
 Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and Attention
@@ -34,7 +37,11 @@ class ContextAwareModel(nn.Module):
         self.embedding = nn.Embedding.from_pretrained(self.weights_matrix)
 
         self.lstm = nn.LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
-        self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
+
+        self.dropout = nn.Dropout(0.1)
+        #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
+        self.classifier = nn.Linear(self.hidden_size * 2, 2)
+        self.sigm = nn.Sigmoid()
         self.context_naive = context_naive
 
     def forward(self, input_tensor, target_idx):
@@ -52,9 +59,8 @@ class ContextAwareModel(nn.Module):
             for item in range(batch_size):
                 my_idx = target_idx[item]
                 target_embeddings[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
-
+            target_output = self.dropout(target_embeddings)
         else:
-
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
             # loop through input and update hidden
@@ -71,9 +77,9 @@ class ContextAwareModel(nn.Module):
                 my_idx = target_idx[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-        output = self.classifier(target_output)  # sigmoid function that returns batch_size * 1
-
-        return output.view(batch_size)
+        logits = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
+        probs = self.sigm(logits)
+        return (logits, probs)
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
@@ -123,7 +129,8 @@ class ContextAwareClassifier():
         # set criterion
         n_pos = len([l for l in train_labels if l == 1])
         class_weight = 1 - (n_pos / len(train_labels))
-        self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
+        #self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
+        self.criterion = CrossEntropyLoss()
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
@@ -141,9 +148,9 @@ class ContextAwareClassifier():
 
         _, _, _, documents, labels, labels_long, positions = batch
 
-        sigm_output = self.model(documents, positions)
+        logits, probs = self.model(documents, positions)
         #print(labels.type())
-        loss = self.criterion(sigm_output, labels)
+        loss = self.criterion(probs, labels)
         loss.backward()
 
         self.optimizer.step()
@@ -167,15 +174,25 @@ class ContextAwareClassifier():
             _, _, _, documents, labels, labels_long, positions = batch
 
             with torch.no_grad():
-                sigm_output = self.model(documents, positions)
-                loss = self.criterion(sigm_output, labels)
+                #sigm_output = self.model(documents, positions)
+                logits, probs = self.model(documents, positions)
+                #loss = self.criterion(sigm_output, labels)
+                loss = self.criterion(logits.view(-1, 2), labels.view(-1))
                 sigm_output = sigm_output.detach().cpu().numpy()
 
+            if len(y_pred) == 0:
+                y_pred.append(probs.detach().cpu().numpy())
+            else:
+                y_pred[0] = np.append(y_pred[0], probs.detach().cpu().numpy(), axis=0)
+
             # convert to predictions
-            preds = [1 if output > 0.5 else 0 for output in sigm_output]
+            #preds = [1 if output > 0.5 else 0 for output in sigm_output]
+            #y_pred.extend(preds)
 
             sum_loss += loss.item()
-            y_pred.extend(preds)
+
+        y_pred = y_pred[0]
+        y_pred = np.argmax(y_pred, axis=1)
 
         self.model.train()
         return y_pred, sum_loss / len(batches)
