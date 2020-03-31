@@ -1,0 +1,5 @@
+INFO:root:Start Logging to reports/cam/use/berg/article/subset0.5/Mar-31-11h-40.log
+INFO:root:Namespace(batch_size=24, bert_learning_rate=2e-05, bert_model='bert-base-cased', bilstm_layers=4, context_naive=True, context_type='article', embedding_type='use', epochs=100, finetune_embeddings=False, gamma=0.95, hidden_size=50, learning_rate=2e-05, mode='debug', no_padding=False, patience=5, save_epoch_cp_every=50, seed_val=263, split_type='berg', start_epoch=0, step_info_every=50, subset_of_data=1.0, warmup_proportion=0.1)
+INFO:root:============ PREPROCESS DATA =============
+INFO:root: Writing to: data/cam_input/article/cam_basil.tsv
+INFO:root: Max len: 76
