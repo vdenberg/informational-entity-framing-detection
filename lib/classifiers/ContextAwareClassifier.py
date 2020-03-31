@@ -58,6 +58,8 @@ class ContextAwareModel(nn.Module):
             target_embeddings = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
             for item in range(batch_size):
                 my_idx = target_idx[item]
+                print(input_tensor.shape)
+                print(target_idx.shape)
                 target_embeddings[item] = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
