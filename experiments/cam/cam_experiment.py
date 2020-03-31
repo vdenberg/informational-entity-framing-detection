@@ -9,7 +9,10 @@ from transformers import BertTokenizer
 from lib.handle_data.SplitData import Split
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
-from lib.classifiers.BertWrapper import BertWrapper
+
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
+import pickle
+
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
 #from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
@@ -354,8 +357,16 @@ logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 cam_results_table = pd.read_csv('reports/cam/results_table.csv')
+inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 folds = [folds[1]]
 for fold in folds:
+    model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=NUM_LABELS,
+                                                          output_hidden_states=True, output_attentions=True)
+    with open(f"data/folds/2_dev_features.pkl", "rb") as f:
+        dev_features = pickle.load(f)
+        _, dev_data, dev_labels = to_tensor(dev_features, 'classification')
+    inferencer.eval(model, dev_data, dev_labels, set_type='dev', name=f'best model on {fold}')
+
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                  train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,

@@ -4,9 +4,24 @@ from torch.nn import CrossEntropyLoss, MSELoss
 import torch
 from torch import nn
 import numpy as np
-from torch.utils.data import (DataLoader, SequentialSampler)
+from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 import os
+
+
+def to_tensor(features, OUTPUT_MODE):
+    example_ids = [f.my_id for f in features]
+    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
+    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
+    segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
+
+    if OUTPUT_MODE == "classification":
+        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    elif OUTPUT_MODE == "regression":
+        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
+
+    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
+    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
 # model
