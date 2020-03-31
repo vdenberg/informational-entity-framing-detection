@@ -374,7 +374,7 @@ bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/b
                                                            output_hidden_states=True, output_attentions=True)
 inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 
-with open(f"data/folds/2_dev_features.pkl", "rb") as f:
+with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
     bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
 inferencer.eval(bert_model, bert_dev_data, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
 
