@@ -188,14 +188,16 @@ class ContextAwareClassifier():
                     sigm_output = probs.detach().cpu().numpy()
                     loss = self.criterion(sigm_output, labels)
 
-            if len(y_pred) == 0:
-                y_pred.append(probs.detach().cpu().numpy())
-            else:
-                y_pred[0] = np.append(y_pred[0], probs.detach().cpu().numpy(), axis=0)
+            if self.context_naive:
+                if len(y_pred) == 0:
+                    y_pred.append(probs.detach().cpu().numpy())
+                else:
+                    y_pred[0] = np.append(y_pred[0], probs.detach().cpu().numpy(), axis=0)
 
             # convert to predictions
-            #preds = [1 if output > 0.5 else 0 for output in sigm_output]
-            #y_pred.extend(preds)
+            else:
+                preds = [1 if output > 0.5 else 0 for output in sigm_output]
+                y_pred.extend(preds)
 
             sum_loss += loss.item()
 
