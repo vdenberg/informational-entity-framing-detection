@@ -21,7 +21,7 @@ def to_tensor(features, OUTPUT_MODE):
         label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
 
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
-    return data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
+    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
 # model
@@ -133,12 +133,9 @@ class Inferencer():
         model.to(self.device)
         model.eval()
 
-        eval_sampler = SequentialSampler(data)
-        eval_dataloader = DataLoader(data, sampler=eval_sampler, batch_size=1)
-
         preds = []
         embeddings = []
-        for step, batch in enumerate(eval_dataloader):
+        for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, segment_ids, label_ids = batch
 

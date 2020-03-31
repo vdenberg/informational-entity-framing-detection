@@ -39,7 +39,7 @@ def to_tensors(split, device):
 
 def to_batches(tensors, batch_size):
     ''' Creates dataloader with input divided into batches. '''
-    sampler = RandomSampler(tensors)
+    sampler = SequentialSampler(tensors) #RandomSampler(tensors)
     loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
     return loader
 

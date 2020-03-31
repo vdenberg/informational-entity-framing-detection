@@ -110,7 +110,7 @@ parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', def
 
 # TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
-parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='debug')
+parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=100)
 parser.add_argument('-pat', '--patience', type=int, default=5)
@@ -267,7 +267,6 @@ NR_FOLDS = len(folds)
 
 # batch data
 for fold_i, fold in enumerate(folds):
-    print(fold['train'])
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
     dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
     test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
@@ -366,25 +365,72 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 #                    REPEAT BERT
 # =====================================================================================
 
+# repeat BERT result
 # pick fold bert was trained on:
 fold = [fold for fold in folds if fold['name'] == 2][0]
 
-# repeat BERT result
+# bert data
+with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
+    bert_dev_ids, bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
+    bert_dev_ids, bert_dev_data, bert_dev_labels = bert_dev_ids[:50], bert_dev_data[:50], bert_dev_labels[:50]
+    bert_dev_batches = to_batches(bert_dev_data, BATCH_SIZE)
 
+# bert model
+bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=2,
+                                                           output_hidden_states=True, output_attentions=True)
+bert_model.eval()
+
+# cam data
+cam_dev_batches = to_batches(to_tensors(fold['dev'].loc[bert_dev_ids], device), batch_size=BATCH_SIZE)
+cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
+
+# cnm model
+cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
+                             learning_rate=LR, gamma=GAMMA, context_naive=True)
+cnm.eval()
+
+
+
+for bert_batch in bert_dev_batches:
+    input_ids, input_mask, segment_ids, label_ids = bert_batch
+    bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
+    logits, probs, sequence_output, pooled_output = bert_outputs
+    print(logits)
+
+print('=======')
+
+for cam_batch in cam_dev_batches:
+    ids, _, _, _, documents, labels, labels_long, positions = cam_batch
+    logits, probs = cnm(ids, documents, positions)
+    print(logits)
+
+
+
+exit(0)
+
+
+print(dev_batches)
+for b in dev_batches:
+
+    print(ids, labels_long)
+
+exit(0)
 # apply bert
 bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=2,
                                                            output_hidden_states=True, output_attentions=True)
 inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 
-with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
-    bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
-inferencer.eval(bert_model, bert_dev_data, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
+inferencer.eval(bert_model, bert_dev_batches, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
 
 # aply context naive model
-cnm = ContextAwareClassifier(train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
+cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
                              learning_rate=LR, gamma=GAMMA, context_naive=True)
 
 dev_batches = fold['dev_batches']
+
+print(dev_batches)
+
+exit(0)
 cnm_dev_preds, dev_loss = cnm.predict(dev_batches)
 val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold['name']}")
 logger.info(val_perf)
