@@ -401,7 +401,7 @@ print('=======')
 
 for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
-    logits, probs = cnm(ids, documents, positions)
+    logits, probs = cnm.model(ids, documents, positions)
     print(logits)
 
 
