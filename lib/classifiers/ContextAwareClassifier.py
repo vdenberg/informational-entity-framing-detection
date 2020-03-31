@@ -149,7 +149,7 @@ class ContextAwareClassifier():
 
         ids, _, _, _, documents, labels, labels_long, positions = batch
 
-        logits, probs = self.model(documents, positions)
+        logits, probs = self.model(ids, documents, positions)
         #print(labels.type())
         loss = self.criterion(probs, labels)
         loss.backward()
