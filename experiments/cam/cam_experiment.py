@@ -388,6 +388,9 @@ cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matr
                              learning_rate=LR, gamma=GAMMA, context_naive=True)
 cnm.model.eval()
 
+# loss function
+loss_fct = CrossEntropyLoss()
+
 for bert_batch in bert_dev_batches:
     input_ids, input_mask, segment_ids, label_ids = bert_batch
     bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
@@ -395,12 +398,12 @@ for bert_batch in bert_dev_batches:
     print(logits)
 
 print('=======')
-
+exit(0)
 for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
     logits, probs = cnm.model(ids, documents, positions)
     print(logits)
-
+    loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
 
 
 exit(0)
