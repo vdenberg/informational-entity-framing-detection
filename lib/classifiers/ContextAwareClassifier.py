@@ -147,7 +147,7 @@ class ContextAwareClassifier():
         self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
 
-        _, _, _, documents, labels, labels_long, positions = batch
+        ids, _, _, _, documents, labels, labels_long, positions = batch
 
         logits, probs = self.model(documents, positions)
         #print(labels.type())
