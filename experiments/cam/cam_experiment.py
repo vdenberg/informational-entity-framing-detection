@@ -372,7 +372,6 @@ fold = [fold for fold in folds if fold['name'] == 2][0]
 # bert data
 with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
     bert_dev_ids, bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
-    bert_dev_ids, bert_dev_data, bert_dev_labels = bert_dev_ids[:50], bert_dev_data[:50], bert_dev_labels[:50]
     bert_dev_batches = to_batches(bert_dev_data, BATCH_SIZE)
 
 # bert model
@@ -388,8 +387,6 @@ cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
 cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
                              learning_rate=LR, gamma=GAMMA, context_naive=True)
 cnm.model.eval()
-
-
 
 for bert_batch in bert_dev_batches:
     input_ids, input_mask, segment_ids, label_ids = bert_batch
