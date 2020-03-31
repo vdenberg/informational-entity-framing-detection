@@ -101,8 +101,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         sequence_output = outputs[0] # according to pytorch doc: (batch_size, sequence_length, hidden_size)
         pooled_output = outputs[1]
 
-        pooled_output = self.dropout(pooled_output)
-        print(pooled_output.shape)
+        pooled_output = self.dropout(pooled_output) # 1 * 768
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 

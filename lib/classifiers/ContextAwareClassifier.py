@@ -59,7 +59,6 @@ class ContextAwareModel(nn.Module):
             for item in range(batch_size):
                 my_idx = target_idx[item]
                 embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)
-                print(embedded.shape)
                 target_output[item] = embedded[0]
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
@@ -78,7 +77,7 @@ class ContextAwareModel(nn.Module):
                 my_idx = target_idx[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-        logits = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
+        logits = self.classifier(target_output) #.view(batch_size)  # sigmoid function that returns batch_size * 1
         probs = self.sigm(logits)
         return logits, probs
 
