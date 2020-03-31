@@ -387,7 +387,7 @@ cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
 # cnm model
 cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
                              learning_rate=LR, gamma=GAMMA, context_naive=True)
-cnm.eval()
+cnm.model.eval()
 
 
 
