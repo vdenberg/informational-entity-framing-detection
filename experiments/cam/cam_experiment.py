@@ -13,6 +13,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
 from lib.evaluate.StandardEval import my_eval
 import pickle
+from torch.nn import CrossEntropyLoss
 
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
@@ -403,7 +404,7 @@ for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
     logits, probs = cnm.model(ids, documents, positions)
     print(logits)
-    loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+    loss = loss_fct(logits.view(-1, 2), labels.view(-1))
 
 
 exit(0)
