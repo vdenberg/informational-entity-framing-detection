@@ -80,7 +80,7 @@ class ContextAwareModel(nn.Module):
 
         logits = self.classifier(target_output) #.view(batch_size)  # sigmoid function that returns batch_size * 1
         probs = self.sigm(logits)
-        return logits, probs
+        return logits, probs, target_output
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
