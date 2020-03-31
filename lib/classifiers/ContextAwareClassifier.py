@@ -190,7 +190,7 @@ class ContextAwareClassifier():
                     logits, probs, target_output = self.model(ids, documents, positions)
                     loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
                 else:
-                    sigm_output  = self.model(documents, positions)
+                    sigm_output  = self.model(ids, documents, positions)
                     #sigm_output = sigm_output.detach().cpu().numpy()
                     loss = self.criterion(sigm_output, labels)
 
