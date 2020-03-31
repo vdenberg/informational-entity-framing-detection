@@ -70,15 +70,15 @@ class Processor():
 
         return token_ids, token_mask, tok_seg_ids
 
-def make_weight_matrix(data, embed_df, EMB_DIM):
 
+def make_weight_matrix(data, embed_df, EMB_DIM):
     sentence_embeddings = {i.lower(): np.array(u.strip('[]').split(', ')) for i, u in
                            zip(embed_df.index, embed_df.embeddings)}
 
     matrix_len = len(data) + 2  # 1 for EOD token and 1 for padding token
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
 
-    sent_id_map = {sent_id: sent_num_id for sent_num_id, sent_id in enumerate(embed_df.index.values)}
+    sent_id_map = {sent_id.lower(): sent_num_id+1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
     for sent_id, index in sent_id_map.items():  # word here is a sentence id like 91fox27
         if sent_id == '11fox23':
             pass
@@ -361,7 +361,37 @@ logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
+TRAIN = True
+if TRAIN:
+    cam_results_table = pd.read_csv('reports/cam/results_table.csv')
+    for folf in folds:
+        name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
+        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
+                                     train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
+                                     emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
+                                     batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=False)
 
+        logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
+        cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
+                        print_every=PRINT_STEP_EVERY)
+
+
+
+        best_val_mets, test_mets = cl.train_on_fold(fold)
+
+        best_val_mets['seed'] = SEED_VAL
+        best_val_mets['fold'] = fold["name"]
+
+        test_mets['seed'] = SEED_VAL
+        test_mets['fold'] = fold["name"]
+
+        cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
+        cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
+
+        cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
+
+    # final results of cross validation
+    logger.info(f' CAM Results:\n{cam_results_table}')
 # =====================================================================================
 #                    REPEAT BERT
 # =====================================================================================
@@ -375,14 +405,16 @@ with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
     bert_dev_ids, bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
     bert_dev_batches = to_batches(bert_dev_data, BATCH_SIZE)
 
+# cam data
+cam_dev_batches = to_batches(to_tensors(fold['dev'].loc[bert_dev_ids], device), batch_size=BATCH_SIZE)
+cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
+print(fold['dev']['id_num'])
+
 # bert model
 bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=2,
                                                            output_hidden_states=True, output_attentions=True)
 bert_model.eval()
 
-# cam data
-cam_dev_batches = to_batches(to_tensors(fold['dev'].loc[bert_dev_ids], device), batch_size=BATCH_SIZE)
-cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
 
 # cnm model
 cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
@@ -392,13 +424,20 @@ cnm.model.eval()
 # loss function
 loss_fct = CrossEntropyLoss()
 
-bert_probs = []
+
+# try having exact embeddings passed on
+# 1) get embeddings
+bert_embeddings = []
 for bert_batch in bert_dev_batches:
     input_ids, input_mask, segment_ids, label_ids = bert_batch
     with torch.no_grad():
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
-    bert_probs.append(pooled_output.detach().cpu().numpy())
+    bert_embeddings.append(pooled_output.detach().cpu().numpy())
+fold['dev']['embeddings'] = bert_embeddings
+
+#2 turn into matrix
+weights_matrix = np.zeros((len(bert_embeddings), 768))
 
 cam_probs = []
 for cam_batch in cam_dev_batches:
@@ -407,7 +446,7 @@ for cam_batch in cam_dev_batches:
         logits, probs, target_output = cnm.model(ids, documents, positions)
     cam_probs.append(target_output.detach().cpu().numpy())
 
-print(bert_probs[:1][0])
+print(bert_embeddings[:1][0])
 print(cam_probs[:1][0])
 exit(0)
 
@@ -440,33 +479,5 @@ logger.info(val_perf)
 
 
 '''
-cam_results_table = pd.read_csv('reports/cam/results_table.csv')
-for folf in folds:
-    name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
-    cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
-                                 train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
-                                 emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                                 batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=CN)
 
-    logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
-    cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
-                    print_every=PRINT_STEP_EVERY)
-
-
-
-    best_val_mets, test_mets = cl.train_on_fold(fold)
-
-    best_val_mets['seed'] = SEED_VAL
-    best_val_mets['fold'] = fold["name"]
-
-    test_mets['seed'] = SEED_VAL
-    test_mets['fold'] = fold["name"]
-
-    cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
-    cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
-
-    cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
-
-# final results of cross validation
-logger.info(f' CAM Results:\n{cam_results_table}')
 '''
