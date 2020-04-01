@@ -346,10 +346,6 @@ with open(test_fp, "rb") as f:
 logger.info(f"Get embeddings")
 test_embeddings = True
 if test_embeddings:
-
-    #load premade
-    data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
-
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
@@ -376,11 +372,11 @@ if test_embeddings:
 
     logger.info(data_w_embeds['embeddings'].head(3))
     logger.info(embed_df['embeddings'].head(3))
+    exit(0)
 
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
 # =====================================================================================
-
 
 logger.info(f"Convert data to indices for weights matrix")
 sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
@@ -400,7 +396,6 @@ test_batches = to_batches(test_data, 1)
 # =====================================================================================
 #                    TRAIN CLASSIFIER
 # =====================================================================================
-
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
