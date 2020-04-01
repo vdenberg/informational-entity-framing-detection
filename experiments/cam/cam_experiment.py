@@ -315,7 +315,6 @@ logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 #                    REPEAT BERT
 # =====================================================================================
 
-
 '''
 # =====================================================================================
 #                    LOAD BERT DATA
@@ -377,6 +376,8 @@ logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
 fold_2 = folds[1]
+
+'''
 train_ids = fold_2['train'].index
 dev_ids = fold_2['dev'].index
 test_ids = fold_2['test'].index
@@ -384,7 +385,7 @@ test_ids = fold_2['test'].index
 train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
 dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
 test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
-
+'''
 
 # =====================================================================================
 #                    GET EMBEDDINGS
@@ -423,6 +424,7 @@ if test_embeddings:
     logger.info(embed_df['embeddings'].head(3))
     exit(0)
 
+'''
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
 # =====================================================================================
@@ -451,6 +453,7 @@ test_data = TensorDataset(test_ids, test_labels)
 train_batches = to_batches(train_data, BATCH_SIZE)
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
+'''
 
 # =====================================================================================
 #                    TRAIN CLASSIFIER

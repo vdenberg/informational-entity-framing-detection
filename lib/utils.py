@@ -32,7 +32,8 @@ def to_tensors(split, device):
     ids = torch.tensor(split.id_num.to_numpy(), dtype=torch.long, device=device)
 
     # to dataset
-    tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
+    #tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
+    tensors = TensorDataset(ids, labels_long)
 
     return tensors
 
