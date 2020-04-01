@@ -283,6 +283,10 @@ with open(test_fp, "rb") as f:
 
 
 logger.info(f"Get embeddings")
+
+#load premade
+data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
+
 # load bert features
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensor(pickle.load(f))
@@ -302,7 +306,7 @@ for bert_batch in bert_all_batches:
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
     bert_embeddings.extend(pooled_output.detach().cpu().numpy())
-embed_df = pd.DataFrame(bert_embeddings, index=all_ids, columns=['embeddings'])
+embed_df = pd.DataFrame([bert_embeddings], index=all_ids, columns=['embeddings'])
 
 # turn into matrix
 weights_matrix = make_weight_matrix(embed_df, 768)
