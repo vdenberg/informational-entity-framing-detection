@@ -121,7 +121,7 @@ parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn of
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=24)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
+parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
 parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=2e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
@@ -371,22 +371,6 @@ logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 '''
 
 # =====================================================================================
-#                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
-# =====================================================================================
-
-logger.info(f"Convert data to indices for weights matrix")
-
-fold_2 = folds[1]
-fold = {'name': 2}
-
-train_ids = fold_2['train'].id_num.values
-dev_ids = fold_2['dev'].id_num.values
-test_ids = fold_2['test'].id_num.values
-
-#train_ids = [sent_id_map[i] for i in train_ids]
-#dev_ids = [sent_id_map[i] for i in dev_ids]
-
-# =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
 
@@ -431,8 +415,9 @@ fold = folds[1]
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
-cnm = ContextAwareClassifier(tr_labs=fold['train'].label.values, weights_mat=WEIGHTS_MATRIX,
-                             lr=2e-4, context_naive=True)
+cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label.values,
+                             weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                             b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 cnm.model.train()
 
 # pick same loss function
@@ -485,44 +470,6 @@ for ep in range(1, int(N_EPOCHS+1)):
 
 
 '''
-# =====================================================================================
-#                    LOAD DATA
-# =====================================================================================
-
-logger.info("============ LOADING DATA =============")
-logger.info(f" Context: {CONTEXT_TYPE}")
-logger.info(f" Split type: {SPLIT_TYPE}")
-logger.info(f" Max doc len: {MAX_DOC_LEN}")
-
-data = pd.read_json(DATA_FP)
-data.index = data.sentence_ids.values
-
-# split data
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-
-folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
-if DEBUG:
-    folds = [folds[0], folds[1]]
-NR_FOLDS = len(folds)
-
-# batch data
-for fold_i, fold_2 in enumerate(folds):
-    train_batches = to_batches(to_tensors(fold_2['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold_2['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold_2['test'], device), batch_size=BATCH_SIZE)
-
-    fold_2['train_batches'] = train_batches
-    fold_2['dev_batches'] = dev_batches
-    fold_2['test_batches'] = test_batches
-
-logger.info(f" --> Read {len(data)} data points")
-logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
-logger.info(f" --> Nr folds: {NR_FOLDS}")
-logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
-logger.info(f" --> Columns: {list(data.columns)}")
-
-
-
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
