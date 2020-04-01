@@ -66,10 +66,11 @@ class ContextAwareModel(nn.Module):
                 contexts_embedded[seq_idx] = embedded
 
             target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
-            #target_output = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
+            target_output_cam = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
             for item, position in enumerate(positions):
                 bert_embedding = contexts_embedded(position, item) #self.embedding(contexts[item, position])
-                #cam_embedding = contexts_encoded[position, item]
+                cam_embedding = contexts_encoded[position, item].view(1, 1, -1)
+                target_output_cam[item] = cam_embedding
                 target_output[item] = bert_embedding
 
             logits = self.classifier(target_output)
