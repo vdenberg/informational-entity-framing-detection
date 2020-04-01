@@ -193,8 +193,9 @@ class ContextAwareClassifier():
                     # bert shape of probs:
                     # tensor([[0.7380, 0.1817]], device='cuda:0') 1
                     # torch.Size([1, 2])
-                    print(probs, len(probs))
-                    print(probs.shape)
+                    # cam shape of probs:
+                    # tensor([[0.8027, 0.1397]], device='cuda:0') 1
+                    # torch.Size([1, 2])
 
                     loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
                 else:

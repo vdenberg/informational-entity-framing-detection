@@ -392,7 +392,6 @@ dev_data = TensorDataset(dev_ids, dev_labels)
 test_data = TensorDataset(test_ids, test_labels)
 
 train_batches = to_batches(train_data, BATCH_SIZE)
-print(len(train_batches))
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
 exit(0)
@@ -427,7 +426,8 @@ for ep in range(1, int(N_EPOCHS+1)):
         loss.backward()
 
         tr_loss += loss.item()
-        print(f"Step {step} / {len(train_batches)}, Loss: {loss}")
+        if step % 100 == 0:
+            print(f"Step {step} / {len(train_batches)}, Loss: {loss}")
 
         # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
         cnm.optimizer.step()
