@@ -221,7 +221,7 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         if self.context_naive:
-            y_pred = y_pred[0]
+            #y_pred = y_pred[0]
             y_pred = np.argmax(y_pred, axis=1)
 
         self.model.train()
