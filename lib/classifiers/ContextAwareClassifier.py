@@ -41,7 +41,7 @@ class ContextAwareModel(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.context_naive = context_naive
 
-        self.classifier = nn.Linear(self.emb_size, 2)
+        self.classifier = nn.Linear(self.hidden_size * 2, 2)
         self.sigm = nn.Sigmoid()
         #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
@@ -74,9 +74,9 @@ class ContextAwareModel(nn.Module):
                 target_output_cam[item] = cam_embedding
                 target_output[item] = bert_embedding
 
-            logits = self.classifier(target_output)
-            #probs = self.sigm(logits)
-            probs = self.sigm(logits).view(batch_size, 2)
+            logits = self.classifier(target_output_cam)
+            probs = self.sigm(logits)
+            #probs = self.sigm(logits).view(batch_size, 2)
             return logits, probs, target_output
         else:
             # loop through input and update hidden
