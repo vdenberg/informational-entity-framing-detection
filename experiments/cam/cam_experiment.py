@@ -266,9 +266,18 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
+# batch data
+for fold_i, fold in enumerate(folds):
+    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=1)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=1)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
+
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
-logger.info(f" --> Nr folds: {NR_FOLDS}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
@@ -415,45 +424,10 @@ logger.info(f"Get embeddings")
 
 
 # =====================================================================================
-#                    TO TENSORS & BATCHES
-# =====================================================================================
-
-logger.info(f"To tensors and batches")
-
-# batch data
-for fold_i, fold in enumerate(folds):
-    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=1)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=1)
-
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
-
-fold = folds[1]
-
-'''
-train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
-dev_ids = torch.tensor(dev_ids, dtype=torch.long, device=device)
-test_ids = torch.tensor(test_ids, dtype=torch.long, device=device)
-
-train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
-dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
-test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
-
-train_data = TensorDataset(train_ids, train_labels)
-dev_data = TensorDataset(dev_ids, dev_labels)
-test_data = TensorDataset(test_ids, test_labels)
-
-train_batches = to_batches(train_data, BATCH_SIZE)
-dev_batches = to_batches(dev_data, 1)
-test_batches = to_batches(test_data, 1)
-
-'''
-
-# =====================================================================================
 #                    TRAIN CLASSIFIER
 # =====================================================================================
+
+fold = folds[1]
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
