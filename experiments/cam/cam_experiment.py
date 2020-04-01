@@ -433,7 +433,6 @@ for fold_i, fold in enumerate(folds):
     fold['test_batches'] = test_batches
 
 fold = folds[1]
-fold = {'name': 2}
 
 '''
 train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
