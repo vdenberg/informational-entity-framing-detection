@@ -184,7 +184,7 @@ class ContextAwareClassifier():
             batch = tuple(t.to(self.device) for t in batch)
 
             #ids, _, _, _, documents, labels, labels_long, positions = batch
-            ids, labels_long = batch
+            ids, labels = batch
 
             with torch.no_grad():
                 if self.context_naive:
@@ -197,7 +197,8 @@ class ContextAwareClassifier():
                     # tensor([[0.8027, 0.1397]], device='cuda:0') 1
                     # torch.Size([1, 2])
 
-                    loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
+                    #loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
+                    loss = self.criterion(probs, labels)
                 else:
                     pass
                     #sigm_output  = self.model(ids, documents, positions)
