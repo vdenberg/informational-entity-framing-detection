@@ -20,10 +20,9 @@ from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
 #from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
 
-
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
-        self.sent_id_map = {my_id.lower(): i+1 for i, my_id in enumerate(sentence_ids)}
+        self.sent_id_map = {str_i.lower(): i+1 for i, str_i in enumerate(sentence_ids)}
         #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
         self.EOD_index = len(self.sent_id_map)
         self.max_doc_length = max_doc_length + 1 # add 1 for EOD_index
@@ -228,25 +227,48 @@ logger.info(args)
 # =====================================================================================
 
 logger.info(f"Preprocess data if needed")
-if not os.path.exists(DATA_FP):
+#if not os.path.exists(DATA_FP):
+logger.info("============ PREPROCESS DATA =============")
+logger.info(f" Writing to: {DATA_FP}")
+logger.info(f" Max len: {MAX_DOC_LEN}")
 
-    logger.info("============ PREPROCESS DATA =============")
-    logger.info(f" Writing to: {DATA_FP}")
-    logger.info(f" Max len: {MAX_DOC_LEN}")
+raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
+sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
+raw_data = pd.read_csv(raw_data_fp, sep='\t',
+                       names=['sentence_ids', 'context_document', 'label', 'position'],
+                       dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
+raw_data['sentence'] = sentences
+raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
+raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
+#token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(raw_data.sentence.values)
+#raw_data['token_ids'], raw_data['token_mask'], raw_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
+raw_data.to_json(DATA_FP)
 
-    string_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
-    sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
-    string_data = pd.read_csv(string_data_fp, sep='\t',
-                              names=['sentence_ids', 'context_document', 'label', 'position'],
-                              dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
-    processor = Processor(sentence_ids=string_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
-    string_data['sentence'] = sentences
-    string_data['id_num'] = [processor.sent_id_map[i] for i in string_data.sentence_ids.values]
-    string_data['context_doc_num'] = processor.to_numeric_documents(string_data.context_document.values)
-    token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(string_data.sentence.values)
-    string_data['token_ids'], string_data['token_mask'], string_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
 
-    string_data.to_json(DATA_FP)
+# =====================================================================================
+#                    LOAD CAM DATA
+# =====================================================================================
+
+logger.info("============ LOADING DATA =============")
+logger.info(f" Context: {CONTEXT_TYPE}")
+logger.info(f" Split type: {SPLIT_TYPE}")
+logger.info(f" Max doc len: {MAX_DOC_LEN}")
+
+data = pd.read_json(DATA_FP)
+data.index = data.sentence_ids.values
+
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
+folds = spl.apply_split(features=['id_num', 'context_doc_num', 'position'])
+if DEBUG:
+    folds = [folds[0], folds[1]]
+NR_FOLDS = len(folds)
+
+logger.info(f" --> Read {len(data)} data points")
+logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f" --> Nr folds: {NR_FOLDS}")
+logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
+logger.info(f" --> Columns: {list(data.columns)}")
 
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS
@@ -304,16 +326,12 @@ data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
 data_w_embeds = data_w_embeds.rename(
     columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
 data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-print(data_w_embeds.head())
+data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
 # transform into matrix
-WEIGHTS_MATRIX = make_weight_matrix(data_w_embeds, EMB_DIM)
+WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
 
 logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
-
-# =====================================================================================
-#                    REPEAT BERT
-# =====================================================================================
 
 '''
 # =====================================================================================
@@ -339,58 +357,20 @@ with open(test_fp, "rb") as f:
     test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 '''
 
-# =====================================================================================
-#                    LOAD CAM DATA
-# =====================================================================================
-
-logger.info("============ LOADING DATA =============")
-logger.info(f" Context: {CONTEXT_TYPE}")
-logger.info(f" Split type: {SPLIT_TYPE}")
-logger.info(f" Max doc len: {MAX_DOC_LEN}")
-
-data = pd.read_json(DATA_FP)
-data.index = data.sentence_ids.values
-
-# split data
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-
-folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
-if DEBUG:
-    folds = [folds[0], folds[1]]
-NR_FOLDS = len(folds)
-
-# batch data
-for fold_i, fold in enumerate(folds):
-    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
-
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
-
-logger.info(f" --> Read {len(data)} data points")
-logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
-logger.info(f" --> Nr folds: {NR_FOLDS}")
-logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
-logger.info(f" --> Columns: {list(data.columns)}")
-
-fold_2 = folds[1]
 
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
 # =====================================================================================
 
 logger.info(f"Convert data to indices for weights matrix")
-sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
 
+fold_2 = folds[1]
 train_ids = fold_2['train'].id_num.values
 dev_ids = fold_2['dev'].id_num.values
 test_ids = fold_2['test'].id_num.values
 
 #train_ids = [sent_id_map[i] for i in train_ids]
 #dev_ids = [sent_id_map[i] for i in dev_ids]
-#test_ids = [sent_id_map[i] for i in test_ids]
 
 '''
 # =====================================================================================
@@ -436,6 +416,17 @@ logger.info(f"Get embeddings")
 
 logger.info(f"To tensors and batches")
 
+'''
+# batch data
+for fold_i, fold in enumerate(folds):
+    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
+'''
 train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
 dev_ids = torch.tensor(dev_ids, dtype=torch.long, device=device)
 test_ids = torch.tensor(test_ids, dtype=torch.long, device=device)
