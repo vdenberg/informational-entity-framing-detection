@@ -53,18 +53,29 @@ class ContextAwareModel(nn.Module):
         :return: sigmoid output of size batchsize
         """
         batch_size = contexts.shape[0]
+        seq_length = contexts.shape[1]
 
         if self.context_naive:
-            target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
+            document_embeddings = torch.zeros(seq_length, batch_size, self.emb_size, device=self.device)
+            for seq_idx in range(seq_length):
+                embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)[0]
+                document_embeddings[seq_idx] = embedded
+
+            target_output = torch.zeros(batch_size, 1, self.emb_size, device=self.device)
             for item in range(batch_size):
-                my_idx = positions[item]
-                embedded = self.embedding(contexts[item, my_idx]).view(1, -1)
-                target_output[item] = embedded
+                pos = positions[item]
+                target_output[item] = document_embeddings[pos, item, :]
+
+            #target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
+            #for item in range(batch_size):
+            #    my_idx = positions[item]
+            #    embedded = self.embedding(contexts[item, my_idx]).view(1, -1)
+            #    target_output[item] = embedded
+
             logits = self.classifier(target_output)
             probs = self.sigm(logits)
             return logits, probs, target_output
         else:
-            seq_length = contexts.shape[1]
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
             # loop through input and update hidden
@@ -152,10 +163,10 @@ class ContextAwareClassifier():
         self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
 
-        ids, _, _, _, documents, labels, labels_long, positions = batch
+        documents, positions, labels = batch
 
         if self.context_naive:
-            logits, probs, target_output = self.model(ids, documents, positions)
+            logits, probs, target_output = self.model(documents, positions)
         else:
             probs = self.model(ids, documents, positions)
         #print(labels.type())
@@ -181,7 +192,6 @@ class ContextAwareClassifier():
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
 
-            #ids, _, _, _, documents, labels, labels_long, positions = batch
             contexts, positions, labels = batch
 
             with torch.no_grad():
