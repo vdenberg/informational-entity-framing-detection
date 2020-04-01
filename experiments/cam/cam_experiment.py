@@ -395,7 +395,7 @@ train_batches = to_batches(train_data, BATCH_SIZE)
 print(len(train_batches))
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
-
+exit(0)
 # =====================================================================================
 #                    TRAIN CLASSIFIER
 # =====================================================================================
