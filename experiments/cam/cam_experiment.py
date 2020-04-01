@@ -320,9 +320,9 @@ weights_matrix = make_weight_matrix(embed_df, 768)
 logger.info(f"Convert data to indices for weights matrix")
 sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
 
-train_ids = torch.tensor([sent_id_map[i] for i in train_ids], dtype=torch.long)
-dev_ids = torch.tensor([sent_id_map[i] for i in dev_ids], dtype=torch.long)
-test_ids = torch.tensor([sent_id_map[i] for i in test_ids], dtype=torch.long)
+train_ids = torch.tensor([sent_id_map[i] for i in train_ids], dtype=torch.long, device=device)
+dev_ids = torch.tensor([sent_id_map[i] for i in dev_ids], dtype=torch.long, device=device)
+test_ids = torch.tensor([sent_id_map[i] for i in test_ids], dtype=torch.long, device=device)
 
 train_data = TensorDataset(train_ids, train_labels)
 dev_data = TensorDataset(dev_ids, dev_labels)
