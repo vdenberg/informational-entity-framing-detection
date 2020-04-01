@@ -46,7 +46,7 @@ class ContextAwareModel(nn.Module):
         else:
             self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
-    def forward(self, id_tensor, input_tensor, target_idx):
+    def forward(self, input_tensor, target_idx=None):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
@@ -54,19 +54,19 @@ class ContextAwareModel(nn.Module):
         :return: sigmoid output of size batchsize
         """
         batch_size = input_tensor.shape[0]
-        seq_length = input_tensor.shape[1]
 
         if self.context_naive:
             target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
             for item in range(batch_size):
                 #my_idx = target_idx[item]
                 #embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)[0]
-                embedded = self.embedding(id_tensor[item]).view(1, -1)
+                embedded = self.embedding(input_tensor[item]).view(1, -1)
                 target_output[item] = embedded
             logits = self.classifier(target_output)
             probs = self.sigm(logits)
             return logits, probs, target_output
         else:
+            seq_length = input_tensor.shape[1]
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
             # loop through input and update hidden
