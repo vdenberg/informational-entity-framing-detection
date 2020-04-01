@@ -431,11 +431,27 @@ for bert_batch in bert_dev_batches:
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
     bert_embeddings.append(pooled_output.detach().cpu().numpy())
+print(bert_embeddings[0])
 fold_2['dev']['embeddings'] = bert_embeddings
+print(fold_2['dev'].iloc[0,:])
 
 # 2) turn into matrix
 weights_matrix = np.zeros((len(bert_embeddings), 768))
+sentence_embeddings = {i.lower(): emb for i, emb in zip(fold_2['dev'].index, fold_2['dev'].embeddings)}
 
+matrix_len = len(data) + 2  # 1 for EOD token and 1 for padding token
+weights_matrix = np.zeros((matrix_len, EMB_DIM))
+
+sent_id_map = {sent_id.lower(): sent_num_id+1 for sent_num_id, sent_id in enumerate(fold_2['dev'].index.values)}
+for sent_id, index in sent_id_map.items():  # word here is a sentence id like 91fox27
+    if sent_id == '11fox23':
+        pass
+    else:
+        embedding = sentence_embeddings[sent_id]
+        weights_matrix[index] = embedding
+print(weights_matrix[0])
+
+exit(0)
 cam_probs = []
 for cam_batch in cam_dev_batches:
     ids, _, _, _, documents, labels, labels_long, positions = cam_batch
