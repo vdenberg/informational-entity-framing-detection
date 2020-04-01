@@ -45,33 +45,32 @@ class ContextAwareModel(nn.Module):
         self.sigm = nn.Sigmoid()
         #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
-    def forward(self, input_tensor, target_idx=None):
+    def forward(self, contexts, positions):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
         :param target_idx: batchsize, specifies which token is to be classified
         :return: sigmoid output of size batchsize
         """
-        batch_size = input_tensor.shape[0]
+        batch_size = contexts.shape[0]
 
         if self.context_naive:
             target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
             for item in range(batch_size):
-                #my_idx = target_idx[item]
-                #embedded = self.embedding(input_tensor[item, my_idx]).view(1, 1, -1)[0]
-                embedded = self.embedding(input_tensor[item]).view(1, -1)
+                my_idx = positions[item]
+                embedded = self.embedding(contexts[item, my_idx]).view(1, -1)
                 target_output[item] = embedded
             logits = self.classifier(target_output)
             probs = self.sigm(logits)
             return logits, probs, target_output
         else:
-            seq_length = input_tensor.shape[1]
+            seq_length = contexts.shape[1]
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
             # loop through input and update hidden
             hidden = self.init_hidden(batch_size)
             for ei in range(seq_length):
-                embedded = self.embedding(input_tensor[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
+                embedded = self.embedding(contexts[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
                 output, hidden = self.lstm(embedded, # feed hidden of previous token/item, store in hidden again
                                            hidden)  # output has shape 1 (for token in question) * batchsize * (hidden * 2)
                 context_encoder_outputs[ei] = output[0]
@@ -79,7 +78,7 @@ class ContextAwareModel(nn.Module):
             # loop through batch to get token at desired index
             target_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
             for item in range(batch_size):
-                my_idx = target_idx[item]
+                my_idx = positions[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
             logits = self.classifier(target_output)
@@ -160,7 +159,7 @@ class ContextAwareClassifier():
         else:
             probs = self.model(ids, documents, positions)
         #print(labels.type())
-        loss = self.criterion(logits.view(-1, 1), labels_long.view(-1))
+        loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
         loss.backward()
 
         self.optimizer.step()
@@ -183,11 +182,11 @@ class ContextAwareClassifier():
             batch = tuple(t.to(self.device) for t in batch)
 
             #ids, _, _, _, documents, labels, labels_long, positions = batch
-            ids, labels = batch
+            contexts, positions, labels = batch
 
             with torch.no_grad():
                 if self.context_naive:
-                    logits, probs, target_output = self.model(ids)
+                    logits, probs, target_output = self.model(contexts, positions)
 
                     # bert shape of probs:
                     # tensor([[0.7380, 0.1817]], device='cuda:0') 1
