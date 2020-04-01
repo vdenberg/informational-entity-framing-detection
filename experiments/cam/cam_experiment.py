@@ -344,7 +344,7 @@ with open(test_fp, "rb") as f:
 # =====================================================================================
 
 logger.info(f"Get embeddings")
-test_embeddings = True
+test_embeddings = False
 if test_embeddings:
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
