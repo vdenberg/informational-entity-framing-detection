@@ -12,7 +12,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
 from lib.evaluate.StandardEval import my_eval
-import pickle
+import pickle, time
 from torch.nn import CrossEntropyLoss
 
 from lib.classifiers.Classifier import Classifier
@@ -396,16 +396,25 @@ if TRAIN:
 # pick fold bert was trained on
 fold_2 = folds[1]
 
-# load bert features
+# compare to cam version of data
 with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
-    bert_dev_ids, bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
-    bert_dev_batches = to_batches(bert_dev_data, BATCH_SIZE)
+    ids, data, labels = to_tensor(pickle.load(f), 'classification')
+    bert_dev_batches = to_batches(data, BATCH_SIZE)
 
-# load cam data
-fold_2['dev'] = fold_2['dev'].loc[bert_dev_ids]
-fold_2['dev_batches'] = to_batches(to_tensors(fold_2['dev'], device), batch_size=BATCH_SIZE)
-cam_dev_labels = fold_2['dev'].label
-cam_dev_batches = fold_2['dev_batches']
+# compare to cam version of data
+logger.info("Sizes:", len(folds[1]['dev_batches']), len(bert_dev_batches))
+bert_dev_labels = []
+for b in bert_dev_batches:
+    bert_dev_labels.extend(b[-1])
+cam_dev_labels = []
+for b in fold_2['dev_batches']:
+    cam_dev_labels.extend(b[5])
+logger.info("Labels:", bert_dev_labels[:10], cam_dev_labels[:10])
+
+# load bert features
+with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+    all_ids, all_data, all_labels = to_tensor(pickle.load(f), 'classification')
+    bert_all_batches = to_batches(all_data, BATCH_SIZE)
 
 # bert model
 bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
@@ -413,61 +422,67 @@ bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/b
                                                            output_attentions=True)
 bert_model.eval()
 
-# cnm model
-cnm = ContextAwareClassifier(tr_labs=fold_2['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN,
-                             layers=BILSTM_LAYERS, lr=LR, gamma=GAMMA, context_naive=True)
-cnm.model.eval()
-
-# loss function
-loss_fct = CrossEntropyLoss()
-
-# try having exact embeddings passed on
-
-# 1) get embeddings
+# get embeddings
 bert_embeddings = []
-for bert_batch in bert_dev_batches:
+for bert_batch in bert_all_batches:
     input_ids, input_mask, segment_ids, label_ids = bert_batch
     with torch.no_grad():
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
     bert_embeddings.extend(pooled_output.detach().cpu().numpy())
-print(bert_embeddings[0][:5])
-fold_2['dev']['embeddings'] = bert_embeddings
-print(fold_2['dev'].iloc[0,:]['embeddings'][:5])
+embed_df = pd.DataFrame(bert_embeddings, index=all_ids)
 
-# 2) turn into matrix
-weights_matrix = np.zeros((len(bert_embeddings), 768))
-sentence_embeddings = {i.lower(): emb for i, emb in zip(fold_2['dev'].index, fold_2['dev'].embeddings)}
+# turn into matrix
+weights_matrix = make_weight_matrix(data, embed_df, 768)
 
-matrix_len = len(data) + 2  # 1 for EOD token and 1 for padding token
-weights_matrix = np.zeros((matrix_len, EMB_DIM))
+# cnm model with bert-like classifier and no bilstm
+cnm = ContextAwareClassifier(tr_labs=fold_2['train'].label.values, weights_mat=weights_matrix,
+                             lr=2e-5, context_naive=True)
+cnm.model.train()
 
-sent_id_map = {sent_id.lower(): sent_num_id+1 for sent_num_id, sent_id in enumerate(fold_2['dev'].index.values)}
-for sent_id, index in sent_id_map.items():  # word here is a sentence id like 91fox27
-    if sent_id == '11fox23':
-        pass
-    else:
-        embedding = sentence_embeddings[sent_id]
-        weights_matrix[index] = embedding
-print(weights_matrix[1][:5])
+# pick same loss function
+loss_fct = CrossEntropyLoss()
 
-exit(0)
-cam_probs = []
-for cam_batch in cam_dev_batches:
-    ids, _, _, _, documents, labels, labels_long, positions = cam_batch
-    with torch.no_grad():
+# train
+name_base = f"s{SEED_VAL}_f{fold_2['name']}_{'cyc'}_bs{BATCH_SIZE}"
+t0 = time.time()
+for ep in range(1, int(N_EPOCHS+1)):
+    tr_loss = 0
+    nb_tr_examples, nb_tr_steps = 0, 0
+    for step, batch in enumerate(fold_2['train_batches']):
+        batch = tuple(t.to(device) for t in batch)
+
+        #input_ids, input_mask, segment_ids, label_ids = batch
+        ids, _, _, _, documents, labels, labels_long, positions = batch
+
+        cnm.model.zero_grad()
         logits, probs, target_output = cnm.model(ids, documents, positions)
-    cam_probs.append(target_output.detach().cpu().numpy())
+        loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
-print(bert_embeddings[:1][0])
-print(cam_probs[:1][0])
-exit(0)
+        loss.backward()
 
+        tr_loss += loss.item()
 
-print(dev_batches)
-for b in dev_batches:
+        # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
+        cnm.optimizer.step()
+        cnm.scheduler.step()
 
-    print(ids, labels_long)
+    # Save after Epoch
+    epoch_name = name_base + f"_ep{ep}"
+    av_loss = tr_loss / len(fold_2['train_batches'])
+    cnm.save_model(epoch_name)
+    dev_preds = cnm.predict(fold_2['dev_batches'])
+    dev_mets, dev_perf = my_eval(fold_2["dev"].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
+    logger.info(f'{dev_perf}')
+
+    # check if best
+    if dev_mets['f1'] > best_val_mets['f1']:
+        best_val_mets = dev_mets
+        best_val_perf = dev_perf
+        best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+
+    logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+
 
 exit(0)
 # apply bert
@@ -475,7 +490,7 @@ bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/b
                                                            output_hidden_states=True, output_attentions=True)
 inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 
-inferencer.eval(bert_model, bert_dev_batches, bert_dev_labels, set_type='dev', name=f"best bert model on {fold_2['name']}")
+inferencer.eval(bert_model, bert_all_batches, all_labels, set_type='dev', name=f"best bert model on {fold_2['name']}")
 
 # aply context naive model
 cnm = ContextAwareClassifier(tr_labs=fold_2['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
@@ -487,7 +502,7 @@ print(dev_batches)
 
 exit(0)
 cnm_dev_preds, dev_loss = cnm.predict(dev_batches)
-val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold_2['name']}")
+val_mets, val_perf = my_eval(all_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold_2['name']}")
 logger.info(val_perf)
 
 
