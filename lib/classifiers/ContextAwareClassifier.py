@@ -198,7 +198,11 @@ class ContextAwareClassifier():
 
             if self.context_naive:
                 probs = probs.detach().cpu().numpy()
-                y_pred.extend(probs)
+                if len(y_pred) == 0:
+                    y_pred.extend(probs)
+                else:
+                    y_pred[0] = np.append(y_pred[0], probs, axis=0)
+
             # convert to predictions
             else:
                 preds = [1 if output > 0.5 else 0 for output in sigm_output]
