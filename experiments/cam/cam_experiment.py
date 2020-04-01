@@ -381,17 +381,25 @@ train_ids = fold_2['train'].index
 dev_ids = fold_2['dev'].index
 test_ids = fold_2['test'].index
 
-train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
-dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
-test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
 
+
+# =====================================================================================
+#                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
+# =====================================================================================
+
+logger.info(f"Convert data to indices for weights matrix")
+sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
+
+train_ids = [sent_id_map[i] for i in train_ids]
+dev_ids = [sent_id_map[i] for i in dev_ids]
+test_ids = [sent_id_map[i] for i in test_ids]
+
+'''
 # =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
 
 logger.info(f"Get embeddings")
-test_embeddings = False
-if test_embeddings:
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
@@ -421,17 +429,8 @@ if test_embeddings:
     logger.info(data_w_embeds['embeddings'].head(3))
     logger.info(embed_df['embeddings'].head(3))
     exit(0)
+'''
 
-# =====================================================================================
-#                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
-# =====================================================================================
-
-logger.info(f"Convert data to indices for weights matrix")
-sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
-
-train_ids = [sent_id_map[i] for i in train_ids]
-dev_ids = [sent_id_map[i] for i in dev_ids]
-test_ids = [sent_id_map[i] for i in test_ids]
 
 # =====================================================================================
 #                    TO TENSORS & BATCHES
@@ -442,6 +441,10 @@ logger.info(f"To tensors and batches")
 train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
 dev_ids = torch.tensor(dev_ids, dtype=torch.long, device=device)
 test_ids = torch.tensor(test_ids, dtype=torch.long, device=device)
+
+train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
+dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
+test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
 
 train_data = TensorDataset(train_ids, train_labels)
 dev_data = TensorDataset(dev_ids, dev_labels)
