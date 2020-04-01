@@ -362,8 +362,8 @@ NR_FOLDS = len(folds)
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=1)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=1)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
@@ -377,7 +377,6 @@ logger.info(f" --> Columns: {list(data.columns)}")
 
 fold_2 = folds[1]
 
-'''
 train_ids = fold_2['train'].index
 dev_ids = fold_2['dev'].index
 test_ids = fold_2['test'].index
@@ -385,7 +384,6 @@ test_ids = fold_2['test'].index
 train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
 dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
 test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
-'''
 
 # =====================================================================================
 #                    GET EMBEDDINGS
@@ -424,7 +422,6 @@ if test_embeddings:
     logger.info(embed_df['embeddings'].head(3))
     exit(0)
 
-'''
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
 # =====================================================================================
@@ -453,7 +450,6 @@ test_data = TensorDataset(test_ids, test_labels)
 train_batches = to_batches(train_data, BATCH_SIZE)
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
-'''
 
 # =====================================================================================
 #                    TRAIN CLASSIFIER
@@ -501,7 +497,7 @@ for ep in range(1, int(N_EPOCHS+1)):
     av_loss = tr_loss / len(train_batches)
     cnm.save_model(epoch_name)
     dev_preds, dev_loss = cnm.predict(dev_batches)
-    dev_mets, dev_perf = my_eval(fold['dev'].label.values, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
+    dev_mets, dev_perf = my_eval(dev_labels, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
     logger.info(f'{dev_perf}')
 
     # check if best
