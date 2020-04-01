@@ -458,7 +458,7 @@ test_batches = to_batches(test_data, 1)
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
-cnm = ContextAwareClassifier(tr_labs=[f.my_id for f in train_features], weights_mat=WEIGHTS_MATRIX,
+cnm = ContextAwareClassifier(tr_labs=fold_2['train'].label.values, weights_mat=WEIGHTS_MATRIX,
                              lr=2e-4, context_naive=True)
 cnm.model.train()
 
