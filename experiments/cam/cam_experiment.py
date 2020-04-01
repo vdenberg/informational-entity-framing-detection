@@ -384,9 +384,9 @@ fold_2 = folds[1]
 logger.info(f"Convert data to indices for weights matrix")
 sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
 
-train_ids = fold_2['train'].id_num
-dev_ids = fold_2['dev'].id_num
-test_ids = fold_2['test'].id_num
+train_ids = fold_2['train'].id_num.values
+dev_ids = fold_2['dev'].id_num.values
+test_ids = fold_2['test'].id_num.values
 
 #train_ids = [sent_id_map[i] for i in train_ids]
 #dev_ids = [sent_id_map[i] for i in dev_ids]
