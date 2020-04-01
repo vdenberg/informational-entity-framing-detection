@@ -433,7 +433,7 @@ for bert_batch in bert_dev_batches:
     bert_embeddings.extend(pooled_output.detach().cpu().numpy())
 print(bert_embeddings[0][:5])
 fold_2['dev']['embeddings'] = bert_embeddings
-print(fold_2['dev'].iloc[0,:]['embeddings'].values[:5])
+print(fold_2['dev'].iloc[0,:]['embeddings'][:5])
 
 # 2) turn into matrix
 weights_matrix = np.zeros((len(bert_embeddings), 768))
