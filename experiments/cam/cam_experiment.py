@@ -362,8 +362,8 @@ NR_FOLDS = len(folds)
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=1)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=1)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
