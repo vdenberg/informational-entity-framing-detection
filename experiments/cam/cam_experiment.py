@@ -402,14 +402,14 @@ with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
     bert_dev_batches = to_batches(data, BATCH_SIZE)
 
 # compare to cam version of data
-logger.info("Sizes:", len(folds[1]['dev_batches']), len(bert_dev_batches))
+print("Sizes:", len(folds[1]['dev_batches']), len(bert_dev_batches))
 bert_dev_labels = []
 for b in bert_dev_batches:
     bert_dev_labels.extend(b[-1])
 cam_dev_labels = []
 for b in fold_2['dev_batches']:
     cam_dev_labels.extend(b[5])
-logger.info("Labels:", bert_dev_labels[:10], cam_dev_labels[:10])
+print("Labels:", bert_dev_labels[:10], cam_dev_labels[:10])
 
 # load bert features
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
