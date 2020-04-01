@@ -205,9 +205,9 @@ class ContextAwareClassifier():
                     #loss = self.criterion(sigm_output, labels)
 
             if self.context_naive:
-                probs = probs.detach().cpu().numpy()
+                probs = probs[0].detach().cpu().numpy()
                 print(probs)
-                y_pred.extend(probs)
+                y_pred.append(probs)
                 #if len(y_pred) == 0:
                 #    y_pred.append(probs)
                 #else:
