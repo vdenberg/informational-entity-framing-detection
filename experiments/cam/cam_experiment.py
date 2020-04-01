@@ -501,7 +501,6 @@ for ep in range(1, int(N_EPOCHS+1)):
     av_loss = tr_loss / len(train_batches)
     cnm.save_model(epoch_name)
     dev_preds, dev_loss = cnm.predict(dev_batches)
-    print(len(dev_preds), len(fold['dev'].label))
     dev_mets, dev_perf = my_eval(fold['dev'].label.values, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
     logger.info(f'{dev_perf}')
 
