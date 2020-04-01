@@ -486,7 +486,7 @@ for ep in range(1, int(N_EPOCHS+1)):
 
         tr_loss += loss.item()
         if step % 100 == 0:
-            print(f"Step {step} / {len(train_batches)}, Loss: {loss}")
+            print(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
 
         # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
         cnm.optimizer.step()
@@ -494,7 +494,7 @@ for ep in range(1, int(N_EPOCHS+1)):
 
     # Save after Epoch
     epoch_name = name_base + f"_ep{ep}"
-    av_loss = tr_loss / len(train_batches)
+    av_loss = tr_loss / len(fold['train_batches'])
     cnm.save_model(epoch_name)
     dev_preds, dev_loss = cnm.predict(fold['dev_batches'])
     dev_mets, dev_perf = my_eval(fold['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
