@@ -366,6 +366,7 @@ if test_embeddings:
             bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
             logits, probs, sequence_output, pooled_output = bert_outputs
             print(probs, len(probs))
+            print(probs.shape)
             emb_output = list(pooled_output.detach().cpu().numpy())
         bert_embeddings.extend(emb_output)
     embed_df = pd.DataFrame(index=all_ids)
