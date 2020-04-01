@@ -420,9 +420,6 @@ cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_
                              b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 cnm.model.train()
 
-# pick same loss function
-loss_fct = CrossEntropyLoss()
-
 # train
 best_val_mets = {'f1': 0}
 best_val_perf = ''
@@ -438,8 +435,7 @@ for ep in range(1, int(N_EPOCHS+1)):
 
         cnm.model.zero_grad()
         logits, probs, target_output = cnm.model(ids)
-        #loss = loss_fct(logits.view(-1, 1), label_ids.view(-1))
-        loss = loss_fct(probs, label_ids)
+        loss = cnm.criterion(logits.view(-1, 1), label_ids.view(-1))
 
         loss.backward()
 

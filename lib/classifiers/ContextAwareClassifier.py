@@ -41,7 +41,7 @@ class ContextAwareModel(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.context_naive = context_naive
         if self.context_naive:
-            self.classifier = nn.Linear(self.emb_size, 1)
+            self.classifier = nn.Linear(self.emb_size, 2)
             self.sigm = nn.Sigmoid()
         else:
             self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
@@ -133,12 +133,10 @@ class ContextAwareClassifier():
                                                cycle_momentum=False, max_lr=lr * 30)
 
         # set criterion
-        if self.context_naive:
-            self.criterion = CrossEntropyLoss()
-        else:
-            n_pos = len([l for l in tr_labs if l == 1])
-            class_weight = 1 - (n_pos / len(tr_labs))
-            self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
+        self.criterion = CrossEntropyLoss()
+        #n_pos = len([l for l in tr_labs if l == 1])
+        #class_weight = 1 - (n_pos / len(tr_labs))
+        #self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
@@ -161,7 +159,7 @@ class ContextAwareClassifier():
         else:
             probs = self.model(ids, documents, positions)
         #print(labels.type())
-        loss = self.criterion(probs, labels)
+        loss = self.criterion(logits.view(-1, 1), labels_long.view(-1))
         loss.backward()
 
         self.optimizer.step()
@@ -197,8 +195,7 @@ class ContextAwareClassifier():
                     # tensor([[0.8027, 0.1397]], device='cuda:0') 1
                     # torch.Size([1, 2])
 
-                    #loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
-                    loss = self.criterion(probs, labels)
+                    loss = self.criterion(logits.view(-1, 2), labels.view(-1))
                 else:
                     pass
                     #sigm_output  = self.model(ids, documents, positions)
