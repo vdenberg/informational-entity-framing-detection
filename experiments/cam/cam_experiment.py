@@ -280,7 +280,7 @@ with open(test_fp, "rb") as f:
 
 # load bert features
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensor(pickle.load(f), 'classification')
+    all_ids, all_data, all_labels = to_tensor(pickle.load(f))
     bert_all_batches = to_batches(all_data, BATCH_SIZE)
 
 # bert model
