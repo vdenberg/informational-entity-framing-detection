@@ -218,9 +218,12 @@ file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
 
-logger.info(f"Start Logging to {LOG_NAME}")
+logger.info("============ INITIALISATION =============")
+logger.info(f" Logging to {LOG_NAME}")
+logger.info(f" Saving to {CHECKPOINT_DIR}")
+logger.info(f" Arguments:")
 logger.info(args)
-
+logger.info(f" Good luck!")
 
 # =====================================================================================
 #                    PREPROCESS DATA
