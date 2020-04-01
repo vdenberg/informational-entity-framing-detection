@@ -61,20 +61,20 @@ class ContextAwareModel(nn.Module):
                 embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)[0]
                 document_embeddings[seq_idx] = embedded
 
-            target_output = torch.zeros(batch_size, 1, self.emb_size, device=self.device)
+            target_output_a = torch.zeros(batch_size, 1, self.emb_size, device=self.device)
             for item in range(batch_size):
                 pos = positions[item]
-                target_output[item] = document_embeddings[pos, item, :]
+                target_output_a[item] = document_embeddings[pos, item, :]
 
-            #target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
-            #for item in range(batch_size):
-            #    my_idx = positions[item]
-            #    embedded = self.embedding(contexts[item, my_idx]).view(1, -1)
-            #    target_output[item] = embedded
+            target_output_b = torch.zeros(batch_size, self.emb_size, device=self.device)
+            for item in range(batch_size):
+                my_idx = positions[item]
+                embedded = self.embedding(contexts[item, my_idx]).view(1, -1)
+                target_output_b[item] = embedded
 
-            logits = self.classifier(target_output)
+            logits = self.classifier(target_output_b)
             probs = self.sigm(logits)
-            return logits, probs, target_output
+            return logits, probs, target_output_b
         else:
             context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
 
