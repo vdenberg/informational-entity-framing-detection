@@ -431,9 +431,9 @@ for bert_batch in bert_dev_batches:
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
     bert_embeddings.extend(pooled_output.detach().cpu().numpy())
-print(bert_embeddings[0])
+print(bert_embeddings[0][:5])
 fold_2['dev']['embeddings'] = bert_embeddings
-print(fold_2['dev'].iloc[0,:])
+print(fold_2['dev'].iloc[0,'embeddings'].values[:5])
 
 # 2) turn into matrix
 weights_matrix = np.zeros((len(bert_embeddings), 768))
@@ -449,7 +449,7 @@ for sent_id, index in sent_id_map.items():  # word here is a sentence id like 91
     else:
         embedding = sentence_embeddings[sent_id]
         weights_matrix[index] = embedding
-print(weights_matrix[0])
+print(weights_matrix[1][:5])
 
 exit(0)
 cam_probs = []
