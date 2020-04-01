@@ -227,23 +227,24 @@ logger.info(args)
 # =====================================================================================
 
 logger.info(f"Preprocess data if needed")
-#if not os.path.exists(DATA_FP):
-logger.info("============ PREPROCESS DATA =============")
-logger.info(f" Writing to: {DATA_FP}")
-logger.info(f" Max len: {MAX_DOC_LEN}")
+PREPROCESS = False
+if PREPROCESS:
+    logger.info("============ PREPROCESS DATA =============")
+    logger.info(f" Writing to: {DATA_FP}")
+    logger.info(f" Max len: {MAX_DOC_LEN}")
 
-raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
-sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
-raw_data = pd.read_csv(raw_data_fp, sep='\t',
-                       names=['sentence_ids', 'context_document', 'label', 'position'],
-                       dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
-processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
-raw_data['sentence'] = sentences
-raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
-raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
-#token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(raw_data.sentence.values)
-#raw_data['token_ids'], raw_data['token_mask'], raw_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
-raw_data.to_json(DATA_FP)
+    raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
+    sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
+    raw_data = pd.read_csv(raw_data_fp, sep='\t',
+                           names=['sentence_ids', 'context_document', 'label', 'position'],
+                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+    processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
+    raw_data['sentence'] = sentences
+    raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
+    raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
+    #token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(raw_data.sentence.values)
+    #raw_data['token_ids'], raw_data['token_mask'], raw_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
+    raw_data.to_json(DATA_FP)
 
 
 # =====================================================================================
@@ -365,6 +366,8 @@ with open(test_fp, "rb") as f:
 logger.info(f"Convert data to indices for weights matrix")
 
 fold_2 = folds[1]
+fold = {'name': 2}
+
 train_ids = fold_2['train'].id_num.values
 dev_ids = fold_2['dev'].id_num.values
 test_ids = fold_2['test'].id_num.values
