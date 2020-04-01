@@ -113,7 +113,7 @@ parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', def
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=100)
+parser.add_argument('-ep', '--epochs', type=int, default=50)
 parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=True)
 
@@ -363,35 +363,28 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 TRAIN = True
 if TRAIN:
-    #cam_results_table = pd.read_csv('reports/cam/results_table.csv')
+    cam_table = pd.read_csv('reports/cam/results_table.csv')
     for fold in [folds[1]]:
         name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
-        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
-                                     train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
-                                     emb_dim=EMB_DIM, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                                     batch_size=BATCH_SIZE, learning_rate=LR, step_size=1, gamma=GAMMA, context_naive=False)
+        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label.values,
+                                     weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
 
         logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
-        cl = Classifier(logger=logger, model=cam, n_epochs=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, model_name=name_base,
-                        print_every=PRINT_STEP_EVERY)
-
-
+        cl = Classifier(logger=logger, model=cam, n_eps=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, name=name_base,
+                        printing=PRINT_STEP_EVERY)
 
         best_val_mets, test_mets = cl.train_on_fold(fold)
+        best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
+        best_val_mets['fold'], test_mets['fold'] = fold["name"], fold["name"]
 
-        best_val_mets['seed'] = SEED_VAL
-        best_val_mets['fold'] = fold["name"]
-
-        test_mets['seed'] = SEED_VAL
-        test_mets['fold'] = fold["name"]
-
-        cam_results_table = cam_results_table.append(best_val_mets, ignore_index=True)
-        cam_results_table = cam_results_table.append(test_mets, ignore_index=True)
-
-        cam_results_table.to_csv('reports/cam/results_table.csv', index=False)
+        cam_table = cam_table.append(best_val_mets, ignore_index=True)
+        cam_table = cam_table.append(test_mets, ignore_index=True)
+        cam_table.to_csv('reports/cam/results_table.csv', index=False)
 
     # final results of cross validation
-    logger.info(f' CAM Results:\n{cam_results_table}')
+    logger.info(f' CAM Results:\n{cam_table}')
+
 # =====================================================================================
 #                    REPEAT BERT
 # =====================================================================================
@@ -417,8 +410,8 @@ bert_model.eval()
 
 
 # cnm model
-cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                             learning_rate=LR, gamma=GAMMA, context_naive=True)
+cnm = ContextAwareClassifier(tr_labs=fold['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                             lr=LR, gamma=GAMMA, context_naive=True)
 cnm.model.eval()
 
 # loss function
@@ -465,8 +458,8 @@ inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 inferencer.eval(bert_model, bert_dev_batches, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
 
 # aply context naive model
-cnm = ContextAwareClassifier(train_labels=fold['dev'].label.values, weights_matrix=WEIGHTS_MATRIX, hidden_size=HIDDEN, bilstm_layers=BILSTM_LAYERS,
-                             learning_rate=LR, gamma=GAMMA, context_naive=True)
+cnm = ContextAwareClassifier(tr_labs=fold['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                             lr=LR, gamma=GAMMA, context_naive=True)
 
 dev_batches = fold['dev_batches']
 

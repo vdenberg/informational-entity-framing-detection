@@ -9,17 +9,17 @@ class Classifier:
     """
     Generic Classifier that performs recurring machine learning tasks
     """
-    def __init__(self, model, n_epochs, logger, patience, fig_dir, model_name, print_every, load_from_ep=None):
+    def __init__(self, model, n_eps, logger, patience, fig_dir, name, printing, load_from_ep=None):
         self.wrapper = model
-        self.n_epochs = n_epochs
+        self.n_epochs = n_eps
         self.logger = logger
         self.patience = patience
         self.fig_dir = fig_dir
-        self.model_name = model_name
-        self.print_every = print_every
+        self.model_name = name
+        self.print_every = printing
 
         # load
-        self.epochs = range(n_epochs)
+        self.epochs = range(n_eps)
         if load_from_ep:
             self.n_epochs += load_from_ep
             self.epochs = range(load_from_ep, self.n_epochs)
@@ -77,7 +77,6 @@ class Classifier:
 
         val_preds, val_loss = self.wrapper.predict(dev_bs)
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
-
 
         best_log = ''
         if val_mets['f1'] > self.best_val_mets['f1']:

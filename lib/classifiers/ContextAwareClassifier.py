@@ -93,16 +93,16 @@ class ContextAwareModel(nn.Module):
 
 
 class ContextAwareClassifier():
-    def __init__(self, emb_dim=768, hidden_size=32, bilstm_layers=1, weights_matrix=None, train_labels=None,
-                 batch_size=24, cp_dir='models/checkpoints/cam',
-                 learning_rate=0.001, start_epoch=0, patience=3, step_size=1, gamma=0.75, context_naive=False):
+    def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
+                 b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
+                 step=1, gamma=0.75, context_naive=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()
 
         self.emb_dim = emb_dim
-        self.hidden_size = hidden_size
-        self.batch_size = batch_size
+        self.hidden_size = hid_size
+        self.batch_size = b_size
         self.criterion = None  # depends on classweight which should be set on input
         self.context_naive = context_naive
 
@@ -110,7 +110,7 @@ class ContextAwareClassifier():
             self.model = self.load_model()
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
-                                           bilstm_layers=bilstm_layers, weights_matrix=weights_matrix,
+                                           bilstm_layers=layers, weights_matrix=weights_mat,
                                            device=self.device, context_naive=context_naive)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
@@ -125,16 +125,16 @@ class ContextAwareClassifier():
         self.test_perf_string = ''
 
         # set optim and scheduler
-        nr_train_instances = len(train_labels)
-        nr_train_batches = int(nr_train_instances / batch_size)
+        nr_train_instances = len(tr_labs)
+        nr_train_batches = int(nr_train_instances / b_size)
         half_tr_bs = int(nr_train_instances/2)
-        self.optimizer = AdamW(self.model.parameters(), lr=learning_rate, eps=1e-8)
-        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=learning_rate, step_size_up=half_tr_bs,
-                                               cycle_momentum=False, max_lr=learning_rate*30)
+        self.optimizer = AdamW(self.model.parameters(), lr=lr, eps=1e-8)
+        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
+                                               cycle_momentum=False, max_lr=lr * 30)
 
         # set criterion
-        n_pos = len([l for l in train_labels if l == 1])
-        class_weight = 1 - (n_pos / len(train_labels))
+        n_pos = len([l for l in tr_labs if l == 1])
+        class_weight = 1 - (n_pos / len(tr_labs))
         if self.context_naive:
             self.criterion = CrossEntropyLoss()
         else:
