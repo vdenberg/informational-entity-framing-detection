@@ -308,11 +308,10 @@ for bert_batch in bert_all_batches:
         logits, probs, sequence_output, pooled_output = bert_outputs
         emb_output = list(pooled_output.detach().cpu().numpy())
     bert_embeddings.extend(emb_output)
-print(len(bert_embeddings), len(bert_embeddings[0]))
 embed_df = pd.DataFrame(index=all_ids)
 embed_df['embeddings'] = bert_embeddings
 
-smp1 = data_w_embeds['embeddings'].head(3)
+smp1 = data_w_embeds['poolbert'].head(3)
 smp2 = embed_df['embeddings'].head(3)
 
 # turn into matrix
