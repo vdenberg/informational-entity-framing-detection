@@ -308,7 +308,9 @@ for bert_batch in bert_all_batches:
         logits, probs, sequence_output, pooled_output = bert_outputs
         emb_output = list(pooled_output[0].detach().cpu().numpy())
     bert_embeddings.append(emb_output)
-embed_df = pd.DataFrame([bert_embeddings], index=all_ids, columns=['embeddings'])
+print(len(bert_embeddings), len(bert_embeddings[0]))
+embed_df = pd.DataFrame(index=all_ids)
+embed_df['embeddings'] = bert_embeddings
 
 # turn into matrix
 weights_matrix = make_weight_matrix(embed_df, 768)
