@@ -253,7 +253,7 @@ if not os.path.exists(DATA_FP):
 # =====================================================================================
 
 # isolate fold
-fold = folds[1]
+fold = {'name': '2'}
 
 # =====================================================================================
 #                    LOAD BERT DATA
@@ -337,7 +337,7 @@ name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 t0 = time.time()
 for ep in range(1, int(N_EPOCHS+1)):
     tr_loss = 0
-    for step, batch in enumerate(fold['train_batches']):
+    for step, batch in enumerate(train_batches):
         batch = tuple(t.to(device) for t in batch)
 
         #input_ids, input_mask, segment_ids, label_ids = batch
