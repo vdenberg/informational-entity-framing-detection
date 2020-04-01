@@ -56,8 +56,9 @@ class ContextAwareModel(nn.Module):
         seq_length = contexts.shape[1]
 
         contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
+        hidden = self.init_hidden(batch_size)
+
         if self.context_naive:
-            hidden = self.init_hidden(batch_size)
             contexts_embedded = torch.zeros(seq_length, batch_size, self.emb_size, device=self.device)
             for seq_idx in range(seq_length):
                 embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
@@ -74,11 +75,12 @@ class ContextAwareModel(nn.Module):
                 target_output[item] = bert_embedding
 
             logits = self.classifier(target_output)
-            probs = self.sigm(logits)
+            #probs = self.sigm(logits)
+            probs = self.sigm(logits).view(batch_size)
             return logits, probs, target_output
         else:
             # loop through input and update hidden
-            hidden = self.init_hidden(batch_size)
+
             for ei in range(seq_length):
                 embedded = self.embedding(contexts[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
                 output, hidden = self.lstm(embedded, # feed hidden of previous token/item, store in hidden again
