@@ -267,14 +267,14 @@ if DEBUG:
 NR_FOLDS = len(folds)
 
 # batch data
-for fold_i, fold in enumerate(folds):
-    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+for fold_i, fold_2 in enumerate(folds):
+    train_batches = to_batches(to_tensors(fold_2['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold_2['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold_2['test'], device), batch_size=BATCH_SIZE)
 
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
+    fold_2['train_batches'] = train_batches
+    fold_2['dev_batches'] = dev_batches
+    fold_2['test_batches'] = test_batches
 
 logger.info(f" --> Read {len(data)} data points")
 logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
@@ -351,7 +351,7 @@ logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
 
-logger.info("============ TRAINING =============")
+logger.info("============ CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
@@ -361,22 +361,26 @@ logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
-TRAIN = True
+# =====================================================================================
+#                    TRAIN ON FOLD 2
+# =====================================================================================
+
+TRAIN = False
 if TRAIN:
     cam_table = pd.read_csv('reports/cam/results_table.csv')
-    for fold in [folds[1]]:
-        name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
-        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label.values,
+    for fold_2 in [folds[1]]:
+        name_base = f"s{SEED_VAL}_f{fold_2['name']}_{'cyc'}_bs{BATCH_SIZE}"
+        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold_2['train'].label.values,
                                      weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                      b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
 
-        logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
+        logger.info(f' CAM Training on fold {fold_2["name"]} (sizes: {fold_2["sizes"]})')
         cl = Classifier(logger=logger, model=cam, n_eps=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, name=name_base,
                         printing=PRINT_STEP_EVERY)
 
-        best_val_mets, test_mets = cl.train_on_fold(fold)
+        best_val_mets, test_mets = cl.train_on_fold(fold_2)
         best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
-        best_val_mets['fold'], test_mets['fold'] = fold["name"], fold["name"]
+        best_val_mets['fold'], test_mets['fold'] = fold_2["name"], fold_2["name"]
 
         cam_table = cam_table.append(best_val_mets, ignore_index=True)
         cam_table = cam_table.append(test_mets, ignore_index=True)
@@ -389,36 +393,36 @@ if TRAIN:
 #                    REPEAT BERT
 # =====================================================================================
 
-# repeat BERT result
-# pick fold bert was trained on:
-fold = [fold for fold in folds if fold['name'] == 2][0]
+# pick fold bert was trained on
+fold_2 = [fold_2[1]]
 
-# bert data
+# load bert features
 with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
     bert_dev_ids, bert_dev_data, bert_dev_labels = to_tensor(pickle.load(f), 'classification')
     bert_dev_batches = to_batches(bert_dev_data, BATCH_SIZE)
 
-# cam data
-cam_dev_batches = to_batches(to_tensors(fold['dev'].loc[bert_dev_ids], device), batch_size=BATCH_SIZE)
-cam_dev_labels = fold['dev'].loc[bert_dev_ids].label
-print(fold['dev']['id_num'])
+# load cam data
+fold_2['dev'] = fold_2['dev'].loc[bert_dev_ids]
+fold_2['dev_batches'] = to_batches(to_tensors(fold_2['dev'], device), batch_size=BATCH_SIZE)
+cam_dev_labels = fold_2['dev'].label
+cam_dev_batches = fold_2['dev_batches']
 
 # bert model
-bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model', num_labels=2,
-                                                           output_hidden_states=True, output_attentions=True)
+bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
+                                                           num_labels=2, output_hidden_states=True,
+                                                           output_attentions=True)
 bert_model.eval()
 
-
 # cnm model
-cnm = ContextAwareClassifier(tr_labs=fold['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                             lr=LR, gamma=GAMMA, context_naive=True)
+cnm = ContextAwareClassifier(tr_labs=fold_2['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN,
+                             layers=BILSTM_LAYERS, lr=LR, gamma=GAMMA, context_naive=True)
 cnm.model.eval()
 
 # loss function
 loss_fct = CrossEntropyLoss()
 
-
 # try having exact embeddings passed on
+
 # 1) get embeddings
 bert_embeddings = []
 for bert_batch in bert_dev_batches:
@@ -427,9 +431,9 @@ for bert_batch in bert_dev_batches:
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
     bert_embeddings.append(pooled_output.detach().cpu().numpy())
-fold['dev']['embeddings'] = bert_embeddings
+fold_2['dev']['embeddings'] = bert_embeddings
 
-#2 turn into matrix
+# 2) turn into matrix
 weights_matrix = np.zeros((len(bert_embeddings), 768))
 
 cam_probs = []
@@ -455,19 +459,19 @@ bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/b
                                                            output_hidden_states=True, output_attentions=True)
 inferencer = Inferencer(REPORTS_DIR, 'classification', logger, device, USE_CUDA)
 
-inferencer.eval(bert_model, bert_dev_batches, bert_dev_labels, set_type='dev', name=f"best bert model on {fold['name']}")
+inferencer.eval(bert_model, bert_dev_batches, bert_dev_labels, set_type='dev', name=f"best bert model on {fold_2['name']}")
 
 # aply context naive model
-cnm = ContextAwareClassifier(tr_labs=fold['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+cnm = ContextAwareClassifier(tr_labs=fold_2['dev'].label.values, weights_mat=WEIGHTS_MATRIX, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                              lr=LR, gamma=GAMMA, context_naive=True)
 
-dev_batches = fold['dev_batches']
+dev_batches = fold_2['dev_batches']
 
 print(dev_batches)
 
 exit(0)
 cnm_dev_preds, dev_loss = cnm.predict(dev_batches)
-val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold['name']}")
+val_mets, val_perf = my_eval(bert_dev_labels, cnm_dev_preds, set_type='val', av_loss=dev_loss, name=f"cnm model on fold {fold_2['name']}")
 logger.info(val_perf)
 
 
