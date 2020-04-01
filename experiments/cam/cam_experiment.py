@@ -306,8 +306,9 @@ for bert_batch in bert_all_batches:
     with torch.no_grad():
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
-    bert_embeddings.extend(pooled_output.detach().cpu().numpy())
-embed_df = pd.DataFrame([bert_embeddings], index=all_ids, columns=['embeddings'])
+        emb_output = list(pooled_output[0].detach().cpu().numpy())
+    bert_embeddings.append(emb_output)
+embed_df = pd.DataFrame(bert_embeddings, index=all_ids, columns=['embeddings'])
 
 # turn into matrix
 weights_matrix = make_weight_matrix(embed_df, 768)
