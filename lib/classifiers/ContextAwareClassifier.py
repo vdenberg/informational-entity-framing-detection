@@ -223,7 +223,7 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         if self.context_naive:
-            print(y_pred)
+            print(y_pred[:10])
             #y_pred = y_pred[0]
             y_pred = np.argmax(y_pred, axis=1)
 
