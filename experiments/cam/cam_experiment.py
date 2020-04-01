@@ -248,6 +248,68 @@ if not os.path.exists(DATA_FP):
 
     string_data.to_json(DATA_FP)
 
+# =====================================================================================
+#                    FINETUNE EMBEDDINGS
+# =====================================================================================
+
+if FT_EMB:
+    pass
+    """
+    logger.info("============ FINETUNE EMBEDDINGS =============")
+    logger.info(f" Embedding type: {EMB_TYPE}")
+    logger.info(f" Finetuning LR: {BERT_LR}")
+    logger.info(f" Num epochs (same as overall): {N_EPOCHS}")
+    logger.info(f" Finetuning batch size (same as overall): {BATCH_SIZE}")
+    logger.info(f" Mode: {MODE}")
+
+    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
+
+    for fold in folds:
+        LOAD_FROM_EP = None
+        bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
+                           bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
+                           n_train_batches=len(fold['train_batches']), load_from_ep=LOAD_FROM_EP)
+
+        logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
+        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
+                        fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
+        cl.train_on_fold(fold)
+        finetune_f1s.loc[fold['name']] = cl.test_perf
+
+    finetune_f1s.loc['mean'] = finetune_f1s.mean()
+    logger.info(f'Finetuning results:\n{finetune_f1s}')
+
+
+    #ft = OldFinetuner(logger=logger, n_epochs=10,
+    #                  lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
+    #ft.fan()
+    bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
+                n_train_batches=len(fold['train_batches']))
+    all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
+    data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
+    data_w_embeds = data
+    data_w_embeds.to_csv(EMBED_FP)
+    """
+
+# =====================================================================================
+#                    LOAD EMBEDDINGS
+# =====================================================================================
+
+logger.info("============ LOAD EMBEDDINGS =============")
+logger.info(f" Embedding type: {EMB_TYPE}")
+
+# read embeddings file
+data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
+data_w_embeds = data_w_embeds.rename(
+    columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
+print(data_w_embeds.head())
+
+# transform into matrix
+WEIGHTS_MATRIX = make_weight_matrix(data_w_embeds, EMB_DIM)
+
+logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 
 # =====================================================================================
 #                    REPEAT BERT
@@ -281,43 +343,39 @@ with open(test_fp, "rb") as f:
 #                    GET EMBEDDINGS
 # =====================================================================================
 
-
 logger.info(f"Get embeddings")
+test_embeddings = True
+if test_embeddings:
 
-#load premade
-data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
+    #load premade
+    data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
 
-# load bert features
-with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
-    bert_all_batches = to_batches(all_data, BATCH_SIZE)
+    # load bert features
+    with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+        all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
+        bert_all_batches = to_batches(all_data, BATCH_SIZE)
 
-# bert model
-bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
-                                                           num_labels=2, output_hidden_states=False,
-                                                           output_attentions=False)
-bert_model.to(device)
-bert_model.eval()
+    # bert model
+    bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
+                                                               num_labels=2, output_hidden_states=False,
+                                                               output_attentions=False)
+    bert_model.to(device)
+    bert_model.eval()
 
-# get embeddings
-bert_embeddings = []
-for bert_batch in bert_all_batches:
-    input_ids, input_mask, segment_ids, label_ids = bert_batch
-    with torch.no_grad():
-        bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
-        logits, probs, sequence_output, pooled_output = bert_outputs
-        emb_output = list(pooled_output.detach().cpu().numpy())
-    bert_embeddings.extend(emb_output)
-embed_df = pd.DataFrame(index=all_ids)
-embed_df['embeddings'] = bert_embeddings
+    # get embeddings
+    bert_embeddings = []
+    for bert_batch in bert_all_batches:
+        input_ids, input_mask, segment_ids, label_ids = bert_batch
+        with torch.no_grad():
+            bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
+            logits, probs, sequence_output, pooled_output = bert_outputs
+            emb_output = list(pooled_output.detach().cpu().numpy())
+        bert_embeddings.extend(emb_output)
+    embed_df = pd.DataFrame(index=all_ids)
+    embed_df['embeddings'] = bert_embeddings
 
-smp1 = data_w_embeds['poolbert'].head(3)
-smp2 = embed_df['embeddings'].head(3)
-print(smp1)
-print(smp2)
-# turn into matrix
-weights_matrix = make_weight_matrix(data_w_embeds, 768)
-
+    logger.info(data_w_embeds['embeddings'].head(3))
+    logger.info(embed_df['embeddings'].head(3))
 
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
@@ -432,69 +490,6 @@ logger.info(f" --> Nr folds: {NR_FOLDS}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
-
-# =====================================================================================
-#                    FINETUNE EMBEDDINGS
-# =====================================================================================
-
-if FT_EMB:
-    pass
-    """
-    logger.info("============ FINETUNE EMBEDDINGS =============")
-    logger.info(f" Embedding type: {EMB_TYPE}")
-    logger.info(f" Finetuning LR: {BERT_LR}")
-    logger.info(f" Num epochs (same as overall): {N_EPOCHS}")
-    logger.info(f" Finetuning batch size (same as overall): {BATCH_SIZE}")
-    logger.info(f" Mode: {MODE}")
-
-    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
-    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
-
-    for fold in folds:
-        LOAD_FROM_EP = None
-        bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
-                           bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
-                           n_train_batches=len(fold['train_batches']), load_from_ep=LOAD_FROM_EP)
-
-        logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
-        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
-                        fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
-        cl.train_on_fold(fold)
-        finetune_f1s.loc[fold['name']] = cl.test_perf
-
-    finetune_f1s.loc['mean'] = finetune_f1s.mean()
-    logger.info(f'Finetuning results:\n{finetune_f1s}')
-   
-
-    #ft = OldFinetuner(logger=logger, n_epochs=10,
-    #                  lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
-    #ft.fan()
-    bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
-                n_train_batches=len(fold['train_batches']))
-    all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
-    data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
-    data_w_embeds = data
-    data_w_embeds.to_csv(EMBED_FP)
-    """
-
-# =====================================================================================
-#                    LOAD EMBEDDINGS
-# =====================================================================================
-
-logger.info("============ LOAD EMBEDDINGS =============")
-logger.info(f" Embedding type: {EMB_TYPE}")
-
-# read embeddings file
-data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
-data_w_embeds = data_w_embeds.rename(
-    columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-print(data_w_embeds.head())
-
-# transform into matrix
-WEIGHTS_MATRIX = make_weight_matrix(data, data_w_embeds, EMB_DIM)
-
-logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 
 
 # =====================================================================================
