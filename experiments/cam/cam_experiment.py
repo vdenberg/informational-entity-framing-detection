@@ -437,7 +437,6 @@ for ep in range(1, int(N_EPOCHS+1)):
     for step, batch in enumerate(fold['train_batches']):
         batch = tuple(t.to(device) for t in batch)
 
-        #input_ids, input_mask, segment_ids, label_ids = batch
         ids, label_ids = batch
 
         cnm.model.zero_grad()
