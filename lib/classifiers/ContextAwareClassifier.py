@@ -209,7 +209,7 @@ class ContextAwareClassifier():
                 if len(y_pred) == 0:
                     y_pred.append(probs)
                 else:
-                    # 3 dimension(s) and the array at index 1 has 2 dimension(s)
+                    # Error: array at index 0 has 3 dimension(s) and the array at index 1 has 2 dimension(s)
                     y_pred[0] = np.append(y_pred, probs, axis=0)
 
             # convert to predictions
