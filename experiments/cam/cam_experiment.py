@@ -409,6 +409,9 @@ cnm.model.train()
 loss_fct = CrossEntropyLoss()
 
 # train
+best_val_mets = {'f1': 0}
+best_val_perf = ''
+best_model_loc = ''
 name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 t0 = time.time()
 for ep in range(1, int(N_EPOCHS+1)):
