@@ -14,7 +14,7 @@ from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferenc
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 import pickle, time
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, BCELoss
 
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
@@ -415,13 +415,16 @@ fold = folds[1]
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
-cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label.values,
+cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                              weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                              b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 cnm.model.train()
 
 # pick same loss function
 loss_fct = CrossEntropyLoss()
+n_pos = len([l for l in fold['train'].label if l == 1])
+class_weight = 1 - (n_pos / len(fold['train'].label))
+loss_fct = BCELoss(weight=torch.tensor(class_weight, dtype=torch.long, device=device))
 
 # train
 best_val_mets = {'f1': 0}
