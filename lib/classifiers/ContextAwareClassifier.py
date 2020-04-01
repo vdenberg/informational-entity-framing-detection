@@ -199,7 +199,7 @@ class ContextAwareClassifier():
             if self.context_naive:
                 probs = probs.detach().cpu().numpy()
                 if len(y_pred) == 0:
-                    y_pred.extend(probs)
+                    y_pred.append(probs)
                 else:
                     y_pred[0] = np.append(y_pred, probs, axis=0)
 
