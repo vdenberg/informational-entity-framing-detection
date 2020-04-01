@@ -201,7 +201,7 @@ class ContextAwareClassifier():
                 if len(y_pred) == 0:
                     y_pred.extend(probs)
                 else:
-                    y_pred[0] = np.append(y_pred[0], probs, axis=0)
+                    y_pred[0] = np.append(y_pred, probs, axis=0)
 
             # convert to predictions
             else:
