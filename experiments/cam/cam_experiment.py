@@ -268,13 +268,13 @@ test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_featur
 
 with open(train_fp, "rb") as f:
     train_features = pickle.load(f)
-    train_ids, train_data, train_labels = to_tensor(train_features)
+    train_ids, train_data, train_labels = to_tensor(train_features, device)
 
 with open(dev_fp, "rb") as f:
-    dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f))
+    dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
 
 with open(test_fp, "rb") as f:
-    test_ids, test_data, test_labels = to_tensor(pickle.load(f))
+    test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
 
 # =====================================================================================
