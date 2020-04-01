@@ -442,7 +442,7 @@ for ep in range(1, int(N_EPOCHS+1)):
 
         cnm.model.zero_grad()
         logits, probs, target_output = cnm.model(ids)
-        loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+        loss = loss_fct(logits.view(-1, 1), label_ids.view(-1))
 
         loss.backward()
 
