@@ -133,11 +133,11 @@ class ContextAwareClassifier():
                                                cycle_momentum=False, max_lr=lr * 30)
 
         # set criterion
-        n_pos = len([l for l in tr_labs if l == 1])
-        class_weight = 1 - (n_pos / len(tr_labs))
         if self.context_naive:
             self.criterion = CrossEntropyLoss()
         else:
+            n_pos = len([l for l in tr_labs if l == 1])
+            class_weight = 1 - (n_pos / len(tr_labs))
             self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
 
     def load_model(self, name):
