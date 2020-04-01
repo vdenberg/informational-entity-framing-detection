@@ -379,7 +379,7 @@ if test_embeddings:
 # =====================================================================================
 
 logger.info(f"Convert data to indices for weights matrix")
-sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
+sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
 
 train_ids = torch.tensor([sent_id_map[i] for i in train_ids], dtype=torch.long, device=device)
 dev_ids = torch.tensor([sent_id_map[i] for i in dev_ids], dtype=torch.long, device=device)
@@ -399,7 +399,7 @@ test_batches = to_batches(test_data, 1)
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
-cnm = ContextAwareClassifier(tr_labs=[f.my_id for f in train_features], weights_mat=weights_matrix,
+cnm = ContextAwareClassifier(tr_labs=[f.my_id for f in train_features], weights_mat=WEIGHTS_MATRIX,
                              lr=2e-5, context_naive=True)
 cnm.model.train()
 
