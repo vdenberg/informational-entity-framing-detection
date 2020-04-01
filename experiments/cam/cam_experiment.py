@@ -103,6 +103,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
+parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
@@ -148,6 +149,7 @@ DEBUG = True if args.mode == 'debug' else False
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
+PREPROCESS = args.preprocess
 if DEBUG:
     SUBSET = 0.5
 
@@ -315,7 +317,6 @@ if FT_EMB:
     data_w_embeds = data
     data_w_embeds.to_csv(EMBED_FP)
     """
-
 '''
 # =====================================================================================
 #                    LOAD BERT DATA
@@ -499,7 +500,7 @@ for ep in range(1, int(N_EPOCHS+1)):
     av_loss = tr_loss / len(train_batches)
     cnm.save_model(epoch_name)
     dev_preds, dev_loss = cnm.predict(dev_batches)
-    dev_mets, dev_perf = my_eval(dev_labels, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
+    dev_mets, dev_perf = my_eval(fold_2['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
     logger.info(f'{dev_perf}')
 
     # check if best
