@@ -61,9 +61,9 @@ class ContextAwareModel(nn.Module):
                 embedded = self.embedding(contexts[:, seq_idx]).view(batch_size, 1, -1)
                 context_as_embeddings[:, seq_idx] = embedded
 
-            target_output_a = torch.zeros(batch_size, self.emb_size, device=self.device)
-            for batch_id, position in enumerate(positions):
-                target_output_a[batch_id] = context_as_embeddings[position, batch_id, :]
+            #target_output_a = torch.zeros(batch_size, self.emb_size, device=self.device)
+            #for batch_id, position in enumerate(positions):
+            #    target_output_a[batch_id] = context_as_embeddings[position, batch_id, :]
 
             target_output_b = torch.zeros(batch_size, self.emb_size, device=self.device)
             for batch_id, position in enumerate(positions):
