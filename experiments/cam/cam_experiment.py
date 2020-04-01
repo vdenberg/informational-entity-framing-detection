@@ -363,8 +363,15 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 
 TRAIN = True
 if TRAIN:
+    #cam_results_table = pd.read_csv('reports/cam/results_table.csv')
+    for fold in folds:
+        name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
+        print(name_base)
+exit(0)
+
+if TRAIN:
     cam_results_table = pd.read_csv('reports/cam/results_table.csv')
-    for folf in folds:
+    for fold in folds:
         name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
         cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR,
                                      train_labels=fold['train'].label.values, weights_matrix=WEIGHTS_MATRIX,
