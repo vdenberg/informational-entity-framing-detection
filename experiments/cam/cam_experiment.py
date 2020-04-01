@@ -294,8 +294,9 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 
 # bert model
 bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
-                                                           num_labels=2, output_hidden_states=True,
-                                                           output_attentions=True)
+                                                           num_labels=2, output_hidden_states=False,
+                                                           output_attentions=False)
+bert_model.to(device)
 bert_model.eval()
 
 # get embeddings
