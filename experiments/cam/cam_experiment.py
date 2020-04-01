@@ -306,7 +306,7 @@ for bert_batch in bert_all_batches:
     with torch.no_grad():
         bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
         logits, probs, sequence_output, pooled_output = bert_outputs
-        emb_output = list(pooled_output[0].detach().cpu().numpy())
+        emb_output = list(pooled_output.detach().cpu().numpy())
     bert_embeddings.extend(emb_output)
 print(len(bert_embeddings), len(bert_embeddings[0]))
 embed_df = pd.DataFrame(index=all_ids)
