@@ -344,7 +344,7 @@ with open(test_fp, "rb") as f:
 # =====================================================================================
 
 logger.info(f"Get embeddings")
-test_embeddings = False
+test_embeddings = True
 if test_embeddings:
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
@@ -365,6 +365,7 @@ if test_embeddings:
         with torch.no_grad():
             bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
             logits, probs, sequence_output, pooled_output = bert_outputs
+            print(probs, len(probs))
             emb_output = list(pooled_output.detach().cpu().numpy())
         bert_embeddings.extend(emb_output)
     embed_df = pd.DataFrame(index=all_ids)
@@ -390,6 +391,7 @@ dev_data = TensorDataset(dev_ids, dev_labels)
 test_data = TensorDataset(test_ids, test_labels)
 
 train_batches = to_batches(train_data, BATCH_SIZE)
+print(len(train_batches))
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
 
