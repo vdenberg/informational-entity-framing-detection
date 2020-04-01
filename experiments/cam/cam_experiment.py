@@ -227,6 +227,7 @@ logger.info(args)
 #                    PREPROCESS DATA
 # =====================================================================================
 
+logger.info(f"Preprocess data if needed")
 if not os.path.exists(DATA_FP):
 
     logger.info("============ PREPROCESS DATA =============")
@@ -259,6 +260,8 @@ fold = {'name': '2'}
 #                    LOAD BERT DATA
 # =====================================================================================
 
+
+logger.info(f"Load bert data")
 train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
 dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
 test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
@@ -278,6 +281,8 @@ with open(test_fp, "rb") as f:
 #                    GET EMBEDDINGS
 # =====================================================================================
 
+
+logger.info(f"Get embeddings")
 # load bert features
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensor(pickle.load(f))
@@ -306,6 +311,8 @@ weights_matrix = make_weight_matrix(embed_df, 768)
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
 # =====================================================================================
 
+
+logger.info(f"Convert data to indices for weights matrix")
 sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
 
 train_ids = torch.tensor([sent_id_map[i] for i in train_ids], dtype=torch.long)
@@ -324,6 +331,8 @@ test_batches = to_batches(test_data, 1)
 #                    TRAIN CLASSIFIER
 # =====================================================================================
 
+
+logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
 cnm = ContextAwareClassifier(tr_labs=[f.my_id for f in train_features], weights_mat=weights_matrix,
                              lr=2e-5, context_naive=True)
@@ -350,6 +359,7 @@ for ep in range(1, int(N_EPOCHS+1)):
         loss.backward()
 
         tr_loss += loss.item()
+        print(f"Step {step} / {len(train_batches)}, Loss: {loss}")
 
         # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
         cnm.optimizer.step()
