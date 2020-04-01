@@ -74,9 +74,9 @@ class ContextAwareModel(nn.Module):
                 target_output_cam[item] = cam_embedding
                 target_output[item] = bert_embedding
 
-            logits = self.classifier(target_output)
-            #probs = self.sigm(logits)
-            probs = self.sigm(logits).view(batch_size)
+            logits = self.classifier(target_output_cam)
+            probs = self.sigm(logits)
+            #probs = self.sigm(logits).view(batch_size)
             return logits, probs, target_output
         else:
             # loop through input and update hidden
