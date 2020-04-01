@@ -390,8 +390,8 @@ dev_data = TensorDataset(dev_ids, dev_labels)
 test_data = TensorDataset(test_ids, test_labels)
 
 train_batches = to_batches(train_data, BATCH_SIZE)
-#dev_batches = to_batches(dev_data, 1)
-#test_batches = to_batches(test_data, 1)
+dev_batches = to_batches(dev_data, 1)
+test_batches = to_batches(test_data, 1)
 
 # =====================================================================================
 #                    TRAIN CLASSIFIER
@@ -434,7 +434,7 @@ for ep in range(1, int(N_EPOCHS+1)):
     epoch_name = name_base + f"_ep{ep}"
     av_loss = tr_loss / len(train_batches)
     cnm.save_model(epoch_name)
-    dev_preds = cnm.predict(dev_data)
+    dev_preds = cnm.predict(dev_batches)
     dev_mets, dev_perf = my_eval(dev_labels, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
     logger.info(f'{dev_perf}')
 
