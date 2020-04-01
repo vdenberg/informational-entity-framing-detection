@@ -445,7 +445,7 @@ for ep in range(1, int(N_EPOCHS+1)):
 
         tr_loss += loss.item()
         if step % 100 == 0:
-            print(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
+            logging.info(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
 
         # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
         cnm.optimizer.step()
