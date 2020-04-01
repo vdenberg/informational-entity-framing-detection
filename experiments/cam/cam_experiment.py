@@ -226,7 +226,6 @@ logger.info(args)
 #                    PREPROCESS DATA
 # =====================================================================================
 
-logger.info(f"Preprocess data if needed")
 PREPROCESS = False
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
@@ -266,7 +265,7 @@ if DEBUG:
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+#ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Nr folds: {NR_FOLDS}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
@@ -315,25 +314,6 @@ if FT_EMB:
     data_w_embeds.to_csv(EMBED_FP)
     """
 
-# =====================================================================================
-#                    LOAD EMBEDDINGS
-# =====================================================================================
-
-logger.info("============ LOAD EMBEDDINGS =============")
-logger.info(f" Embedding type: {EMB_TYPE}")
-
-# read embeddings file
-data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
-data_w_embeds = data_w_embeds.rename(
-    columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
-
-# transform into matrix
-WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
-
-logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
-
 '''
 # =====================================================================================
 #                    LOAD BERT DATA
@@ -358,6 +338,27 @@ with open(test_fp, "rb") as f:
     test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 '''
 
+# =====================================================================================
+#                    LOAD EMBEDDINGS
+# =====================================================================================
+
+logger.info("============ LOAD EMBEDDINGS =============")
+logger.info(f" Embedding type: {EMB_TYPE}")
+
+# read embeddings file
+data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
+data_w_embeds = data_w_embeds.rename(
+    columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
+data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
+
+# transform into matrix
+WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
+
+logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
+
+
+'''
 
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
@@ -375,7 +376,6 @@ test_ids = fold_2['test'].id_num.values
 #train_ids = [sent_id_map[i] for i in train_ids]
 #dev_ids = [sent_id_map[i] for i in dev_ids]
 
-'''
 # =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
@@ -419,7 +419,6 @@ logger.info(f"Get embeddings")
 
 logger.info(f"To tensors and batches")
 
-'''
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
@@ -429,6 +428,10 @@ for fold_i, fold in enumerate(folds):
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+
+fold_2 = folds[1]
+fold = {'name': 2}
+
 '''
 train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
 dev_ids = torch.tensor(dev_ids, dtype=torch.long, device=device)
@@ -445,6 +448,8 @@ test_data = TensorDataset(test_ids, test_labels)
 train_batches = to_batches(train_data, BATCH_SIZE)
 dev_batches = to_batches(dev_data, 1)
 test_batches = to_batches(test_data, 1)
+
+'''
 
 # =====================================================================================
 #                    TRAIN CLASSIFIER
