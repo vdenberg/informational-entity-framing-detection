@@ -289,7 +289,7 @@ data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
 
 # load bert features
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensor(pickle.load(f))
+    all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
     bert_all_batches = to_batches(all_data, BATCH_SIZE)
 
 # bert model
