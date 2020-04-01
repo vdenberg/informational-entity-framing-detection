@@ -344,7 +344,7 @@ with open(test_fp, "rb") as f:
 # =====================================================================================
 
 logger.info(f"Get embeddings")
-test_embeddings = True
+test_embeddings = False
 if test_embeddings:
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
@@ -422,6 +422,13 @@ for ep in range(1, int(N_EPOCHS+1)):
 
         cnm.model.zero_grad()
         logits, probs, target_output = cnm.model(ids)
+
+        # bert shape of probs:
+        # tensor([[0.7380, 0.1817]], device='cuda:0') 1
+        # torch.Size([1, 2])
+        print(probs, len(probs))
+        print(probs.shape)
+
         loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
         loss.backward()
