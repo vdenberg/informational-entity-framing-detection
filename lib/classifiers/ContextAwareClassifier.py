@@ -55,10 +55,10 @@ class ContextAwareModel(nn.Module):
         batch_size = contexts.shape[0]
         seq_length = contexts.shape[1]
 
+        contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
         if self.context_naive:
             hidden = self.init_hidden(batch_size)
             contexts_embedded = torch.zeros(seq_length, batch_size, self.emb_size, device=self.device)
-            contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
             for seq_idx in range(seq_length):
                 embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
                 output, hidden = self.lstm(embedded, hidden)
@@ -68,7 +68,7 @@ class ContextAwareModel(nn.Module):
             target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
             target_output_cam = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
             for item, position in enumerate(positions):
-                bert_embedding = contexts_embedded(position, item) #self.embedding(contexts[item, position])
+                bert_embedding = contexts_embedded[position, item] #self.embedding(contexts[item, position])
                 cam_embedding = contexts_encoded[position, item].view(1, 1, -1)
                 target_output_cam[item] = cam_embedding
                 target_output[item] = bert_embedding
@@ -77,21 +77,19 @@ class ContextAwareModel(nn.Module):
             probs = self.sigm(logits)
             return logits, probs, target_output
         else:
-            context_encoder_outputs = torch.zeros(self.input_size, batch_size, self.hidden_size * 2, device=self.device)
-
             # loop through input and update hidden
             hidden = self.init_hidden(batch_size)
             for ei in range(seq_length):
                 embedded = self.embedding(contexts[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
                 output, hidden = self.lstm(embedded, # feed hidden of previous token/item, store in hidden again
                                            hidden)  # output has shape 1 (for token in question) * batchsize * (hidden * 2)
-                context_encoder_outputs[ei] = output[0]
+                contexts_encoded[ei] = output[0]
 
             # loop through batch to get token at desired index
             target_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
             for item in range(batch_size):
                 my_idx = positions[item]
-                target_output[item] = context_encoder_outputs[my_idx, item, :]
+                target_output[item] = contexts_encoded[my_idx, item, :]
 
             logits = self.classifier(target_output)
             sigm_output = self.sigm(logits).view(batch_size)  # sigmoid function that returns batch_size * 1
