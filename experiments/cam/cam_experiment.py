@@ -315,13 +315,14 @@ logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
 #                    REPEAT BERT
 # =====================================================================================
 
-# isolate fold
-fold = {'name': '2'}
 
+'''
 # =====================================================================================
 #                    LOAD BERT DATA
 # =====================================================================================
 
+# isolate fold
+fold = {'name': '2'}
 
 logger.info(f"Load bert data")
 train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
@@ -337,6 +338,52 @@ with open(dev_fp, "rb") as f:
 
 with open(test_fp, "rb") as f:
     test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
+'''
+
+# =====================================================================================
+#                    LOAD CAM DATA
+# =====================================================================================
+
+logger.info("============ LOADING DATA =============")
+logger.info(f" Context: {CONTEXT_TYPE}")
+logger.info(f" Split type: {SPLIT_TYPE}")
+logger.info(f" Max doc len: {MAX_DOC_LEN}")
+
+data = pd.read_json(DATA_FP)
+data.index = data.sentence_ids.values
+
+# split data
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
+
+folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'tok_seg_ids', 'position'])
+if DEBUG:
+    folds = [folds[0], folds[1]]
+NR_FOLDS = len(folds)
+
+# batch data
+for fold_i, fold in enumerate(folds):
+    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
+
+logger.info(f" --> Read {len(data)} data points")
+logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f" --> Nr folds: {NR_FOLDS}")
+logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
+logger.info(f" --> Columns: {list(data.columns)}")
+
+fold_2 = folds[1]
+train_ids = fold_2['train'].index
+dev_ids = fold_2['dev'].index
+test_ids = fold_2['test'].index
+
+train_labels = torch.tensor(fold_2['train'].label.values, dtype=torch.long)
+dev_labels = torch.tensor(fold_2['dev'].label.values, dtype=torch.long)
+test_labels = torch.tensor(fold_2['test'].label.values, dtype=torch.long)
 
 
 # =====================================================================================
@@ -383,9 +430,19 @@ if test_embeddings:
 logger.info(f"Convert data to indices for weights matrix")
 sent_id_map = {sent_id.lower(): sent_num_id + 1 for sent_num_id, sent_id in enumerate(data_w_embeds.index.values)}
 
-train_ids = torch.tensor([sent_id_map[i] for i in train_ids], dtype=torch.long, device=device)
-dev_ids = torch.tensor([sent_id_map[i] for i in dev_ids], dtype=torch.long, device=device)
-test_ids = torch.tensor([sent_id_map[i] for i in test_ids], dtype=torch.long, device=device)
+train_ids = [sent_id_map[i] for i in train_ids]
+dev_ids = [sent_id_map[i] for i in dev_ids]
+test_ids = [sent_id_map[i] for i in test_ids]
+
+# =====================================================================================
+#                    TO TENSORS & BATCHES
+# =====================================================================================
+
+logger.info(f"To tensors and batches")
+
+train_ids = torch.tensor(train_ids, dtype=torch.long, device=device)
+dev_ids = torch.tensor(dev_ids, dtype=torch.long, device=device)
+test_ids = torch.tensor(test_ids, dtype=torch.long, device=device)
 
 train_data = TensorDataset(train_ids, train_labels)
 dev_data = TensorDataset(dev_ids, dev_labels)
