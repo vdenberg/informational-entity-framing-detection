@@ -69,7 +69,7 @@ class ContextAwareModel(nn.Module):
             for item, position in enumerate(positions):
                 #embedded = self.embedding(contexts[batch_id, position]).view(1, -1)
                 embedded = contexts_embedded[position, item]
-                target_output_b[batch_id] = embedded
+                target_output_b[item] = embedded
 
             logits = self.classifier(target_output_b)
             probs = self.sigm(logits)
