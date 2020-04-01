@@ -56,19 +56,19 @@ class ContextAwareModel(nn.Module):
         seq_length = contexts.shape[1]
 
         if self.context_naive:
-            contexts_embedded = torch.zeros(batch_size, seq_length, self.emb_size, device=self.device)
+            contexts_embedded = torch.zeros(seq_length, batch_size, self.emb_size, device=self.device)
             for seq_idx in range(seq_length):
-                embedded = self.embedding(contexts[:, seq_idx]).view(batch_size, 1, -1)
-                contexts_embedded[:, seq_idx, :] = embedded
+                embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
+                contexts_embedded[seq_idx] = embedded
 
             #target_output_a = torch.zeros(batch_size, self.emb_size, device=self.device)
             #for batch_id, position in enumerate(positions):
             #    target_output_a[batch_id] = context_as_embeddings[position, batch_id, :]
 
             target_output_b = torch.zeros(batch_size, self.emb_size, device=self.device)
-            for batch_id, position in enumerate(positions):
+            for item, position in enumerate(positions):
                 #embedded = self.embedding(contexts[batch_id, position]).view(1, -1)
-                embedded = contexts_embedded[batch_id, position]
+                embedded = contexts_embedded[position, item]
                 target_output_b[batch_id] = embedded
 
             logits = self.classifier(target_output_b)
