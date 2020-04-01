@@ -220,10 +220,9 @@ file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
 
-logger.info("============ INITIALISATION =============")
-logger.info(f" Logging to {LOG_NAME}")
-logger.info(f" Arguments:")
+logger.info("============ STARTING =============")
 logger.info(args)
+logger.info(f" Log file: {LOG_NAME}")
 logger.info(f" Good luck!")
 
 # =====================================================================================
@@ -248,7 +247,6 @@ if PREPROCESS:
     #token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(raw_data.sentence.values)
     #raw_data['token_ids'], raw_data['token_mask'], raw_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
     raw_data.to_json(DATA_FP)
-
 
 # =====================================================================================
 #                    LOAD CAM DATA
@@ -425,8 +423,8 @@ logger.info(f"To tensors and batches")
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=1)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=1)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
