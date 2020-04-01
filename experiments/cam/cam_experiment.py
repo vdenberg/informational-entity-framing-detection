@@ -312,8 +312,12 @@ print(len(bert_embeddings), len(bert_embeddings[0]))
 embed_df = pd.DataFrame(index=all_ids)
 embed_df['embeddings'] = bert_embeddings
 
+smp1 = data_w_embeds['embeddings'].head(3)
+smp2 = embed_df['embeddings'].head(3)
+
 # turn into matrix
 weights_matrix = make_weight_matrix(embed_df, 768)
+
 
 # =====================================================================================
 #                    CONVERT DATA TO INDICES FOR WEIGHTS MATRIX
