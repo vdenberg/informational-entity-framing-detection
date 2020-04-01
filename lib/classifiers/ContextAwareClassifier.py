@@ -40,11 +40,10 @@ class ContextAwareModel(nn.Module):
 
         self.dropout = nn.Dropout(0.1)
         self.context_naive = context_naive
-        if self.context_naive:
-            self.classifier = nn.Linear(self.emb_size, 2)
-            self.sigm = nn.Sigmoid()
-        else:
-            self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
+
+        self.classifier = nn.Linear(self.emb_size, 2)
+        self.sigm = nn.Sigmoid()
+        #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
     def forward(self, input_tensor, target_idx=None):
         """
@@ -83,8 +82,10 @@ class ContextAwareModel(nn.Module):
                 my_idx = target_idx[item]
                 target_output[item] = context_encoder_outputs[my_idx, item, :]
 
-            sigm_output = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
-            return sigm_output
+            logits = self.classifier(target_output)
+            sigm_output = self.sigm(logits).view(batch_size)  # sigmoid function that returns batch_size * 1
+            #sigm_output = self.classifier(target_output).view(batch_size)  # sigmoid function that returns batch_size * 1
+            return logits, sigm_output
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
