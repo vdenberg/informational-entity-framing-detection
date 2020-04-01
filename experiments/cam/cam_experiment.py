@@ -313,9 +313,10 @@ embed_df['embeddings'] = bert_embeddings
 
 smp1 = data_w_embeds['poolbert'].head(3)
 smp2 = embed_df['embeddings'].head(3)
-
+print(smp1)
+print(smp2)
 # turn into matrix
-weights_matrix = make_weight_matrix(embed_df, 768)
+weights_matrix = make_weight_matrix(data_w_embeds, 768)
 
 
 # =====================================================================================
