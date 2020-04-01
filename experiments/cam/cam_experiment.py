@@ -394,7 +394,7 @@ if TRAIN:
 # =====================================================================================
 
 # pick fold bert was trained on
-fold_2 = [folds[1]]
+fold_2 = folds[1]
 
 # load bert features
 with open(f"data/features_for_bert/folds/2_dev_features.pkl", "rb") as f:
