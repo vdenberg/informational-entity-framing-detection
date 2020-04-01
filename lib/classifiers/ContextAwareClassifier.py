@@ -183,16 +183,18 @@ class ContextAwareClassifier():
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
 
-            ids, _, _, _, documents, labels, labels_long, positions = batch
+            #ids, _, _, _, documents, labels, labels_long, positions = batch
+            ids, labels_long = batch
 
             with torch.no_grad():
                 if self.context_naive:
-                    logits, probs, target_output = self.model(ids, documents, positions)
+                    logits, probs, target_output = self.model(ids)
                     loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
                 else:
-                    sigm_output  = self.model(ids, documents, positions)
+                    pass
+                    #sigm_output  = self.model(ids, documents, positions)
                     #sigm_output = sigm_output.detach().cpu().numpy()
-                    loss = self.criterion(sigm_output, labels)
+                    #loss = self.criterion(sigm_output, labels)
 
             if self.context_naive:
                 if len(y_pred) == 0:
