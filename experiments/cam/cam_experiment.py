@@ -432,7 +432,7 @@ for fold_i, fold in enumerate(folds):
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
 
-fold_2 = folds[1]
+fold = folds[1]
 fold = {'name': 2}
 
 '''
@@ -460,7 +460,7 @@ test_batches = to_batches(test_data, 1)
 
 logger.info(f"Train CNM")
 # cnm model with bert-like classifier and no bilstm
-cnm = ContextAwareClassifier(tr_labs=fold_2['train'].label.values, weights_mat=WEIGHTS_MATRIX,
+cnm = ContextAwareClassifier(tr_labs=fold['train'].label.values, weights_mat=WEIGHTS_MATRIX,
                              lr=2e-4, context_naive=True)
 cnm.model.train()
 
@@ -475,7 +475,7 @@ name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 t0 = time.time()
 for ep in range(1, int(N_EPOCHS+1)):
     tr_loss = 0
-    for step, batch in enumerate(train_batches):
+    for step, batch in enumerate(fold['train_batches']):
         batch = tuple(t.to(device) for t in batch)
 
         #input_ids, input_mask, segment_ids, label_ids = batch
@@ -500,7 +500,7 @@ for ep in range(1, int(N_EPOCHS+1)):
     av_loss = tr_loss / len(train_batches)
     cnm.save_model(epoch_name)
     dev_preds, dev_loss = cnm.predict(dev_batches)
-    dev_mets, dev_perf = my_eval(fold_2['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
+    dev_mets, dev_perf = my_eval(fold['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
     logger.info(f'{dev_perf}')
 
     # check if best
