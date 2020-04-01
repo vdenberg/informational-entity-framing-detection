@@ -206,12 +206,14 @@ class ContextAwareClassifier():
 
             if self.context_naive:
                 probs = probs[0].detach().cpu().numpy()
-                if len(y_pred) == 0:
-                    y_pred.append(probs)
-                else:
+                print(probs)
+                y_pred.extend(probs)
+                #if len(y_pred) == 0:
+                #    y_pred.append(probs)
+                #else:
                     # Error: array at index 0 has 3 dimension(s) and the array at index 1 has 2 dimension(s)
                     # Error: array at index 0 has 2 dimension(s) and the array at index 1 has 1 dimension(s)
-                    y_pred[0] = np.append(y_pred[0], probs, axis=0)
+                #    y_pred[0] = np.append(y_pred[0], probs, axis=0)
 
             # convert to predictions
             else:
@@ -221,6 +223,7 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         if self.context_naive:
+            print(y_pred)
             #y_pred = y_pred[0]
             y_pred = np.argmax(y_pred, axis=1)
 
