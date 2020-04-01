@@ -422,9 +422,6 @@ cnm.model.train()
 
 # pick same loss function
 loss_fct = CrossEntropyLoss()
-n_pos = len([l for l in fold['train'].label if l == 1])
-class_weight = 1 - (n_pos / len(fold['train'].label))
-loss_fct = BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=device))
 
 # train
 best_val_mets = {'f1': 0}

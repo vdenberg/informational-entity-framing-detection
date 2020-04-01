@@ -134,10 +134,7 @@ class ContextAwareClassifier():
 
         # set criterion
         if self.context_naive:
-            #self.criterion = CrossEntropyLoss()
-            n_pos = len([l for l in tr_labs if l == 1])
-            class_weight = 1 - (n_pos / len(tr_labs))
-            self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
+            self.criterion = CrossEntropyLoss()
         else:
             n_pos = len([l for l in tr_labs if l == 1])
             class_weight = 1 - (n_pos / len(tr_labs))
