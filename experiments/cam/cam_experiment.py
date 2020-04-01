@@ -220,7 +220,6 @@ logger = logging.getLogger()
 
 logger.info("============ INITIALISATION =============")
 logger.info(f" Logging to {LOG_NAME}")
-logger.info(f" Saving to {CHECKPOINT_DIR}")
 logger.info(f" Arguments:")
 logger.info(args)
 logger.info(f" Good luck!")
