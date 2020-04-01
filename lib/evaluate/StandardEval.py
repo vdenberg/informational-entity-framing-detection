@@ -41,6 +41,7 @@ def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     :return:
     """
     # METRICS_DICT
+    print(len(labels), len(preds))
     metrics_dict = get_metrics(labels, preds)
 
     if av_loss:

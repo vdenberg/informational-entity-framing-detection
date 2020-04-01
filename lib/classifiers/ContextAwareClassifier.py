@@ -226,6 +226,7 @@ class ContextAwareClassifier():
             print(y_pred[:10])
             #y_pred = y_pred[0]
             y_pred = np.argmax(y_pred, axis=1)
+            print(y_pred[:10])
 
         self.model.train()
         return y_pred, sum_loss / len(batches)
