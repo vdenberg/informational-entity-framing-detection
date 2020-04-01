@@ -206,7 +206,6 @@ class ContextAwareClassifier():
 
             if self.context_naive:
                 probs = probs[0].detach().cpu().numpy()
-                print(probs)
                 y_pred.append(probs)
                 #if len(y_pred) == 0:
                 #    y_pred.append(probs)
@@ -223,10 +222,8 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         if self.context_naive:
-            print(y_pred[:10])
             #y_pred = y_pred[0]
             y_pred = np.argmax(y_pred, axis=1)
-            print(y_pred[:10])
 
         self.model.train()
         return y_pred, sum_loss / len(batches)
