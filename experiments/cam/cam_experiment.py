@@ -353,7 +353,7 @@ if test_embeddings:
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
-        bert_all_batches = to_batches(all_data, BATCH_SIZE)
+        bert_all_batches = to_batches(all_data, 1)
 
     # bert model
     bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
