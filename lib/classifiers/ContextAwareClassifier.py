@@ -208,7 +208,6 @@ class ContextAwareClassifier():
                 y_pred = probs
             else:
                 y_pred = np.append(y_pred, probs, axis=0)
-            print(y_pred.shape)
 
                 # convert to predictions
                 # #preds = [1 if output > 0.5 else 0 for output in sigm_output]
