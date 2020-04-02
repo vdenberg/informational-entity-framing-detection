@@ -367,6 +367,7 @@ for fold_i, fold in enumerate(folds):
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
+'''
 model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
                       '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
                       '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
@@ -382,7 +383,12 @@ model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
 with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
     bert_all_batches = to_batches(all_data, 1)
-
+        # bert model
+    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
+                                                               num_labels=2, output_hidden_states=True,
+                                                               output_attentions=True)
+    
+'''
 for fold in folds:
     # read embeddings file
     embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv"
@@ -392,11 +398,6 @@ for fold in folds:
     data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
     data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
-    # bert model
-    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
-                                                               num_labels=2, output_hidden_states=True,
-                                                               output_attentions=True)
-    bert
     # transform into matrix
     WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
 
