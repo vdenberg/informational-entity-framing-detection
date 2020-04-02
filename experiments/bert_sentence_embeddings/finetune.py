@@ -152,8 +152,8 @@ if __name__ == '__main__':
     with open(DATA_DIR + "/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
 
-    for SEED_VAL in [263, 111]:
-        for fold_name in ["orig", '9', '8']:
+    for SEED_VAL in [263]:
+        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
             if fold_name == 'orig':
@@ -239,7 +239,6 @@ if __name__ == '__main__':
                     if step % PRINT_EVERY == 0 and step != 0:
                         # Calculate elapsed time in minutes.
                         elapsed = time.time() - t0
-                        logging.info(input_ids.shape)
                         logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                 # Save after Epoch
