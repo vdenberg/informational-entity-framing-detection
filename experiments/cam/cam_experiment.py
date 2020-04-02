@@ -283,31 +283,34 @@ logger.info(f" --> Read {len(data)} data points")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
-# =====================================================================================
-#                    FINETUNE EMBEDDINGS
-# =====================================================================================
 '''
 # =====================================================================================
 #                    LOAD BERT DATA
 # =====================================================================================
+folds = [folds[1]]
 
-# isolate fold
-fold = {'name': '2'}
+logger.info("============ LOAD BERT FEATURES =============")
+logger.info(f" Embedding type: {EMB_TYPE}")
 
-logger.info(f"Load bert data")
-train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
-dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
-test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
+for fold in folds:
+    train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
 
-with open(train_fp, "rb") as f:
-    train_features = pickle.load(f)
-    train_ids, train_data, train_labels = to_tensor(train_features, device)
+    with open(train_fp, "rb") as f:
+        train_features = pickle.load(f)
+        train_ids, train_data, train_labels = to_tensor(train_features, device)
+    
+    with open(dev_fp, "rb") as f:
+        dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
+    
+    with open(test_fp, "rb") as f:
+        test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
+    
+# =====================================================================================
+#                    FINETUNE EMBEDDINGS
+# =====================================================================================
 
-with open(dev_fp, "rb") as f:
-    dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
-
-with open(test_fp, "rb") as f:
-    test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
 if FT_EMB:
     pass
@@ -386,11 +389,11 @@ if FT_EMB:
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
-folds = [folds[1]]
 
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
+folds = [folds[1]]
 for fold in enumerate(folds):
     # read embeddings file
     embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.cs"
