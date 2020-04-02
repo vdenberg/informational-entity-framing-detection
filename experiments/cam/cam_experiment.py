@@ -461,7 +461,7 @@ for fold in folds:
 
             cnm.model.zero_grad()
             logits, probs, target_output = cnm.model(contexts, positions)
-            loss = clf.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+            loss = cnm.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
             loss.backward()
 
