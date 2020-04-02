@@ -149,7 +149,7 @@ if __name__ == '__main__':
     logger.info(args)
 
     for SEED_VAL in [263, 111]:
-        for fold_name in ['9', '8']:
+        for fold_name in ["orig", '9', '8']:
             for schedule in ['warmup']:
                 name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
