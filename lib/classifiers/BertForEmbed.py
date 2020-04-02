@@ -138,6 +138,8 @@ class Inferencer():
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, segment_ids, label_ids = batch
+            print(len(batch))
+            print(len(input_ids))
 
             with torch.no_grad():
                 outputs = model(input_ids, input_mask, labels=None)
