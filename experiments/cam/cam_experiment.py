@@ -20,6 +20,7 @@ from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
 #from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
 
+
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
         self.sent_id_map = {str_i.lower(): i+1 for i, str_i in enumerate(sentence_ids)}
@@ -296,17 +297,40 @@ if FT_EMB:
     logger.info(f" Mode: {MODE}")
 
     finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
-    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 
     for fold in folds:
+        name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
+        
+        logger.info(f"Load bert data")
+        train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
+        dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
+        test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
+        
+        with open(train_fp, "rb") as f:
+            train_features = pickle.load(f)
+            train_ids, train_data, train_labels = to_tensor(train_features, device)
+        
+        with open(dev_fp, "rb") as f:
+            dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
+        
+        with open(test_fp, "rb") as f:
+            test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
+
+        logger.info(f"***** BERT training on Fold {fold_name} *****")
+        logger.info(f"  Logging to {LOG_NAME}")
+
+        tr_batches = None
+        
         LOAD_FROM_EP = None
         bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
                            bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
                            n_train_batches=len(fold['train_batches']), load_from_ep=LOAD_FROM_EP)
 
-        logger.info(f' Finetuning on fold {fold["name"]} (sizes: {fold["sizes"]})')
-        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_epochs=N_EPOCHS, patience=PATIENCE,
+        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_eps=N_EPOCHS, patience=PATIENCE,
                         fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
+        
+        to_batches
+        
         cl.train_on_fold(fold)
         finetune_f1s.loc[fold['name']] = cl.test_perf
 
@@ -411,7 +435,7 @@ logger.info(f"Get embeddings")
 #                    TRAIN CLASSIFIER
 # =====================================================================================
 
-fold = [folds[0], folds[1]]
+fold = [folds[1]]
 
 for fold in folds:
     logger.info(f"Train CNM")
@@ -421,14 +445,11 @@ for fold in folds:
                                  b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
     cnm.model.train()
 
-    # pick same loss function
-    loss_fct = CrossEntropyLoss()
+    name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
+
+    clf = Classifier(model=cnm.model, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=100)
 
     # train
-    best_val_mets = {'f1': 0}
-    best_val_perf = ''
-    best_model_loc = ''
-    name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
     t0 = time.time()
     for ep in range(1, int(N_EPOCHS+1)):
         tr_loss = 0
@@ -440,7 +461,7 @@ for fold in folds:
 
             cnm.model.zero_grad()
             logits, probs, target_output = cnm.model(contexts, positions)
-            loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+            loss = clf.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
             loss.backward()
 
@@ -461,15 +482,15 @@ for fold in folds:
         logger.info(f'{dev_perf}')
 
         # check if best
-        if dev_mets['f1'] > best_val_mets['f1']:
-            best_val_mets = dev_mets
-            best_val_perf = dev_perf
-            best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+        if dev_mets['f1'] > clf.best_val_mets['f1']:
+            clf.best_val_mets = dev_mets
+            clf.best_val_perf = dev_perf
+            clf.best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
-        logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+        logger.info(f"Best model for fold so far: {clf.best_model_loc}: {clf.best_val_perf}")
 
-logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
-logger.info(f"Logged to: {LOG_NAME}.")
+    logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
+    logger.info(f"Logged to: {LOG_NAME}.")
 
 '''
 # =====================================================================================

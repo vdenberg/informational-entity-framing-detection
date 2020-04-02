@@ -9,7 +9,7 @@ class Classifier:
     """
     Generic Classifier that performs recurring machine learning tasks
     """
-    def __init__(self, model, n_eps, logger, patience, fig_dir, name, printing, load_from_ep=None):
+    def __init__(self, model, logger, fig_dir, name, n_eps=10, patience=3, printing=100, load_from_ep=None):
         self.wrapper = model
         self.n_epochs = n_eps
         self.logger = logger
@@ -30,6 +30,7 @@ class Classifier:
         self.train_time = 0
         self.prev_val_f1 = 0
         self.best_val_mets = {'f1':0}
+        self.best_val_perf = ''
         self.full_patience = patience
         self.current_patience = self.full_patience
         self.test_mets = {}

@@ -110,7 +110,7 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = None  # depends on classweight which should be set on input
+        self.criterion = CrossEntropyLoss()  # could be made to depend on classweight which should be set on input
         self.context_naive = context_naive
 
         if start_epoch > 0:
@@ -139,8 +139,7 @@ class ContextAwareClassifier():
         self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
                                                cycle_momentum=False, max_lr=lr * 30)
 
-        # set criterion
-        self.criterion = CrossEntropyLoss()
+        # set criterion on input
         #n_pos = len([l for l in tr_labs if l == 1])
         #class_weight = 1 - (n_pos / len(tr_labs))
         #self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
@@ -164,9 +163,10 @@ class ContextAwareClassifier():
         if self.context_naive:
             logits, probs, target_output = self.model(documents, positions)
         else:
-            probs = self.model(ids, documents, positions)
+            probs = self.model(documents, positions)
+
         #print(labels.type())
-        loss = self.criterion(logits.view(-1, 2), labels_long.view(-1))
+        loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
         self.optimizer.step()
