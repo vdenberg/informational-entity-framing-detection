@@ -55,19 +55,22 @@ class ContextAwareModel(nn.Module):
         batch_size = contexts.shape[0]
         seq_length = contexts.shape[1]
 
-        contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
-        hidden = self.init_hidden(batch_size)
+        if not self.context_naive:
+            contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
+            hidden = self.init_hidden(batch_size)
 
-        for seq_idx in range(seq_length):
-            embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
-            output, hidden = self.lstm(embedded, hidden)
-            contexts_encoded[seq_idx] = output[0]
+            for seq_idx in range(seq_length):
+                embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
+                output, hidden = self.lstm(embedded, hidden)
+                contexts_encoded[seq_idx] = output[0]
 
         target_output = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
         for item, position in enumerate(positions):
-            #bert_embedding = contexts_embedded[position, item] #self.embedding(contexts[item, position])
-            cam_embedding = contexts_encoded[position, item].view(1, 1, -1)
-            target_output[item] = cam_embedding
+            if self.context_naive:
+                embedding = self.embedding(contexts[item, position]) #contexts_embedded[position, item] #self.embedding(contexts[item, position])
+            else:
+                embedding = contexts_encoded[position, item].view(1, 1, -1)
+            target_output[item] = embedding
 
         logits = self.classifier(target_output)
         probs = self.sigm(logits)
