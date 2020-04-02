@@ -155,17 +155,11 @@ class ContextAwareClassifier():
         return model
 
     def train_on_batch(self, batch):
-        self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
-
         documents, positions, labels = batch
 
-        if self.context_naive:
-            logits, probs, target_output = self.model(documents, positions)
-        else:
-            probs = self.model(documents, positions)
-
-        #print(labels.type())
+        self.model.zero_grad()
+        logits, probs, target_output = self.model(documents, positions)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 

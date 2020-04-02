@@ -454,24 +454,18 @@ for fold in folds:
     for ep in range(1, int(N_EPOCHS+1)):
         tr_loss = 0
         for step, batch in enumerate(fold['train_batches']):
-            batch = tuple(t.to(device) for t in batch)
+            loss = cnm.train_on_batch(batch)
 
-            #input_ids, input_mask, segment_ids, label_ids = batch
-            contexts, positions, label_ids = batch
-
-            cnm.model.zero_grad()
-            logits, probs, target_output = cnm.model(contexts, positions)
-            loss = cnm.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-
-            loss.backward()
+            #batch = tuple(t.to(device) for t in batch)
+            #contexts, positions, label_ids = batch
+            #cnm.model.zero_grad()
+            #logits, probs, target_output = cnm.model(contexts, positions)
+            #loss = cnm.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+            #loss.backward()
 
             tr_loss += loss.item()
             if step % 100 == 0:
                 logging.info(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
-
-            # if (step + 1) % GRADIENT_ACCUMULATION_STEPS == 0:
-            cnm.optimizer.step()
-            cnm.scheduler.step()
 
         # Save after Epoch
         epoch_name = name_base + f"_ep{ep}"
