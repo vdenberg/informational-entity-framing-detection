@@ -348,7 +348,7 @@ if FT_EMB:
 # =====================================================================================
 #                    LOAD CAM DATA
 # =====================================================================================
-
+'''
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
@@ -358,6 +358,7 @@ for fold_i, fold in enumerate(folds):
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+'''
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
