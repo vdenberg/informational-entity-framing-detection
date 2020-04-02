@@ -432,32 +432,6 @@ logger.info(f"Get embeddings")
 
 
 # =====================================================================================
-#                    TRAIN CLASSIFIER
-# =====================================================================================
-
-folds = [folds[1]]
-
-for fold in folds:
-    logger.info(f"Train CNM on {fold['name']}")
-    # cnm model with bert-like classifier and no bilstm
-    cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                 weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
-    #cnm.model.train()
-
-    name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
-
-    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                     printing=PRINT_STEP_EVERY, load_from_ep=None)
-
-    # train
-    train_elapsed, losses = clf.train_on_fold(fold)
-
-    logger.info(f"Logged to: {LOG_NAME}.")
-
-
-'''
-# =====================================================================================
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
 
@@ -471,6 +445,40 @@ logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
+
+folds = [folds[1]]
+
+cam_table = pd.read_csv('reports/cam/results_table.csv')
+new_cam_table = pd.DataFrame(columns=cam_table.columns)
+for fold in folds:
+    logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
+    name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
+
+    cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                 weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
+
+
+    cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                     printing=PRINT_STEP_EVERY, load_from_ep=None)
+
+    # train
+    best_val_mets, test_mets = cl.train_on_fold(fold)
+    best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
+    best_val_mets['fold'], test_mets['fold'] = fold["name"], fold["name"]
+
+    new_cam_table = new_cam_table.append(best_val_mets, ignore_index=True)
+    new_cam_table = new_cam_table.append(test_mets, ignore_index=True)
+    print(new_cam_table)
+
+    cam_table = cam_table.append(new_cam_table, ignore_index=True)
+    cam_table.to_csv('reports/cam/results_table.csv', index=False)
+
+    logger.info(f"Logged to: {LOG_NAME}.")
+    logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
+
+
+'''
 
 # =====================================================================================
 #                    TRAIN ON FOLD 2

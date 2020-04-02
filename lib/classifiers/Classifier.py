@@ -140,7 +140,7 @@ class Classifier:
         test_mets, test_perf = self.test_model(fold, name)
 
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
-        self.logger.info(f" {self.test_mets}")
+        self.logger.info(f" {test_mets}")
         return self.best_val_mets, test_mets
 
 
