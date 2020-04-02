@@ -41,7 +41,11 @@ class ContextAwareModel(nn.Module):
         self.dropout = nn.Dropout(0.1)
         self.context_naive = context_naive
 
-        self.classifier = nn.Linear(self.hidden_size * 2, 2)
+        if self.context_naive:
+            self.classifier = nn.Linear(self.emb_size, 2)
+        else:
+            self.classifier = nn.Linear(self.hidden_size * 2, 2)
+
         self.sigm = nn.Sigmoid()
         #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
 
