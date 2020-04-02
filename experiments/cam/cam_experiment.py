@@ -447,11 +447,13 @@ for fold in folds:
 
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
-    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=PRINT_STEP_EVERY)
+    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                     printing=PRINT_STEP_EVERY, load_from_ep=None)
 
     # train
     train_elapsed, losses = clf.train_all_epochs(fold)
 
+    clf.wrapper.load_model(clf.best_model_loc)
     #for ep in range(1, int(N_EPOCHS+1)):
     #    av_loss, elapsed = clf.train_epoch(fold['train_batches'])
     #    tr_mets, tr_perf, val_mets, val_perf = clf.validate_after_epoch(ep, elapsed, fold)
