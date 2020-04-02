@@ -145,7 +145,7 @@ class BertWrapper:
 
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
-        _, _, input_ids, input_mask, label_ids = batch
+        input_ids, input_mask, label_ids = batch
 
         self.model.zero_grad()
         outputs = self.model(input_ids, input_mask, labels=label_ids)
@@ -164,7 +164,7 @@ class BertWrapper:
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            _, _, input_ids, input_mask, label_ids = batch
+            input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
                 outputs = self.model(input_ids, input_mask, labels=None)

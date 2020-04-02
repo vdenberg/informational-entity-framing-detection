@@ -17,7 +17,7 @@ def to_tensor(features, device):
 
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
 
-    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
+    data = TensorDataset(input_ids, input_mask, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
