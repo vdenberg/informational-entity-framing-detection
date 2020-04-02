@@ -303,7 +303,7 @@ if __name__ == '__main__':
                 results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
                 best_val_mets['seed'] = SEED_VAL
                 best_val_mets['fold'] = fold_name
-                best_val_mets['epoch'] = model_locs[fold_name][-1]
+                best_val_mets['epoch'] = model_locs[fold_name][-1] #
                 best_val_mets['set_type'] = 'val'
                 test_mets['seed'] = SEED_VAL
                 test_mets['fold'] = fold_name
