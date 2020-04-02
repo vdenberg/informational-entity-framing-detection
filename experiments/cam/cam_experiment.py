@@ -369,7 +369,7 @@ logger.info(f" Embedding type: {EMB_TYPE}")
 
 for fold in folds:
     # read embeddings file
-    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.cs"
+    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
