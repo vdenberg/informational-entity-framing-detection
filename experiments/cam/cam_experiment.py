@@ -267,6 +267,7 @@ folds = spl.apply_split(features=['id_num', 'context_doc_num', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
+folds = [folds[1]]
 
 # batch data
 for fold_i, fold in enumerate(folds):
@@ -393,8 +394,7 @@ if FT_EMB:
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
-folds = [folds[1]]
-for fold in enumerate(folds):
+for fold in folds:
     # read embeddings file
     embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.cs"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
