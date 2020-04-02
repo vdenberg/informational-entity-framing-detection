@@ -83,7 +83,7 @@ class Classifier:
         if val_mets['f1'] > self.best_val_mets['f1']:
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
-            self.best_model_loc = ep_name
+            self.best_model_loc = os.path.join(self.wrapper.cp_dir, ep_name)
             best_log = '(HIGH SCORE)'
 
         self.logger.info(f" Epoch {ep} ({self.model_name.replace('_', ' ')}) ({elapsed}): "
