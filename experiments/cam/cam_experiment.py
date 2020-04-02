@@ -443,7 +443,7 @@ for fold in folds:
     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                  weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                  b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
-    cnm.model.train()
+    #cnm.model.train()
 
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
