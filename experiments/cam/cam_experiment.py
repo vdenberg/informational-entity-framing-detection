@@ -300,7 +300,7 @@ if FT_EMB:
 
 
     for fold in folds:
-        logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
+        logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
 
         train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")

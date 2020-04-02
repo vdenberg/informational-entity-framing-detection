@@ -226,8 +226,8 @@ class BertWrapper:
         torch.save(model_to_save.state_dict(), output_model_file)
         model_to_save.config.to_json_file(output_config_file)
 
-    def load_model(self, bert_model='bert-base-cased', load_from_ep=None, load_from_path=None):
-        if not load_from_ep:
+    def load_model(self, load_from_path=None, bert_model='bert-base-cased'):
+        if not load_from_path:
             return BertForSequenceClassification.from_pretrained(bert_model, cache_dir=self.cache_dir,
                                                                  num_labels=self.num_labels,
                                                                  output_hidden_states=False,
@@ -236,9 +236,9 @@ class BertWrapper:
             return BertForSequenceClassification.from_pretrained(load_from_path, num_labels=self.num_labels,
                                                                  output_hidden_states=False,
                                                                  output_attentions=False)
-        elif load_from_ep:
-            load_dir = os.path.join(self.cp_dir, load_from_ep)
-            return BertForSequenceClassification.from_pretrained(load_dir, num_labels=self.num_labels,
-                                                                 output_hidden_states=False,
-                                                                 output_attentions=False)
+        #elif load_from_ep:
+        #    load_dir = os.path.join(self.cp_dir, load_from_ep)
+        #    return BertForSequenceClassification.from_pretrained(load_dir, num_labels=self.num_labels,
+        #                                                         output_hidden_states=False,
+        #                                                         output_attentions=False)
 
