@@ -204,12 +204,7 @@ class ContextAwareClassifier():
 
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
 
-            if len(y_pred) == 0:
-                y_pred.append(probs)
-            else:
-                    # Error: array at index 0 has 3 dimension(s) and the array at index 1 has 2 dimension(s)
-                    # Error: array at index 0 has 2 dimension(s) and the array at index 1 has 1 dimension(s)
-                y_pred[0] = np.append(y_pred[0], probs, axis=0)
+            y_pred = np.append(y_pred, probs, axis=0)
             print(y_pred.shape)
 
                 # convert to predictions
