@@ -313,6 +313,11 @@ if FT_EMB:
     logger.info(f" Finetuning batch size (same as overall): {BATCH_SIZE}")
     logger.info(f" Mode: {MODE}")
 
+    with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+        all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
+
+    bert_all_batches = to_batches(all_data, 1)
+
     for fold in folds:
         logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
@@ -324,24 +329,11 @@ if FT_EMB:
                              n_eps=N_EPOCHS, printing=PRINT_STEP_EVERY, load_from_ep=None)
         best_val_mets, test_mets = bert_cl.train_on_fold(fold)
 
-
-        with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
-            all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
-
-        bert_all_batches = to_batches(all_data, 1)
         basil_w_BERT = pd.DataFrame(index=all_ids)
         embeddings = bert_cl.get_embeddings(bert_all_batches, emb_type=EMB_TYPE)
         logger.info(f'Finished {len(embeddings)} embeddings')
         basil_w_BERT[EMB_TYPE] = embeddings
         basil_w_BERT.to_csv(f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv")
-
-        #best_model = bert.load_model(load_from_path=bert_cl.best_model_loc)
-        #bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger, n_train_batches=len(fold['train_batches']))
-        #all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
-        #data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
-        #data_w_embeds = data
-        #data_w_embeds.to_csv(EMBED_FP)
-
 
 
 # =====================================================================================
