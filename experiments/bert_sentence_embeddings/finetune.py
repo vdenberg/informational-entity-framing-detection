@@ -153,7 +153,7 @@ if __name__ == '__main__':
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
     all_batches = to_batches(all_data, batch_size=1)
 
-    for SEED_VAL in [263]:
+    for SEED_VAL in [263]: #124
         model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
                       '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
                       '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
