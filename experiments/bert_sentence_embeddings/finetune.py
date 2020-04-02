@@ -151,6 +151,7 @@ if __name__ == '__main__':
 
     with open(DATA_DIR + "/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
+    all_batches = to_batches(all_data)
 
     for SEED_VAL in [263]:
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
@@ -262,7 +263,7 @@ if __name__ == '__main__':
                 best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                            output_hidden_states=True,
                                                                            output_attentions=True)
-                embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
+                embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embeddings
