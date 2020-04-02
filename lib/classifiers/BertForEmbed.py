@@ -9,15 +9,18 @@ from lib.evaluate.StandardEval import my_eval
 import os
 
 
-def to_tensor(features, device):
+def to_tensor(features, OUTPUT_MODE):
     example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long, device=device)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long, device=device)
-    segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long, device=device)
+    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
+    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
+    segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
 
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    if OUTPUT_MODE == "classification":
+        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    elif OUTPUT_MODE == "regression":
+        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
 
-    data = TensorDataset(input_ids, input_mask, label_ids)
+    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
@@ -134,10 +137,10 @@ class Inferencer():
         embeddings = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
-            input_ids, input_mask, label_ids = batch
+            input_ids, input_mask, segment_ids, label_ids = batch
 
             with torch.no_grad():
-                outputs = model(input_ids, input_mask, labels=None)
+                outputs = model(input_ids, segment_ids, input_mask, labels=None)
                 logits, probs, sequence_output, pooled_output = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
