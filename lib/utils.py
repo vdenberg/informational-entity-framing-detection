@@ -10,10 +10,14 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
-def to_tensors(split, device):
+def to_tensors(split, features, device):
     """ Tmp. """
     # to array if needed
     contexts = np.array([list(el) for el in split.context_doc_num.values])
+
+    token_ids = [f.input_ids for f in features]
+    token_mask = [f.input_mask for f in features]
+
     #token_ids = [list(el) for el in split.token_ids.values]
     #token_mask = [list(el) for el in split.token_mask.values]
     #tok_seg_ids = [list(el) for el in split.tok_seg_ids.values]
@@ -22,8 +26,8 @@ def to_tensors(split, device):
     #tok_seg_ids = np.array([list(el) for el in split.tok_seg_ids.values])
 
     # to tensors
-    #token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
-    #token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+    token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+    token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
     #tok_seg_ids = torch.tensor(tok_seg_ids, dtype=torch.long, device=device)
     contexts = torch.tensor(contexts, dtype=torch.long, device=device)
     labels_float = torch.tensor(split.label.to_numpy(), dtype=torch.float, device=device)
@@ -34,7 +38,7 @@ def to_tensors(split, device):
 
     # to dataset
     #tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
-    tensors = TensorDataset(contexts, positions, labels_long)
+    tensors = TensorDataset(contexts, positions, token_ids, token_mask, labels_long)
 
     return tensors
 

@@ -145,7 +145,7 @@ class BertWrapper:
 
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
-        input_ids, input_mask, label_ids = batch
+        _, _, input_ids, input_mask, label_ids = batch
 
         self.model.zero_grad()
         outputs = self.model(input_ids, input_mask, labels=label_ids)
@@ -164,12 +164,12 @@ class BertWrapper:
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            input_ids, input_mask, label_ids = batch
+            _, _, input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
                 outputs = self.model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output, pooled_output = outputs
-                loss = self.criterion(logits.view(-1, 2), label_ids.view(-1))
+                loss = self.criterion(logits.view(-1, self.num_labels), label_ids.view(-1))
                 probs = probs.detach().cpu().numpy()
 
             if len(y_pred) == 0:
@@ -183,10 +183,10 @@ class BertWrapper:
 
     def get_embedding_output(self, batch, emb_type):
         batch = tuple(t.to(self.device) for t in batch)
-        input_ids, input_mask, segment_ids, label_ids = batch
+        _, _, input_ids, input_mask, label_ids = batch
 
         with torch.no_grad():
-            outputs = self.model(input_ids, segment_ids, input_mask, labels=None)
+            outputs = self.model(input_ids, input_mask, labels=None)
             logits, probs, sequence_output, pooled_output = outputs
 
             if emb_type == 'avbert':

@@ -288,17 +288,27 @@ for fold in folds:
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
-        train_ids, train_data, train_labels = to_tensor(train_features, device)
+        #train_ids, train_data, train_labels = to_tensor(train_features, device)
 
     with open(dev_fp, "rb") as f:
-        dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
+        dev_features = pickle.load(f)
+        #dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
 
     with open(test_fp, "rb") as f:
-        test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
+        test_features = pickle.load(f)
+        #test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
-    fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
-    fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
-    fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
+    #fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
+    #fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
+    #fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
+
+    train_batches = to_batches(to_tensors(fold['train'], train_features, device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], dev_features, device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], test_features, device), batch_size=BATCH_SIZE)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
 
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS
