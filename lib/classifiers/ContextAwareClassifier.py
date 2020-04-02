@@ -9,7 +9,7 @@ from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_devi
 import os, time
 import numpy as np
 
-from torch.nn import CrossEntropyLoss
+from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 """
 Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and Attention
@@ -34,20 +34,20 @@ class ContextAwareModel(nn.Module):
         self.device = device
 
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
-        self.embedding = nn.Embedding.from_pretrained(self.weights_matrix)
+        self.embedding = Embedding.from_pretrained(self.weights_matrix)
         self.emb_size = weights_matrix.shape[1]
-        self.lstm = nn.LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
+        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
 
-        self.dropout = nn.Dropout(0.1)
+        self.dropout = Dropout(0.1)
         self.context_naive = context_naive
 
         if self.context_naive:
-            self.classifier = nn.Linear(self.emb_size, 2)
+            self.classifier = Linear(self.emb_size, 2)
         else:
-            self.classifier = nn.Linear(self.hidden_size * 2, 2)
+            self.classifier = Linear(self.hidden_size * 2, 2)
 
-        self.sigm = nn.Sigmoid()
-        #self.classifier = nn.Sequential(nn.Linear(self.hidden_size * 2, 1), nn.Sigmoid())
+        self.sigm = Sigmoid()
+        #self.classifier = nn.Sequential(Linear(self.hidden_size * 2, 1), Sigmoid())
 
     def forward(self, contexts, positions):
         """
