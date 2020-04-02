@@ -98,7 +98,7 @@ def make_weight_matrix(embed_df, EMB_DIM):
 
 parser = argparse.ArgumentParser()
 # PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=50)
+parser.add_argument('-inf', '--step_info_every', type=int, default=100)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
@@ -447,7 +447,7 @@ for fold in folds:
 
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
-    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=100)
+    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=PRINT_STEP_EVERY)
 
     # train
     train_elapsed, losses = clf.train_all_epochs(fold)
@@ -458,6 +458,7 @@ for fold in folds:
 
     logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
     logger.info(f"Logged to: {LOG_NAME}.")
+
 
 '''
 # =====================================================================================
