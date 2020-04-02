@@ -249,12 +249,15 @@ if __name__ == '__main__':
                 dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
                 # check if best
+                high_score = ''
                 if dev_mets['f1'] > best_val_mets['f1']:
                     best_val_mets = dev_mets
                     best_val_perf = dev_perf
                     best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+                    high_score = '(HIGH SCORE)
 
-                logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+                logger.info(f'{dev_perf} {high_score}')
+
 
             for EMB_TYPE in ['poolbert']:
                 embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
