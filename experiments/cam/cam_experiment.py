@@ -469,7 +469,7 @@ for fold in folds:
 
     new_cam_table = new_cam_table.append(best_val_mets, ignore_index=True)
     new_cam_table = new_cam_table.append(test_mets, ignore_index=True)
-    print(new_cam_table)
+    logger.info(new_cam_table)
 
     cam_table = cam_table.append(new_cam_table, ignore_index=True)
     cam_table.to_csv('reports/cam/results_table.csv', index=False)
