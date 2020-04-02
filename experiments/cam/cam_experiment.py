@@ -447,7 +447,7 @@ for fold in folds:
 
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
-    clf = Classifier(model=cnm.model, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=100)
+    clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=100)
 
     # train
     t0 = time.time()
