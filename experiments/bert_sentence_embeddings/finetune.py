@@ -283,7 +283,7 @@ if __name__ == '__main__':
 
                 name =  name_base + f"_fin{NUM_TRAIN_EPOCHS}"
                 #save_model(model, CHECKPOINT_DIR, name)
-                test_mets = inferencer.eval(best_model, test_data, test_labels, set_type='test', name='test ' + name)
+                test_mets = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='test ' + name)
 
                 results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
                 best_val_mets['seed'] = SEED_VAL
