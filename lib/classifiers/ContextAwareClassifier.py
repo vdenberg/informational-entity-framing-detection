@@ -181,47 +181,33 @@ class ContextAwareClassifier():
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-
             contexts, positions, labels = batch
 
             with torch.no_grad():
-                if self.context_naive:
-                    logits, probs, target_output = self.model(contexts, positions)
+                logits, probs, target_output = self.model(contexts, positions)
+                loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
-                    # bert shape of probs:
-                    # tensor([[0.7380, 0.1817]], device='cuda:0') 1
-                    # torch.Size([1, 2])
-                    # cam shape of probs:
-                    # tensor([[0.8027, 0.1397]], device='cuda:0') 1
-                    # torch.Size([1, 2])
+                #sigm_output  = self.model(ids, documents, positions)
+                #sigm_output = sigm_output.detach().cpu().numpy()
+                #loss = self.criterion(sigm_output, labels)
 
-                    loss = self.criterion(logits.view(-1, 2), labels.view(-1))
-                else:
-                    pass
-                    #sigm_output  = self.model(ids, documents, positions)
-                    #sigm_output = sigm_output.detach().cpu().numpy()
-                    #loss = self.criterion(sigm_output, labels)
-
-            if self.context_naive:
-                probs = probs[0].detach().cpu().numpy()
-                y_pred.append(probs)
-                #if len(y_pred) == 0:
+            probs = probs[0].detach().cpu().numpy()
+            y_pred.append(probs)
+            #if len(y_pred) == 0:
                 #    y_pred.append(probs)
                 #else:
                     # Error: array at index 0 has 3 dimension(s) and the array at index 1 has 2 dimension(s)
                     # Error: array at index 0 has 2 dimension(s) and the array at index 1 has 1 dimension(s)
                 #    y_pred[0] = np.append(y_pred[0], probs, axis=0)
 
-            # convert to predictions
-            else:
-                preds = [1 if output > 0.5 else 0 for output in sigm_output]
-                y_pred.extend(preds)
+                # convert to predictions
+                # #preds = [1 if output > 0.5 else 0 for output in sigm_output]
+                #y_pred.extend(preds)
 
             sum_loss += loss.item()
 
-        if self.context_naive:
-            #y_pred = y_pred[0]
-            y_pred = np.argmax(y_pred, axis=1)
+        #y_pred = y_pred[0]
+        y_pred = np.argmax(y_pred, axis=1)
 
         self.model.train()
         return y_pred, sum_loss / len(batches)

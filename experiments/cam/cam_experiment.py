@@ -452,6 +452,7 @@ for fold in folds:
     # train
     t0 = time.time()
     for ep in range(1, int(N_EPOCHS+1)):
+        '''
         tr_loss = 0
         for step, batch in enumerate(fold['train_batches']):
             loss = cnm.train_on_batch(batch)
@@ -468,8 +469,11 @@ for fold in folds:
                 logging.info(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
 
         # Save after Epoch
-        epoch_name = name_base + f"_ep{ep}"
         av_loss = tr_loss / len(fold['train_batches'])
+        '''
+        av_loss, elapsed = clf.train_epoch()
+
+        epoch_name = name_base + f"_ep{ep}"
         cnm.save_model(epoch_name)
         dev_preds, dev_loss = cnm.predict(fold['dev_batches'])
         dev_mets, dev_perf = my_eval(fold['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
