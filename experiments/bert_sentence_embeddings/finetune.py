@@ -254,7 +254,7 @@ if __name__ == '__main__':
                     best_val_mets = dev_mets
                     best_val_perf = dev_perf
                     best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    high_score = '(HIGH SCORE)
+                    high_score = '(HIGH SCORE)'
 
                 logger.info(f'{dev_perf} {high_score}')
 
