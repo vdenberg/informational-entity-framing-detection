@@ -188,7 +188,7 @@ class ContextAwareClassifier():
     def predict(self, batches):
         self.model.eval()
 
-        y_pred = np.array([])
+        y_pred = []
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
@@ -204,7 +204,10 @@ class ContextAwareClassifier():
 
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
 
-            y_pred = np.append(y_pred, probs, axis=0)
+            if len(y_pred) == 0:
+                y_pred = probs
+            else:
+                y_pred = np.append(y_pred, probs, axis=0)
             print(y_pred.shape)
 
                 # convert to predictions
