@@ -452,27 +452,10 @@ for fold in folds:
     # train
     t0 = time.time()
     for ep in range(1, int(N_EPOCHS+1)):
-        '''
-        tr_loss = 0
-        for step, batch in enumerate(fold['train_batches']):
-            loss = cnm.train_on_batch(batch)
-
-            #batch = tuple(t.to(device) for t in batch)
-            #contexts, positions, label_ids = batch
-            #cnm.model.zero_grad()
-            #logits, probs, target_output = cnm.model(contexts, positions)
-            #loss = cnm.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-            #loss.backward()
-
-            tr_loss += loss
-            if step % 100 == 0:
-                logging.info(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
-
-        # Save after Epoch
-        av_loss = tr_loss / len(fold['train_batches'])
-        '''
         av_loss, elapsed = clf.train_epoch(fold['train_batches'])
+        clf.validate_after_epoch(ep, elapsed, fold)
 
+        '''
         epoch_name = name_base + f"_ep{ep}"
         cnm.save_model(epoch_name)
         dev_preds, dev_loss = cnm.predict(fold['dev_batches'])
@@ -486,7 +469,7 @@ for fold in folds:
             clf.best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
         logger.info(f"Best model for fold so far: {clf.best_model_loc}: {clf.best_val_perf}")
-
+        '''
     logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
     logger.info(f"Logged to: {LOG_NAME}.")
 
