@@ -435,7 +435,7 @@ logger.info(f"Get embeddings")
 #                    TRAIN CLASSIFIER
 # =====================================================================================
 
-fold = [folds[1]]
+folds = [folds[1]]
 
 for fold in folds:
     logger.info(f"Train CNM on {fold['name']}")
