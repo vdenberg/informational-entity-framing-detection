@@ -240,7 +240,7 @@ if __name__ == '__main__':
                         # Calculate elapsed time in minutes.
                         elapsed = time.time() - t0
                         logging.info(input_ids.shape)
-                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
+                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                 # Save after Epoch
                 epoch_name = name_base + f"_ep{ep}"
