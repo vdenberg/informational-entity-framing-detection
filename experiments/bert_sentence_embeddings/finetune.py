@@ -15,6 +15,7 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import time
 import logging
+from lib.utils import to_batches
 
 #######
 # FROM:
@@ -148,6 +149,9 @@ if __name__ == '__main__':
 
     logger.info(args)
 
+    with open(DATA_DIR + "/all_features.pkl", "rb") as f:
+        all_ids, all_data, all_labels = to_tensor(pickle.load(f))
+
     for SEED_VAL in [263, 111]:
         for fold_name in ["orig", '9', '8']:
             name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
@@ -201,8 +205,9 @@ if __name__ == '__main__':
             nb_tr_steps = 0
             tr_loss = 0
 
-            train_sampler = RandomSampler(train_data)
-            train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=BATCH_SIZE)
+            train_batches = to_batches(train_data, BATCH_SIZE)
+            dev_batches = to_batches(dev_data, BATCH_SIZE)
+            test_batches = to_batches(test_data, BATCH_SIZE)
 
             model.train()
 
@@ -210,7 +215,7 @@ if __name__ == '__main__':
             for ep in range(NUM_TRAIN_EPOCHS+1):
                 tr_loss = 0
                 nb_tr_examples, nb_tr_steps = 0, 0
-                for step, batch in enumerate(train_dataloader):
+                for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
                     input_ids, input_mask, segment_ids, label_ids = batch
 
@@ -234,15 +239,15 @@ if __name__ == '__main__':
                     if step % PRINT_EVERY == 0 and step != 0:
                         # Calculate elapsed time in minutes.
                         elapsed = time.time() - t0
-                        print(input_ids.shape)
+                        logging.info(input_ids.shape)
                         logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
                 # Save after Epoch
                 epoch_name = name_base + f"_ep{ep}"
-                av_loss = tr_loss / len(train_dataloader)
+                av_loss = tr_loss / len(train_batches)
                 save_model(model, CHECKPOINT_DIR, epoch_name)
 
-                dev_mets, dev_perf = inferencer.eval(model, dev_data, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+                dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
                 # check if best
                 if dev_mets['f1'] > best_val_mets['f1']:
@@ -251,6 +256,13 @@ if __name__ == '__main__':
                     best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
                 logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+
+            for EMB_TYPE in ['poolbert', 'avbert']:
+                embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
+                logger.info(f'Finished {len(embeddings)} embeddings')
+                basil_w_BERT = pd.DataFrame(index=all_ids)
+                basil_w_BERT[EMB_TYPE] = embeddings
+                basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
 
             BASELINE = False
             if BASELINE:
