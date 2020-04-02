@@ -118,8 +118,8 @@ def save_bert_model(model_to_save, model_dir, identifier):
 
 
 class BertWrapper:
-    def __init__(self, cp_dir, n_epochs, n_train_batches, load_from_ep=0,
-                 bert_model='bert-base-cased',  cache_dir='models/cache', num_labels=2,
+    def __init__(self, cp_dir, n_eps, n_train_batches, load_from_ep=0,
+                 bert_model='bert-base-cased', cache_dir='models/cache', num_labels=2,
                  bert_lr=2e-6, warmup_proportion=0.1):
         self.warmup_proportion = warmup_proportion
         self.device, self.use_cuda = get_torch_device()
@@ -132,9 +132,10 @@ class BertWrapper:
         if self.use_cuda:
             self.model.cuda()
 
-        # set optim and scheduler
+        # set criterion, optim and scheduler
+        self.criterion = CrossEntropyLoss()
         self.optimizer = AdamW(self.model.parameters(), lr=bert_lr, eps=1e-8)
-        num_train_optimization_steps = n_train_batches * n_epochs
+        num_train_optimization_steps = n_train_batches * n_eps
         num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
         self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
                                                          num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
@@ -143,15 +144,13 @@ class BertWrapper:
         #                          step_size_up=stepsize, cycle_momentum=False)
 
     def train_on_batch(self, batch):
-        self.model.zero_grad()
         batch = tuple(t.to(self.device) for t in batch)
+        input_ids, input_mask, segment_ids, label_ids = batch
 
-        token_ids, token_masks, tok_seg_ids, _, _, labels, _ = batch
-
-        outputs = self.model(input_ids=token_ids, attention_mask=token_masks, token_type_ids=tok_seg_ids, labels=labels)
+        self.model.zero_grad()
+        outputs = self.model(input_ids, input_mask, labels=label_ids)
         (loss), logits, probs, sequence_ouput, pooled_output = outputs
-        loss = outputs[0]
-
+        loss = self.criterion(logits.view(-1, 2), label_ids.view(-1))
         loss.backward()
 
         self.optimizer.step()
@@ -161,34 +160,35 @@ class BertWrapper:
     def predict(self, batches):
         self.model.eval()
 
-        preds = []
+        y_pred = []
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
+            input_ids, input_mask, segment_ids, label_ids = batch
 
             with torch.no_grad():
-                (loss), logits, probs, sequence_output, pooled_output = self.model(input_ids=token_ids,
-                                                                   attention_mask=token_masks,
-                                                                   token_type_ids=tok_seg_ids, labels=labels)
+                outputs = self.model(input_ids, segment_ids, input_mask, labels=None)
+                logits, probs, sequence_output, pooled_output = outputs
+                loss = self.criterion(logits.view(-1, 2), label_ids.view(-1))
                 probs = probs.detach().cpu().numpy()
 
-            if len(preds) == 0:
-                preds.append(probs)
+            if len(y_pred) == 0:
+                y_pred.append(probs)
             else:
-                preds[0] = np.append(preds[0], probs, axis=0)
+                y_pred[0] = np.append(y_pred[0], probs, axis=0)
             sum_loss += loss.item()
 
-        preds = np.argmax(preds[0], axis=1)
-        return preds, sum_loss / len(batches)
+        y_pred = np.argmax(y_pred[0], axis=1)
+        return y_pred, sum_loss / len(batches)
 
     def get_embedding_output(self, batch, emb_type):
         batch = tuple(t.to(self.device) for t in batch)
-        token_ids, token_masks, tok_seg_ids, contexts, labels_fl, labels, positions = batch
+        input_ids, input_mask, segment_ids, label_ids = batch
 
         with torch.no_grad():
-            probs, sequence_output, pooled_output = self.model(input_ids=token_ids, attention_mask=token_masks,
-                                                               labels=None) #token_type_ids=tok_seg_ids,
+            outputs = model(input_ids, segment_ids, input_mask, labels=None)
+            logits, probs, sequence_output, pooled_output = outputs
+
             if emb_type == 'avbert':
                 return sequence_output.mean(axis=1)
 
@@ -202,12 +202,10 @@ class BertWrapper:
             emb_output = self.get_embedding_output(batch, emb_type)
 
             if self.use_cuda:
-                emb_output = list(emb_output[0].detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
-
+                emb_output = list(emb_output.detach().cpu().numpy()) # .detach().cpu() necessary here on gpu
             else:
-                emb_output = list(emb_output[0].numpy())
+                emb_output = list(emb_output.numpy())
             embeddings.append(emb_output)
-
         return embeddings
 
     def save_model(self, model_dir, name):

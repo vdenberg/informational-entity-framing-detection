@@ -9,6 +9,7 @@ from transformers import BertTokenizer
 from lib.handle_data.SplitData import Split
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
+from lib.classifiers.BertWrapper import BertWrapper
 
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
@@ -198,7 +199,6 @@ REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET
 FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-EMBED_FP = f'data/basil_w_{EMB_TYPE}.csv'
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -286,10 +286,41 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS
 # =====================================================================================
+'''
+# =====================================================================================
+#                    LOAD BERT DATA
+# =====================================================================================
+
+# isolate fold
+fold = {'name': '2'}
+
+logger.info(f"Load bert data")
+train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
+dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
+test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
+
+with open(train_fp, "rb") as f:
+    train_features = pickle.load(f)
+    train_ids, train_data, train_labels = to_tensor(train_features, device)
+
+with open(dev_fp, "rb") as f:
+    dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
+
+with open(test_fp, "rb") as f:
+    test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
 if FT_EMB:
     pass
     """
+    # train
+    logger.info(f"------------ FT BERT ON {fold['name']} ------------")
+    bert = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=N_EPOCHS, n_train_batches=len(fold['train_batches']),
+                       bert_lr=BERT_LR)
+
+    bert_cl = Classifier(model=bert, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                         printing=PRINT_STEP_EVERY, load_from_ep=None)
+    best_val_mets, test_mets = bert_cl.train_on_fold(fold)
+    
     logger.info("============ FINETUNE EMBEDDINGS =============")
     logger.info(f" Embedding type: {EMB_TYPE}")
     logger.info(f" Finetuning LR: {BERT_LR}")
@@ -350,48 +381,30 @@ if FT_EMB:
     data_w_embeds.to_csv(EMBED_FP)
     """
 '''
-# =====================================================================================
-#                    LOAD BERT DATA
-# =====================================================================================
 
-# isolate fold
-fold = {'name': '2'}
-
-logger.info(f"Load bert data")
-train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
-dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
-test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
-
-with open(train_fp, "rb") as f:
-    train_features = pickle.load(f)
-    train_ids, train_data, train_labels = to_tensor(train_features, device)
-
-with open(dev_fp, "rb") as f:
-    dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
-
-with open(test_fp, "rb") as f:
-    test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
-'''
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
+folds = [folds[1]]
 
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
-# read embeddings file
-data_w_embeds = pd.read_csv(EMBED_FP, index_col=0).fillna('')
-data_w_embeds = data_w_embeds.rename(
-    columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
+for fold in enumerate(folds):
+    # read embeddings file
+    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.cs"
+    data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
+    data_w_embeds = data_w_embeds.rename(
+        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+    data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
+    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
-# transform into matrix
-WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
+    # transform into matrix
+    WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
 
-logger.info(f" --> Weight matrix shape: {WEIGHTS_MATRIX.shape}")
-
+    logger.info(f" --> Loaded from {embed_fp}, shape: {WEIGHTS_MATRIX.shape}")
+    fold['weights_matrix'] = train_batches
 
 '''
 
@@ -447,24 +460,23 @@ logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
 
-folds = [folds[1]]
-
 cam_table = pd.read_csv('reports/cam/results_table.csv')
 new_cam_table = pd.DataFrame(columns=cam_table.columns)
 for fold in folds:
-    logger.info(f"------------ ON FOLD {fold['name']} ------------")
+    logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                 weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                  b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
+    cam_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                        printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-    cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                     printing=PRINT_STEP_EVERY, load_from_ep=None)
+
 
     # train
-    best_val_mets, test_mets = cl.train_on_fold(fold)
+    best_val_mets, test_mets = cam_cl.train_on_fold(fold)
     best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
     best_val_mets['fold'], test_mets['fold'] = fold["name"], fold["name"]
 
