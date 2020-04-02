@@ -471,7 +471,7 @@ for fold in folds:
         # Save after Epoch
         av_loss = tr_loss / len(fold['train_batches'])
         '''
-        av_loss, elapsed = clf.train_epoch()
+        av_loss, elapsed = clf.train_epoch(fold['train_batches'])
 
         epoch_name = name_base + f"_ep{ep}"
         cnm.save_model(epoch_name)
