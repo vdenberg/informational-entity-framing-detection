@@ -15,6 +15,7 @@ from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 import pickle, time
 from torch.nn import CrossEntropyLoss, BCELoss
+from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 from lib.classifiers.Classifier import Classifier
 from lib.utils import get_torch_device, to_tensors, to_batches
