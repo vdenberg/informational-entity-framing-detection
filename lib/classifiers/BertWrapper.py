@@ -118,7 +118,7 @@ def save_bert_model(model_to_save, model_dir, identifier):
 
 
 class BertWrapper:
-    def __init__(self, cp_dir, n_eps, n_train_batches, load_from_ep=0,
+    def __init__(self, cp_dir, n_eps, n_train_batches, load_from_path=0,
                  bert_model='bert-base-cased', cache_dir='models/cache', num_labels=2,
                  bert_lr=2e-6, warmup_proportion=0.1):
         self.warmup_proportion = warmup_proportion
@@ -127,7 +127,7 @@ class BertWrapper:
         self.cp_dir = cp_dir
         self.num_labels = num_labels
 
-        self.model = self.load_model(bert_model, load_from_ep)
+        self.model = self.load_model(bert_model=bert_model, load_from_path=load_from_path)
         self.model.to(self.device)
         if self.use_cuda:
             self.model.cuda()
