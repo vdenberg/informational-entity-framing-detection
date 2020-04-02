@@ -258,8 +258,10 @@ if __name__ == '__main__':
 
                 logger.info(f'{dev_perf} {high_score}')
 
-
             for EMB_TYPE in ['poolbert']:
+                best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                           output_hidden_states=True,
+                                                                           output_attentions=True)
                 embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
