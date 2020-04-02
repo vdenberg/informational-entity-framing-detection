@@ -252,6 +252,7 @@ if __name__ == '__main__':
                 # check if best
                 high_score = ''
                 if dev_mets['f1'] > best_val_mets['f1']:
+                    best_ep = ep
                     best_val_mets = dev_mets
                     best_val_perf = dev_perf
                     best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
@@ -268,13 +269,11 @@ if __name__ == '__main__':
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embeddings
                 basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
+                logger.info(f'Written to data/{fold_name}_basil_w_{EMB_TYPE}.csv')
 
             BASELINE = False
             if BASELINE:
                 # Save final model
-                best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                      output_hidden_states=True, output_attentions=True)
-
                 logger.info(f"***** Testing on Fold {fold_name} *****")
                 logger.info(f"  Model = {best_model_loc}")
                 logger.info(f"  Batch size = {BATCH_SIZE}")
@@ -289,6 +288,7 @@ if __name__ == '__main__':
                 results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
                 best_val_mets['seed'] = SEED_VAL
                 best_val_mets['fold'] = fold_name
+                best_val_mets['epoch'] = best_ep
                 best_val_mets['set_type'] = 'val'
                 test_mets['seed'] = SEED_VAL
                 test_mets['fold'] = fold_name
