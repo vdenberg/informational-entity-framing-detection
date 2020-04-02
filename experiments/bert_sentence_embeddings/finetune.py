@@ -44,7 +44,7 @@ def to_tensor(features, OUTPUT_MODE):
     elif OUTPUT_MODE == "regression":
         label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
 
-    data = TensorDataset(input_ids, input_mask, label_ids)
+    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 # split_input() # only needs to happen once, can be found in split_data
@@ -148,12 +148,8 @@ if __name__ == '__main__':
 
     logger.info(args)
 
-    with open('data/features_for_bert/all_features.pkl', "rb") as f:
-        all_features = pickle.load(f)
-    all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
-
     for SEED_VAL in [263, 111]:
-        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+        for fold_name in ['2', '8']:
             for schedule in ['warmup']:
                 name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
@@ -195,13 +191,13 @@ if __name__ == '__main__':
                     load_dir = os.path.join(CHECKPOINT_DIR, name)
                     logger.info(f'Loading model {load_dir}')
                     model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=False, output_attentions=False)
+                                                                          output_hidden_states=True, output_attentions=True)
                     logger.info(f'Loaded model {load_dir}')
                     inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
                 else:
                     load_dir = CACHE_DIR
                     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=False, output_attentions=False)
+                                                                          output_hidden_states=True, output_attentions=True)
 
                 model.to(device)
 
@@ -231,11 +227,13 @@ if __name__ == '__main__':
                     nb_tr_examples, nb_tr_steps = 0, 0
                     for step, batch in enumerate(train_dataloader):
                         batch = tuple(t.to(device) for t in batch)
-                        input_ids, input_mask, label_ids = batch
+                        input_ids, input_mask, segment_ids, label_ids = batch
                         # print(label_ids)
 
                         model.zero_grad()
-                        print()
+                        #if step % PRINT_EVERY == 0 and step != 0:
+                        #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
+                        #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
                         outputs = model(input_ids, input_mask, labels=label_ids)
                         (loss), logits, probs, sequence_output, pooled_output = outputs
                         loss = outputs[0]
@@ -281,14 +279,6 @@ if __name__ == '__main__':
 
                     logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
 
-                for EMB_TYPE in ['poolbert', 'avbert']:
-
-                    embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
-                    logger.info(f'Finished {len(embeddings)} embeddings')
-                    basil_w_BERT = pd.DataFrame(index=all_ids)
-                    basil_w_BERT[EMB_TYPE] = embeddings
-                    basil_w_BERT.to_csv(f"data/{fold_name}_basil_w_{EMB_TYPE}.csv")
-
                 BASELINE = False
                 if BASELINE:
                     # Save final model
@@ -322,4 +312,3 @@ if __name__ == '__main__':
                     results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
 
     logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
-    logger.info(f"Logged to: {LOG_NAME}.")
