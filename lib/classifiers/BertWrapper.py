@@ -208,7 +208,7 @@ class BertWrapper:
             embeddings.append(emb_output)
         return embeddings
 
-    def save_model(self, model_dir, name):
+    def save_model(self, name):
         """
         Save bert model.
         :param model_dir: usually models/bert_for_embed/etc.
@@ -216,7 +216,7 @@ class BertWrapper:
         """
         model_to_save = self.model
 
-        output_dir = os.path.join(model_dir, name)
+        output_dir = os.path.join(self.cp_dir, name)
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         output_model_file = os.path.join(output_dir, "pytorch_model.bin")
