@@ -195,13 +195,13 @@ if __name__ == '__main__':
                     load_dir = os.path.join(CHECKPOINT_DIR, name)
                     logger.info(f'Loading model {load_dir}')
                     model = BertForSequenceClassification.from_pretrained(load_dir, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
+                                                                          output_hidden_states=False, output_attentions=False)
                     logger.info(f'Loaded model {load_dir}')
                     inferencer.eval(model, dev_data, dev_labels, name=f'epoch{LOAD_FROM_EP}')
                 else:
                     load_dir = CACHE_DIR
                     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
+                                                                          output_hidden_states=False, output_attentions=False)
 
                 model.to(device)
 
@@ -235,9 +235,6 @@ if __name__ == '__main__':
                         # print(label_ids)
 
                         model.zero_grad()
-                        #if step % PRINT_EVERY == 0 and step != 0:
-                        #    logger.info(input_ids) # [[  101,  4254,  1989,  ...,     0,     0,     0], [  101,   146,   787,  ...,     0,     0,     0],
-                        #    logger.info(input_mask) #[[1, 1, 1,  ..., 0, 0, 0],
                         outputs = model(input_ids, input_mask, labels=label_ids)
                         (loss), logits, probs, sequence_output, pooled_output = outputs
                         loss = outputs[0]
