@@ -271,7 +271,7 @@ if __name__ == '__main__':
                 basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
                 logger.info(f'Written to data/{fold_name}_basil_w_{EMB_TYPE}.csv')
 
-            BASELINE = False
+            BASELINE = True
             if BASELINE:
                 # Save final model
                 logger.info(f"***** Testing on Fold {fold_name} *****")
