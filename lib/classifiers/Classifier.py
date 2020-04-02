@@ -87,7 +87,7 @@ class Classifier:
             best_log = '(HIGH SCORE)'
 
         self.logger.info(f" Epoch {ep} ({self.model_name.replace('_', ' ')}) ({elapsed}): "
-                         f"{tr_perf} - {val_perf} {best_log}")
+                         f"{tr_perf} | {val_perf} {best_log}")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
@@ -112,7 +112,7 @@ class Classifier:
             self.update_patience(val_mets['f1'])
 
             if (not self.current_patience > 0) & (val_mets['f1'] > 0.20):
-                self.logger.info(" Stopping training.")
+                self.logger.info(" > Stopping training.")
                 break
 
         eps_elapsed = format_runtime(time.time() - train_start)

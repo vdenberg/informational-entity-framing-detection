@@ -298,7 +298,6 @@ if FT_EMB:
     logger.info(f" Finetuning batch size (same as overall): {BATCH_SIZE}")
     logger.info(f" Mode: {MODE}")
 
-
     for fold in folds:
         logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
