@@ -280,7 +280,7 @@ logger.info(f" --> Columns: {list(data.columns)}")
 
 for fold in folds:
     logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
-    name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
+    name_base = f"bert_{SEED_VAL}_f{fold['name']}"
 
     train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
     dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")

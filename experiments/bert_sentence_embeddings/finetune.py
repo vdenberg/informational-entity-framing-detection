@@ -148,8 +148,12 @@ if __name__ == '__main__':
 
     logger.info(args)
 
+    with open('data/features_for_bert/all_features', "rb") as f:
+        all_features = pickle.load(f)
+    all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
+
     for SEED_VAL in [263, 111]:
-        for fold_name in ['2', '8']:
+        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             for schedule in ['warmup']:
                 name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
@@ -278,6 +282,14 @@ if __name__ == '__main__':
                         best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
 
                     logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
+
+                for EMB_TYPE in ['poolbert', 'avbert']:
+
+                    embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
+                    logger.info(f'Finished {len(embeddings)} embeddings')
+                    basil_w_BERT = pd.DataFrame(index=all_ids)
+                    basil_w_BERT[EMB_TYPE] = embeddings
+                    basil_w_BERT.to_csv(f"data/{fold_name}_basil_w_{EMB_TYPE}.csv")
 
                 BASELINE = False
                 if BASELINE:
