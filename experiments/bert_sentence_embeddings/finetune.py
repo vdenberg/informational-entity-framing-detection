@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
     with open(DATA_DIR + "/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
-    all_batches = to_batches(all_data)
+    all_batches = to_batches(all_data, batch_size=BATCH_SIZE)
 
     for SEED_VAL in [263]:
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
