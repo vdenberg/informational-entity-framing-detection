@@ -123,7 +123,7 @@ class Classifier:
         test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
         return test_mets, test_perf
 
-    def train_on_fold(self, fold):
+    def train_on_fold(self, fold, save_embeddings=False):
         self.cur_fold = fold['name']
         train_elapsed, losses = self.train_all_epochs(fold)
         self.train_time = train_elapsed
@@ -142,6 +142,9 @@ class Classifier:
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
         self.logger.info(f" {test_mets}")
         return self.best_val_mets, test_mets
+
+    def get_embeddings(self, batches, emb_type):
+        return self.wrapper.get_embeddings(batches, emb_type)
 
 
 

@@ -251,7 +251,7 @@ if PREPROCESS:
     raw_data.to_json(DATA_FP)
 
 # =====================================================================================
-#                    LOAD CAM DATA
+#                    LOAD DATA
 # =====================================================================================
 
 logger.info("============ LOADING DATA =============")
@@ -269,22 +269,37 @@ if DEBUG:
 NR_FOLDS = len(folds)
 folds = [folds[1]]
 
-# batch data
-for fold_i, fold in enumerate(folds):
-    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
-
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
-
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
-    
+# =====================================================================================
+#                    LOAD BERT DATA
+# =====================================================================================
+
+for fold in folds:
+    logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
+    name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
+
+    train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
+
+    with open(train_fp, "rb") as f:
+        train_features = pickle.load(f)
+        train_ids, train_data, train_labels = to_tensor(train_features, device)
+
+    with open(dev_fp, "rb") as f:
+        dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
+
+    with open(test_fp, "rb") as f:
+        test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
+
+    fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
+    fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
+    fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
+
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS
 # =====================================================================================
@@ -302,30 +317,23 @@ if FT_EMB:
         logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
 
-        train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
-        dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
-        test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
-        
-        with open(train_fp, "rb") as f:
-            train_features = pickle.load(f)
-            train_ids, train_data, train_labels = to_tensor(train_features, device)
-        
-        with open(dev_fp, "rb") as f:
-            dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
-        
-        with open(test_fp, "rb") as f:
-            test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
-
-        fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
-        fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
-        fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
-
         bert = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=N_EPOCHS, n_train_batches=len(fold['train_batches']),
                            bert_lr=BERT_LR)
 
         bert_cl = Classifier(model=bert, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE,
                              n_eps=N_EPOCHS, printing=PRINT_STEP_EVERY, load_from_ep=None)
         best_val_mets, test_mets = bert_cl.train_on_fold(fold)
+
+
+        with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+            all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
+
+        bert_all_batches = to_batches(all_data, 1)
+        basil_w_BERT = pd.DataFrame(index=all_ids)
+        embeddings = bert_cl.get_embeddings(bert_all_batches, emb_type=EMB_TYPE)
+        logger.info(f'Finished {len(embeddings)} embeddings')
+        basil_w_BERT[EMB_TYPE] = embeddings
+        basil_w_BERT.to_csv(f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv")
 
         #best_model = bert.load_model(load_from_path=bert_cl.best_model_loc)
         #bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger, n_train_batches=len(fold['train_batches']))
@@ -336,11 +344,23 @@ if FT_EMB:
 
 
 
+# =====================================================================================
+#                    LOAD CAM DATA
+# =====================================================================================
+# batch data
+for fold_i, fold in enumerate(folds):
+    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
-'''
+
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
@@ -359,7 +379,7 @@ for fold in folds:
     logger.info(f" --> Loaded from {embed_fp}, shape: {WEIGHTS_MATRIX.shape}")
     fold['weights_matrix'] = train_batches
 
-'''
+
 
 # =====================================================================================
 #                    GET EMBEDDINGS
@@ -401,7 +421,7 @@ logger.info(f"Get embeddings")
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
-'''
+
 logger.info("============ TRAINING CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
@@ -442,4 +462,3 @@ for fold in folds:
 
     logger.info(f"Logged to: {LOG_NAME}.")
     logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
-'''
