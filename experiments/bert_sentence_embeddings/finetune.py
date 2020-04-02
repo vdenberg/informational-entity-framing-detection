@@ -148,7 +148,7 @@ if __name__ == '__main__':
 
     logger.info(args)
 
-    with open('data/features_for_bert/all_features', "rb") as f:
+    with open('data/features_for_bert/all_features.pkl', "rb") as f:
         all_features = pickle.load(f)
     all_ids, all_data, all_labels = to_tensor(all_features, OUTPUT_MODE)
 
