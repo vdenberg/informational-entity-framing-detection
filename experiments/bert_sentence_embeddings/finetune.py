@@ -256,7 +256,7 @@ if __name__ == '__main__':
 
                 logger.info(f"Best model so far: {best_model_loc}: {best_val_perf}")
 
-            for EMB_TYPE in ['poolbert', 'avbert']:
+            for EMB_TYPE in ['poolbert']:
                 embeddings = inferencer.predict(model, all_data, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
