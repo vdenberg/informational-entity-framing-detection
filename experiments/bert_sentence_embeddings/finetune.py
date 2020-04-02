@@ -213,7 +213,6 @@ if __name__ == '__main__':
                 for step, batch in enumerate(train_dataloader):
                     batch = tuple(t.to(device) for t in batch)
                     input_ids, input_mask, segment_ids, label_ids = batch
-                    # print(label_ids)
 
                     model.zero_grad()
                     outputs = model(input_ids, input_mask, labels=label_ids)
@@ -235,7 +234,7 @@ if __name__ == '__main__':
                     if step % PRINT_EVERY == 0 and step != 0:
                         # Calculate elapsed time in minutes.
                         elapsed = time.time() - t0
-                        # Report progress.
+                        print(input_ids.shape)
                         logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_dataloader)} - Loss: {loss.item()}')
 
                 # Save after Epoch
