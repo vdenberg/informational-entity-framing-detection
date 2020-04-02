@@ -463,7 +463,7 @@ for fold in folds:
             #loss = cnm.criterion(logits.view(-1, NUM_LABELS), label_ids.view(-1))
             #loss.backward()
 
-            tr_loss += loss.item()
+            tr_loss += loss
             if step % 100 == 0:
                 logging.info(f"Step {step} / {len(fold['train_batches'])}, Loss: {loss}")
 
