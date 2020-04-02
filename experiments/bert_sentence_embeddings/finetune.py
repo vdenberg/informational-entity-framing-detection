@@ -279,7 +279,7 @@ if __name__ == '__main__':
                                                                            output_hidden_states=True,
                                                                            output_attentions=True)
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                logger.info(f'Finished {len(embeddings)} embeddings')
+                logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embeddings
                 basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
