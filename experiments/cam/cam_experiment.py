@@ -284,29 +284,6 @@ logger.info(f" --> Read {len(data)} data points")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
-'''
-# =====================================================================================
-#                    LOAD BERT DATA
-# =====================================================================================
-folds = [folds[1]]
-
-logger.info("============ LOAD BERT FEATURES =============")
-logger.info(f" Embedding type: {EMB_TYPE}")
-
-for fold in folds:
-    train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
-    dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
-    test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
-
-    with open(train_fp, "rb") as f:
-        train_features = pickle.load(f)
-        train_ids, train_data, train_labels = to_tensor(train_features, device)
-    
-    with open(dev_fp, "rb") as f:
-        dev_ids, dev_data, dev_labels = to_tensor(pickle.load(f), device)
-    
-    with open(test_fp, "rb") as f:
-        test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
     
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS
@@ -314,17 +291,6 @@ for fold in folds:
 
 
 if FT_EMB:
-    pass
-    """
-    # train
-    logger.info(f"------------ FT BERT ON {fold['name']} ------------")
-    bert = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=N_EPOCHS, n_train_batches=len(fold['train_batches']),
-                       bert_lr=BERT_LR)
-
-    bert_cl = Classifier(model=bert, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                         printing=PRINT_STEP_EVERY, load_from_ep=None)
-    best_val_mets, test_mets = bert_cl.train_on_fold(fold)
-    
     logger.info("============ FINETUNE EMBEDDINGS =============")
     logger.info(f" Embedding type: {EMB_TYPE}")
     logger.info(f" Finetuning LR: {BERT_LR}")
@@ -332,12 +298,11 @@ if FT_EMB:
     logger.info(f" Finetuning batch size (same as overall): {BATCH_SIZE}")
     logger.info(f" Mode: {MODE}")
 
-    finetune_f1s = pd.DataFrame(index=list(range(NR_FOLDS)) + ['mean'], columns=['Acc', 'Prec', 'Rec', 'F1'])
 
     for fold in folds:
-        name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
-        
-        logger.info(f"Load bert data")
+        logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
+        name_base = f"bertforembed_{SEED_VAL}_f{fold['name']}"
+
         train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
         dev_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_dev_features.pkl")
         test_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_test_features.pkl")
@@ -352,45 +317,32 @@ if FT_EMB:
         with open(test_fp, "rb") as f:
             test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
-        logger.info(f"***** BERT training on Fold {fold_name} *****")
-        logger.info(f"  Logging to {LOG_NAME}")
+        fold['train_batches'] = to_batches(train_data)
+        fold['dev_batches'] = to_batches(dev_data)
+        fold['test_batches'] = to_batches(test_data)
 
-        tr_batches = None
-        
-        LOAD_FROM_EP = None
-        bert = BertWrapper(BERT_MODEL, cache_dir=CACHE_DIR, cp_dir=CHECKPOINT_DIR, num_labels=NUM_LABELS,
-                           bert_lr=BERT_LR, warmup_proportion=WARMUP_PROPORTION, n_epochs=N_EPOCHS,
-                           n_train_batches=len(fold['train_batches']), load_from_ep=LOAD_FROM_EP)
+        bert = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=N_EPOCHS, n_train_batches=len(fold['train_batches']),
+                           bert_lr=BERT_LR)
 
-        cl = Classifier(logger=logger, cp_dir=CHECKPOINT_DIR, model=bert, n_eps=N_EPOCHS, patience=PATIENCE,
-                        fig_dir=FIG_DIR, model_name='bert', print_every=PRINT_STEP_EVERY)
-        
-        to_batches
-        
-        cl.train_on_fold(fold)
-        finetune_f1s.loc[fold['name']] = cl.test_perf
+        bert_cl = Classifier(model=bert, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE,
+                             n_eps=N_EPOCHS, printing=PRINT_STEP_EVERY, load_from_ep=None)
+        best_val_mets, test_mets = bert_cl.train_on_fold(fold)
 
-    finetune_f1s.loc['mean'] = finetune_f1s.mean()
-    logger.info(f'Finetuning results:\n{finetune_f1s}')
+        #best_model = bert.load_model(load_from_path=bert_cl.best_model_loc)
+        #bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
+                    n_train_batches=len(fold['train_batches']))
+        #all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
+        #data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
+        #data_w_embeds = data
+        #data_w_embeds.to_csv(EMBED_FP)
 
 
-    #ft = OldFinetuner(logger=logger, n_epochs=10,
-    #                  lr=BERT_LR, seed=SEED_VAL, load_from_ep=0)
-    #ft.fan()
-    bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
-                n_train_batches=len(fold['train_batches']))
-    all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
-    data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
-    data_w_embeds = data
-    data_w_embeds.to_csv(EMBED_FP)
-    """
-'''
 
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
-
+'''
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
@@ -414,7 +366,7 @@ for fold in folds:
 # =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
-
+'''
 logger.info(f"Get embeddings")
     # load bert features
     with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
@@ -451,7 +403,7 @@ logger.info(f"Get embeddings")
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
-
+'''
 logger.info("============ TRAINING CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
@@ -492,3 +444,4 @@ for fold in folds:
 
     logger.info(f"Logged to: {LOG_NAME}.")
     logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
+'''
