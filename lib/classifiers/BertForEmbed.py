@@ -180,7 +180,7 @@ class Inferencer():
         metrics_dict, metrics_string = my_eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
-        self.logger.info(f'{metrics_string}')
+        #self.logger.info(f'{metrics_string}')
         #with open(output_eval_file, 'w') as f:
         #    f.write{metrics_string + '\n'}
 
