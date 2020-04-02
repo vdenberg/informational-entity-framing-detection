@@ -435,7 +435,7 @@ logger.info(f"Get embeddings")
 #                    CONTEXT AWARE MODEL
 # =====================================================================================
 
-logger.info("============ CAM =============")
+logger.info("============ TRAINING CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
@@ -451,7 +451,7 @@ folds = [folds[1]]
 cam_table = pd.read_csv('reports/cam/results_table.csv')
 new_cam_table = pd.DataFrame(columns=cam_table.columns)
 for fold in folds:
-    logger.info(f' CAM Training on fold {fold["name"]} (sizes: {fold["sizes"]})')
+    logger.info(f"------------ ON FOLD {fold['name']} ------------")
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
 
     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
@@ -476,35 +476,3 @@ for fold in folds:
 
     logger.info(f"Logged to: {LOG_NAME}.")
     logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
-
-
-'''
-
-# =====================================================================================
-#                    TRAIN ON FOLD 2
-# =====================================================================================
-
-TRAIN = False
-if TRAIN:
-    cam_table = pd.read_csv('reports/cam/results_table.csv')
-    for fold_2 in [folds[1]]:
-        name_base = f"s{SEED_VAL}_f{fold_2['name']}_{'cyc'}_bs{BATCH_SIZE}"
-        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold_2['train'].label.values,
-                                     weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
-
-        logger.info(f' CAM Training on fold {fold_2["name"]} (sizes: {fold_2["sizes"]})')
-        cl = Classifier(logger=logger, model=cam, n_eps=N_EPOCHS, patience=PATIENCE, fig_dir=FIG_DIR, name=name_base,
-                        printing=PRINT_STEP_EVERY)
-
-        best_val_mets, test_mets = cl.train_on_fold(fold_2)
-        best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
-        best_val_mets['fold'], test_mets['fold'] = fold_2["name"], fold_2["name"]
-
-        cam_table = cam_table.append(best_val_mets, ignore_index=True)
-        cam_table = cam_table.append(test_mets, ignore_index=True)
-        cam_table.to_csv('reports/cam/results_table.csv', index=False)
-
-    # final results of cross validation
-    logger.info(f' CAM Results:\n{cam_table}')
-'''
