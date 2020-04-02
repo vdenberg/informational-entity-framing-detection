@@ -317,9 +317,9 @@ if FT_EMB:
         with open(test_fp, "rb") as f:
             test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
-        fold['train_batches'] = to_batches(train_data)
-        fold['dev_batches'] = to_batches(dev_data)
-        fold['test_batches'] = to_batches(test_data)
+        fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
+        fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
+        fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
 
         bert = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=N_EPOCHS, n_train_batches=len(fold['train_batches']),
                            bert_lr=BERT_LR)
