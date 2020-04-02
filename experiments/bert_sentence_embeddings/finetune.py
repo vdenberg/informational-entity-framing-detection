@@ -154,6 +154,17 @@ if __name__ == '__main__':
     all_batches = to_batches(all_data, batch_size=1)
 
     for SEED_VAL in [263]:
+        model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
+                      '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
+                      '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
+                      '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
+                      '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
+                      '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
+                      '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
+                      '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
+                      '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
+                      '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
+                      }
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
@@ -210,6 +221,7 @@ if __name__ == '__main__':
             dev_batches = to_batches(dev_data, BATCH_SIZE)
             test_batches = to_batches(test_data, BATCH_SIZE)
 
+            '''
             model.train()
 
             t0 = time.time()
@@ -258,9 +270,11 @@ if __name__ == '__main__':
                     best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
                     high_score = '(HIGH SCORE)'
 
-                logger.info(f'{dev_perf} {high_score}')
+                logger.info(f'ep {ep}: {dev_perf} {high_score}')
+                '''
 
             for EMB_TYPE in ['poolbert']:
+                best_model_loc = model_locs[fold_name]
                 best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                            output_hidden_states=True,
                                                                            output_attentions=True)
