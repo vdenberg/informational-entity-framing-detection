@@ -452,13 +452,14 @@ for fold in folds:
 
     # train
     train_elapsed, losses = clf.train_all_epochs(fold)
+    logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
 
     clf.wrapper.load_model(clf.best_model_loc)
+    logger.info(f'Loaded best model from {clf.best_model_loc}')
     #for ep in range(1, int(N_EPOCHS+1)):
     #    av_loss, elapsed = clf.train_epoch(fold['train_batches'])
     #    tr_mets, tr_perf, val_mets, val_perf = clf.validate_after_epoch(ep, elapsed, fold)
 
-    logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
     logger.info(f"Logged to: {LOG_NAME}.")
 
 
