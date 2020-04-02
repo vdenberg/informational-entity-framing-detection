@@ -438,7 +438,7 @@ logger.info(f"Get embeddings")
 fold = [folds[1]]
 
 for fold in folds:
-    logger.info(f"Train CNM")
+    logger.info(f"Train CNM on {fold['name']}")
     # cnm model with bert-like classifier and no bilstm
     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                  weights_mat=WEIGHTS_MATRIX, emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
