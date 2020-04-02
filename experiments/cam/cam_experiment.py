@@ -329,8 +329,7 @@ if FT_EMB:
         best_val_mets, test_mets = bert_cl.train_on_fold(fold)
 
         #best_model = bert.load_model(load_from_path=bert_cl.best_model_loc)
-        #bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger,
-                    n_train_batches=len(fold['train_batches']))
+        #bert = BertWrapper(model=ft.trained_model, cp_dir=CHECKPOINT_DIR, logger=logger, n_train_batches=len(fold['train_batches']))
         #all_batches = to_batches(to_tensors(data, device), batch_size=BATCH_SIZE)
         #data['embeddings'] = bert.get_embeddings(all_batches, emb_type=EMB_TYPE)
         #data_w_embeds = data
