@@ -450,26 +450,12 @@ for fold in folds:
     clf = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, printing=100)
 
     # train
-    t0 = time.time()
-    for ep in range(1, int(N_EPOCHS+1)):
-        av_loss, elapsed = clf.train_epoch(fold['train_batches'])
-        clf.validate_after_epoch(ep, elapsed, fold)
+    train_elapsed, losses = clf.train_all_epochs(fold)
 
-        '''
-        epoch_name = name_base + f"_ep{ep}"
-        cnm.save_model(epoch_name)
-        dev_preds, dev_loss = cnm.predict(fold['dev_batches'])
-        dev_mets, dev_perf = my_eval(fold['dev'].label, dev_preds, av_loss=av_loss, set_type='dev', name=epoch_name)
-        logger.info(f'{dev_perf}')
+    #for ep in range(1, int(N_EPOCHS+1)):
+    #    av_loss, elapsed = clf.train_epoch(fold['train_batches'])
+    #    tr_mets, tr_perf, val_mets, val_perf = clf.validate_after_epoch(ep, elapsed, fold)
 
-        # check if best
-        if dev_mets['f1'] > clf.best_val_mets['f1']:
-            clf.best_val_mets = dev_mets
-            clf.best_val_perf = dev_perf
-            clf.best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
-
-        logger.info(f"Best model for fold so far: {clf.best_model_loc}: {clf.best_val_perf}")
-        '''
     logger.info(f"Best model overall: {clf.best_model_loc}: {clf.best_val_perf}")
     logger.info(f"Logged to: {LOG_NAME}.")
 
