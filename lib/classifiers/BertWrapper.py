@@ -186,7 +186,7 @@ class BertWrapper:
         input_ids, input_mask, segment_ids, label_ids = batch
 
         with torch.no_grad():
-            outputs = model(input_ids, segment_ids, input_mask, labels=None)
+            outputs = self.model(input_ids, segment_ids, input_mask, labels=None)
             logits, probs, sequence_output, pooled_output = outputs
 
             if emb_type == 'avbert':

@@ -304,7 +304,6 @@ for fold in folds:
 #                    FINETUNE EMBEDDINGS
 # =====================================================================================
 
-
 if FT_EMB:
     logger.info("============ FINETUNE EMBEDDINGS =============")
     logger.info(f" Embedding type: {EMB_TYPE}")
@@ -339,6 +338,7 @@ if FT_EMB:
 # =====================================================================================
 #                    LOAD CAM DATA
 # =====================================================================================
+
 # batch data
 for fold_i, fold in enumerate(folds):
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
@@ -370,7 +370,6 @@ for fold in folds:
 
     logger.info(f" --> Loaded from {embed_fp}, shape: {WEIGHTS_MATRIX.shape}")
     fold['weights_matrix'] = train_batches
-
 
 
 # =====================================================================================
