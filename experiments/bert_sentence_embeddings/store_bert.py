@@ -27,7 +27,7 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 
 
-def to_tensor(features, OUTPUT_MODE):
+def to_tensor(features, OUTPUT_MODE='classification'):
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
