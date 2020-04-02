@@ -64,7 +64,11 @@ class ContextAwareModel(nn.Module):
                 output, hidden = self.lstm(embedded, hidden)
                 contexts_encoded[seq_idx] = output[0]
 
-        target_output = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
+        if self.context_naive:
+            target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
+        else:
+            target_output = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
+
         for item, position in enumerate(positions):
             if self.context_naive:
                 embedding = self.embedding(contexts[item, position]) #contexts_embedded[position, item] #self.embedding(contexts[item, position])

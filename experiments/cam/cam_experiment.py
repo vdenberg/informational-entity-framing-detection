@@ -504,6 +504,7 @@ logger.info(f" Starting LR: {LR}")
 logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
+logger.info(f" Context-naive: {CN}")
 
 # =====================================================================================
 #                    TRAIN ON FOLD 2
