@@ -47,7 +47,7 @@ class Processor():
         return numeric_context_docs
 
     def to_numeric_sentences(self, sentence_ids):
-        with open("data/features_for_bert/all_features.pkl", "rb") as f:
+        with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
             features = pickle.load(f)
         feat_dict = {f.my_id.lower(): f for f in features}
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
@@ -277,7 +277,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-folds = spl.apply_split(features=['id_num', 'context_doc_num', 'position'])
+folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)

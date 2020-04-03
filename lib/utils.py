@@ -10,9 +10,10 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
-def to_tensors(split, features, device):
+def to_tensors(split, device):
     """ Tmp. """
     # to array if needed
+    print(split.columns)
     contexts = np.array([list(el) for el in split.context_doc_num.values])
 
     #token_ids = [f.input_ids for f in features]
@@ -26,8 +27,8 @@ def to_tensors(split, features, device):
     #tok_seg_ids = np.array([list(el) for el in split.tok_seg_ids.values])
 
     # to tensors
-    #token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
-    #token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+    token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+    token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
     #tok_seg_ids = torch.tensor(tok_seg_ids, dtype=torch.long, device=device)
     contexts = torch.tensor(contexts, dtype=torch.long, device=device)
     labels_float = torch.tensor(split.label.to_numpy(), dtype=torch.float, device=device)
