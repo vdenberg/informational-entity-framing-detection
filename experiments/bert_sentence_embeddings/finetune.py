@@ -79,7 +79,7 @@ BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
-PRINT_EVERY = 50
+PRINT_EVERY = args.print_every
 
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
@@ -94,7 +94,7 @@ torch.cuda.manual_seed_all(SEED_VAL)
 OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
-PRINT_EVERY = args.print_every
+
 
 '''
 Set up for BERT baseline:
