@@ -49,7 +49,7 @@ def to_tensors(split=None, features=None, device=None):
     if split:
         return TensorDataset(contexts, positions, token_ids, token_mask, labels)
     elif features:
-        return ids, TensorDataset(token_ids, token_mask, segment_ids, labels), labels
+        return ids, TensorDataset(token_ids, token_mask, labels), labels
 
 
 def to_batches(tensors, batch_size):
