@@ -120,7 +120,7 @@ logger = logging.getLogger()
 logger.info(args)
 
 with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensors(pickle.load(f))
+    all_ids, all_data, all_labels = to_tensors(features=pickle.load(f))
 all_batches = to_batches(all_data, batch_size=1)
 
 best_model_loc = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
