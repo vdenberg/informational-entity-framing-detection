@@ -13,7 +13,6 @@ from matplotlib import ticker
 def to_tensors(split, device):
     """ Tmp. """
     # to array if needed
-    print(split.columns)
     contexts = np.array([list(el) for el in split.context_doc_num.values])
 
     #token_ids = [f.input_ids for f in features]

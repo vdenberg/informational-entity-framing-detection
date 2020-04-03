@@ -82,13 +82,16 @@ class Processor():
 
 def make_weight_matrix(embed_df, EMB_DIM):
     # clean embedding string
+    embed_df = embed_df.fillna(0).replace({'\n', ' '})
     sentence_embeddings = {}
     for index, emb in zip(embed_df.index, embed_df.embeddings):
-        embedding = re.sub('[\[\]]', '', emb)
-        embedding = embedding.split(', ')[:-1]
-        embedding = np.array(embedding)
-        print(embedding.shape)
-        sentence_embeddings[index.lower()] = embedding
+        if emb != 0:
+            emb = re.sub('\s+', ' ', emb)
+            emb = emb[6:-17]
+            emb = re.sub('[\(\[\]\)]', '', emb)
+            emb = emb.split(', ')
+            emb = np.array(emb, dtype=float)
+        sentence_embeddings[index.lower()] = emb
 
     matrix_len = len(embed_df) + 2  # 1 for EOD token and 1 for padding token
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
@@ -121,7 +124,7 @@ parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of 
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
-parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='use')
+parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='poolbert')
 parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
                     help='Whether to finetune pretrained BERT embs')
 
@@ -245,7 +248,7 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
-PREPROCESS = True
+PREPROCESS = False
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
