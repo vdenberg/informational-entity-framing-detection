@@ -89,7 +89,7 @@ BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
-PRINT_EVERY = 50
+PRINT_EVERY = 10
 
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
@@ -232,14 +232,11 @@ if __name__ == '__main__':
 
                     model.zero_grad()
                     outputs = model(input_ids, input_mask, labels=label_ids)
-                    logger.info('1')
                     (loss), logits, probs, sequence_output, pooled_output = outputs
-                    logger.info('2')
 
                     loss_fct = CrossEntropyLoss()
                     loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
-                    logger.info('3')
                     loss.backward()
 
                     tr_loss += loss.item()
@@ -250,7 +247,6 @@ if __name__ == '__main__':
                     scheduler.step()
                     global_step += 1
 
-                    logger.info('4')
                     if step % PRINT_EVERY == 0 and step != 0:
                         # Calculate elapsed time in minutes.
                         elapsed = time.time() - t0
