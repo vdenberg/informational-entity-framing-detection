@@ -180,7 +180,6 @@ class Inferencer():
         elif self.output_mode == "regression":
             preds = np.squeeze(preds)
 
-        print(preds.shape)
         model.train()
         if return_embeddings:
             return embeddings

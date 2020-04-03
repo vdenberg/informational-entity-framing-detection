@@ -251,8 +251,7 @@ for SEED_VAL in [263]: #124
             wrapper.save_model(epoch_name)
 
             dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
-            dev_preds, dev_loss = wrapper.predict(test_batches)
-            print(dev_preds.shape)
+            dev_preds, dev_loss = wrapper.predict(dev_batches)
             dev_mets2, dev_perf2 = eval(dev_labels, dev_preds, set_type='dev', av_loss=dev_loss, name=epoch_name)
 
             # check if best
