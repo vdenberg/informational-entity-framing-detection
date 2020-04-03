@@ -49,7 +49,7 @@ class Processor():
     def to_numeric_sentences(self, sentence_ids):
         with open("data/features_for_bert/all_features.pkl", "rb") as f:
             features = pickle.load(f)
-        feat_dict = {f.my_id: f for f in features}
+        feat_dict = {f.my_id.lower(): f for f in features}
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
         token_mask = [feat_dict[i].input_mask for i in sentence_ids]
         '''
