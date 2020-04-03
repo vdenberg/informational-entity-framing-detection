@@ -206,7 +206,7 @@ if __name__ == '__main__':
                                                                   output_hidden_states=True, output_attentions=True)
 
             model.to(device)
-
+            logger.info('1')
             optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
                               eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
             scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
@@ -222,6 +222,7 @@ if __name__ == '__main__':
             test_batches = to_batches(test_data, BATCH_SIZE)
 
             model.train()
+            logger.info('2')
 
             t0 = time.time()
             for ep in range(NUM_TRAIN_EPOCHS+1):
@@ -233,6 +234,7 @@ if __name__ == '__main__':
 
                     model.zero_grad()
                     outputs = model(input_ids, input_mask, labels=label_ids)
+                    logger.info('3')
                     (loss), logits, probs, sequence_output, pooled_output = outputs
 
                     loss_fct = CrossEntropyLoss()
