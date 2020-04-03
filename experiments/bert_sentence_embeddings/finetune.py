@@ -95,7 +95,6 @@ OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
-
 '''
 Set up for BERT baseline:
 5 seeds
@@ -186,9 +185,10 @@ for SEED_VAL in [263]: #124
         logger.info(f"  Logging to {LOG_NAME}")
 
         n_train_batches = int(len(train_features) / BATCH_SIZE)
-        half_train_batches = int(n_train_batches / 2)
-        num_train_optimization_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+        num_train_optimization_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS #half_train_batches = int(n_train_batches / 2)
         num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+        wrapper = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=NUM_TRAIN_EPOCHS, n_train_batches=n_train_batches,
+                                  bert_lr=LEARNING_RATE)
 
         load_dir = CACHE_DIR
         model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
@@ -246,7 +246,8 @@ for SEED_VAL in [263]: #124
             # Save after Epoch
             epoch_name = name_base + f"_ep{ep}"
             av_loss = tr_loss / len(train_batches)
-            save_model(model, CHECKPOINT_DIR, epoch_name)
+            wrapper.model = model
+            wrapper.save_model(epoch_name)
 
             dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
