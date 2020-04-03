@@ -221,6 +221,7 @@ if __name__ == '__main__':
             test_batches = to_batches(test_data, BATCH_SIZE)
 
             model.train()
+            print(device, USE_CUDA)
 
             t0 = time.time()
             for ep in range(NUM_TRAIN_EPOCHS+1):
@@ -228,7 +229,6 @@ if __name__ == '__main__':
                 nb_tr_examples, nb_tr_steps = 0, 0
                 for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
-                    print(device, USE_CUDA)
                     input_ids, input_mask, segment_ids, label_ids = batch
 
                     model.zero_grad()
