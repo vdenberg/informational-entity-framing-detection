@@ -148,7 +148,7 @@ class Inferencer():
         embeddings = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
-            input_ids, input_mask, segment_ids, label_ids = batch
+            input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
                 outputs = model(input_ids, input_mask, labels=None)
