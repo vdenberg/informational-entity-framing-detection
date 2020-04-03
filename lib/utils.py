@@ -10,37 +10,41 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
-def to_tensors(split, device):
+def to_tensors(split=None, features=None, device=None):
     """ Tmp. """
+
     # to array if needed
-    contexts = np.array([list(el) for el in split.context_doc_num.values])
+    if split:
+        token_ids = [list(el) for el in split.token_ids.values]
+        token_mask = [list(el) for el in split.token_mask.values]
+        labels = split.label.to_numpy()
+        contexts = np.array([list(el) for el in split.context_doc_num.values])
+        positions = split.position.to_numpy()
+        ids = [f.my_id for f in features]
 
-    #token_ids = [f.input_ids for f in features]
-    #token_mask = [f.input_mask for f in features]
-
-    token_ids = [list(el) for el in split.token_ids.values]
-    token_mask = [list(el) for el in split.token_mask.values]
-    #tok_seg_ids = [list(el) for el in split.tok_seg_ids.values]
-    #token_ids = np.array([list(el) for el in split.token_ids.values])
-    #token_mask = np.array([list(el) for el in split.token_mask.values])
-    #tok_seg_ids = np.array([list(el) for el in split.tok_seg_ids.values])
+    elif features:
+        token_ids = [f.input_ids for f in features]
+        token_mask = [f.input_mask for f in features]
+        labels = [f.label_id for f in features]
+        contexts = [None for f in features]
+        positions = [None for f in features]
+        #ids = torch.tensor(split.id_num.to_numpy(), dtype=torch.long, device=device)
 
     # to tensors
     token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
     token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
-    #tok_seg_ids = torch.tensor(tok_seg_ids, dtype=torch.long, device=device)
+    labels = torch.tensor(labels, dtype=torch.long, device=device)
     contexts = torch.tensor(contexts, dtype=torch.long, device=device)
-    labels_float = torch.tensor(split.label.to_numpy(), dtype=torch.float, device=device)
-    labels_long = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
     positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
-
-    ids = torch.tensor(split.id_num.to_numpy(), dtype=torch.long, device=device)
 
     # to dataset
     #tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
-    tensors = TensorDataset(contexts, positions, token_ids, token_mask, labels_long)
+    tensors = TensorDataset(contexts, positions, token_ids, token_mask, labels)
 
-    return tensors
+    if split:
+        return tensors
+    elif features:
+        return  ids, tensors, labels
 
 
 def to_batches(tensors, batch_size):
