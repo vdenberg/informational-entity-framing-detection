@@ -89,7 +89,7 @@ BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
-PRINT_EVERY = 1000
+PRINT_EVERY = 50
 
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
@@ -221,7 +221,6 @@ if __name__ == '__main__':
             dev_batches = to_batches(dev_data, BATCH_SIZE)
             test_batches = to_batches(test_data, BATCH_SIZE)
 
-
             model.train()
 
             t0 = time.time()
@@ -271,7 +270,6 @@ if __name__ == '__main__':
                     high_score = '(HIGH SCORE)'
 
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
-
 
             for EMB_TYPE in ['poolbert']:
                 best_model_loc = model_locs[fold_name]
