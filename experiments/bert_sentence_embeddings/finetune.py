@@ -13,6 +13,7 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import logging
 from lib.utils import to_batches, to_tensors
+from lib.evaluate import my_eval
 import time
 
 #######
@@ -249,18 +250,21 @@ for SEED_VAL in [263]: #124
             wrapper.model = model
             wrapper.save_model(epoch_name)
 
-            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+            dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+            dev_preds, dev_loss = wrapper.predict(test_batches)
+            dev_mets2, dev_perf2 = my_eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
 
             # check if best
             high_score = ''
-            if dev_mets['f1'] > best_val_mets['f1']:
+            if dev_mets1['f1'] > best_val_mets['f1']:
                 best_ep = ep
-                best_val_mets = dev_mets
-                best_val_perf = dev_perf
+                best_val_mets = dev_mets1
+                best_val_perf = dev_perf1
                 best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
                 high_score = '(HIGH SCORE)'
 
-            logger.info(f'ep {ep}: {dev_perf} {high_score}')
+            logger.info(f'1 ep {ep}: {dev_perf1} {high_score}')
+            logger.info(f'2 ep {ep}: {dev_perf2}')
 
         for EMB_TYPE in ['poolbert']:
             best_model_loc = model_locs[fold_name]
