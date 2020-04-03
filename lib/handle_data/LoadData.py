@@ -13,7 +13,6 @@ def tokenize(x):
     global nlp
     return [token.text for token in nlp(x)]
 
-
 class LoadBasil:
     def __init__(self):
         self.raw_dir = 'create_data/emnlp19-BASIL/data/'
@@ -55,7 +54,6 @@ class LoadBasil:
                     all_spans.setdefault(id, {'inf_spans': [], 'lex_spans': []})
 
                     if informational_ann:
-
 
                         for ann in informational_ann:
                             inf_spans.append((ann['start'],ann['end']))

@@ -14,31 +14,13 @@ from lib.utils import get_torch_device
 import logging
 from lib.utils import to_batches, to_tensors
 from lib.evaluate.Eval import eval
+from lib.handle_data.LoadData import
 import time
 
 #######
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
-
-def to_tensor(features, OUTPUT_MODE='classification'):
-    '''
-    example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
-
-    if OUTPUT_MODE == "classification":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    elif OUTPUT_MODE == "regression":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
-
-    data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-    '''
-    return to_tensors(features=features)
-
-# split_input() # only needs to happen once, can be found in split_data
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
@@ -138,12 +120,11 @@ logger = logging.getLogger()
 
 logger.info(args)
 
-with open(DATA_DIR + "folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensor(pickle.load(f))
+with open("data/features_for_word/folds/all_features.pkl", "rb") as f:
+    all_ids, all_data, all_labels = to_tensors(pickle.load(f))
 all_batches = to_batches(all_data, batch_size=1)
 
-for SEED_VAL in [263]: #124
-    model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
+best_model_loc = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
                   '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
                   '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
                   '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
@@ -152,10 +133,11 @@ for SEED_VAL in [263]: #124
                   '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
                   '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
                   '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                  }
+                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'}
+
+for SEED_VAL in [263]: #124
     for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-        name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
+        name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
         if fold_name == 'orig':
             train_fp = os.path.join(DATA_DIR, "train_features.pkl")
@@ -169,15 +151,15 @@ for SEED_VAL in [263]: #124
 
         with open(train_fp, "rb") as f:
             train_features = pickle.load(f)
-            _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+            _, train_data, train_labels = to_tensors(train_features, OUTPUT_MODE)
 
         with open(dev_fp, "rb") as f:
             dev_features = pickle.load(f)
-            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+            _, dev_data, dev_labels = to_tensors(dev_features, OUTPUT_MODE)
 
         with open(test_fp, "rb") as f:
             test_features = pickle.load(f)
-            _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
+            _, test_data, test_labels = to_tensors(test_features, OUTPUT_MODE)
 
         logger.info(f"***** Training on Fold {fold_name} *****")
         logger.info(f"  Batch size = {BATCH_SIZE}")
@@ -250,28 +232,26 @@ for SEED_VAL in [263]: #124
 
             dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
             dev_preds, dev_loss = wrapper.predict(dev_batches)
-            dev_mets2, dev_perf2 = eval(dev_labels, dev_preds, set_type='dev', av_loss=dev_loss, name=epoch_name)
+            dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=dev_loss, name=epoch_name)
             wrapper.save_model(epoch_name)
 
             # check if best
             high_score = ''
-            if dev_mets1['f1'] > best_val_mets['f1']:
+            if dev_mets['f1'] > best_val_mets['f1']:
                 best_ep = ep
-                best_val_mets = dev_mets1
-                best_val_perf = dev_perf1
+                best_val_mets = dev_mets
+                best_val_perf = dev_perf
                 best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
                 high_score = '(HIGH SCORE)'
 
             logger.info(f'1 ep {ep}: {dev_perf1} {high_score}')
-            logger.info(f'2 ep {ep}: {dev_perf2}')
+            logger.info(f'ep {ep}: {dev_perf} {high_score}')
 
         for EMB_TYPE in ['poolbert']:
-            best_model_loc = model_locs[fold_name]
-            best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                       output_hidden_states=True,
-                                                                       output_attentions=True)
-            embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+            best_model_loc = best_model_loc[fold_name]
+            embeddings = wrapper.get_embeddings(all_batches, model_path=best_model_loc, emb_type=EMB_TYPE)
             logger.info(f'Finished {len(embeddings)} embeddings with shape ({len(embeddings)}, {len(embeddings[0])})')
+            #embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
             basil_w_BERT = pd.DataFrame(index=all_ids)
             basil_w_BERT[EMB_TYPE] = embeddings
             basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
@@ -295,7 +275,7 @@ for SEED_VAL in [263]: #124
             results_df = pd.read_csv('reports/bert_baseline/new_results_table.csv', index_col=False)
             best_val_mets['seed'] = SEED_VAL
             best_val_mets['fold'] = fold_name
-            best_val_mets['epoch'] = model_locs[fold_name][-1] #
+            best_val_mets['epoch'] = best_model_loc[fold_name][-1] #
             best_val_mets['set_type'] = 'val'
             test_mets['seed'] = SEED_VAL
             test_mets['fold'] = fold_name

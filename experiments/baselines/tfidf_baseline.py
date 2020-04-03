@@ -1,4 +1,4 @@
-from lib.handle_data.LoadBasil import load_basil_features
+from lib.handle_data.LoadData import load_basil_features
 from lib.handle_data.SplitData import Split
 from lib.classifiers.Baselines import Maj, TFIDFBaseline
 from lib.evaluate.CrossValidation import CrossValidation

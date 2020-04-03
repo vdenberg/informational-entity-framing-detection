@@ -207,7 +207,10 @@ class BertWrapper:
             elif emb_type == 'poolbert':
                 return pooled_output
 
-    def get_embeddings(self, batches, emb_type):
+    def get_embeddings(self, batches, emb_type, model_path=''):
+        if model_path:
+            self.load_model(load_from_path=model_path)
+
         self.model.eval()
         embeddings = []
         for step, batch in enumerate(batches):
