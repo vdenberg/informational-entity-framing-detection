@@ -28,7 +28,7 @@ class InputFeatures(object):
     """A single set of features of data."""
 
     def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
-        self.my_id = my_id
+        self.my_id = my_id.lower()
         self.input_ids = input_ids
         self.input_mask = input_mask
         self.segment_ids = segment_ids
