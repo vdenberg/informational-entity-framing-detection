@@ -215,28 +215,28 @@ for SEED_VAL in [263]: #124
         model.train()
 
         t0 = time.time()
-        for ep in range(NUM_TRAIN_EPOCHS+1):
+        for ep in range(1, NUM_TRAIN_EPOCHS+1):
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
             for step, batch in enumerate(train_batches):
+                # style 1
                 batch = tuple(t.to(device) for t in batch)
                 input_ids, input_mask, label_ids = batch
-
                 model.zero_grad()
                 outputs = model(input_ids, input_mask, labels=label_ids)
                 (loss), logits, probs, sequence_output, pooled_output = outputs
-
                 loss_fct = CrossEntropyLoss()
                 loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-
                 loss.backward()
-
                 tr_loss += loss.item()
                 nb_tr_examples += input_ids.size(0)
                 nb_tr_steps += 1
-
                 optimizer.step()
                 scheduler.step()
+
+                #style 2
+                wrapper.train_on_batch(batch)
+
                 global_step += 1
 
                 if step % PRINT_EVERY == 0 and step != 0:
@@ -247,12 +247,11 @@ for SEED_VAL in [263]: #124
             # Save after Epoch
             epoch_name = name_base + f"_ep{ep}"
             av_loss = tr_loss / len(train_batches)
-            wrapper.model = model
-            wrapper.save_model(epoch_name)
 
             dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
             dev_preds, dev_loss = wrapper.predict(dev_batches)
             dev_mets2, dev_perf2 = eval(dev_labels, dev_preds, set_type='dev', av_loss=dev_loss, name=epoch_name)
+            wrapper.save_model(epoch_name)
 
             # check if best
             high_score = ''
