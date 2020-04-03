@@ -14,7 +14,6 @@ from lib.utils import get_torch_device
 import logging
 from lib.utils import to_batches, to_tensors
 from lib.evaluate.Eval import eval
-from lib.handle_data.LoadData import
 import time
 
 #######
@@ -192,7 +191,6 @@ for SEED_VAL in [263]: #124
         train_batches = to_batches(train_data, BATCH_SIZE)
         dev_batches = to_batches(dev_data, BATCH_SIZE)
         test_batches = to_batches(test_data, BATCH_SIZE)
-
 
         model.train()
 
