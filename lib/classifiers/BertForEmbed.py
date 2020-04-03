@@ -5,7 +5,7 @@ import torch
 from torch import nn
 import numpy as np
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from lib.evaluate.StandardEval import my_eval
+from lib.evaluate.Eval import eval
 import os
 
 
