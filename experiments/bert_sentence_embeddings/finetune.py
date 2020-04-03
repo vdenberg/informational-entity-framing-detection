@@ -228,6 +228,7 @@ if __name__ == '__main__':
                 nb_tr_examples, nb_tr_steps = 0, 0
                 for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
+                    print(device, USE_CUDA)
                     input_ids, input_mask, segment_ids, label_ids = batch
 
                     model.zero_grad()
