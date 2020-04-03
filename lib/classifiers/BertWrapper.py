@@ -9,6 +9,16 @@ import os
 import numpy as np
 from lib.utils import get_torch_device
 
+class InputFeatures(object):
+    """A single set of features of data."""
+
+    def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
+        self.my_id = my_id
+        self.input_ids = input_ids
+        self.input_mask = input_mask
+        self.segment_ids = segment_ids
+        self.label_id = label_id
+
 
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config):

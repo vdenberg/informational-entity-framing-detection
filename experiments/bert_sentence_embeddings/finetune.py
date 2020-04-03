@@ -3,7 +3,7 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.optim.lr_scheduler import CyclicLR
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-#from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertWrapper import InputFeatures #BertForSequenceClassification, BertWrapper
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     # set logger
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{"finding good dev model"}')
-    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
+    LOG_NAME = f'tmp' #f"{REPORTS_DIR}/{now_string}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 
     logger.info(args)
 
-    with open(DATA_DIR + "/all_features.pkl", "rb") as f:
+    with open(DATA_DIR + "folds/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
     all_batches = to_batches(all_data, batch_size=1)
 
