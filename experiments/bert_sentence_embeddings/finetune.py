@@ -150,15 +150,15 @@ for SEED_VAL in [263]: #124
 
         with open(train_fp, "rb") as f:
             train_features = pickle.load(f)
-            _, train_data, train_labels = to_tensors(train_features, OUTPUT_MODE)
+            _, train_data, train_labels = to_tensors(features=train_features)
 
         with open(dev_fp, "rb") as f:
             dev_features = pickle.load(f)
-            _, dev_data, dev_labels = to_tensors(dev_features, OUTPUT_MODE)
+            _, dev_data, dev_labels = to_tensors(features=dev_features)
 
         with open(test_fp, "rb") as f:
             test_features = pickle.load(f)
-            _, test_data, test_labels = to_tensors(test_features, OUTPUT_MODE)
+            _, test_data, test_labels = to_tensors(features=test_features)
 
         logger.info(f"***** Training on Fold {fold_name} *****")
         logger.info(f"  Batch size = {BATCH_SIZE}")
