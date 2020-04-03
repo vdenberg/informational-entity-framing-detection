@@ -1,27 +1,40 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+from torch.optim.lr_scheduler import CyclicLR
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-from lib.classifiers.BertWrapper import InputFeatures #, BertForSequenceClassification, BertWrapper
+#from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
-#from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
+from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import os, sys, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
-import logging
-from lib.utils import to_batches, to_tensors
 import time
+import logging
+from lib.utils import to_batches
 
 #######
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
 
+
+class InputFeatures(object):
+    """A single set of features of data."""
+
+    def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
+        self.my_id = my_id
+        self.input_ids = input_ids
+        self.input_mask = input_mask
+        self.segment_ids = segment_ids
+        self.label_id = label_id
+
+
 def to_tensor(features, OUTPUT_MODE='classification'):
-    '''
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
@@ -34,8 +47,6 @@ def to_tensor(features, OUTPUT_MODE='classification'):
 
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-    '''
-    return to_tensors(features=features)
 
 # split_input() # only needs to happen once, can be found in split_data
 
@@ -78,7 +89,7 @@ BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
-PRINT_EVERY = 50
+PRINT_EVERY = 1000
 
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
@@ -138,7 +149,7 @@ if __name__ == '__main__':
 
     logger.info(args)
 
-    with open(DATA_DIR + "folds/all_features.pkl", "rb") as f:
+    with open(DATA_DIR + "/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
     all_batches = to_batches(all_data, batch_size=1)
 
@@ -154,7 +165,7 @@ if __name__ == '__main__':
                       '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
                       '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                       }
-        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+        for fold_name in ['orig', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
 
             if fold_name == 'orig':
@@ -261,13 +272,14 @@ if __name__ == '__main__':
 
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
 
+
             for EMB_TYPE in ['poolbert']:
                 best_model_loc = model_locs[fold_name]
                 best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                            output_hidden_states=True,
                                                                            output_attentions=True)
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                logger.info(f'Finished {len(embeddings)} embeddings with shape ({len(embeddings)}, {len(embeddings[0])})')
+                logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embeddings
                 basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
