@@ -24,6 +24,16 @@ def to_tensor(features, OUTPUT_MODE):
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
+class InputFeatures(object):
+    """A single set of features of data."""
+
+    def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
+        self.my_id = my_id
+        self.input_ids = input_ids
+        self.input_mask = input_mask
+        self.segment_ids = segment_ids
+        self.label_id = label_id
+
 # model
 
 class BertForSequenceClassification(BertPreTrainedModel):

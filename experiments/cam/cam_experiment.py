@@ -11,7 +11,7 @@ from lib.handle_data.SplitData import Split
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.BertWrapper import BertWrapper
 
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor, InputFeatures
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from lib.evaluate.StandardEval import my_eval
 import pickle, time
