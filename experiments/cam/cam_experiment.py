@@ -477,6 +477,7 @@ logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
+logger.info(f" Use cuda: {USE_CUDA}")
 
 cam_table = pd.read_csv('reports/cam/results_table.csv')
 new_cam_table = pd.DataFrame(columns=cam_table.columns)
