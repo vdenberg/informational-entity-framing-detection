@@ -13,7 +13,7 @@ from lib.classifiers.BertWrapper import BertWrapper
 
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor, InputFeatures
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from lib.evaluate.StandardEval import my_eval
+from lib.evaluate.Eval import eval
 import pickle, time
 from torch.nn import CrossEntropyLoss, BCELoss
 from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
