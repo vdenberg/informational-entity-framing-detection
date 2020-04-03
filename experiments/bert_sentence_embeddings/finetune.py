@@ -221,8 +221,6 @@ if __name__ == '__main__':
             test_batches = to_batches(test_data, BATCH_SIZE)
 
             model.train()
-            logger.info(device)
-            logger.info(USE_CUDA)
 
             t0 = time.time()
             for ep in range(NUM_TRAIN_EPOCHS+1):
