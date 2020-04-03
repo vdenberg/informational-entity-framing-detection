@@ -420,10 +420,10 @@ for fold in folds:
     data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
     # transform into matrix
-    WEIGHTS_MATRIX = make_weight_matrix(data, EMB_DIM)
+    weights_matrix = make_weight_matrix(data, EMB_DIM)
 
-    logger.info(f" --> Loaded from {embed_fp}, shape: {WEIGHTS_MATRIX.shape}")
-    fold['weights_matrix'] = train_batches
+    logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+    fold['weights_matrix'] = weights_matrix
 
 
 # =====================================================================================
