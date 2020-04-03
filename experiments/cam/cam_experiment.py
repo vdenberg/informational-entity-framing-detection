@@ -47,7 +47,7 @@ class Processor():
         return numeric_context_docs
 
     def to_numeric_sentences(self, sentence_ids):
-        with open(DATA_DIR + "/all_features.pkl", "rb") as f:
+        with open("data/features_for_bert/all_features.pkl", "rb") as f:
             features = pickle.load(f)
         feat_dict = {f.my_id: f for f in features}
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
