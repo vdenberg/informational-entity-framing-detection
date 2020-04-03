@@ -119,7 +119,7 @@ logger = logging.getLogger()
 
 logger.info(args)
 
-with open("data/features_for_word/folds/all_features.pkl", "rb") as f:
+with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f))
 all_batches = to_batches(all_data, batch_size=1)
 
