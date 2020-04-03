@@ -184,9 +184,9 @@ class BertWrapper:
                 probs = probs.detach().cpu().numpy()
 
             if len(y_pred) == 0:
-                y_pred.append(probs.detach().cpu().numpy())
+                y_pred.append(probs)
             else:
-                y_pred[0] = np.append(y_pred[0], probs.detach().cpu().numpy(), axis=0)
+                y_pred[0] = np.append(y_pred[0], probs, axis=0)
             sum_loss += loss.item()
 
         y_pred = np.argmax(y_pred[0], axis=1)
