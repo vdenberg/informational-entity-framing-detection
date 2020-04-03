@@ -1,4 +1,4 @@
-import argparse, os, sys, logging
+import argparse, os, sys, logging, re
 from datetime import datetime
 import random
 
@@ -75,8 +75,14 @@ class Processor():
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
-    sentence_embeddings = {i.lower(): np.array(u.strip('[]').split(', ')) for i, u in
-                           zip(embed_df.index, embed_df.embeddings)}
+    # clean embedding string
+    sentence_embeddings = {}
+    for index, emb in zip(embed_df.index, embed_df.embeddings):
+        embedding = re.sub('[\[\]]', '', emb)
+        embedding = emb.split(', ')[:-1]
+        embedding = np.array(embedding)
+        print(empedding.shape)
+        sentence_embeddings[index.lower()] = embedding
 
     matrix_len = len(embed_df) + 2  # 1 for EOD token and 1 for padding token
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
