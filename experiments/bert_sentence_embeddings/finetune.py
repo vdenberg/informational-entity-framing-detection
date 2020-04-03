@@ -7,13 +7,13 @@ from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
+#from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import os, sys, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import logging
-from lib.utils import to_batches
+from lib.utils import to_batches, to_tensors
 import time
 
 #######
@@ -22,6 +22,7 @@ import time
 #####
 
 def to_tensor(features, OUTPUT_MODE='classification'):
+    '''
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
@@ -34,6 +35,8 @@ def to_tensor(features, OUTPUT_MODE='classification'):
 
     data = TensorDataset(input_ids, input_mask, segment_ids, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
+    '''
+    return to_tensors(features=features)
 
 # split_input() # only needs to happen once, can be found in split_data
 
@@ -76,7 +79,7 @@ BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
-PRINT_EVERY = 1000
+PRINT_EVERY = 100
 
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
