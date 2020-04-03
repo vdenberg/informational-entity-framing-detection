@@ -1,9 +1,8 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-from torch.optim.lr_scheduler import CyclicLR
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-from lib.classifiers.BertWrapper import InputFeatures #BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
+from lib.classifiers.BertWrapper import InputFeatures, BertForSequenceClassification, BertWrapper
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
@@ -13,7 +12,6 @@ import os, sys, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
-import time
 import logging
 from lib.utils import to_batches
 
@@ -21,18 +19,6 @@ from lib.utils import to_batches
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
-
-
-class InputFeatures(object):
-    """A single set of features of data."""
-
-    def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
-        self.my_id = my_id
-        self.input_ids = input_ids
-        self.input_mask = input_mask
-        self.segment_ids = segment_ids
-        self.label_id = label_id
-
 
 def to_tensor(features, OUTPUT_MODE='classification'):
     example_ids = [f.my_id for f in features]
@@ -221,7 +207,7 @@ if __name__ == '__main__':
             dev_batches = to_batches(dev_data, BATCH_SIZE)
             test_batches = to_batches(test_data, BATCH_SIZE)
 
-            '''
+
             model.train()
 
             t0 = time.time()
@@ -271,7 +257,6 @@ if __name__ == '__main__':
                     high_score = '(HIGH SCORE)'
 
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
-                '''
 
             for EMB_TYPE in ['poolbert']:
                 best_model_loc = model_locs[fold_name]
