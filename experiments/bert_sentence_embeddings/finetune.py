@@ -3,7 +3,6 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
 from lib.classifiers.BertWrapper import InputFeatures, BertForSequenceClassification, BertWrapper
-from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
@@ -95,7 +94,6 @@ OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
-if __name__ == '__main__':
 
     '''
     Set up for BERT baseline:
@@ -130,7 +128,7 @@ if __name__ == '__main__':
     # set logger
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{"finding good dev model"}')
-    LOG_NAME = f'tmp' #f"{REPORTS_DIR}/{now_string}.log"
+    LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
