@@ -187,7 +187,7 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil'):
         preds = self.predict(model, data)
-        metrics_dict, metrics_string = my_eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
+        metrics_dict, metrics_string = eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         #self.logger.info(f'{metrics_string}')
