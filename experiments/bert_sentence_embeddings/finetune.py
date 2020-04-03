@@ -1,8 +1,8 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
-from lib.classifiers.BertWrapper import InputFeatures, BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
+from lib.classifiers.BertWrapper import InputFeatures #, BertForSequenceClassification, BertWrapper
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
@@ -94,6 +94,7 @@ OUTPUT_MODE = 'classification'
 output_mode = OUTPUT_MODE
 inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
 
+if __name__ == '__main__':
 
     '''
     Set up for BERT baseline:
