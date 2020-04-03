@@ -46,7 +46,13 @@ class Processor():
             numeric_context_docs.append(doc)
         return numeric_context_docs
 
-    def to_numeric_sentences(self, sentences):
+    def to_numeric_sentences(self, sentence_ids):
+        with open(DATA_DIR + "/all_features.pkl", "rb") as f:
+            features = pickle.load(f)
+        feat_dict = {f.my_id: f for f in features}
+        token_ids = [feat_dict[i].input_ids for i in sentence_ids]
+        token_mask = [feat_dict[i].input_mask for i in sentence_ids]
+        '''
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
         all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
@@ -70,8 +76,8 @@ class Processor():
             token_ids.append(input_ids)
             token_mask.append(input_mask)
             tok_seg_ids.append(segment_ids)
-
-        return token_ids, token_mask, tok_seg_ids
+        '''
+        return token_ids, token_mask
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
@@ -79,9 +85,9 @@ def make_weight_matrix(embed_df, EMB_DIM):
     sentence_embeddings = {}
     for index, emb in zip(embed_df.index, embed_df.embeddings):
         embedding = re.sub('[\[\]]', '', emb)
-        embedding = emb.split(', ')[:-1]
+        embedding = embedding.split(', ')[:-1]
         embedding = np.array(embedding)
-        print(empedding.shape)
+        print(embedding.shape)
         sentence_embeddings[index.lower()] = embedding
 
     matrix_len = len(embed_df) + 2  # 1 for EOD token and 1 for padding token
@@ -239,7 +245,7 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
-PREPROCESS = False
+PREPROCESS = True
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
@@ -254,8 +260,8 @@ if PREPROCESS:
     raw_data['sentence'] = sentences
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
-    #token_ids, token_mask, tok_seg_ids = processor.to_numeric_sentences(raw_data.sentence.values)
-    #raw_data['token_ids'], raw_data['token_mask'], raw_data['tok_seg_ids'] = token_ids, token_mask, tok_seg_ids
+    token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
+    raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
     raw_data.to_json(DATA_FP)
 
 # =====================================================================================
@@ -310,9 +316,13 @@ for fold in folds:
     #fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
     #fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(fold['train'], train_features, device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], dev_features, device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], test_features, device), batch_size=BATCH_SIZE)
+    #train_batches = to_batches(to_tensors(fold['train'], train_features, device), batch_size=BATCH_SIZE)
+    #dev_batches = to_batches(to_tensors(fold['dev'], dev_features, device), batch_size=BATCH_SIZE)
+    #test_batches = to_batches(to_tensors(fold['test'], test_features, device), batch_size=BATCH_SIZE)
+
+    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
