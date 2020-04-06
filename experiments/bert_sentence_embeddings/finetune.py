@@ -66,7 +66,6 @@ else:
     SEED_VAL = SEED
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
-torch.random(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
