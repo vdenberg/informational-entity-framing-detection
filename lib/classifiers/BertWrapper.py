@@ -34,8 +34,6 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
         self.init_weights()
 
-        #self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
-
     def forward(
         self,
         input_ids=None,

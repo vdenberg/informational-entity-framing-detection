@@ -170,29 +170,34 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
     load_dir = CACHE_DIR
     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)
+    model2 = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+                                                          output_hidden_states=True, output_attentions=True)
 
     model.to(device)
+    model2.to(device)
 
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
+                      eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+    optimizer2 = AdamW(model.parameters(), lr=LEARNING_RATE,
                       eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler #CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
                                # cycle_momentum=False, max_lr=LEARNING_RATE*2)
-
-    global_step = 0
-    nb_tr_steps = 0
-    tr_loss = 0
+    scheduler2 = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                num_training_steps=num_train_optimization_steps)  # PyTorch scheduler #CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
+    # cycle_momentum=False, max_lr=LEARNING_RATE*2)
 
     train_batches = to_batches(train_data, BATCH_SIZE)
     dev_batches = to_batches(dev_data, BATCH_SIZE)
     test_batches = to_batches(test_data, BATCH_SIZE)
 
     model.train()
+    model2.train()
 
     t0 = time.time()
     for ep in range(1, NUM_TRAIN_EPOCHS+1):
         tr_loss = 0
-        nb_tr_examples, nb_tr_steps = 0, 0
+        tr_loss2 = 0
         for step, batch in enumerate(train_batches):
             # style 1
             batch = tuple(t.to(device) for t in batch)
@@ -202,30 +207,41 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             (loss), logits, probs, sequence_output, pooled_output = outputs
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-            loss.backward()
-            tr_loss += loss.item()
-            nb_tr_examples += input_ids.size(0)
-            nb_tr_steps += 1
+            tr_loss += loss.item
             optimizer.step()
+            loss.backward()
             scheduler.step()
 
-            #style 2
-            wrapper.train_on_batch(batch)
+            # copy of style 1
+            batch = tuple(t.to(device) for t in batch)
+            input_ids, input_mask, label_ids = batch
+            model2.zero_grad()
+            outputs2 = model(input_ids, input_mask, labels=label_ids)
+            (loss), logits2, probs, sequence_output, pooled_output = outputs
+            loss_fct = CrossEntropyLoss()
+            loss2 = loss_fct(logits2.view(-1, NUM_LABELS), label_ids.view(-1))
+            loss2.backward()
+            tr_loss2 += loss2.item
+            optimizer2.step()
+            scheduler2.step()
 
-            global_step += 1
+            #style 2
+            tr_loss3 = wrapper.train_on_batch(batch)
 
             if step % PRINT_EVERY == 0 and step != 0:
                 # Calculate elapsed time in minutes.
                 elapsed = time.time() - t0
-                logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                logging.info(f' Epoch {ep}/{NUM_TRAIN_EPOCHS} - {step}/{len(train_batches)} - Tr Loss: {loss.item()} & {loss2.item()}')
 
         # Save after Epoch
         epoch_name = name_base + f"_ep{ep}"
-        av_loss = tr_loss / len(train_batches)
+        av_tr_loss = tr_loss / len(train_batches)
+        av_tr_loss2 = tr_loss2 / len(train_batches)
 
-        dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+        dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_tr_loss, set_type='dev', name=epoch_name)
+        dev_mets2, dev_perf2 = inferencer.eval(model2, dev_batches, dev_labels, av_loss=av_tr_loss2, set_type='dev', name=epoch_name)
         dev_preds, dev_loss = wrapper.predict(dev_batches)
-        dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=dev_loss, name=epoch_name)
+        dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=tr_loss3, name=epoch_name)
         wrapper.save_model(epoch_name)
 
         # check if best
@@ -237,8 +253,9 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
             high_score = '(HIGH SCORE)'
 
-        logger.info(f'outside of function: ep {ep}: {dev_perf1} {high_score}')
-        logger.info(f'inside a function: ep {ep}: {dev_perf} {high_score}')
+        logger.info(f'outside of function: ep {ep}: {dev_perf1} ')
+        logger.info(f'outside of function 2: ep {ep}: {dev_perf2}')
+        logger.info(f'inside a function: ep {ep}: {dev_perf} ') #{high_score}
 
     for EMB_TYPE in ['poolbert']:
         best_model_loc = best_model_loc[fold_name]
