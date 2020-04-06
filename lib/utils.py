@@ -47,7 +47,7 @@ def to_tensors(split=None, features=None, device=None):
     #tensors = TensorDataset(ids, token_ids, token_mask, tok_seg_ids, contexts, labels_fl, labels_long, positions)
 
     if split:
-        return TensorDataset(token_ids, token_mask), labels
+        return TensorDataset(token_ids, token_mask, labels)
     elif features:
         return ids, TensorDataset(token_ids, token_mask, labels), labels
 

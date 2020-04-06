@@ -151,7 +151,7 @@ class ContextAwareClassifier():
 
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
-        inputs, labels = batch
+        inputs, labels = batch[:-1], batch[-1]
 
         self.model.zero_grad()
         logits, probs = self.model(inputs)
@@ -176,7 +176,7 @@ class ContextAwareClassifier():
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            inputs, labels = batch
+            inputs, labels = batch[:-1], batch[-1]
 
             with torch.no_grad():
                 logits, probs = self.model(inputs)
