@@ -296,9 +296,9 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 
 for fold in folds:
-    train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
+    train_batches = to_batches(to_tensors(fold['train'], device=device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(fold['dev'], device=device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(fold['test'], device=device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
