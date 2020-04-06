@@ -216,7 +216,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             batch = tuple(t.to(device) for t in batch)
             input_ids, input_mask, label_ids = batch
             model2.zero_grad()
-            outputs2 = model(input_ids, input_mask, labels=label_ids)
+            outputs2 = model2(input_ids, input_mask, labels=label_ids)
             (loss), logits2, probs, sequence_output, pooled_output = outputs
             loss_fct = CrossEntropyLoss()
             loss2 = loss_fct(logits2.view(-1, NUM_LABELS), label_ids.view(-1))
