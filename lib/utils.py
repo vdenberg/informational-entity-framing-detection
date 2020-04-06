@@ -42,6 +42,7 @@ def to_tensors(split=None, features=None, device=None):
         token_ids = token_ids[:art_i]
         token_mask = token_mask[:art_i]
         labels = labels[:art_i]
+        print(art_i, len(labels))
 
         #contexts = np.array([list(el) for el in split.context_doc_num.values])
         #positions = split.position.to_numpy()
