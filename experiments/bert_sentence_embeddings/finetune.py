@@ -212,21 +212,8 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             loss.backward()
             scheduler.step()
 
-            # copy of style 1
-            batch = tuple(t.to(device) for t in batch)
-            input_ids, input_mask, label_ids = batch
-            model2.zero_grad()
-            outputs2 = model2(input_ids, input_mask, labels=label_ids)
-            (loss2), logits2, probs, sequence_output, pooled_output = outputs2
-            loss_fct = CrossEntropyLoss()
-            loss2 = loss_fct(logits2.view(-1, NUM_LABELS), label_ids.view(-1))
-            loss2.backward()
-            tr_loss2 += loss2.item()
-            optimizer2.step()
-            scheduler2.step()
-
             #style 2
-            tr_loss3 = wrapper.train_on_batch(batch)
+            #tr_loss3 = wrapper.train_on_batch(batch)
 
             if step % PRINT_EVERY == 0 and step != 0:
                 # Calculate elapsed time in minutes.
@@ -239,23 +226,21 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
         av_tr_loss2 = tr_loss2 / len(train_batches)
 
         dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_tr_loss, set_type='dev', name=epoch_name)
-        dev_mets2, dev_perf2 = inferencer.eval(model2, dev_batches, dev_labels, av_loss=av_tr_loss2, set_type='dev', name=epoch_name)
-        dev_preds, dev_loss = wrapper.predict(dev_batches)
-        dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=tr_loss3, name=epoch_name)
+        #dev_preds, dev_loss = wrapper.predict(dev_batches)
+        #dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=tr_loss3, name=epoch_name)
         wrapper.save_model(epoch_name)
 
         # check if best
         high_score = ''
-        if dev_mets['f1'] > best_val_mets['f1']:
+        if dev_mets1['f1'] > best_val_mets['f1']:
             best_ep = ep
-            best_val_mets = dev_mets
-            best_val_perf = dev_perf
+            best_val_mets = dev_mets1
+            best_val_perf = dev_perf1
             best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
             high_score = '(HIGH SCORE)'
 
         logger.info(f'outside of function: ep {ep}: {dev_perf1} ')
-        logger.info(f'outside of function 2: ep {ep}: {dev_perf2}')
-        logger.info(f'inside a function: ep {ep}: {dev_perf} ') #{high_score}
+        #logger.info(f'inside a function: ep {ep}: {dev_perf} ') #{high_score}
 
     for EMB_TYPE in ['poolbert']:
         best_model_loc = best_model_loc[fold_name]
