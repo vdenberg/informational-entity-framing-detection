@@ -217,7 +217,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             input_ids, input_mask, label_ids = batch
             model2.zero_grad()
             outputs2 = model2(input_ids, input_mask, labels=label_ids)
-            (loss2), logits2, probs, sequence_output, pooled_output = outputs
+            (loss2), logits2, probs, sequence_output, pooled_output = outputs2
             loss_fct = CrossEntropyLoss()
             loss2 = loss_fct(logits2.view(-1, NUM_LABELS), label_ids.view(-1))
             loss2.backward()
