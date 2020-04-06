@@ -221,7 +221,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             loss_fct = CrossEntropyLoss()
             loss2 = loss_fct(logits2.view(-1, NUM_LABELS), label_ids.view(-1))
             loss2.backward()
-            tr_loss2 += loss2.item
+            tr_loss2 += loss2.item()
             optimizer2.step()
             scheduler2.step()
 
