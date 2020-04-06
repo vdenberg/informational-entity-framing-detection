@@ -170,29 +170,20 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
     load_dir = CACHE_DIR
     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
                                                           output_hidden_states=True, output_attentions=True)
-    model2 = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
-                                                          output_hidden_states=True, output_attentions=True)
 
     model.to(device)
-    model2.to(device)
 
     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
-                      eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-    optimizer2 = AdamW(model.parameters(), lr=LEARNING_RATE,
                       eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
                                                     num_training_steps=num_train_optimization_steps)  # PyTorch scheduler #CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
                                # cycle_momentum=False, max_lr=LEARNING_RATE*2)
-    scheduler2 = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                num_training_steps=num_train_optimization_steps)  # PyTorch scheduler #CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
-    # cycle_momentum=False, max_lr=LEARNING_RATE*2)
 
     train_batches = to_batches(train_data, BATCH_SIZE)
     dev_batches = to_batches(dev_data, BATCH_SIZE)
     test_batches = to_batches(test_data, BATCH_SIZE)
 
     model.train()
-    model2.train()
 
     t0 = time.time()
     for ep in range(1, NUM_TRAIN_EPOCHS+1):
@@ -218,12 +209,11 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             if step % PRINT_EVERY == 0 and step != 0:
                 # Calculate elapsed time in minutes.
                 elapsed = time.time() - t0
-                logging.info(f' Epoch {ep}/{NUM_TRAIN_EPOCHS} - {step}/{len(train_batches)} - Tr Loss: {loss.item()} & {loss2.item()}')
+                logging.info(f' Epoch {ep}/{NUM_TRAIN_EPOCHS} - {step}/{len(train_batches)} - Tr Loss: {loss.item()}')'
 
         # Save after Epoch
         epoch_name = name_base + f"_ep{ep}"
         av_tr_loss = tr_loss / len(train_batches)
-        av_tr_loss2 = tr_loss2 / len(train_batches)
 
         dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_tr_loss, set_type='dev', name=epoch_name)
         #dev_preds, dev_loss = wrapper.predict(dev_batches)
