@@ -1,6 +1,6 @@
 import time, os
 from lib.utils import format_runtime, plot_scores
-from lib.evaluate.StandardEval import my_eval
+from lib.evaluate.Eval import eval
 
 from sklearn.model_selection import learning_curve
 
