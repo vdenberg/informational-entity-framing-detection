@@ -18,32 +18,39 @@ def to_tensors(split=None, features=None, device=None):
         token_ids = [f.input_ids for f in features]
         token_mask = [f.input_mask for f in features]
         labels = [f.label_id for f in features]
-        # contexts = [None for f in features]
-        # positions = [None for f in features]
         ids = [f.my_id for f in features]
         segment_ids = [f.segment_ids for f in features]
+        token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+        token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+        labels = torch.tensor(labels, dtype=torch.long, device=device)
+
+        if features:
+            return ids, TensorDataset(token_ids, token_mask, labels), labels
 
     else:
-        token_ids = [list(el) for el in split.token_ids.values]
-        token_mask = [list(el) for el in split.token_mask.values]
-        labels = split.label.to_numpy()
-        contexts = np.array([list(el) for el in split.context_doc_num.values])
-        positions = split.position.to_numpy()
+        token_ids = np.zeros((300, 76, 122)) # n article * doc len * sent len
+        token_mask = np.zeros((300, 76, 122)) # n article * doc len * sent len
+        labels = np.zeros((300, 76, 1)) # n article * doc len * sent len
+
+        art_i = 0
+        for n, gr in split.groupby(['story', 'source']):
+            for sent_i, (_, r) in enumerate(gr.iterrows()):
+                token_ids[art_i, sent_i] = np.asarray(r.token_ids)
+                token_mask[art_i, sent_i] = np.asarray(r.token_mask)
+            art_i += 1
+
+
+        #contexts = np.array([list(el) for el in split.context_doc_num.values])
+        #positions = split.position.to_numpy()
         # ids = torch.tensor(split.id_num.to_numpy(), dtype=torch.long, device=device)
 
-    # to tensors
-    if not features:
-        contexts = torch.tensor(contexts, dtype=torch.long, device=device)
-        positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
+        #contexts = torch.tensor(contexts, dtype=torch.long, device=device)
+        #positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
 
-    token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
-    token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
-    labels = torch.tensor(labels, dtype=torch.long, device=device)
+        token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+        token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+        labels = torch.tensor(labels, dtype=torch.long, device=device)
 
-    if features:
-        return ids, TensorDataset(token_ids, token_mask, labels), labels
-
-    else:
         return TensorDataset(token_ids, token_mask, labels)
 
 

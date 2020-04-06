@@ -52,6 +52,7 @@ class Processor():
         feat_dict = {f.my_id.lower(): f for f in features}
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
         token_mask = [feat_dict[i].input_mask for i in sentence_ids]
+        self.max_sent_length = len(token_ids[0])
         '''
         tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
@@ -248,24 +249,30 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
-PREPROCESS = False
+PREPROCESS = True
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
-    logger.info(f" Max len: {MAX_DOC_LEN}")
+    logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
+    sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
     raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
-    sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')['sentence'].values
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
                            names=['sentence_ids', 'context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+    raw_data = raw_data.set_index('sentence_ids', drop=False)
+
+    raw_data['source'] = sentences['source']
+    raw_data['story'] = sentences['story']
+    raw_data['sentence'] = sentences['sentence']
+
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
-    raw_data['sentence'] = sentences
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
     raw_data.to_json(DATA_FP)
+    logger.info(f" Max sent len: {processor.max_sent_length}")
 
 # =====================================================================================
 #                    LOAD DATA
@@ -280,7 +287,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-folds = spl.apply_split(features=['id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
+folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
@@ -402,8 +409,8 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
 logger.info(f" Use cuda: {USE_CUDA}")
 
-cam_table = pd.read_csv('reports/cam/results_table.csv')
-new_cam_table = pd.DataFrame(columns=cam_table.columns)
+#cam_table = pd.read_csv('reports/cam/results_table.csv')
+new_cam_table = pd.DataFrame(columns=['seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
 for fold in folds:
     logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
@@ -426,8 +433,8 @@ for fold in folds:
     new_cam_table = new_cam_table.append(test_mets, ignore_index=True)
     logger.info(f"\n{new_cam_table}")
 
-    cam_table = cam_table.append(new_cam_table, ignore_index=True)
-    cam_table.to_csv('reports/cam/results_table.csv', index=False)
+    #cam_table = cam_table.append(new_cam_table, ignore_index=True)
+    #cam_table.to_csv('reports/cam/results_table.csv', index=False)
 
     logger.info(f"Logged to: {LOG_NAME}.")
-    logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
+    #logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
