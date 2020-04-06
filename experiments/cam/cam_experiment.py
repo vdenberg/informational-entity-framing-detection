@@ -292,11 +292,10 @@ logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
 # =====================================================================================
-#                    LOAD BERT DATA
+#                    BATCH DATA
 # =====================================================================================
 
 for fold in folds:
-    logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
     name_base = f"bert_{SEED_VAL}_f{fold['name']}"
 
     train_fp = os.path.join(f"data/features_for_bert/folds/{fold['name']}_train_features.pkl")
@@ -315,14 +314,6 @@ for fold in folds:
         test_features = pickle.load(f)
         #test_ids, test_data, test_labels = to_tensor(pickle.load(f), device)
 
-    #fold['train_batches'] = to_batches(train_data, BATCH_SIZE)
-    #fold['dev_batches'] = to_batches(dev_data, BATCH_SIZE)
-    #fold['test_batches'] = to_batches(test_data, BATCH_SIZE)
-
-    #train_batches = to_batches(to_tensors(fold['train'], train_features, device), batch_size=BATCH_SIZE)
-    #dev_batches = to_batches(to_tensors(fold['dev'], dev_features, device), batch_size=BATCH_SIZE)
-    #test_batches = to_batches(to_tensors(fold['test'], test_features, device), batch_size=BATCH_SIZE)
-
     train_batches = to_batches(to_tensors(fold['train'], device), batch_size=BATCH_SIZE)
     dev_batches = to_batches(to_tensors(fold['dev'], device), batch_size=BATCH_SIZE)
     test_batches = to_batches(to_tensors(fold['test'], device), batch_size=BATCH_SIZE)
@@ -330,6 +321,7 @@ for fold in folds:
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+
 
 # =====================================================================================
 #                    FINETUNE EMBEDDINGS

@@ -8,6 +8,8 @@ from torch.optim.lr_scheduler import CyclicLR
 import os
 import numpy as np
 from lib.utils import get_torch_device
+from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
+
 
 class InputFeatures(object):
     """A single set of features of data."""
@@ -31,6 +33,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
         self.sigm = nn.Sigmoid()
 
         self.init_weights()
+
+        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
 
     def forward(
         self,

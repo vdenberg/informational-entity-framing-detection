@@ -4,12 +4,12 @@ from torch.autograd import Variable
 from transformers.optimization import AdamW
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-from lib.evaluate.StandardEval import my_eval
+from lib.evaluate.Eval import eval
 from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time
 import numpy as np
 
-from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
+from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 """
 Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and Attention
@@ -49,7 +49,7 @@ class ContextAwareModel(nn.Module):
         self.sigm = Sigmoid()
         #self.classifier = nn.Sequential(Linear(self.hidden_size * 2, 1), Sigmoid())
 
-    def forward(self, contexts, positions):
+    def forward(self, token_ids, token_mask, contexts, positions):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
