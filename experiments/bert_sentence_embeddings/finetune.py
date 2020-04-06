@@ -188,7 +188,6 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
     t0 = time.time()
     for ep in range(1, NUM_TRAIN_EPOCHS+1):
         tr_loss = 0
-        tr_loss2 = 0
         for step, batch in enumerate(train_batches):
             # style 1
             batch = tuple(t.to(device) for t in batch)
@@ -209,7 +208,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             if step % PRINT_EVERY == 0 and step != 0:
                 # Calculate elapsed time in minutes.
                 elapsed = time.time() - t0
-                logging.info(f' Epoch {ep}/{NUM_TRAIN_EPOCHS} - {step}/{len(train_batches)} - Tr Loss: {loss.item()}')'
+                logging.info(f' Epoch {ep}/{NUM_TRAIN_EPOCHS} - {step}/{len(train_batches)} - Tr Loss: {loss.item()}')
 
         # Save after Epoch
         epoch_name = name_base + f"_ep{ep}"
