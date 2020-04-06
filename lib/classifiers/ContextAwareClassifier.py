@@ -5,7 +5,7 @@ from transformers.optimization import AdamW
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.Eval import eval
-from transformers import BertModel, BertPreTrainedModel
+from transformers import BertModel, BertPreTrainedModel, BertForSequenceClassification
 from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time
 import numpy as np
@@ -37,7 +37,7 @@ class ContextAwareModel(nn.Module):
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = Embedding.from_pretrained(self.weights_matrix)
         self.emb_size = weights_matrix.shape[1]
-        self.bert_pretrained = BertPreTrainedModel.from_pretrained('bert-base-cased', cache_dir='models/cache',
+        self.bert_pretrained = BertForSequenceClassification.from_pretrained('bert-base-cased', cache_dir='models/cache',
                                                         num_labels=2, output_hidden_states=False,
                                                         output_attentions=False)
 
