@@ -165,7 +165,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
     num_train_optimization_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS #half_train_batches = int(n_train_batches / 2)
     num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
     wrapper = BertWrapper(cp_dir=CHECKPOINT_DIR, n_eps=NUM_TRAIN_EPOCHS, n_train_batches=n_train_batches,
-                              bert_lr=LEARNING_RATE, seed_val=SEED_VAL)
+                          bert_lr=LEARNING_RATE, seed_val=SEED_VAL)
 
     load_dir = CACHE_DIR
     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
