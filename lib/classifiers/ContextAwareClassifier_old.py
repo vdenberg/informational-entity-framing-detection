@@ -242,13 +242,13 @@ class ContextAwareClassifier():
         for batch in test_dataloader:
             # get output for batch
             batch = tuple(t.to(self.device) for t in batch)
-            input_tensor, target_label_tensor, target_idx = batch
-            outputs = self.model(input_tensor, target_idx, self.max_length)
+            inputs, labels = batch
+            outputs = self.model(inputs, self.max_length)
             outputs = outputs.detach().cpu().numpy()
 
             # convert to predictions
             preds = [1 if output > 0.5 else 0 for output in outputs]
-            y_true.extend([el for el in target_label_tensor.detach().cpu().numpy()])
+            y_true.extend([el for el in labels.detach().cpu().numpy()])
             y_pred.extend(preds)
         return y_true, y_pred
 

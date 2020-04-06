@@ -5,6 +5,7 @@ from transformers.optimization import AdamW
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.Eval import eval
+from transformers import BertModel, BertPreTrainedModel
 from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time
 import numpy as np
@@ -36,8 +37,12 @@ class ContextAwareModel(nn.Module):
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = Embedding.from_pretrained(self.weights_matrix)
         self.emb_size = weights_matrix.shape[1]
-        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
+        self.bert_pretrained = BertPreTrainedModel.from_pretrained('bert-base-cased', cache_dir='models/cache',
+                                                        num_labels=2, output_hidden_states=False,
+                                                        output_attentions=False)
 
+        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
+        self.num_labels = 2
         self.dropout = Dropout(0.1)
         self.context_naive = context_naive
 
@@ -47,62 +52,41 @@ class ContextAwareModel(nn.Module):
             self.classifier = Linear(self.hidden_size * 2, 2)
 
         self.sigm = Sigmoid()
-        #self.classifier = nn.Sequential(Linear(self.hidden_size * 2, 1), Sigmoid())
 
-    def forward(self, token_ids, token_mask, contexts, positions):
+    def forward(self, inputs):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
         :param target_idx: batchsize, specifies which token is to be classified
         :return: sigmoid output of size batchsize
         """
-        batch_size = contexts.shape[0]
-        seq_length = contexts.shape[1]
+        batch_size = inputs[0].shape[0]
+        seq_len = inputs[0].shape[1]
 
-        if not self.context_naive:
-            contexts_encoded = torch.zeros(seq_length, batch_size, self.hidden_size * 2, device=self.device)
+        # init containers for outputs
+        if self.context_naive:
+            sentence_representations = torch.zeros(batch_size, seq_len, self.emb_size, device=self.device)
+        else:
+            sentence_representations = torch.zeros(batch_size, seq_len, self.hidden_size * 2, device=self.device)
             hidden = self.init_hidden(batch_size)
 
-            for seq_idx in range(seq_length):
-                embedded = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
-                output, hidden = self.lstm(embedded, hidden)
-                contexts_encoded[seq_idx] = output[0]
+        token_ids, token_mask = inputs
+        for seq_idx in range(seq_len):
+            t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
+            bert_outputs = self.bert_pretrained.bert(t_i, t_m)
+            embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
 
-        if self.context_naive:
-            target_output = torch.zeros(batch_size, self.emb_size, device=self.device)
-        else:
-            target_output = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
-
-        for item, position in enumerate(positions):
             if self.context_naive:
-                embedding = self.embedding(contexts[item, position]) #contexts_embedded[position, item] #self.embedding(contexts[item, position])
+                sentence_representations[:, seq_idx] = embedded_sentence
+
             else:
-                embedding = contexts_encoded[position, item].view(1, 1, -1)
-            target_output[item] = embedding
+                embedded_sentence = embedded_sentence.view(1, batch_size, -1) #self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
+                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                sentence_representations[:, seq_idx] = encoded
 
-        logits = self.classifier(target_output)
+        logits = self.classifier(sentence_representations)
         probs = self.sigm(logits)
-        return logits, probs, target_output
-
-        '''
-        else:
-            # loop through input and update hidden
-            for ei in range(seq_length):
-                embedded = self.embedding(contexts[:, ei]).view(1, batch_size, -1) # get sentence embedding for that item
-                output, hidden = self.lstm(embedded, # feed hidden of previous token/item, store in hidden again
-                                           hidden)  # output has shape 1 (for token in question) * batchsize * (hidden * 2)
-                contexts_encoded[ei] = output[0]
-
-            # loop through batch to get token at desired index
-            target_output = torch.zeros(batch_size, 1, self.hidden_size * 2, device=self.device)
-            for item in range(batch_size):
-                my_idx = positions[item]
-                target_output[item] = contexts_encoded[my_idx, item, :]
-
-            logits = self.classifier(target_output)
-            probs = self.sigm(logits)  # sigmoid function that returns batch_size * 1
-        return logits, probs, target_output
-        '''
+        return logits, probs
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
@@ -167,10 +151,10 @@ class ContextAwareClassifier():
 
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
-        documents, positions, _, _, labels = batch
+        inputs, labels = batch
 
         self.model.zero_grad()
-        logits, probs, target_output = self.model(documents, positions)
+        logits, probs = self.model(inputs)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
@@ -192,10 +176,10 @@ class ContextAwareClassifier():
         sum_loss = 0
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            contexts, positions,  _, _, labels = batch
+            inputs, labels = batch
 
             with torch.no_grad():
-                logits, probs, target_output = self.model(contexts, positions)
+                logits, probs = self.model(inputs)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
                 #sigm_output  = self.model(ids, documents, positions)
