@@ -238,8 +238,8 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
             high_score = '(HIGH SCORE)'
 
-        logger.info(f'1 ep {ep}: {dev_perf1} {high_score}')
-        logger.info(f'ep {ep}: {dev_perf} {high_score}')
+        logger.info(f'outside of function: ep {ep}: {dev_perf1} {high_score}')
+        logger.info(f'inside a function: ep {ep}: {dev_perf} {high_score}')
 
     for EMB_TYPE in ['poolbert']:
         best_model_loc = best_model_loc[fold_name]
