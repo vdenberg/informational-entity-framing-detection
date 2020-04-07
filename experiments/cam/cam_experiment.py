@@ -464,9 +464,9 @@ for fold in folds:
         test_results[1].update(test_mets)
 
     # train
-    new_cam_table = new_cam_table.append(val_results, ignore_index=True)
-    new_cam_table = new_cam_table.append(test_results, ignore_index=True)
-    logger.info(f"\n{new_cam_table}")
+    new_results_table = new_results_table.append(val_results, ignore_index=True)
+    new_results_table = new_results_table.append(test_results, ignore_index=True)
+    logger.info(f"\n{new_results_table}")
 
     #cam_table = cam_table.append(new_cam_table, ignore_index=True)
     #cam_table.to_csv('reports/cam/results_table.csv', index=False)
