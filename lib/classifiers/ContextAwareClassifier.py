@@ -70,6 +70,7 @@ class ContextAwareModel(nn.Module):
 
         if self.context_naive:
             token_ids, token_mask = inputs
+            print(token_ids.shape)
             for seq_idx in range(seq_len):
                 t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx]  # out: bs * sent len, bs * sent len
                 bert_outputs = self.bert_pretrained.bert(t_i, t_m)
