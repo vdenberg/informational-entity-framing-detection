@@ -65,35 +65,41 @@ class ContextAwareModel(nn.Module):
         seq_len = inputs[0].shape[1]
 
         # init containers for outputs
+        rep_dimension = self.emb_size if self.context_naive else self.hidden * 2
+        sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+
         if self.context_naive:
-            sentence_representations = torch.zeros(batch_size, seq_len, self.emb_size, device=self.device)
-        else:
-            sentence_representations = torch.zeros(batch_size, seq_len, self.hidden_size * 2, device=self.device)
-            hidden = self.init_hidden(batch_size)
-
-        if self.context_naive or self.article_wise:
             token_ids, token_mask = inputs
-        else:
-            contexts, positions = inputs
-
-        for seq_idx in range(seq_len):
-            if self.context_naive or self.article_wise:
-                t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
+            for seq_idx in range(seq_len):
+                t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx]  # out: bs * sent len, bs * sent len
                 bert_outputs = self.bert_pretrained.bert(t_i, t_m)
-                embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
-            else:
-                embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
-
-            if self.context_naive:
+                embedded_sentence = self.dropout(bert_outputs[1])
                 sentence_representations[:, seq_idx] = embedded_sentence
+
+        else:
+            hidden = self.init_hidden(batch_size)
+            if self.article_wise:
+                token_ids, token_mask = inputs
+                for seq_idx in range(seq_len):
+                    t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
+                    bert_outputs = self.bert_pretrained.bert(t_i, t_m)
+                    embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
+                    sentence_representations[:, seq_idx] = embedded_sentence
             else:
-                embedded_sentence = embedded_sentence.view(1, batch_size, -1) #self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm(embedded_sentence, hidden)
-                sentence_representations[:, seq_idx] = encoded
+                contexts, positions = inputs
+                for seq_idx in range(seq_len):
+                    embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
+                    encoded, hidden = self.lstm(embedded_sentence, hidden)
+                    sentence_representations[:, seq_idx] = encoded
+
+                target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
+                for item, position in enumerate(positions):
+                    target_sent_reps[item] = sentence_representations[item, position].view(1, -1)
+                sentence_representations = target_sent_reps
 
         logits = self.classifier(sentence_representations)
         probs = self.sigm(logits)
-        return logits, probs
+        return logits, probs, sentence_representations
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
@@ -161,7 +167,7 @@ class ContextAwareClassifier():
         inputs, labels = batch[:-1], batch[-1]
 
         self.model.zero_grad()
-        logits, probs = self.model(inputs)
+        logits, probs, _ = self.model(inputs)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
@@ -186,7 +192,7 @@ class ContextAwareClassifier():
             inputs, labels = batch[:-1], batch[-1]
 
             with torch.no_grad():
-                logits, probs = self.model(inputs)
+                logits, probs, sentence_representation = self.model(inputs)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
                 #sigm_output  = self.model(ids, documents, positions)
