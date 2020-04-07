@@ -197,7 +197,7 @@ class ContextAwareClassifier():
             token_ids, token_mask, _, _ = inputs
 
             with torch.no_grad():
-                logits, probs, sentence_representation = self.model(token_ids, attention_mask=token_mask)
+                logits, probs, sentence_representation = self.model(inputs)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
