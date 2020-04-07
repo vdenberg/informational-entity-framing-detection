@@ -228,7 +228,7 @@ if __name__ == '__main__':
             nb_tr_examples, nb_tr_steps = 0, 0
             for step, batch in enumerate(train_batches):
                 batch = tuple(t.to(device) for t in batch)
-                input_ids, input_mask, segment_ids, label_ids = batch
+                input_ids, input_mask, label_ids = batch
 
                 model.zero_grad()
                 outputs = model(input_ids, input_mask, labels=label_ids)
