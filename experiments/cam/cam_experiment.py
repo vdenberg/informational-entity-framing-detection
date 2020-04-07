@@ -422,7 +422,7 @@ for fold in folds:
     logger.info(f" Nr batches: {len(fold['train_batches'])}")
     logger.info(f" Use cuda: {USE_CUDA}")
 
-    repretrain = False
+    repretrain = True
     if repretrain:
         logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = 'bert_' + name_base
