@@ -65,7 +65,7 @@ class ContextAwareModel(nn.Module):
         seq_len = inputs[0].shape[1]
 
         # init containers for outputs
-        rep_dimension = self.emb_size if self.context_naive else self.hidden * 2
+        rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
         token_ids, token_mask, contexts, positions = inputs
@@ -165,7 +165,6 @@ class ContextAwareClassifier():
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
         inputs, labels = batch[:-1], batch[-1]
-        token_ids, token_mask, contexts, positions = inputs
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
