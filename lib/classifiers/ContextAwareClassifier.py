@@ -26,7 +26,7 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device):
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, article_wise, device):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
@@ -45,6 +45,7 @@ class ContextAwareModel(nn.Module):
         self.num_labels = 2
         self.dropout = Dropout(0.1)
         self.context_naive = context_naive
+        self.article_wise = article_wise
 
         if self.context_naive:
             self.classifier = Linear(self.emb_size, 2)
@@ -70,15 +71,21 @@ class ContextAwareModel(nn.Module):
             sentence_representations = torch.zeros(batch_size, seq_len, self.hidden_size * 2, device=self.device)
             hidden = self.init_hidden(batch_size)
 
-        token_ids, token_mask = inputs
+        if self.context_naive or self.article_wise:
+            token_ids, token_mask = inputs
+        else:
+            contexts, positions = inputs
+
         for seq_idx in range(seq_len):
-            t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
-            bert_outputs = self.bert_pretrained.bert(t_i, t_m)
-            embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
+            if self.context_naive or self.article_wise:
+                t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
+                bert_outputs = self.bert_pretrained.bert(t_i, t_m)
+                embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
+            else:
+                embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
 
             if self.context_naive:
                 sentence_representations[:, seq_idx] = embedded_sentence
-
             else:
                 embedded_sentence = embedded_sentence.view(1, batch_size, -1) #self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
                 encoded, hidden = self.lstm(embedded_sentence, hidden)
@@ -113,7 +120,7 @@ class ContextAwareClassifier():
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
-                                           device=self.device, context_naive=context_naive)
+                                           device=self.device, context_naive=context_naive, article_wise=False)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 

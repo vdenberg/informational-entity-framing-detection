@@ -10,7 +10,7 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
-def to_tensors(split=None, features=None, device=None):
+def to_tensors(split=None, features=None, device=None, article_wise=False):
     """ Tmp. """
 
     # to array if needed
@@ -28,33 +28,35 @@ def to_tensors(split=None, features=None, device=None):
             return ids, TensorDataset(token_ids, token_mask, labels), labels
 
     else:
-        token_ids = np.zeros((300, 76, 122)) # n article * doc len * sent len
-        token_mask = np.zeros((300, 76, 122)) # n article * doc len * sent len
-        labels = np.zeros((300, 76, 1)) # n article * doc len * sent len
+        if article_wise:
+            token_ids = np.zeros((300, 76, 122)) # n article * doc len * sent len
+            token_mask = np.zeros((300, 76, 122)) # n article * doc len * sent len
+            labels = np.zeros((300, 76, 1)) # n article * doc len * sent len
 
-        art_i = 0
-        for n, gr in split.groupby(['story', 'source']):
-            for sent_i, (_, r) in enumerate(gr.iterrows()):
-                token_ids[art_i, sent_i] = np.asarray(r.token_ids)
-                token_mask[art_i, sent_i] = np.asarray(r.token_mask)
-            art_i += 1
+            art_i = 0
+            for n, gr in split.groupby(['story', 'source']):
+                for sent_i, (_, r) in enumerate(gr.iterrows()):
+                    token_ids[art_i, sent_i] = np.asarray(r.token_ids)
+                    token_mask[art_i, sent_i] = np.asarray(r.token_mask)
+                art_i += 1
 
-        token_ids = token_ids[:art_i]
-        token_mask = token_mask[:art_i]
-        labels = labels[:art_i]
+            token_ids = token_ids[:art_i]
+            token_mask = token_mask[:art_i]
+            labels = labels[:art_i]
 
-        #contexts = np.array([list(el) for el in split.context_doc_num.values])
-        #positions = split.position.to_numpy()
-        # ids = torch.tensor(split.id_num.to_numpy(), dtype=torch.long, device=device)
+            token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+            token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+            labels = torch.tensor(labels, dtype=torch.long, device=device)
 
-        #contexts = torch.tensor(contexts, dtype=torch.long, device=device)
-        #positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
+            return TensorDataset(token_ids, token_mask, labels)
 
-        token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
-        token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
-        labels = torch.tensor(labels, dtype=torch.long, device=device)
+        else:
+            contexts = np.array([list(el) for el in split.context_doc_num.values])
+            contexts = torch.tensor(contexts, dtype=torch.long, device=device)
+            positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
+            labels = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
 
-        return TensorDataset(token_ids, token_mask, labels)
+            return TensorDataset(contexts, positions, labels)
 
 
 def to_batches(tensors, batch_size):
