@@ -43,7 +43,7 @@ cache_dir = CACHE_DIR
 parser = argparse.ArgumentParser()
 parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-inf', '--print_every', type=int, default=100)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
+parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
 parser.add_argument('-sv', '--sv', type=int, default=263)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 parser.add_argument('-f', '--fold', type=str, default='fan')
@@ -130,7 +130,7 @@ best_model_loc = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9
                   '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'}
 
-for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+for fold_name in ['2']:
     name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
     if fold_name == 'orig':
