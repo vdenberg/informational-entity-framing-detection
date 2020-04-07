@@ -143,7 +143,7 @@ class ContextAwareClassifier():
         self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
                                                cycle_momentum=False, max_lr=lr * 30)
         num_train_optimization_steps = nr_train_batches * n_eps
-        num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
+        num_train_warmup_steps = int(0.1 * num_train_optimization_steps) #warmup_proportion
         self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
                                                          num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
