@@ -307,9 +307,9 @@ with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_features = pickle.load(f)
 
 for fold in folds:
-    train_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_train_features.pkl")
-    dev_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_dev_features.pkl")
-    test_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_test_features.pkl")
+    train_fp = os.path.join('data/features_for/bert', f"folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join('data/features_for/bert', f"folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join('data/features_for/bert', f"folds/{fold['name']}_test_features.pkl")
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
