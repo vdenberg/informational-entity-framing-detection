@@ -229,6 +229,8 @@ if not os.path.exists(FIG_DIR):
 
 # set device
 device, USE_CUDA = get_torch_device()
+if not USE_CUDA:
+    exit(0)
 
 # set logger
 now = datetime.now()
