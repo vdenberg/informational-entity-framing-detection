@@ -73,8 +73,13 @@ class ContextAwareModel(nn.Module):
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
         if self.context_naive:
-            bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
-            embedded_sentence = self.dropout(bert_outputs[1])
+            super_naive = True
+            if super_naive:
+                for seq_idx in range(seq_len):
+                    sentence_representations[:, seq_idx] = self.embedding(contexts[:, seq_idx])
+            else:
+                bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
+                embedded_sentence = self.dropout(bert_outputs[1])
             sentence_representations = embedded_sentence
 
         else:
