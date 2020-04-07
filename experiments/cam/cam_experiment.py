@@ -436,7 +436,7 @@ for fold in folds:
         val_results[0].update(best_val_mets)
         test_results[0].update(test_mets)
 
-        embed_df = pd.DataFrame(index=fold['all_ids'])
+        embed_df = pd.DataFrame(index=data.sentence_ids)
         embed_df['embeddings'] = embeddings
         data.loc[data_w_embeds.index, 'embeddings'] = embed_df['embeddings']
         weights_matrix = make_weight_matrix(data, EMB_DIM)

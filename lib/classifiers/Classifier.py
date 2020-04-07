@@ -149,8 +149,6 @@ class Classifier:
 
         return self.best_val_mets, test_mets, embeddings
 
-    def get_embeddings(self, batches, emb_type):
-        return self.wrapper.get_embeddings(batches, emb_type)
 
 
 
