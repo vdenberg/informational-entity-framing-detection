@@ -26,7 +26,7 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, article_wise, device):
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, super_naive, article_wise, device):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
@@ -45,6 +45,7 @@ class ContextAwareModel(nn.Module):
         self.num_labels = 2
         self.dropout = Dropout(0.1)
         self.context_naive = context_naive
+        self.super_naive = super_naive
         self.article_wise = article_wise
 
         if self.context_naive:
@@ -73,8 +74,7 @@ class ContextAwareModel(nn.Module):
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
         if self.context_naive:
-            super_naive = True
-            if super_naive:
+            if self.super_naive:
                 for seq_idx in range(seq_len):
                     sentence_representations[:, seq_idx] = self.embedding(contexts[:, seq_idx])
             else:
@@ -114,7 +114,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
                  b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
-                 step=1, gamma=0.75, n_eps=10, context_naive=False):
+                 step=1, gamma=0.75, n_eps=10, context_naive=False, super_naive=False, article_wise=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()

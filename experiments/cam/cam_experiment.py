@@ -454,7 +454,8 @@ for fold in folds:
         cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                      weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
                                      layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
-                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
+                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA,
+                                     context_naive=False, super_naive=True)
 
         cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                             printing=PRINT_STEP_EVERY, load_from_ep=None)
