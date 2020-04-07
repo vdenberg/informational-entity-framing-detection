@@ -198,8 +198,8 @@ for fold_name in ['2']:
             loss_fct = CrossEntropyLoss()
             loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
             tr_loss += loss.item()
-            optimizer.step()
             loss.backward()
+            optimizer.step()
             scheduler.step()
 
             #style 2
