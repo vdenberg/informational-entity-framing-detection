@@ -68,8 +68,9 @@ class ContextAwareModel(nn.Module):
         rep_dimension = self.emb_size if self.context_naive else self.hidden * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
+        token_ids, token_mask, contexts, positions = inputs
         if self.context_naive:
-            token_ids, token_mask = inputs
+
             bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
             embedded_sentence = self.dropout(bert_outputs[1])
             sentence_representations = embedded_sentence
@@ -77,14 +78,12 @@ class ContextAwareModel(nn.Module):
         else:
             hidden = self.init_hidden(batch_size)
             if self.article_wise:
-                token_ids, token_mask = inputs
                 for seq_idx in range(seq_len):
                     t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
                     bert_outputs = self.bert_pretrained.bert(t_i, t_m)
                     embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
                     sentence_representations[:, seq_idx] = embedded_sentence
             else:
-                contexts, positions = inputs
                 for seq_idx in range(seq_len):
                     embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
                     encoded, hidden = self.lstm(embedded_sentence, hidden)
