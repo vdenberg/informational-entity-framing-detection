@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer
+from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor
 from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, InputFeatures
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
@@ -145,15 +145,15 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
-        _, train_data, train_labels = to_tensors(features=train_features)
+        _, train_data, train_labels = to_tensor(features=train_features)
 
     with open(dev_fp, "rb") as f:
         dev_features = pickle.load(f)
-        _, dev_data, dev_labels = to_tensors(features=dev_features)
+        _, dev_data, dev_labels = to_tensor(features=dev_features)
 
     with open(test_fp, "rb") as f:
         test_features = pickle.load(f)
-        _, test_data, test_labels = to_tensors(features=test_features)
+        _, test_data, test_labels = to_tensor(features=test_features)
 
     logger.info(f"***** Training on Fold {fold_name} *****")
     logger.info(f"  Batch size = {BATCH_SIZE}")
