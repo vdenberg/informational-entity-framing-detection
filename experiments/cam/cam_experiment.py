@@ -313,15 +313,12 @@ for fold in folds:
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
-        _, train_data, train_labels = to_tensors(features=train_features)
 
     with open(dev_fp, "rb") as f:
         dev_features = pickle.load(f)
-        _, dev_data, dev_labels = to_tensors(features=dev_features)
 
     with open(test_fp, "rb") as f:
         test_features = pickle.load(f)
-        _, test_data, test_labels = to_tensors(features=test_features)
 
     train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
     dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
