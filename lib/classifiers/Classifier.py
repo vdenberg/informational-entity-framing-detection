@@ -74,10 +74,10 @@ class Classifier:
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
         tr_preds, tr_loss = self.wrapper.predict(tr_bs)
-        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
+        tr_mets, tr_perf = eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
         val_preds, val_loss = self.wrapper.predict(dev_bs)
-        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
+        val_mets, val_perf = eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
 
         best_log = ''
         if val_mets['f1'] > self.best_val_mets['f1']:
