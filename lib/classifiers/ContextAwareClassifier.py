@@ -130,7 +130,8 @@ class ContextAwareClassifier():
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
-                                           device=self.device, context_naive=context_naive, article_wise=False)
+                                           device=self.device, context_naive=context_naive, super_naive=super_naive,
+                                           article_wise=False)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
