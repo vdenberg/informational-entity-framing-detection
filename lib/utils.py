@@ -25,7 +25,7 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
         ids = [f.my_id for f in features]
         segment_ids = [f.segment_ids for f in features]
         contexts_ph = torch.tensor(segment_ids, dtype=torch.long, device=device)
-        positions_ph = torch.tensor(segment_ids, dtype=torch.long, device=device)
+        positions_ph = labels
 
         if features:
             #return ids, TensorDataset(token_ids, token_mask, labels), labels
