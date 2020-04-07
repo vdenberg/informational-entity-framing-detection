@@ -412,7 +412,7 @@ logger.info(f" Context-naive: {CN}")
 logger.info(f" Use cuda: {USE_CUDA}")
 
 #cam_table = pd.read_csv('reports/cam/results_table.csv')
-new_results_table = pd.DataFrame(columns=['seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
+new_results_table = pd.DataFrame(columns=['model,seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
 for fold in folds:
     val_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
     test_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
