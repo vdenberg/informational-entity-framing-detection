@@ -18,13 +18,14 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
         token_ids = [f.input_ids for f in features]
         token_mask = [f.input_mask for f in features]
         labels = [f.label_id for f in features]
-        ids = [f.my_id for f in features]
-        segment_ids = [f.segment_ids for f in features]
         token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
         token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
         labels = torch.tensor(labels, dtype=torch.long, device=device)
+
+        ids = [f.my_id for f in features]
+        segment_ids = [f.segment_ids for f in features]
         contexts_ph = torch.tensor(segment_ids, dtype=torch.long, device=device)
-        positions_ph = torch.tensor(ids, dtype=torch.long, device=device)
+        positions_ph = torch.tensor(segment_ids, dtype=torch.long, device=device)
 
         if features:
             #return ids, TensorDataset(token_ids, token_mask, labels), labels
