@@ -28,8 +28,8 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
         positions_ph = labels
 
         if features:
-            #return ids, TensorDataset(token_ids, token_mask, labels), labels
-            return TensorDataset(token_ids, token_mask, contexts_ph, positions_ph, labels)
+            return ids, TensorDataset(token_ids, token_mask, labels), labels
+            #return TensorDataset(token_ids, token_mask, contexts_ph, positions_ph, labels)
 
     else:
         if article_wise:
