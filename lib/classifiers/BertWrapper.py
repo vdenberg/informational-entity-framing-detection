@@ -169,7 +169,7 @@ class BertWrapper:
         self.model.zero_grad()
         outputs = self.model(input_ids, input_mask, labels=labels)
         (loss), logits, probs, sequence_ouput, pooled_output = outputs
-        loss = self.criterion(logits.view(-1, 2), label_ids.view(-1))
+        loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
         self.optimizer.step()
@@ -181,6 +181,7 @@ class BertWrapper:
 
         y_pred = []
         sum_loss = 0
+        embs = []
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
             #_, _, input_ids, input_mask, label_ids = batch

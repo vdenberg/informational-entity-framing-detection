@@ -431,10 +431,8 @@ for fold in folds:
         #cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
         #                             weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
         #                             b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True)
-        cnm = BertForSequenceClassification.from_pretrained('bert-base-cased',
-                                                                             cache_dir='models/cache',
-                                                                             num_labels=2, output_hidden_states=False,
-                                                                             output_attentions=False)
+        cnm = BertWrapper(CHECKPOINT_DIR, N_EPOCHS, n_train_batches=len(fold['train_batches']), seed_val=SEED_VAL)
+
         cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                             printing=PRINT_STEP_EVERY, load_from_ep=None)
 
