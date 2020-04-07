@@ -140,8 +140,8 @@ class ContextAwareClassifier():
         nr_train_batches = int(nr_train_instances / b_size)
         half_tr_bs = int(nr_train_instances/2)
         self.optimizer = AdamW(self.model.parameters(), lr=lr, eps=1e-8)
-        self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
-                                               cycle_momentum=False, max_lr=lr * 30)
+        #self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
+        #                                       cycle_momentum=False, max_lr=lr * 30)
         num_train_optimization_steps = nr_train_batches * n_eps
         num_train_warmup_steps = int(0.1 * num_train_optimization_steps) #warmup_proportion
         self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
@@ -165,9 +165,10 @@ class ContextAwareClassifier():
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
         inputs, labels = batch[:-1], batch[-1]
+        token_ids, token_mask = inputs
 
         self.model.zero_grad()
-        logits, probs, _ = self.model(inputs)
+        logits, probs, _ = self.model(token_ids, attention_mask=token_mask)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
@@ -191,9 +192,10 @@ class ContextAwareClassifier():
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
             inputs, labels = batch[:-1], batch[-1]
+            token_ids, token_mask = inputs
 
             with torch.no_grad():
-                logits, probs, sentence_representation = self.model(inputs)
+                logits, probs, sentence_representation = self.model(token_ids, attention_mask=token_mask)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
