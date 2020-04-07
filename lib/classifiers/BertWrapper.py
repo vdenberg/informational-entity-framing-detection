@@ -181,17 +181,20 @@ class BertWrapper:
 
         y_pred = []
         sum_loss = 0
-        embs = []
+        embeddings = []
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
-            #_, _, input_ids, input_mask, label_ids = batch
-            input_ids, input_mask, label_ids = batch
+            inputs, labels = batch[:-1], batch[-1]
+            input_ids, input_mask, _, _ = inputs
 
             with torch.no_grad():
                 outputs = self.model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output, pooled_output = outputs
-                loss = self.criterion(logits.view(-1, self.num_labels), label_ids.view(-1))
+                loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1))
                 probs = probs.detach().cpu().numpy()
+
+                embedding = list(pooled_output.detach().cpu().numpy())
+                embeddings.append(embedding)
 
             if len(y_pred) == 0:
                 y_pred.append(probs)
@@ -200,7 +203,7 @@ class BertWrapper:
             sum_loss += loss.item()
 
         y_pred = np.argmax(y_pred[0], axis=1)
-        return y_pred, sum_loss / len(batches)
+        return y_pred, sum_loss / len(batches), embeddings
 
     def get_embedding_output(self, batch, emb_type):
         batch = tuple(t.to(self.device) for t in batch)
