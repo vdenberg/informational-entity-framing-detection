@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.autograd import Variable
-from transformers.optimization import AdamW
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 from lib.evaluate.Eval import eval
@@ -106,7 +106,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
                  b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
-                 step=1, gamma=0.75, context_naive=False):
+                 step=1, gamma=0.75, n_eps=10, context_naive=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()
@@ -142,6 +142,10 @@ class ContextAwareClassifier():
         self.optimizer = AdamW(self.model.parameters(), lr=lr, eps=1e-8)
         self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
                                                cycle_momentum=False, max_lr=lr * 30)
+        num_train_optimization_steps = nr_train_batches * n_eps
+        num_train_warmup_steps = int(self.warmup_proportion * num_train_optimization_steps)
+        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+                                                         num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
         # set criterion on input
         #n_pos = len([l for l in tr_labs if l == 1])
