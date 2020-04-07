@@ -70,7 +70,6 @@ class ContextAwareModel(nn.Module):
 
         token_ids, token_mask, contexts, positions = inputs
         if self.context_naive:
-
             bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
             embedded_sentence = self.dropout(bert_outputs[1])
             sentence_representations = embedded_sentence
