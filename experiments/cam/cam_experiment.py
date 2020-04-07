@@ -303,12 +303,30 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 #                    BATCH DATA
 # =====================================================================================
+with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
+    all_features = pickle.load(f)
 
 for fold in folds:
-    train_batches = to_batches(to_tensors(fold['train'], device=device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(fold['dev'], device=device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(fold['test'], device=device), batch_size=BATCH_SIZE)
-    all_batches = to_batches(to_tensors(data, device=device), batch_size=BATCH_SIZE)
+    train_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join(DATA_DIR, f"folds/{fold['name']}_test_features.pkl")
+
+    with open(train_fp, "rb") as f:
+        train_features = pickle.load(f)
+        _, train_data, train_labels = to_tensors(features=train_features)
+
+    with open(dev_fp, "rb") as f:
+        dev_features = pickle.load(f)
+        _, dev_data, dev_labels = to_tensors(features=dev_features)
+
+    with open(test_fp, "rb") as f:
+        test_features = pickle.load(f)
+        _, test_data, test_labels = to_tensors(features=test_features)
+
+    train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
+    all_batches = to_batches(to_tensors(features=all_features, device=device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
