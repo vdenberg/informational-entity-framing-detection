@@ -86,9 +86,8 @@ class ContextAwareModel(nn.Module):
                     embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
                     sentence_representations[:, seq_idx] = embedded_sentence
             else:
-                for seq_idx in range(seq_len):
-                    embedded_sentence = self.embedding(c
-                    ontexts[:, seq_idx]).view(1, batch_size, -1)
+                for seq_idx in range(contexts.shape[0]):
+                    embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
                     encoded, hidden = self.lstm(embedded_sentence, hidden)
                     sentence_representations[:, seq_idx] = encoded
 
