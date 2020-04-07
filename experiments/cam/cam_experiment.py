@@ -461,8 +461,8 @@ for fold in folds:
         test_results[1].update(test_mets)
 
     # train
-    new_cam_table = new_cam_table.append(val_mets, ignore_index=True)
-    new_cam_table = new_cam_table.append(test_mets, ignore_index=True)
+    new_cam_table = new_cam_table.append(val_results, ignore_index=True)
+    new_cam_table = new_cam_table.append(test_results, ignore_index=True)
     logger.info(f"\n{new_cam_table}")
 
     #cam_table = cam_table.append(new_cam_table, ignore_index=True)
