@@ -77,7 +77,7 @@ class ContextAwareModel(nn.Module):
         else:
             hidden = self.init_hidden(batch_size)
             if self.article_wise:
-                for seq_idx in range(seq_len):
+                for seq_idx in range(contexts.shape[0]):
                     t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
                     bert_outputs = self.bert_pretrained.bert(t_i, t_m)
                     embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
