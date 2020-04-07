@@ -412,26 +412,56 @@ logger.info(f" Context-naive: {CN}")
 logger.info(f" Use cuda: {USE_CUDA}")
 
 #cam_table = pd.read_csv('reports/cam/results_table.csv')
-new_cam_table = pd.DataFrame(columns=['seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
+new_results_table = pd.DataFrame(columns=['seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
 for fold in folds:
-    logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
+    val_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
+    test_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
+
+    logger.info(f"------------ FOLD {fold['name']} ------------")
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'cyc'}_bs{BATCH_SIZE}"
     logger.info(f" Nr batches: {len(fold['train_batches'])}")
     logger.info(f" Use cuda: {USE_CUDA}")
-    cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
-    cam_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                        printing=PRINT_STEP_EVERY, load_from_ep=None)
+    repretrain = False
+    if repretrain:
+        logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
+        name_base = 'bert_' + name_base
+        cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                     weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True)
 
+        cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                            printing=PRINT_STEP_EVERY, load_from_ep=None)
+
+        best_val_mets, test_mets, embeddings = cnm_cl.train_on_fold(fold)
+        val_results[0].update(best_val_mets)
+        test_results[0].update(test_mets)
+
+        embed_df = pd.DataFrame(index=fold['all_ids'])
+        embed_df['embeddings'] = embeddings
+        data.loc[data_w_embeds.index, 'embeddings'] = embed_df['embeddings']
+        weights_matrix = make_weight_matrix(data, EMB_DIM)
+        logger.info(f" --> Using embeddings from {cnm_cl.best_model_loc}, shape: {weights_matrix.shape}")
+        fold['weights_matrix'] = weights_matrix
+
+    if not CN:
+        logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
+        name_base = 'cam_' + name_base
+
+        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                     weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
+                                     layers=BILSTM_LAYERS,
+                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
+
+        cam_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                            printing=PRINT_STEP_EVERY, load_from_ep=None)
+
+        best_val_mets, test_mets, _ = cam_cl.train_on_fold(fold)
+        val_results[1].update(best_val_mets)
+        test_results[1].update(test_mets)
 
     # train
-    best_val_mets, test_mets = cam_cl.train_on_fold(fold)
-    best_val_mets['seed'], test_mets['seed'] = SEED_VAL, SEED_VAL
-    best_val_mets['fold'], test_mets['fold'] = fold["name"], fold["name"]
-
-    new_cam_table = new_cam_table.append(best_val_mets, ignore_index=True)
+    new_cam_table = new_cam_table.append(val_mets, ignore_index=True)
     new_cam_table = new_cam_table.append(test_mets, ignore_index=True)
     logger.info(f"\n{new_cam_table}")
 

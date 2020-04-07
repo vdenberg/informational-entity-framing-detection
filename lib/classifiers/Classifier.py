@@ -73,10 +73,10 @@ class Classifier:
 
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
-        tr_preds, tr_loss = self.wrapper.predict(tr_bs)
+        tr_preds, tr_loss, _ = self.wrapper.predict(tr_bs)
         tr_mets, tr_perf = eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
-        val_preds, val_loss = self.wrapper.predict(dev_bs)
+        val_preds, val_loss, _ = self.wrapper.predict(dev_bs)
         val_mets, val_perf = eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
 
         best_log = ''
@@ -119,8 +119,8 @@ class Classifier:
         return eps_elapsed, losses
 
     def test_model(self, fold, name):
-        preds, test_loss = self.wrapper.predict(fold['test_batches'])
-        test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
+        preds, test_loss, _ = self.wrapper.predict(fold['test_batches'])
+        test_mets, test_perf = eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
         return test_mets, test_perf
 
     def train_on_fold(self, fold, save_embeddings=False):
@@ -141,7 +141,13 @@ class Classifier:
 
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
         self.logger.info(f" {test_mets}")
-        return self.best_val_mets, test_mets
+
+        if save_embeddings:
+            preds, all_loss, embeddings = self.wrapper.predict(fold['all_batches'])
+        else:
+            embeddings = None
+
+        return self.best_val_mets, test_mets, embeddings
 
     def get_embeddings(self, batches, emb_type):
         return self.wrapper.get_embeddings(batches, emb_type)

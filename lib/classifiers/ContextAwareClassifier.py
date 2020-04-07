@@ -187,6 +187,7 @@ class ContextAwareClassifier():
 
         y_pred = []
         sum_loss = 0
+        embeddings = []
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
             inputs, labels = batch[:-1], batch[-1]
@@ -195,6 +196,8 @@ class ContextAwareClassifier():
                 logits, probs, sentence_representation = self.model(inputs)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
+                embedding = list(sentence_representation.detach().cpu().numpy())
+                embeddings.append(embedding)
                 #sigm_output  = self.model(ids, documents, positions)
                 #sigm_output = sigm_output.detach().cpu().numpy()
                 #loss = self.criterion(sigm_output, labels)
@@ -216,7 +219,7 @@ class ContextAwareClassifier():
         y_pred = np.argmax(y_pred, axis=1)
 
         self.model.train()
-        return y_pred, sum_loss / len(batches)
+        return y_pred, sum_loss / len(batches), embeddings
 
 # _, USE_CUDA = get_torch_device()
 # LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor
