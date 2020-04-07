@@ -234,9 +234,9 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
 
     for EMB_TYPE in ['poolbert']:
         best_model_loc = best_model_loc[fold_name]
-        embeddings = wrapper.get_embeddings(all_batches, model_path=best_model_loc, emb_type=EMB_TYPE)
+        #embeddings = wrapper.get_embeddings(all_batches, model_path=best_model_loc, emb_type=EMB_TYPE)
+        embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
         logger.info(f'Finished {len(embeddings)} embeddings with shape ({len(embeddings)}, {len(embeddings[0])})')
-        #embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
         basil_w_BERT = pd.DataFrame(index=all_ids)
         basil_w_BERT[EMB_TYPE] = embeddings
         basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
