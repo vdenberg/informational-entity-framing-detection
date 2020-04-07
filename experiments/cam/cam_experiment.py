@@ -456,7 +456,7 @@ for fold in folds:
                                      layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
                                      b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=False)
 
-        cam_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+        cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                             printing=PRINT_STEP_EVERY, load_from_ep=None)
 
         best_val_mets, test_mets, _ = cam_cl.train_on_fold(fold)
