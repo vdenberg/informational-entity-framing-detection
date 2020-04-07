@@ -308,10 +308,12 @@ for fold in folds:
     train_batches = to_batches(to_tensors(fold['train'], device=device), batch_size=BATCH_SIZE)
     dev_batches = to_batches(to_tensors(fold['dev'], device=device), batch_size=BATCH_SIZE)
     test_batches = to_batches(to_tensors(fold['test'], device=device), batch_size=BATCH_SIZE)
+    all_batches = to_batches(to_tensors(data, device=device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+    fold['all_batches'] = all_batches
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
@@ -356,6 +358,7 @@ for fold in folds:
 
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
+
 
 
 # =====================================================================================
@@ -436,9 +439,9 @@ for fold in folds:
         val_results[0].update(best_val_mets)
         test_results[0].update(test_mets)
 
-        embed_df = pd.DataFrame(index=data.sentence_ids)
+        embed_df = pd.DataFrame(index=fold['all_batches'].index)
         embed_df['embeddings'] = embeddings
-        data.loc[data_w_embeds.index, 'embeddings'] = embed_df['embeddings']
+        data.loc[fold['all_batches'].index, 'embeddings'] = embed_df['embeddings']
         weights_matrix = make_weight_matrix(data, EMB_DIM)
         logger.info(f" --> Using embeddings from {cnm_cl.best_model_loc}, shape: {weights_matrix.shape}")
         fold['weights_matrix'] = weights_matrix
