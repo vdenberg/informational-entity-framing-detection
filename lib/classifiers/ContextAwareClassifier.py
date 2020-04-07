@@ -61,14 +61,17 @@ class ContextAwareModel(nn.Module):
         :param target_idx: batchsize, specifies which token is to be classified
         :return: sigmoid output of size batchsize
         """
+        token_ids, token_mask, contexts, positions = inputs
+
         batch_size = inputs[0].shape[0]
-        seq_len = inputs[0].shape[1]
+        sen_len = token_ids.shape[1]
+        doc_len = contexts.shape[1]
+        seq_len = doc_len
 
         # init containers for outputs
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
-        token_ids, token_mask, contexts, positions = inputs
         if self.context_naive:
             bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
             embedded_sentence = self.dropout(bert_outputs[1])
@@ -77,7 +80,7 @@ class ContextAwareModel(nn.Module):
         else:
             hidden = self.init_hidden(batch_size)
             if self.article_wise:
-                for seq_idx in range(contexts.shape[0]):
+                for seq_idx in range(seq_len):
                     t_i, t_m = token_ids[:, seq_idx], token_mask[:, seq_idx] # out: bs * sent len, bs * sent len
                     bert_outputs = self.bert_pretrained.bert(t_i, t_m)
                     embedded_sentence = self.dropout(bert_outputs[1]) # out bs * sent len
