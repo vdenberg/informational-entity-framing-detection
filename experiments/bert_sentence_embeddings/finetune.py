@@ -218,7 +218,7 @@ for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
         dev_mets1, dev_perf1 = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_tr_loss, set_type='dev', name=epoch_name)
         #dev_preds, dev_loss = wrapper.predict(dev_batches)
         #dev_mets, dev_perf = eval(dev_labels, dev_preds, set_type='dev', av_loss=tr_loss3, name=epoch_name)
-        wrapper.save_model(epoch_name)
+        #wrapper.save_model(epoch_name)
 
         # check if best
         high_score = ''
