@@ -424,7 +424,7 @@ for fold in folds:
     name_base = f"s{SEED_VAL}_f{fold['name']}_{'wm'}_bs{BATCH_SIZE}"
     logger.info(f" Nr batches: {len(fold['train_batches'])}")
 
-    repretrain = True
+    repretrain = False
     if repretrain:
         logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
         name_base = 'bert_' + name_base
