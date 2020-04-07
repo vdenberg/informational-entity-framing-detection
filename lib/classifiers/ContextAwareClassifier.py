@@ -165,10 +165,10 @@ class ContextAwareClassifier():
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
         inputs, labels = batch[:-1], batch[-1]
-        token_ids, token_mask = inputs
+        token_ids, token_mask, contexts, positions = inputs
 
         self.model.zero_grad()
-        logits, probs, _ = self.model(token_ids, attention_mask=token_mask)
+        logits, probs, _ = self.model(inputs)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
