@@ -163,11 +163,11 @@ class BertWrapper:
 
     def train_on_batch(self, batch):
         batch = tuple(t.to(self.device) for t in batch)
-        #_, _, input_ids, input_mask, label_ids = batch
-        input_ids, input_mask, label_ids = batch
+        inputs, labels = batch[:-1], batch[-1]
+        input_ids, input_mask = inputs
 
         self.model.zero_grad()
-        outputs = self.model(input_ids, input_mask, labels=label_ids)
+        outputs = self.model(input_ids, input_mask, labels=labels)
         (loss), logits, probs, sequence_ouput, pooled_output = outputs
         loss = self.criterion(logits.view(-1, 2), label_ids.view(-1))
         loss.backward()
