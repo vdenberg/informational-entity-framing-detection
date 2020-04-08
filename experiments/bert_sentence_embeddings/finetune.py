@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -123,9 +123,10 @@ if __name__ == '__main__':
                 dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
                 test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
 
-            with open(train_fp, "rb") as f:
-                train_features = pickle.load(f)
-                _, train_data, train_labels = to_tensor(train_features)
+            # with open(train_fp, "rb") as f:
+            #     train_features = pickle.load(f)
+            #     _, train_data, train_labels = to_tensor(train_features)
+            _, train_data, train_labels = load_features(train_fp)
 
             with open(dev_fp, "rb") as f:
                 dev_features = pickle.load(f)
@@ -213,7 +214,7 @@ if __name__ == '__main__':
                                                                        output_attentions=True)
 
             for EMB_TYPE in ['poolbert']:
-                all_ids, all_batches = load_all_batches()
+                all_ids, all_batches = load_features('data/features_for_bert/all_features.pkl')
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)

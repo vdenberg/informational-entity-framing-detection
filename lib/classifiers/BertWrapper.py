@@ -22,11 +22,13 @@ class InputFeatures(object):
         self.segment_ids = segment_ids
         self.label_id = label_id
 
-def load_all_batches():
-    with open("data/features_for_bert/all_features.pkl", "rb") as f:
-        all_ids, all_data, all_labels = to_tensor(pickle.load(f))
-    all_batches = to_batches(all_data, batch_size=1)
-    return all_ids, all_batches
+
+def load_features(fp):
+    with open(fp, "rb") as f:
+        ids, data, labels = to_tensor(pickle.load(f))
+    batches = to_batches(data, batch_size=1)
+    return ids, batches, labels
+
 
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config):
