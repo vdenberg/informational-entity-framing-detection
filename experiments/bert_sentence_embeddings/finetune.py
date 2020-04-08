@@ -142,7 +142,7 @@ if __name__ == '__main__':
             logger.info(f"  SEED = {SEED_VAL}")
             logger.info(f"  Logging to {LOG_NAME}")
 
-            n_train_batches = int(len(train_features) / BATCH_SIZE)
+            n_train_batches = int(len(train_labels) / BATCH_SIZE)
             half_train_batches = int(n_train_batches / 2)
             num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
             num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
