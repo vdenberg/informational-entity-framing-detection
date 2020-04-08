@@ -166,7 +166,6 @@ class Inferencer():
 
             else:
                 emb_output = list(emb_output.numpy())
-            print(emb_output)
             embeddings.append(emb_output)
 
             if len(preds) == 0:
