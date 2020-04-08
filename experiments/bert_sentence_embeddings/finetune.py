@@ -107,28 +107,18 @@ if __name__ == '__main__':
         torch.cuda.manual_seed_all(SEED_VAL)
 
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+            name_base = f"bert_{SEED_VAL}_f{fold_name}"
+
             best_val_mets = {'f1': 0}
             best_val_perf = ''
             best_model_loc = ''
 
-            name_base = f"bert_{SEED_VAL}_f{fold_name}"
-
-            train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
-            dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
-            test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
-
-            # with open(train_fp, "rb") as f:
-            #     train_features = pickle.load(f)
-            #     _, train_data, train_labels = to_tensor(train_features)
+            train_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_train_features.pkl")
+            dev_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_dev_features.pkl")
+            test_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_test_features.pkl")
             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-
-            with open(dev_fp, "rb") as f:
-                dev_features = pickle.load(f)
-                _, dev_data, dev_labels = to_tensor(dev_features)
-
-            with open(test_fp, "rb") as f:
-                test_features = pickle.load(f)
-                _, test_data, test_labels = to_tensor(test_features)
+            _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
+            _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
 
             logger.info(f"***** Training on Fold {fold_name} *****")
             logger.info(f"  Batch size = {BATCH_SIZE}")
@@ -136,25 +126,12 @@ if __name__ == '__main__':
             logger.info(f"  SEED = {SEED_VAL}")
             logger.info(f"  Logging to {LOG_NAME}")
 
-            n_train_batches = int(len(train_labels) / BATCH_SIZE)
-            half_train_batches = int(n_train_batches / 2)
-            num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-            num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
-
             model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                   output_hidden_states=True, output_attentions=True)
-
             model.to(device)
-
             optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-            #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
-
-            dev_batches = to_batches(dev_data, BATCH_SIZE)
-            test_batches = to_batches(test_data, BATCH_SIZE)
-
             model.train()
 
-            t0 = time.time()
             for ep in range(1, NUM_TRAIN_EPOCHS+1):
                 tr_loss = 0
                 nb_tr_examples, nb_tr_steps = 0, 0
@@ -173,16 +150,12 @@ if __name__ == '__main__':
                         loss = loss / GRADIENT_ACCUMULATION_STEPS
 
                     loss.backward()
-
                     tr_loss += loss.item()
-
                     optimizer.step()
                     #scheduler.step()
 
                     if step % PRINT_EVERY == 0 and step != 0:
-                        # Calculate elapsed time in minutes.
-                        elapsed = time.time() - t0
-                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)}')
 
                 # Save after Epoch
                 epoch_name = name_base + f"_ep{ep}"
@@ -234,3 +207,11 @@ if __name__ == '__main__':
             results_table = results_table.append(test_mets, ignore_index=True)
 
     results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
+
+'''
+n_train_batches = len(train_batches)
+half_train_batches = int(n_train_batches / 2)
+num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
+#scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
+'''

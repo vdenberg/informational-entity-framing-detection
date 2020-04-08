@@ -29,7 +29,6 @@ def load_features(fp, batch_size):
     batches = to_batches(data, batch_size=batch_size)
     return ids, batches, labels
 
-
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
