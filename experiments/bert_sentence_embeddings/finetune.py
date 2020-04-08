@@ -124,9 +124,7 @@ if __name__ == '__main__':
                     _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
-                    logger.info(f"  Batch size = {BATCH_SIZE}")
-                    logger.info(f"  Learning rate = {LEARNING_RATE}")
-                    logger.info(f"  SEED = {SEED_VAL}")
+                    logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
                     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
