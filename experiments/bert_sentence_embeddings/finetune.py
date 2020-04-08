@@ -48,7 +48,7 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5)
-parser.add_argument('-sv', '--sv', type=int, default=0)
+parser.add_argument('-sv', '--sv', type=int, default=26354)
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 parser.add_argument('-f', '--fold', type=str, default='fan')
 args = parser.parse_args()
@@ -256,3 +256,13 @@ if __name__ == '__main__':
             results_df.to_csv('reports/bert_baseline/new_results_table.csv', index=False)
 
     logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
+
+
+INFO:root: Epoch 0 / 10 - 100 / 267 - Loss: 0.5111603736877441
+INFO:root: Epoch 0 / 10 - 200 / 267 - Loss: 0.26660874485969543
+INFO:root:ep 0: On dev (tn 685 tp 0 fn 99 fp 0): loss 0.4224 acc 87.37 prec 0.0 rec 0.0 > dev f1: 0.0 <
+INFO:root: Epoch 1 / 10 - 100 / 267 - Loss: 0.5469145178794861
+INFO:root: Epoch 1 / 10 - 200 / 267 - Loss: 0.2408713847398758
+INFO:root:ep 1: On dev (tn 602 tp 49 fn 50 fp 83): loss 0.3562 acc 83.04 prec 37.12 rec 49.49 > dev f1: 42.42 < (HIGH SCORE)
+INFO:root: Epoch 2 / 10 - 100 / 267 - Loss: 0.5760565996170044
+^Csrun: interrupt (one more within 1 sec to abort)
