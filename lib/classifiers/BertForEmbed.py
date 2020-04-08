@@ -132,9 +132,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
 
 class Inferencer():
-    def __init__(self, reports_dir, output_mode, logger, device, use_cuda):
+    def __init__(self, reports_dir, logger, device, use_cuda):
         self.device = device
-        self.output_mode = output_mode
         self.reports_dir = reports_dir
         self.logger = logger
         self.device = device
@@ -175,10 +174,7 @@ class Inferencer():
                 preds[0] = np.append(preds[0], probs.detach().cpu().numpy(), axis=0)
 
         preds = preds[0]
-        if self.output_mode == "classification":
-            preds = np.argmax(preds, axis=1)
-        elif self.output_mode == "regression":
-            preds = np.squeeze(preds)
+        preds = np.argmax(preds, axis=1)
 
         model.train()
         if return_embeddings:

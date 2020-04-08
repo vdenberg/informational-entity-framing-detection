@@ -3,9 +3,8 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
 from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
-from tqdm import trange
 from datetime import datetime
-from torch.nn import CrossEntropyLoss, MSELoss
+from torch.nn import CrossEntropyLoss
 import torch
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import os, sys, random, argparse
@@ -33,38 +32,13 @@ class InputFeatures(object):
         self.label_id = label_id
 
 
-def to_tensor(features, OUTPUT_MODE='classification'):
+def to_tensor(features):
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    segment_ids = torch.tensor([f.segment_ids for f in features], dtype=torch.long)
-
-    if OUTPUT_MODE == "classification":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    elif OUTPUT_MODE == "regression":
-        label_ids = torch.tensor([f.label_id for f in features], dtype=torch.float)
-
+    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
     data = TensorDataset(input_ids, input_mask, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-
-# split_input() # only needs to happen once, can be found in split_data
-
-# find GPU if present
-device, USE_CUDA = get_torch_device()
-
-# Bert pre-trained model selected from: bert-base-uncased, bert-large-uncased, bert-base-cased, bert-large-cased,
-# bert-base-multilingual-uncased, bert-base-multilingual-cased, bert-base-chinese.
-BERT_MODEL = 'bert-base-cased'
-
-# structure of project
-TASK_NAME = 'bert_baseline'
-DATA_DIR = 'data/features_for_bert/'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-
-cache_dir = CACHE_DIR
-
 
 ################
 # HYPERPARAMETERS
@@ -79,66 +53,44 @@ parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 parser.add_argument('-f', '--fold', type=str, default='fan')
 args = parser.parse_args()
 
+# find GPU if present
+device, USE_CUDA = get_torch_device()
+BERT_MODEL = 'bert-base-cased' #bert-large-cased
+TASK_NAME = 'bert'
+DATA_DIR = 'data/features_for_bert/'
+CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+REPORTS_DIR = f'reports/{TASK_NAME}'
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+
 NUM_TRAIN_EPOCHS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED = args.sv
 LOAD_FROM_EP = args.load_from_ep
-
 BATCH_SIZE = 24
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
 PRINT_EVERY = 100
 
+SEED = args.sv
 if SEED == 0:
     SEED_VAL = random.randint(0, 300)
 else:
     SEED_VAL = SEED
 random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
-#torch.random(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
-OUTPUT_MODE = 'classification'
-output_mode = OUTPUT_MODE
-inferencer = Inferencer(REPORTS_DIR, output_mode, logger, device, use_cuda=USE_CUDA)
+inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 
 if __name__ == '__main__':
-
-    '''
-    Set up for BERT baseline:
-    5 seeds
-    10 folds
-    
-    for SEED_VAL in [111, 263, 6, 124, 1001]:
-        for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']: #'fan', 
-    
-    '''
-
-    '''
-    Set up for embeddings production:
-    -- experiment with Cyclic LR -> not clearly better
-    -- experiment with batchsize -> looks good
-    seeds: 111 and 263
-    folds: 1, 2, 6
-
-    for SEED_VAL in [111, 263]:
-        for fold_name in ['1', '2', '6']: 
-            for schedule in ['cyclic', 'warmup']:
-                for BATCH_SIZE in [8, 16, 24]:
-                    name_base = f"bert{SEED_VAL}_fold{fold_name}_sch{schedule}_bs{batchsize}":
-                    
-
-    '''
-
     best_val_mets = {'f1': 0}
     best_val_perf = ''
     best_model_loc = ''
 
     # set logger
     now = datetime.now()
-    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{"finding good dev model"}')
+    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
 
     console_hdlr = logging.StreamHandler(sys.stdout)
@@ -163,8 +115,9 @@ if __name__ == '__main__':
                   '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
+
     for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-        name_base = f"bertforembed_{SEED_VAL}_f{fold_name}"
+        name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
         if fold_name == 'orig':
             train_fp = os.path.join(DATA_DIR, "train_features.pkl")
@@ -178,15 +131,15 @@ if __name__ == '__main__':
 
         with open(train_fp, "rb") as f:
             train_features = pickle.load(f)
-            _, train_data, train_labels = to_tensor(train_features, OUTPUT_MODE)
+            _, train_data, train_labels = to_tensor(train_features)
 
         with open(dev_fp, "rb") as f:
             dev_features = pickle.load(f)
-            _, dev_data, dev_labels = to_tensor(dev_features, OUTPUT_MODE)
+            _, dev_data, dev_labels = to_tensor(dev_features)
 
         with open(test_fp, "rb") as f:
             test_features = pickle.load(f)
-            _, test_data, test_labels = to_tensor(test_features, OUTPUT_MODE)
+            _, test_data, test_labels = to_tensor(test_features)
 
         logger.info(f"***** Training on Fold {fold_name} *****")
         logger.info(f"  Batch size = {BATCH_SIZE}")
@@ -196,20 +149,16 @@ if __name__ == '__main__':
 
         n_train_batches = int(len(train_features) / BATCH_SIZE)
         half_train_batches = int(n_train_batches / 2)
-        num_train_optimization_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-        num_train_warmup_steps = int(WARMUP_PROPORTION * num_train_optimization_steps)
+        num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+        num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
 
-        load_dir = CACHE_DIR
-        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=load_dir, num_labels=NUM_LABELS,
+        model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                               output_hidden_states=True, output_attentions=True)
 
         model.to(device)
 
-        optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,
-                          eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-        scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                        num_training_steps=num_train_optimization_steps)  # PyTorch scheduler #CyclicLR(optimizer, base_lr=LEARNING_RATE, step_size_up=half_train_batches,
-                                   # cycle_momentum=False, max_lr=LEARNING_RATE*2)
+        optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+        #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
 
         global_step = 0
         nb_tr_steps = 0
@@ -243,7 +192,7 @@ if __name__ == '__main__':
                 nb_tr_steps += 1
 
                 optimizer.step()
-                scheduler.step()
+                #scheduler.step()
                 global_step += 1
 
                 if step % PRINT_EVERY == 0 and step != 0:
@@ -268,7 +217,6 @@ if __name__ == '__main__':
                 high_score = '(HIGH SCORE)'
 
             logger.info(f'ep {ep}: {dev_perf} {high_score}')
-
 
         for EMB_TYPE in ['poolbert']:
             best_model_loc = model_locs[fold_name]
