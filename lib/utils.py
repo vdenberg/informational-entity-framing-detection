@@ -4,11 +4,18 @@ import os, math, time
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
-
 #plt.switch_backend('agg')
 #import matplotlib.pyplot as plt
 #import matplotlib.ticker as ticker
 
+
+def to_tensor(features):
+    example_ids = [f.my_id for f in features]
+    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
+    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
+    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    data = TensorDataset(input_ids, input_mask, label_ids)
+    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 def to_tensors(split=None, features=None, device=None, article_wise=False):
     """ Tmp. """

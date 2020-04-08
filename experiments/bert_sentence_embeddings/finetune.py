@@ -12,7 +12,7 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import time
 import logging
-from lib.utils import to_batches
+from lib.utils import to_tensor, to_batches
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######

@@ -9,11 +9,10 @@ import os
 import numpy as np
 from lib.utils import get_torch_device
 from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import random
 
-# helpers
 
+# helpers
 class InputFeatures(object):
     """A single set of features of data."""
 
@@ -23,15 +22,6 @@ class InputFeatures(object):
         self.input_mask = input_mask
         self.segment_ids = segment_ids
         self.label_id = label_id
-
-
-def to_tensor(features):
-    example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(input_ids, input_mask, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
 
 class BertForSequenceClassification(BertPreTrainedModel):
