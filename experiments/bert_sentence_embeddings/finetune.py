@@ -12,8 +12,6 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import time
 import logging
-from lib.utils import to_tensor, to_batches
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######
 # FROM:
@@ -56,7 +54,6 @@ args = parser.parse_args()
 device, USE_CUDA = get_torch_device()
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
 TASK_NAME = 'bert_baseline'
-DATA_DIR = 'data/features_for_bert/'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
@@ -113,9 +110,9 @@ if __name__ == '__main__':
             best_val_perf = ''
             best_model_loc = ''
 
-            train_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_train_features.pkl")
-            dev_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_dev_features.pkl")
-            test_fp = os.path.join(DATA_DIR, f"data/features_for_bert/folds/{fold_name}_test_features.pkl")
+            train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl")
+            dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl")
+            test_fp = f"data/features_for_bert/folds/{fold_name}_test_features.pkl")
             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
             _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
             _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
@@ -136,10 +133,10 @@ if __name__ == '__main__':
                 tr_loss = 0
                 for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
-                    input_ids, input_mask, label_ids = batch
+                    input_ids, input_mask, labels = batch
 
                     model.zero_grad()
-                    outputs = model(input_ids, input_mask, labels=label_ids)
+                    outputs = model(input_ids, input_mask, labels=labels)
                     (loss), logits, probs, sequence_output, pooled_output = outputs
 
                     #loss_fct = CrossEntropyLoss()
