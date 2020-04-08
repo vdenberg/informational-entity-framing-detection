@@ -68,7 +68,8 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-results_table = pd.DataFrame(columns=['model,seed,bs,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
+columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+results_table = pd.DataFrame(columns=columns.split(','))
 
 if __name__ == '__main__':
     # set logger
@@ -112,9 +113,9 @@ if __name__ == '__main__':
                 for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     name += f"_f{fold_name}"
 
-                    best_val_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
+                    best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
                                     'f1': 0, 'model_loc': 'models/checkpoints/bert_baseline/bert_26354_bs24_lr5e-05_f1_ep2'}
-                    test_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                    test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
                     dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl"
