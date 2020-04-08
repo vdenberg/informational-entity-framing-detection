@@ -92,14 +92,13 @@ if __name__ == '__main__':
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
-
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
     logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
     logger = logging.getLogger()
-
     logger.info(args)
 
+    # get all data
     with open(DATA_DIR + "/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f))
     all_batches = to_batches(all_data, batch_size=1)
@@ -160,10 +159,6 @@ if __name__ == '__main__':
         optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
         #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
 
-        global_step = 0
-        nb_tr_steps = 0
-        tr_loss = 0
-
         train_batches = to_batches(train_data, BATCH_SIZE)
         dev_batches = to_batches(dev_data, BATCH_SIZE)
         test_batches = to_batches(test_data, BATCH_SIZE)
@@ -185,15 +180,17 @@ if __name__ == '__main__':
                 loss_fct = CrossEntropyLoss()
                 loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
+                if GRADIENT_ACCUMULATION_STEPS > 1:
+                    loss = loss / GRADIENT_ACCUMULATION_STEPS
+
                 loss.backward()
 
                 tr_loss += loss.item()
-                nb_tr_examples += input_ids.size(0)
-                nb_tr_steps += 1
+
 
                 optimizer.step()
                 #scheduler.step()
-                global_step += 1
+
 
                 if step % PRINT_EVERY == 0 and step != 0:
                     # Calculate elapsed time in minutes.
