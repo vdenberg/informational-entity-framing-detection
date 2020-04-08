@@ -113,6 +113,7 @@ if __name__ == '__main__':
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
+
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
             name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
@@ -240,6 +241,6 @@ if __name__ == '__main__':
             test_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'test'})
             results_table = results_table.append(best_val_mets, ignore_index=True)
             results_table = results_table.append(test_mets, ignore_index=True)
-            results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
 
-        logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
+    results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
+    logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
