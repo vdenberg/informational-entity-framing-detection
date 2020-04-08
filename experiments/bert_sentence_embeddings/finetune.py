@@ -151,7 +151,7 @@ if __name__ == '__main__':
                     #scheduler.step()
 
                     if step % PRINT_EVERY == 0 and step != 0:
-                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)}')
+                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                 # Save after Epoch
                 epoch_name = name_base + f"_ep{ep}"
