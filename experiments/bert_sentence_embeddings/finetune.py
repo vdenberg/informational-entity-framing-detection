@@ -134,7 +134,6 @@ if __name__ == '__main__':
 
             for ep in range(1, NUM_TRAIN_EPOCHS+1):
                 tr_loss = 0
-                nb_tr_examples, nb_tr_steps = 0, 0
                 for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
                     input_ids, input_mask, label_ids = batch
@@ -143,8 +142,8 @@ if __name__ == '__main__':
                     outputs = model(input_ids, input_mask, labels=label_ids)
                     (loss), logits, probs, sequence_output, pooled_output = outputs
 
-                    loss_fct = CrossEntropyLoss()
-                    loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
+                    #loss_fct = CrossEntropyLoss()
+                    #loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
 
                     if GRADIENT_ACCUMULATION_STEPS > 1:
                         loss = loss / GRADIENT_ACCUMULATION_STEPS
