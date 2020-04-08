@@ -113,7 +113,7 @@ if __name__ == '__main__':
                     name += f"_f{fold_name}"
 
                     best_val_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
-                                    'f1': 0, 'model_loc': ''}
+                                    'f1': 0, 'model_loc': 'models/checkpoints/bert_baseline/bert_26354_bs24_lr5e-05_f1_ep2'}
                     test_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
@@ -134,7 +134,7 @@ if __name__ == '__main__':
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
-
+                    '''
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
@@ -167,6 +167,7 @@ if __name__ == '__main__':
                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     # load best model, save embeddings, print performance on test
+                    '''
                     best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=True,
                                                                                output_attentions=True)
@@ -178,6 +179,7 @@ if __name__ == '__main__':
                         embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                         basil_w_BERT = pd.DataFrame(index=all_ids)
                         basil_w_BERT[EMB_TYPE] = embs
+                        print(embs)
                         basil_w_BERT.to_csv(f'data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
 
