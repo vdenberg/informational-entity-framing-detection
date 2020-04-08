@@ -73,10 +73,6 @@ inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 results_table = pd.DataFrame(columns=['model,seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
 
 if __name__ == '__main__':
-    best_val_mets = {'f1': 0}
-    best_val_perf = ''
-    best_model_loc = ''
-
     # set logger
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
@@ -115,6 +111,10 @@ if __name__ == '__main__':
         torch.cuda.manual_seed_all(SEED_VAL)
 
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+            best_val_mets = {'f1': 0}
+            best_val_perf = ''
+            best_model_loc = ''
+
             name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
             if fold_name == 'orig':
@@ -212,17 +212,17 @@ if __name__ == '__main__':
 
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
 
+            best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                       output_hidden_states=True,
+                                                                       output_attentions=True)
+
             for EMB_TYPE in ['poolbert']:
-                best_model_loc = model_locs[fold_name]
-                best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                           output_hidden_states=True,
-                                                                           output_attentions=True)
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embeddings
-                basil_w_BERT.to_csv(f'data/{fold_name}_basil_w_{EMB_TYPE}.csv')
-                logger.info(f'Written to data/{fold_name}_basil_w_{EMB_TYPE}.csv')
+                basil_w_BERT.to_csv(f'data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
+                logger.info(f'Written to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
 
             # Save final model
             logger.info(f"***** Testing on Fold {fold_name} *****")
@@ -237,10 +237,9 @@ if __name__ == '__main__':
             test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='test ' + name)
             logging.info(f"{test_perf}")
 
-            best_val_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'val', 'epoch': model_locs[fold_name][-1]})
+            best_val_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'val', 'epoch': best_model_loc[-1]})
             test_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'test'})
             results_table = results_table.append(best_val_mets, ignore_index=True)
             results_table = results_table.append(test_mets, ignore_index=True)
 
     results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
-    logger.info(f"Best model overall: {best_model_loc}: {best_val_perf}")
