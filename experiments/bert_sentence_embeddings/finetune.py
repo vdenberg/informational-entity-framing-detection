@@ -126,7 +126,7 @@ if __name__ == '__main__':
             # with open(train_fp, "rb") as f:
             #     train_features = pickle.load(f)
             #     _, train_data, train_labels = to_tensor(train_features)
-            _, train_data, train_labels = load_features(train_fp)
+            _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
 
             with open(dev_fp, "rb") as f:
                 dev_features = pickle.load(f)
@@ -214,7 +214,7 @@ if __name__ == '__main__':
                                                                        output_attentions=True)
 
             for EMB_TYPE in ['poolbert']:
-                all_ids, all_batches = load_features('data/features_for_bert/all_features.pkl')
+                all_ids, all_batches = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
