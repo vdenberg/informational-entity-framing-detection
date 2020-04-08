@@ -58,7 +58,7 @@ CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
-NUM_TRAIN_EPOCHS = args.n_epochs
+N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
 LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
@@ -68,7 +68,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-results_table = pd.DataFrame(columns=['model,seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
+results_table = pd.DataFrame(columns=['model,seed,bs,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
 
 if __name__ == '__main__':
     # set logger
@@ -94,6 +94,7 @@ if __name__ == '__main__':
                   }
 
     for SEED in [26354, 0, 0]:
+        name = f"bert_{SEED_VAL}"
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -104,11 +105,11 @@ if __name__ == '__main__':
         torch.cuda.manual_seed_all(SEED_VAL)
 
         for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-            name_base = f"bert_{SEED_VAL}_f{fold_name}"
+            name += f"_f{fold_name}"
 
-            best_val_mets = {'f1': 0}
-            best_val_perf = ''
-            best_model_loc = ''
+            best_val_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
+                            'f1': 0, 'model_loc': ''}
+            test_res = {'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
             train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
             dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl"
@@ -129,78 +130,58 @@ if __name__ == '__main__':
             optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
             model.train()
 
-            for ep in range(1, NUM_TRAIN_EPOCHS+1):
+            for ep in range(1, N_EPS + 1):
+                epoch_name = name + f"_ep{ep}"
+
                 tr_loss = 0
                 for step, batch in enumerate(train_batches):
                     batch = tuple(t.to(device) for t in batch)
-                    input_ids, input_mask, labels = batch
 
                     model.zero_grad()
-                    outputs = model(input_ids, input_mask, labels=labels)
+                    outputs = model(batch[0], batch[1], labels=batch[2])
                     (loss), logits, probs, sequence_output, pooled_output = outputs
-
-                    #loss_fct = CrossEntropyLoss()
-                    #loss = loss_fct(logits.view(-1, NUM_LABELS), label_ids.view(-1))
-
-                    if GRADIENT_ACCUMULATION_STEPS > 1:
-                        loss = loss / GRADIENT_ACCUMULATION_STEPS
 
                     loss.backward()
                     tr_loss += loss.item()
                     optimizer.step()
-                    #scheduler.step()
 
                     if step % PRINT_EVERY == 0 and step != 0:
-                        logging.info(f' Epoch {ep} / {NUM_TRAIN_EPOCHS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                        logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                # Save after Epoch
-                epoch_name = name_base + f"_ep{ep}"
                 av_loss = tr_loss / len(train_batches)
                 save_model(model, CHECKPOINT_DIR, epoch_name)
-
                 dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
 
                 # check if best
                 high_score = ''
-                if dev_mets['f1'] > best_val_mets['f1']:
-                    best_ep = ep
-                    best_val_mets = dev_mets
-                    best_val_perf = dev_perf
-                    best_model_loc = os.path.join(CHECKPOINT_DIR, epoch_name)
+                if dev_mets['f1'] > best_val_res['f1']:
+                    best_val_res.update(dev_mets)
+                    best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
                     high_score = '(HIGH SCORE)'
 
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
 
+            # load best model, save embeddings, print performance on test
             best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                        output_hidden_states=True,
                                                                        output_attentions=True)
+            logger.info(f"***** Embeds and Test - Fold {fold_name} *****")
+            logger.info(f"  Details: {best_val_res}")
 
             for EMB_TYPE in ['poolbert']:
                 all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
-                embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
+                embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 basil_w_BERT = pd.DataFrame(index=all_ids)
-                basil_w_BERT[EMB_TYPE] = embeddings
+                basil_w_BERT[EMB_TYPE] = embs
                 basil_w_BERT.to_csv(f'data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
-                logger.info(f'Written to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
+                logger.info(f'Written embeds ({len(embs)},{len(embs[0])}) to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
 
-            # Save final model
-            logger.info(f"***** Testing on Fold {fold_name} *****")
-            logger.info(f"  Model = {best_model_loc}")
-            logger.info(f"  Batch size = {BATCH_SIZE}")
-            logger.info(f"  Learning rate = {LEARNING_RATE}")
-            logger.info(f"  SEED = {SEED_VAL}")
-            logger.info(f"  Logging to {LOG_NAME}")
-
-            name = name_base + f"_fin{NUM_TRAIN_EPOCHS}"
-            save_model(model, CHECKPOINT_DIR, name)
-            test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='test ' + name)
+            test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
             logging.info(f"{test_perf}")
+            test_res.update(test_mets)
 
-            best_val_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'val', 'epoch': best_model_loc[-1]})
-            test_mets.update({'seed': SEED_VAL, 'fold': fold_name, 'set_type': 'test'})
-            results_table = results_table.append(best_val_mets, ignore_index=True)
-            results_table = results_table.append(test_mets, ignore_index=True)
+            results_table = results_table.append(best_val_res, ignore_index=True)
+            results_table = results_table.append(test_res, ignore_index=True)
 
     results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
 
