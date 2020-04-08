@@ -179,7 +179,7 @@ if __name__ == '__main__':
                                                                        output_attentions=True)
 
             for EMB_TYPE in ['poolbert']:
-                all_ids, all_batches = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+                all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)
