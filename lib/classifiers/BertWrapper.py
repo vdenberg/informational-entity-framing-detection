@@ -134,11 +134,6 @@ class BertWrapper:
                  bert_model='bert-base-cased', cache_dir='models/cache', num_labels=2,
                  bert_lr=2e-6, warmup_proportion=0.1, seed_val=None):
 
-        random.seed(seed_val)
-        np.random.seed(seed_val)
-        torch.manual_seed(seed_val)
-        torch.cuda.manual_seed_all(seed_val)
-
         self.warmup_proportion = warmup_proportion
         self.device, self.use_cuda = get_torch_device()
         self.cache_dir = cache_dir
