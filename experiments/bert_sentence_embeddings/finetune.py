@@ -162,7 +162,7 @@ if __name__ == '__main__':
                 logger.info(f'ep {ep}: {dev_perf} {high_score}')
 
             # load best model, save embeddings, print performance on test
-            best_model = BertForSequenceClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+            best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                        output_hidden_states=True,
                                                                        output_attentions=True)
             logger.info(f"***** Embeds and Test - Fold {fold_name} *****")
