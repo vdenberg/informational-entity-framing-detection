@@ -113,15 +113,9 @@ if __name__ == '__main__':
 
             name_base = f"bert_{SEED_VAL}_f{fold_name}"
 
-            if fold_name == 'orig':
-                train_fp = os.path.join(DATA_DIR, "train_features.pkl")
-                dev_fp = os.path.join(DATA_DIR, "dev_features.pkl")
-                test_fp = os.path.join(DATA_DIR, "test_features.pkl")
-                all_fp = os.path.join(DATA_DIR, "all_features.pkl")
-            else:
-                train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
-                dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
-                test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
+            train_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_train_features.pkl")
+            dev_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_dev_features.pkl")
+            test_fp = os.path.join(DATA_DIR, f"folds/{fold_name}_test_features.pkl")
 
             # with open(train_fp, "rb") as f:
             #     train_features = pickle.load(f)
@@ -155,7 +149,6 @@ if __name__ == '__main__':
             optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
             #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
 
-            train_batches = to_batches(train_data, BATCH_SIZE)
             dev_batches = to_batches(dev_data, BATCH_SIZE)
             test_batches = to_batches(test_data, BATCH_SIZE)
 
