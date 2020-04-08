@@ -94,11 +94,12 @@ if __name__ == '__main__':
                   }
 
     for SEED in [26354, 0, 0]:
-        name = f"bert_{SEED_VAL}"
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
             SEED_VAL = SEED
+
+        name = f"bert_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
