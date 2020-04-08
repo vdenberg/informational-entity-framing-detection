@@ -1,9 +1,8 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-from torch.optim.lr_scheduler import CyclicLR
 import pickle
 from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, save_model
-#from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
 from tqdm import trange
 from datetime import datetime
 from torch.nn import CrossEntropyLoss, MSELoss
