@@ -174,7 +174,7 @@ if __name__ == '__main__':
                 basil_w_BERT = pd.DataFrame(index=all_ids)
                 basil_w_BERT[EMB_TYPE] = embs
                 basil_w_BERT.to_csv(f'data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
-                logger.info(f'Written embeds ({len(embs)},{len(embs[0])}) to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
+                logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
 
             test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
             logging.info(f"{test_perf}")
