@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, to_tensor
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -83,11 +83,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
     logger = logging.getLogger()
     logger.info(args)
-
-    # get all data
-    with open(DATA_DIR + "/all_features.pkl", "rb") as f:
-        all_ids, all_data, all_labels = to_tensor(pickle.load(f))
-    all_batches = to_batches(all_data, batch_size=1)
 
     model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
                   '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
@@ -218,6 +213,7 @@ if __name__ == '__main__':
                                                                        output_attentions=True)
 
             for EMB_TYPE in ['poolbert']:
+                all_ids, all_batches = load_all_batches()
                 embeddings = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                 logger.info(f'Finished {len(embeddings)} embeddings with shape {embeddings.shape}')
                 basil_w_BERT = pd.DataFrame(index=all_ids)

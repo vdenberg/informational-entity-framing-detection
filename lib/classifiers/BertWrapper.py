@@ -5,11 +5,10 @@ import torch
 from torch import nn
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.optim.lr_scheduler import CyclicLR
-import os
+import os, pickle
 import numpy as np
-from lib.utils import get_torch_device
+from lib.utils import get_torch_device, to_tensor, to_batches
 from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
-import random
 
 
 # helpers
@@ -23,6 +22,11 @@ class InputFeatures(object):
         self.segment_ids = segment_ids
         self.label_id = label_id
 
+def load_all_batches():
+    with open("data/features_for_bert/all_features.pkl", "rb") as f:
+        all_ids, all_data, all_labels = to_tensor(pickle.load(f))
+    all_batches = to_batches(all_data, batch_size=1)
+    return all_ids, all_batches
 
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config):

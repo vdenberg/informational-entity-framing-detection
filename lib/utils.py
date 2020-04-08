@@ -17,6 +17,7 @@ def to_tensor(features):
     data = TensorDataset(input_ids, input_mask, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
 
+
 def to_tensors(split=None, features=None, device=None, article_wise=False):
     """ Tmp. """
 
