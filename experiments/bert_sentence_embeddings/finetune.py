@@ -56,7 +56,7 @@ args = parser.parse_args()
 # find GPU if present
 device, USE_CUDA = get_torch_device()
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert'
+TASK_NAME = 'bert_baseline'
 DATA_DIR = 'data/features_for_bert/'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
