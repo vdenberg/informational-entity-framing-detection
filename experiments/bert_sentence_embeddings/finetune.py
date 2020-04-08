@@ -2,11 +2,10 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, to_tensor
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 import os, sys, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
@@ -14,6 +13,7 @@ from lib.utils import get_torch_device
 import time
 import logging
 from lib.utils import to_batches
+from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######
 # FROM:
@@ -30,7 +30,7 @@ class InputFeatures(object):
         self.segment_ids = segment_ids
         self.label_id = label_id
 
-
+'''
 def to_tensor(features):
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
@@ -38,6 +38,7 @@ def to_tensor(features):
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
     data = TensorDataset(input_ids, input_mask, label_ids)
     return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
+'''
 
 ################
 # HYPERPARAMETERS
