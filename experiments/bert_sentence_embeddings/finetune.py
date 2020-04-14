@@ -207,7 +207,7 @@ if __name__ == '__main__':
                     logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "fold", "set_type","f1"]]}')
                     setting_results_table = setting_results_table.append(fold_results_table)
 
-                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs", "fold", "set_type","f1"]]')
+                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs", "fold", "set_type","f1"]]}')
                 setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
                 main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
             main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table.csv', index=False)
