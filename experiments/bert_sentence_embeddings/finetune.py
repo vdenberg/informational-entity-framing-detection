@@ -100,18 +100,18 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        name = f"bert_{SEED_VAL}"
+        seed_name = f"bert_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
         for BATCH_SIZE in [24, 16, 21]:
-            name += f"_bs{BATCH_SIZE}"
+            bs_name = seed_name + f"_bs{BATCH_SIZE}"
             for LR in [5e-5, 3e-5, 2e-5]:
-                name += f"_lr{LR}"
+                lr_name = bs_name + f"_lr{LR}"
                 for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-                    name += f"_f{fold_name}"
+                    name = lr_name + f"_f{fold_name}"
 
                     best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
                                     'f1': 0, 'model_loc': ''}
@@ -177,7 +177,7 @@ if __name__ == '__main__':
                         embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                         basil_w_BERT = pd.DataFrame(index=all_ids)
                         basil_w_BERT[EMB_TYPE] = embs
-                        basil_w_BERT.to_csv(f'data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
+                        basil_w_BERT.to_csv(f'data/{name}_basil_w_{EMB_TYPE}.csv')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{SEED_VAL}_{fold_name}_basil_w_{EMB_TYPE}.csv')
 
                     test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
