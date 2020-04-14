@@ -68,8 +68,8 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
-results_table = pd.DataFrame(columns=columns.split(','))
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
     # set logger
@@ -109,9 +109,10 @@ if __name__ == '__main__':
         for BATCH_SIZE in [24, 16, 21]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
             for LR in [5e-5, 3e-5, 2e-5]:
-                lr_name = bs_name + f"_lr{LR}"
+                setting_name = bs_name + f"_lr{LR}"
+                setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
-                    name = lr_name + f"_f{fold_name}"
+                    name = setting_name + f"_f{fold_name}"
 
                     best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'val',
                                     'f1': 0, 'model_loc': ''}
@@ -128,8 +129,13 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
+                    if (BATCH_SIZE == 24) & (LEARNING_RATE == 5e-5):
+                        ALREADY_TRAINED = True
+                    else:
+                        ALREADY_TRAINED = False
+
                     model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
+                                                                      output_hidden_states=True, output_attentions=True)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
@@ -137,24 +143,33 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        tr_loss = 0
-                        for step, batch in enumerate(train_batches):
-                            batch = tuple(t.to(device) for t in batch)
+                        if ALREADY_TRAINED:
+                            trained_model = BertForSequenceClassification.from_pretrained(
+                                os.path.join(CHECKPOINT_DIR, epoch_name), num_labels=NUM_LABELS,
+                                output_hidden_states=True,
+                                output_attentions=True)
+                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
+                                                                 av_loss=av_loss, set_type='dev', name=epoch_name)
+                        else:
+                            tr_loss = 0
+                            for step, batch in enumerate(train_batches):
+                                batch = tuple(t.to(device) for t in batch)
 
-                            model.zero_grad()
-                            outputs = model(batch[0], batch[1], labels=batch[2])
-                            (loss), logits, probs, sequence_output, pooled_output = outputs
+                                model.zero_grad()
+                                outputs = model(batch[0], batch[1], labels=batch[2])
+                                (loss), logits, probs, sequence_output, pooled_output = outputs
 
-                            loss.backward()
-                            tr_loss += loss.item()
-                            optimizer.step()
+                                loss.backward()
+                                tr_loss += loss.item()
+                                optimizer.step()
 
-                            if step % PRINT_EVERY == 0 and step != 0:
-                                logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                                if step % PRINT_EVERY == 0 and step != 0:
+                                    logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                        av_loss = tr_loss / len(train_batches)
-                        save_model(model, CHECKPOINT_DIR, epoch_name)
-                        dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss, set_type='dev', name=epoch_name)
+                            av_loss = tr_loss / len(train_batches)
+                            save_model(model, CHECKPOINT_DIR, epoch_name)
+                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                 set_type='dev', name=epoch_name)
 
                         # check if best
                         high_score = ''
@@ -184,10 +199,11 @@ if __name__ == '__main__':
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 
-                    results_table = results_table.append(best_val_res, ignore_index=True)
-                    results_table = results_table.append(test_res, ignore_index=True)
-
-            results_table.to_csv('reports/bert_baseline/results_table.csv', index=False)
+                    setting_results_table = setting_results_table.append(best_val_res, ignore_index=True)
+                    setting_results_table = setting_results_table.append(test_res, ignore_index=True)
+                setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
+                main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
+            main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table.csv', index=False)
 
 '''
 n_train_batches = len(train_batches)
