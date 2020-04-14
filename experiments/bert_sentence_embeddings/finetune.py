@@ -169,6 +169,9 @@ if __name__ == '__main__':
                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     # load best model, save embeddings, print performance on test
+                    if best_val_res['model_loc'] == '':
+                        # none of the epochs performed above f1 = 0, so just use last epoch
+                        best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
                     best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=True,
                                                                                output_attentions=True)
