@@ -184,10 +184,11 @@ if __name__ == '__main__':
                     best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=True,
                                                                                output_attentions=True)
-                    logger.info(f"***** Embeds and Test - Fold {fold_name} *****")
+                    logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
-                    for EMB_TYPE in ['poolbert']:
+                    '''
+                    for EMB_TYPE in ['poolbert', 'avbert']:
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                         embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                         basil_w_BERT = pd.DataFrame(index=all_ids)
@@ -195,6 +196,7 @@ if __name__ == '__main__':
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
                         basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
+                    '''
 
                     test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
