@@ -59,9 +59,9 @@ REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 N_EPS = args.n_epochs
-LEARNING_RATE = args.learning_rate
+#LEARNING_RATE = args.learning_rate
 LOAD_FROM_EP = args.load_from_ep
-BATCH_SIZE = args.batch_size
+#BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
@@ -108,8 +108,8 @@ if __name__ == '__main__':
 
         for BATCH_SIZE in [24, 16, 21]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LR in [5e-5, 3e-5, 2e-5]:
-                setting_name = bs_name + f"_lr{LR}"
+            for LEARNING_RATE in [5e-5, 3e-5, 2e-5]:
+                setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     name = setting_name + f"_f{fold_name}"
@@ -129,7 +129,7 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    if (BATCH_SIZE == 24) & (LR == 5e-5):
+                    if (BATCH_SIZE == 24) & (LEARNING_RATE == 5e-5):
                         ALREADY_TRAINED = True
                     else:
                         ALREADY_TRAINED = False
