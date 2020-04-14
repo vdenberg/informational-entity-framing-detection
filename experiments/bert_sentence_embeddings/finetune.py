@@ -148,8 +148,7 @@ if __name__ == '__main__':
                                 os.path.join(CHECKPOINT_DIR, epoch_name), num_labels=NUM_LABELS,
                                 output_hidden_states=True,
                                 output_attentions=True)
-                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 av_loss=av_loss, set_type='dev', name=epoch_name)
+                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels, set_type='dev', name=epoch_name)
                         else:
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
