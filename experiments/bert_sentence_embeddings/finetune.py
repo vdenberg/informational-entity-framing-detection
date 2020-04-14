@@ -139,25 +139,34 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        tr_loss = 0
-                        for step, batch in enumerate(train_batches):
-                            batch = tuple(t.to(device) for t in batch)
+                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                            # this epoch for this setting has been trained before already
+                            trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
+                                                                                       num_labels=NUM_LABELS,
+                                                                                       output_hidden_states=True,
+                                                                                       output_attentions=True)
+                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
+                                                                 set_type='dev', name=epoch_name)
+                        else:
+                            tr_loss = 0
+                            for step, batch in enumerate(train_batches):
+                                batch = tuple(t.to(device) for t in batch)
 
-                            model.zero_grad()
-                            outputs = model(batch[0], batch[1], labels=batch[2])
-                            (loss), logits, probs, sequence_output, pooled_output = outputs
+                                model.zero_grad()
+                                outputs = model(batch[0], batch[1], labels=batch[2])
+                                (loss), logits, probs, sequence_output, pooled_output = outputs
 
-                            loss.backward()
-                            tr_loss += loss.item()
-                            optimizer.step()
+                                loss.backward()
+                                tr_loss += loss.item()
+                                optimizer.step()
 
-                            if step % PRINT_EVERY == 0 and step != 0:
-                                logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                                if step % PRINT_EVERY == 0 and step != 0:
+                                    logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                        av_loss = tr_loss / len(train_batches)
-                        save_model(model, CHECKPOINT_DIR, epoch_name)
-                        dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                             set_type='dev', name=epoch_name)
+                            av_loss = tr_loss / len(train_batches)
+                            save_model(model, CHECKPOINT_DIR, epoch_name)
+                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                 set_type='dev', name=epoch_name)
 
                         # check if best
                         high_score = ''
