@@ -129,7 +129,7 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    if (BATCH_SIZE == 24) & (LEARNING_RATE == 5e-5):
+                    if (BATCH_SIZE == 24) & (LR == 5e-5):
                         ALREADY_TRAINED = True
                     else:
                         ALREADY_TRAINED = False
