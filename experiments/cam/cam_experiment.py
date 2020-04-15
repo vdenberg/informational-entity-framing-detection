@@ -425,6 +425,7 @@ logger.info(f" Use cuda: {USE_CUDA}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
+base_name = 'cnm' if CN else "cam"
 for BATCH_SIZE in [BATCH_SIZE, 8]:
     bs_name = f"_bs{BATCH_SIZE}"
     for SEED in [231, 199, 2336]:
@@ -433,60 +434,40 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
         else:
             SEED_VAL = SEED
 
-        seed_name = f"cnm_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        s_name = seed_name + bs_name
+        seed_name = base_name + f"_{SEED_VAL}" + bs_name
 
         for LR in [1e-4, 0.001, 0.01]:
-            setting_name = s_name + f"_lr{LR}"
+            setting_name = seed_name + f"_lr{LR}"
             setting_results_table = pd.DataFrame(columns=table_columns.split(','))
 
             for fold in folds:
                 fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                val_results = {'model': 'cnm', 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'dev'}
-                test_results = {'model': 'cnm', 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'test'}
-
-                logger.info(f"--------------- FOLD {fold['name']} ---------------")
-                name_base = f"s{SEED_VAL}_f{fold['name']}_{'wm'}_bs{BATCH_SIZE}"
+                logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
+                fold_name = setting_name + f"_f{fold['name']}"
                 logger.info(f" Nr batches: {len(fold['train_batches'])}")
 
-                if CN:
-                    logger.info(f"------------ CNM ON FOLD {fold['name']} ------------")
-                    name_base = 'cnm_' + name_base
-                    cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
+                model_type = 'cnm' if CN else 'cam'
 
-                    cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                                        printing=PRINT_STEP_EVERY, load_from_ep=None)
+                val_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'dev'}
+                test_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'test'}
 
-                    best_val_mets, test_mets = cnm_cl.train_on_fold(fold)
-                    val_results.update(best_val_mets)
-                    val_results.update({'model_loc': cnm_cl.best_model_loc})
-                    test_results.update(test_mets)
+                cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                             weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                            b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
-                if not CN:
-                    logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
-                    name_base = 'cam_' + name_base
+                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                    printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                    cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
-                                                 layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
-                                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA,
-                                                 context_naive=False)
-
-                    cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                                        printing=PRINT_STEP_EVERY, load_from_ep=None)
-
-                    best_val_mets, test_mets = cam_cl.train_on_fold(fold)
-                    val_results.update(best_val_mets)
-                    test_results.update(test_mets)
-                    val_results.update({'model_loc': cam_cl.best_model_loc})
+                best_val_mets, test_mets = cam_cl.train_on_fold(fold)
+                val_results.update(best_val_mets)
+                val_results.update({'model_loc': cam_cl.best_model_loc})
+                test_results.update(test_mets)
 
                 fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                 fold_results_table = fold_results_table.append(test_results, ignore_index=True)
@@ -497,5 +478,5 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
             logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
             setting_results_table.to_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index=False)
             main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-        main_results_table.to_csv(f'reports/cam/tables/main_results_table.csv', index=False)
+        main_results_table.to_csv(f'reports/cam/tables/{base_name}_main_results_table_1.csv', index=False)
         logger.info(f"Logged to: {LOG_NAME}.")

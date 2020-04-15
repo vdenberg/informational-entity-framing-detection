@@ -98,7 +98,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
                  b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
-                 step=1, gamma=0.75, n_eps=10, context_naive=False, super_naive=False, article_wise=False):
+                 step=1, gamma=0.75, n_eps=10, context_naive=False):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()
@@ -114,7 +114,7 @@ class ContextAwareClassifier():
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
-                                           device=self.device, context_naive=context_naive, super_naive=super_naive)
+                                           device=self.device, context_naive=context_naive)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
