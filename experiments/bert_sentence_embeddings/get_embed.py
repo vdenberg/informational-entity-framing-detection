@@ -134,8 +134,8 @@ if __name__ == '__main__':
                                                              set_type='dev', name=epoch_name)
                         logger.info(f'{epoch_name}: {dev_perf}')
 
-                        if round(dev_mets['f1'],2) != best_ep_dev_f1:
-                            logger.info(f"Performance not the same: {round(dev_mets['f1'],2)} not same as {best_ep_dev_f1} for {epoch_name}")
+                        if round(dev_mets['f1']*100,2) != best_ep_dev_f1:
+                            logger.info(f"Performance not the same: {round(dev_mets['f1']*100,2)} not same as {best_ep_dev_f1} for {epoch_name}")
 
                         # check if best
                         high_score = ''
@@ -160,8 +160,8 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
 
                     for EMB_TYPE in ['poolbert']:
-                        basil_w_BERT = pd.DataFrame(index=all_ids)
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+                        basil_w_BERT = pd.DataFrame(index=all_ids)
                         embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                         basil_w_BERT[EMB_TYPE] = embs
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
