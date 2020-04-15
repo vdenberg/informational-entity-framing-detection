@@ -91,7 +91,6 @@ def make_weight_matrix(embed_df, EMB_DIM):
             #emb = emb[6:-17]
             emb = re.sub('[\(\[\]\)]', '', emb)
             emb = emb.split(', ')
-            print(emb)
             emb = np.array(emb, dtype=float)
         sentence_embeddings[index.lower()] = emb
 
