@@ -292,7 +292,6 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
-folds = [folds[1]]
 
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
@@ -393,7 +392,7 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 for fold in folds:
     # read embeddings file
     #data/bert_182_bs16_lr2e-05_f1_basil_w_poolbert.csv
-    embed_fp = f"data/bert_182_bs16_lr2e-05_{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    embed_fp = f"data/bert_182_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})

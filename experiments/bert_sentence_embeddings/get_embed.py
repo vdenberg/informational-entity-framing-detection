@@ -64,7 +64,7 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 if __name__ == '__main__':
     # set logger
     now = datetime.now()
-    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}_get_embed')
+    now_string = now.strftime(format=f'%b-%d-%Hh-%-Mm_{TASK_NAME}_get_embed')
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
