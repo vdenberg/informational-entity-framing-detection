@@ -142,12 +142,7 @@ class Classifier:
         self.logger.info(f' FINISHED training {name} (took {self.train_time})')
         self.logger.info(f" {test_mets}")
 
-        if save_embeddings:
-            preds, all_loss, embeddings = self.wrapper.predict(fold['all_batches'])
-        else:
-            embeddings = None
-
-        return self.best_val_mets, test_mets, embeddings
+        return self.best_val_mets, test_mets
 
 
 

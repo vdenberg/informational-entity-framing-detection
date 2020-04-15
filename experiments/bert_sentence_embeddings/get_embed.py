@@ -165,7 +165,6 @@ if __name__ == '__main__':
                         logger.info(f'Got embs: \n{basil_w_BERT.head()}')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
 
-
                     test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)

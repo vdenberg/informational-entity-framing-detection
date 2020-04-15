@@ -251,7 +251,6 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
-PREPROCESS = True
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
@@ -393,7 +392,8 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 '''
 for fold in folds:
     # read embeddings file
-    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    #data/bert_182_bs16_lr2e-05_f1_basil_w_poolbert.csv
+    embed_fp = f"data/bert_182_bs16_lr2e-05_{fold['name']}_basil_w_{EMB_TYPE}.csv"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
@@ -425,63 +425,77 @@ logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
 logger.info(f" Use cuda: {USE_CUDA}")
 
-#cam_table = pd.read_csv('reports/cam/results_table.csv')
-new_results_table = pd.DataFrame(columns=['model,seed,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'.split(',')])
-for fold in folds:
-    val_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
-    test_results = [{'model': 'bert', 'fold': fold["name"], 'seed': SEED_VAL}, {'model': 'cam', 'fold': fold["name"], 'seed': SEED_VAL}]
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
+for SEED in [182]:
+    if SEED == 0:
+        SEED_VAL = random.randint(0, 300)
+    else:
+        SEED_VAL = SEED
 
-    logger.info(f"--------------- FOLD {fold['name']} ---------------")
-    name_base = f"s{SEED_VAL}_f{fold['name']}_{'wm'}_bs{BATCH_SIZE}"
-    logger.info(f" Nr batches: {len(fold['train_batches'])}")
+    seed_name = f"cnm_{SEED_VAL}"
+    random.seed(SEED_VAL)
+    np.random.seed(SEED_VAL)
+    torch.manual_seed(SEED_VAL)
+    torch.cuda.manual_seed_all(SEED_VAL)
 
-    repretrain = False
-    if repretrain:
-        logger.info(f"------------ BERT ON FOLD {fold['name']} ------------")
-        name_base = 'bert_' + name_base
-        #cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-        #                             weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-        #                             b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True)
-        cnm = BertWrapper(CHECKPOINT_DIR, N_EPOCHS, n_train_batches=len(fold['train_batches']), seed_val=SEED_VAL)
+    for BATCH_SIZE in [BATCH_SIZE]:
+        bs_name = seed_name + f"_bs{BATCH_SIZE}"
+        for LR in [LR]:
+            setting_name = bs_name + f"_lr{LR}"
+            setting_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-        cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                            printing=PRINT_STEP_EVERY, load_from_ep=None)
+            for fold in folds:
+                fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-        best_val_mets, test_mets, embeddings = cnm_cl.train_on_fold(fold)
-        val_results[0].update(best_val_mets)
-        test_results[0].update(test_mets)
+                val_results = {'model': 'cnm', 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'dev'}
+                test_results = {'model': 'cnm', 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'test'}
 
-        embed_df = pd.DataFrame(index=fold['all_batches'].index)
-        embed_df['embeddings'] = embeddings
-        data.loc[fold['all_batches'].index, 'embeddings'] = embed_df['embeddings']
-        weights_matrix = make_weight_matrix(data, EMB_DIM)
-        logger.info(f" --> Using embeddings from {cnm_cl.best_model_loc}, shape: {weights_matrix.shape}")
-        fold['weights_matrix'] = weights_matrix
+                logger.info(f"--------------- FOLD {fold['name']} ---------------")
+                name_base = f"s{SEED_VAL}_f{fold['name']}_{'wm'}_bs{BATCH_SIZE}"
+                logger.info(f" Nr batches: {len(fold['train_batches'])}")
 
-    if not CN:
-        logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
-        name_base = 'cam_' + name_base
+                testme = True
+                if testme:
+                    logger.info(f"------------ CNM ON FOLD {fold['name']} ------------")
+                    name_base = 'bert_' + name_base
+                    cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True)
 
-        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                     weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
-                                     layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
-                                     b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA,
-                                     context_naive=False, super_naive=True)
+                    cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                                        printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-        cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
-                            printing=PRINT_STEP_EVERY, load_from_ep=None)
+                    best_val_mets, test_mets = cnm_cl.train_on_fold(fold)
+                    val_results[0].update(best_val_mets)
+                    val_results.update({'model_loc': cnm_cl.best_model_loc})
+                    test_results[0].update(test_mets)
 
-        best_val_mets, test_mets, _ = cam_cl.train_on_fold(fold)
-        val_results[1].update(best_val_mets)
-        test_results[1].update(test_mets)
+                if not CN:
+                    logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
+                    name_base = 'cam_' + name_base
 
-    # train
-    new_results_table = new_results_table.append(val_results, ignore_index=True)
-    new_results_table = new_results_table.append(test_results, ignore_index=True)
-    logger.info(f"\n{new_results_table}")
+                    cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
+                                                 layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
+                                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA,
+                                                 context_naive=False, super_naive=True)
 
-    #cam_table = cam_table.append(new_cam_table, ignore_index=True)
-    #cam_table.to_csv('reports/cam/results_table.csv', index=False)
+                    cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
+                                        printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-    logger.info(f"Logged to: {LOG_NAME}.")
-    #logger.info(f"Results in: {'reports/cam/results_table.csv'}.")
+                    best_val_mets, test_mets, _ = cam_cl.train_on_fold(fold)
+                    val_results[1].update(best_val_mets)
+                    test_results[1].update(test_mets)
+
+                fold_results_table = fold_results_table.append(val_results, ignore_index=True)
+                fold_results_table = fold_results_table.append(test_results, ignore_index=True)
+                logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                setting_results_table = setting_results_table.append(fold_results_table)
+                logger.info(f"Logged to: {LOG_NAME}.")
+
+            logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+            setting_results_table.to_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index=False)
+            main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
+        main_results_table.to_csv(f'reports/cam/tables/main_results_table.csv', index=False)
+        logger.info(f"Logged to: {LOG_NAME}.")
