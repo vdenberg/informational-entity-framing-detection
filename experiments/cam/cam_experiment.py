@@ -483,9 +483,9 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
                     cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                                         printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                    best_val_mets, test_mets, _ = cam_cl.train_on_fold(fold)
-                    val_results[1].update(best_val_mets)
-                    test_results[1].update(test_mets)
+                    best_val_mets, test_mets = cam_cl.train_on_fold(fold)
+                    val_results.update(best_val_mets)
+                    test_results.update(test_mets)
 
                 fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                 fold_results_table = fold_results_table.append(test_results, ignore_index=True)
