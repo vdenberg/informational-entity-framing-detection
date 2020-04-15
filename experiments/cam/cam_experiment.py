@@ -396,7 +396,8 @@ for fold in folds:
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
+    #data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
+    data['embeddings'] = data_w_embeds['embeddings']
 
     # transform into matrix
     weights_matrix = make_weight_matrix(data, EMB_DIM)
@@ -454,7 +455,7 @@ for SEED in [231]:
                 testme = True
                 if testme:
                     logger.info(f"------------ CNM ON FOLD {fold['name']} ------------")
-                    name_base = 'bert_' + name_base
+                    name_base = 'cnm_' + name_base
                     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                 b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True, super_naive=True)
