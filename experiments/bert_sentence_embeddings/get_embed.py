@@ -135,7 +135,7 @@ if __name__ == '__main__':
                         logger.info(f'{epoch_name}: {dev_perf}')
 
                         if round(dev_mets['f1'],2) != best_ep_dev_f1:
-                            logger.info(f"Performance not the same: {dev_mets['f1']} not same as {best_ep_dev_f1} for {epoch_name}")
+                            logger.info(f"Performance not the same: {dround(dev_mets['f1'],2)} not same as {best_ep_dev_f1} for {epoch_name}")
 
                         # check if best
                         high_score = ''
