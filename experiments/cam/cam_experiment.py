@@ -301,8 +301,6 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 #                    BATCH DATA
 # =====================================================================================
-with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_features = pickle.load(f)
 
 for fold in folds:
     '''
@@ -337,8 +335,6 @@ for fold in folds:
 # =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
-inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-all_ids, all_batches, all_labels = load_features('data/features_for_bert/folds/all_features.pkl', batch_size=1)
 
 '''
 logger.info(f"Get embeddings")
@@ -395,7 +391,6 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 '''
 for fold in folds:
     # read embeddings file
-    #data/bert_182_bs16_lr2e-05_f1_basil_w_poolbert.csv
     embed_fp = f"data/bert_182_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
@@ -462,7 +457,7 @@ for SEED in [182]:
                     name_base = 'bert_' + name_base
                     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True)
+                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True, super_naive=True)
 
                     cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                                         printing=PRINT_STEP_EVERY, load_from_ep=None)

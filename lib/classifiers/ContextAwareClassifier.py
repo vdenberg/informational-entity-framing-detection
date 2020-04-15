@@ -37,9 +37,6 @@ class ContextAwareModel(nn.Module):
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = Embedding.from_pretrained(self.weights_matrix)
         self.emb_size = weights_matrix.shape[1]
-        self.bert_pretrained = BertForSequenceClassification.from_pretrained('bert-base-cased', cache_dir='models/cache',
-                                                        num_labels=2, output_hidden_states=False,
-                                                        output_attentions=False)
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
         self.num_labels = 2
