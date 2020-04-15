@@ -71,28 +71,17 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    model_locs ={'1': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f1_ep1',
-                       42.449999999999996),
-                 '10': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3',
-                        32.23),
-                 '2': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4',
-                       37.88),
-                 '3': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f3_ep2',
-                       45.97),
-                 '4': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f4_ep1',
-                       37.59),
-                 '5': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f5_ep3',
-                       34.410000000000004),
-                 '6': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f6_ep4',
-                       26.029999999999998),
-                 '7': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f7_ep3',
-                       32.629999999999995),
-                 '8': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f8_ep4',
-                       26.97),
-                 '9': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f9_ep4',
-                       37.169999999999995)}
+    model_locs = {'1': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f1_ep3', 41.63),
+                     '2': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f2_ep4', 40.32),
+                     '3': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f3_ep2', 47.339999999999996),
+                     '4': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f4_ep1', 43.24),
+                     '5': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f5_ep4', 25.77),
+                     '6': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f6_ep4', 23.7),
+                     '7': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f7_ep4', 33.67),
+                     '8': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f8_ep3', 31.819999999999997),
+                     '9': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f9_ep4', 36.5)}
 
-    for SEED in [26354]:
+    for SEED in [182]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -134,7 +123,11 @@ if __name__ == '__main__':
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
 
-                    for ep in range(1, N_EPS + 1):
+                    # get ep from best model loc
+                    best_ep_model_loc, best_ep_dev_f1 = model_locs[fold_name]
+                    best_ep = best_ep_model_loc[-1]
+
+                    for ep in [best_ep]:
                         epoch_name = name + f"_ep{ep}"
 
                         if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
@@ -145,6 +138,9 @@ if __name__ == '__main__':
                                                                                             output_attentions=True)
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
                                                                  set_type='dev', name=epoch_name)
+                            if dev_mets['f1'] != best_ep_dev_f1:
+                                logger.info(f"Performance not the same: {dev_mets['f1']} not same as {best_ep_dev_f1} for {epoch_name}")
+                                exit(0)
                         else:
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
@@ -179,21 +175,25 @@ if __name__ == '__main__':
                     if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                               output_hidden_states=True,
-                                                                               output_attentions=True)
 
-                    logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
+                    #best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+                    #                                                           output_hidden_states=True,
+                    #                                                           output_attentions=True)
+                    best_model = trained_model
+
+                    logger.info(f"***** Embeds (and Test) - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
-                    for EMB_TYPE in ['poolbert', 'avbert']:
+                    for EMB_TYPE in ['poolbert']:
+                        basil_w_BERT = pd.DataFrame(index=all_ids)
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                         embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                        basil_w_BERT = pd.DataFrame(index=all_ids)
                         basil_w_BERT[EMB_TYPE] = embs
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
                         basil_w_BERT.to_csv(f'data/{emb_name}.csv')
+                        logger.info(f'Got embs: \n({basil_w_BERT.head()}')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
+
 
                     # ''''''
 
