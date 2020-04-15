@@ -451,13 +451,12 @@ for SEED in [231]:
                 name_base = f"s{SEED_VAL}_f{fold['name']}_{'wm'}_bs{BATCH_SIZE}"
                 logger.info(f" Nr batches: {len(fold['train_batches'])}")
 
-                testme = True
-                if testme:
+                if CN:
                     logger.info(f"------------ CNM ON FOLD {fold['name']} ------------")
                     name_base = 'cnm_' + name_base
                     cnm = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=True, super_naive=True)
+                                                b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
                     cnm_cl = Classifier(model=cnm, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                                         printing=PRINT_STEP_EVERY, load_from_ep=None)
@@ -475,7 +474,7 @@ for SEED in [231]:
                                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
                                                  layers=BILSTM_LAYERS, n_eps=N_EPOCHS,
                                                  b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA,
-                                                 context_naive=False, super_naive=True)
+                                                 context_naive=False)
 
                     cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=name_base, patience=PATIENCE, n_eps=N_EPOCHS,
                                         printing=PRINT_STEP_EVERY, load_from_ep=None)
