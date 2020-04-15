@@ -396,11 +396,11 @@ for fold in folds:
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-    #data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
-    data['embeddings'] = data_w_embeds['embeddings']
+    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
     # transform into matrix
-    weights_matrix = make_weight_matrix(data, EMB_DIM)
+    #weights_matrix = make_weight_matrix(data, EMB_DIM)
+    weights_matrix = make_weight_matrix(data_w_embeds, EMB_DIM)
 
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
