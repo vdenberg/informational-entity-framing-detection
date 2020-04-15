@@ -86,11 +86,10 @@ def make_weight_matrix(embed_df, EMB_DIM):
     embed_df = embed_df.fillna(0).replace({'\n', ' '})
     sentence_embeddings = {}
     for index, emb in zip(embed_df.index, embed_df.embeddings):
-        print(emb)
         if emb != 0:
-            emb = re.sub('\s+', ' ', emb)
-            emb = emb[6:-17]
-            emb = re.sub('[\(\[\]\)]', '', emb)
+            #emb = re.sub('\s+', ' ', emb)
+            #emb = emb[6:-17]
+            #emb = re.sub('[\(\[\]\)]', '', emb)
             emb = emb.split(', ')
             print(emb)
             emb = np.array(emb, dtype=float)
