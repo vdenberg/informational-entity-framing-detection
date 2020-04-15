@@ -136,8 +136,8 @@ class ContextAwareClassifier():
         #                                       cycle_momentum=False, max_lr=lr * 30)
         num_train_optimization_steps = nr_train_batches * n_eps
         num_train_warmup_steps = int(0.1 * num_train_optimization_steps) #warmup_proportion
-        self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
-                                                         num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
+        #self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+        #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
         # set criterion on input
         #n_pos = len([l for l in tr_labs if l == 1])
@@ -164,7 +164,7 @@ class ContextAwareClassifier():
         loss.backward()
 
         self.optimizer.step()
-        self.scheduler.step()
+        #self.scheduler.step()
         return loss.item()
 
     def save_model(self, name):

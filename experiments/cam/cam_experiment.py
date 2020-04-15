@@ -175,7 +175,7 @@ if DEBUG:
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
 if DEBUG:
-    N_EPOCHS = 20
+    N_EPOCHS = 4
 
 BATCH_SIZE = args.batch_size
 WARMUP_PROPORTION = args.warmup_proportion
@@ -463,9 +463,9 @@ for SEED in [231]:
                                         printing=PRINT_STEP_EVERY, load_from_ep=None)
 
                     best_val_mets, test_mets = cnm_cl.train_on_fold(fold)
-                    val_results[0].update(best_val_mets)
+                    val_results.update(best_val_mets)
                     val_results.update({'model_loc': cnm_cl.best_model_loc})
-                    test_results[0].update(test_mets)
+                    test_results.update(test_mets)
 
                 if not CN:
                     logger.info(f"------------ CAM ON FOLD {fold['name']} ------------")
