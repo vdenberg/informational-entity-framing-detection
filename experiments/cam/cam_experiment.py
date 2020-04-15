@@ -190,8 +190,8 @@ FT_EMB = args.finetune_embeddings
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
 
 CN = args.context_naive
-if DEBUG:
-    CN = True
+#if DEBUG:
+#    CN = True
 
 HIDDEN = args.hidden_size
 BILSTM_LAYERS = args.bilstm_layers
