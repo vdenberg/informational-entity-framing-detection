@@ -26,7 +26,7 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, super_naive, device):
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
@@ -42,7 +42,6 @@ class ContextAwareModel(nn.Module):
         self.num_labels = 2
         self.dropout = Dropout(0.1)
         self.context_naive = context_naive
-        self.super_naive = super_naive
 
         if self.context_naive:
             self.classifier = Linear(self.emb_size, 2)
