@@ -391,7 +391,7 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 '''
 for fold in folds:
     # read embeddings file
-    embed_fp = f"data/bert_182_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
@@ -423,7 +423,7 @@ logger.info(f" Use cuda: {USE_CUDA}")
 
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
-for SEED in [182]:
+for SEED in [231]:
     if SEED == 0:
         SEED_VAL = random.randint(0, 300)
     else:

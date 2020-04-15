@@ -73,6 +73,7 @@ class ContextAwareModel(nn.Module):
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
+            sentence_representations = target_sent_reps
 
         else:
             hidden = self.init_hidden(batch_size)
