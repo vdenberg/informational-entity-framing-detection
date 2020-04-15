@@ -139,7 +139,7 @@ if __name__ == '__main__':
                                                                                             output_attentions=True)
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
                                                                  set_type='dev', name=epoch_name)
-                            if dev_mets['f1'] != best_ep_dev_f1:
+                            if round(dev_mets['f1'],2) != best_ep_dev_f1:
                                 logger.info(f"Performance not the same: {dev_mets['f1']} not same as {best_ep_dev_f1} for {epoch_name}")
                                 exit(0)
                         else:
