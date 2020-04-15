@@ -440,6 +440,7 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
         torch.cuda.manual_seed_all(SEED_VAL)
 
         s_name = seed_name + bs_name
+
         for LR in [1e-4, 0.001, 0.01]:
             setting_name = s_name + f"_lr{LR}"
             setting_results_table = pd.DataFrame(columns=table_columns.split(','))
