@@ -9,9 +9,9 @@ from transformers import BertTokenizer
 from lib.handle_data.SplitData import Split
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
-from lib.classifiers.BertWrapper import BertWrapper
+from lib.classifiers.BertWrapper import BertForSequenceClassification, load_features
+from lib.classifiers.BertForEmbed import Inferencer, InputFeatures
 
-from lib.classifiers.BertForEmbed import BertForSequenceClassification, Inferencer, to_tensor, InputFeatures
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
 from lib.evaluate.Eval import eval
 import pickle, time
@@ -330,55 +330,14 @@ for fold in folds:
     fold['test_batches'] = test_batches
     fold['all_batches'] = all_batches
 
-# =====================================================================================
-#                    LOAD EMBEDDINGS
-# =====================================================================================
-
-logger.info("============ LOAD EMBEDDINGS =============")
-logger.info(f" Embedding type: {EMB_TYPE}")
-
-'''
-model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
-                      '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
-                      '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
-                      '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
-                      '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
-                      '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
-                      '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
-                      '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
-                      '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                      '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                      }
-
-with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
-    bert_all_batches = to_batches(all_data, 1)
-        # bert model
-    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
-                                                               num_labels=2, output_hidden_states=True,
-                                                               output_attentions=True)
-    
-'''
-for fold in folds:
-    # read embeddings file
-    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv"
-    data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
-    data_w_embeds = data_w_embeds.rename(
-        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-    data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
-
-    # transform into matrix
-    weights_matrix = make_weight_matrix(data, EMB_DIM)
-
-    logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-    fold['weights_matrix'] = weights_matrix
-
 
 
 # =====================================================================================
 #                    GET EMBEDDINGS
 # =====================================================================================
+inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
+all_ids, all_batches, all_labels = load_features('data/features_for_bert/folds/all_features.pkl', batch_size=1)
+
 '''
 logger.info(f"Get embeddings")
     # load bert features
@@ -411,6 +370,43 @@ logger.info(f"Get embeddings")
     logger.info(embed_df['embeddings'].head(3))
     exit(0)
 '''
+
+# =====================================================================================
+#                    LOAD EMBEDDINGS
+# =====================================================================================
+
+logger.info("============ LOAD EMBEDDINGS =============")
+logger.info(f" Embedding type: {EMB_TYPE}")
+
+'''
+models = {1: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f1_ep1', 42.449999999999996), 2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88), 3: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f3_ep2', 45.97), 4: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f4_ep1', 37.59), 5: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f5_ep3', 34.410000000000004), 6: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f6_ep4', 26.029999999999998), 7: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f7_ep3', 32.629999999999995), 8: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f8_ep4', 26.97), 9: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f9_ep4', 37.169999999999995), 10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
+all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+                        
+with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+    all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
+    bert_all_batches = to_batches(all_data, 1)
+        # bert model
+    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
+                                                               num_labels=2, output_hidden_states=True,
+                                                               output_attentions=True)
+    
+'''
+for fold in folds:
+    # read embeddings file
+    embed_fp = f"data/{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
+    data_w_embeds = data_w_embeds.rename(
+        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+    data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
+    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
+
+    # transform into matrix
+    weights_matrix = make_weight_matrix(data, EMB_DIM)
+
+    logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+    fold['weights_matrix'] = weights_matrix
+
+
 
 
 # =====================================================================================

@@ -11,7 +11,6 @@ import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 import time
-from pprint import pprint
 import logging
 
 #######
@@ -29,16 +28,6 @@ class InputFeatures(object):
         self.segment_ids = segment_ids
         self.label_id = label_id
 
-'''
-def to_tensor(features):
-    example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(input_ids, input_mask, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-'''
-
 ################
 # HYPERPARAMETERS
 ################
@@ -48,7 +37,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 # find GPU if present
@@ -75,7 +63,7 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 if __name__ == '__main__':
     # set logger
     now = datetime.now()
-    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
+    now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}_get_embed')
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
     console_hdlr = logging.StreamHandler(sys.stdout)
     file_hdlr = logging.FileHandler(filename=LOG_NAME)
@@ -83,19 +71,28 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
-                  '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
-                  '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
-                  '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
-                  '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
-                  '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
-                  '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
-                  '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
-                  '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                  }
+    model_locs ={'1': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f1_ep1',
+                       42.449999999999996),
+                 '10': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3',
+                        32.23),
+                 '2': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4',
+                       37.88),
+                 '3': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f3_ep2',
+                       45.97),
+                 '4': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f4_ep1',
+                       37.59),
+                 '5': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f5_ep3',
+                       34.410000000000004),
+                 '6': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f6_ep4',
+                       26.029999999999998),
+                 '7': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f7_ep3',
+                       32.629999999999995),
+                 '8': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f8_ep4',
+                       26.97),
+                 '9': ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f9_ep4',
+                       37.169999999999995)}
 
-    for SEED in [231]: #26354, 182,
+    for SEED in [26354]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -107,9 +104,9 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16, 21, 24]:
+        for BATCH_SIZE in [16]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:
+            for LEARNING_RATE in [2e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
@@ -185,10 +182,10 @@ if __name__ == '__main__':
                     best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=True,
                                                                                output_attentions=True)
+
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
-                    '''
                     for EMB_TYPE in ['poolbert', 'avbert']:
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                         embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
@@ -197,7 +194,8 @@ if __name__ == '__main__':
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
                         basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-                    '''
+
+                    # ''''''
 
                     test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
