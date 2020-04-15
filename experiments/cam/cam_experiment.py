@@ -175,7 +175,7 @@ if DEBUG:
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
 if DEBUG:
-    N_EPOCHS = 4
+    N_EPOCHS = 20
 
 BATCH_SIZE = args.batch_size
 WARMUP_PROPORTION = args.warmup_proportion

@@ -133,14 +133,15 @@ class Classifier:
         loss_plt.savefig(self.fig_dir + f'/{self.model_name}_trainval_loss.png', bbox_inches='tight')
 
         # test_model
-        self.wrapper.load_model(self.best_model_loc)
-        self.logger.info(f'Loaded best model from {self.best_model_loc}')
+        if self.best_model_loc:
+            self.wrapper.load_model(self.best_model_loc)
+            self.logger.info(f'Loaded best model from {self.best_model_loc}')
 
-        name = self.model_name + f"_TEST_{self.n_epochs}"
-        test_mets, test_perf = self.test_model(fold, name)
+            name = self.model_name + f"_TEST_{self.n_epochs}"
+            test_mets, test_perf = self.test_model(fold, name)
 
-        self.logger.info(f' FINISHED training {name} (took {self.train_time})')
-        self.logger.info(f" {test_mets}")
+            self.logger.info(f' FINISHED training {name} (took {self.train_time})')
+            self.logger.info(f" {test_mets}")
 
         return self.best_val_mets, test_mets
 
