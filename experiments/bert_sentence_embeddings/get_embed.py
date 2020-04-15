@@ -138,13 +138,9 @@ if __name__ == '__main__':
                             logger.info(f"Performance not the same: {round(dev_mets['f1']*100,2)} not same as {best_ep_dev_f1} for {epoch_name}")
 
                         # check if best
-                        high_score = ''
                         if dev_mets['f1'] > best_val_res['f1']:
                             best_val_res.update(dev_mets)
                             best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
-                            high_score = '(HIGH SCORE)'
-
-                        logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     # load best model, save embeddings, print performance on test
                     if best_val_res['model_loc'] == '':
@@ -166,7 +162,7 @@ if __name__ == '__main__':
                         basil_w_BERT[EMB_TYPE] = embs
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
                         basil_w_BERT.to_csv(f'data/{emb_name}.csv')
-                        logger.info(f'Got embs: \n({basil_w_BERT.head()}')
+                        logger.info(f'Got embs: \n{basil_w_BERT.head()}')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
 
                     # ''''''

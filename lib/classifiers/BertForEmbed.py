@@ -162,11 +162,11 @@ class Inferencer():
                 emb_output = sequence_output.mean(axis=1)
 
             if self.use_cuda:
-                emb_output = list(emb_output.detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
+                emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
 
             else:
                 self.logger.info("NOT USING CUDA")
-                emb_output = list(emb_output.numpy())
+                emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
 
             if len(preds) == 0:
