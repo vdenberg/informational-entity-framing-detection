@@ -486,6 +486,7 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
                     best_val_mets, test_mets = cam_cl.train_on_fold(fold)
                     val_results.update(best_val_mets)
                     test_results.update(test_mets)
+                    val_results.update({'model_loc': cam_cl.best_model_loc})
 
                 fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                 fold_results_table = fold_results_table.append(test_results, ignore_index=True)
