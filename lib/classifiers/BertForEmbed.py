@@ -165,6 +165,7 @@ class Inferencer():
                 emb_output = list(emb_output.detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
 
             else:
+                self.logger.info("NOT USING CUDA")
                 emb_output = list(emb_output.numpy())
             embeddings.append(emb_output)
 

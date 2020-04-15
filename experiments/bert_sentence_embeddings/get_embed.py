@@ -118,50 +118,24 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
-                    model.to(device)
-                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-                    model.train()
-
                     # get ep from best model loc
                     best_ep_model_loc, best_ep_dev_f1 = model_locs[fold_name]
                     best_ep = best_ep_model_loc[-1]
 
                     for ep in [best_ep]:
-                        epoch_name = name + f"_ep{ep}"
+                        epoch_name = name + f"_ep{best_ep}"
 
-                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
-                            # this epoch for this setting has been trained before already
-                            trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                            num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=True,
-                                                                                            output_attentions=True)
-                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 set_type='dev', name=epoch_name)
-                            if round(dev_mets['f1'],2) != best_ep_dev_f1:
-                                logger.info(f"Performance not the same: {dev_mets['f1']} not same as {best_ep_dev_f1} for {epoch_name}")
-                                exit(0)
-                        else:
-                            tr_loss = 0
-                            for step, batch in enumerate(train_batches):
-                                batch = tuple(t.to(device) for t in batch)
+                        trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
+                                                                                        num_labels=NUM_LABELS,
+                                                                                        output_hidden_states=True,
+                                                                                        output_attentions=True)
+                        trained_model.to(device)
+                        dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
+                                                             set_type='dev', name=epoch_name)
+                        logger.info(f'{epoch_name}: {dev_perf}')
 
-                                model.zero_grad()
-                                outputs = model(batch[0], batch[1], labels=batch[2])
-                                (loss), logits, probs, sequence_output, pooled_output = outputs
-
-                                loss.backward()
-                                tr_loss += loss.item()
-                                optimizer.step()
-
-                                if step % PRINT_EVERY == 0 and step != 0:
-                                    logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
-
-                            av_loss = tr_loss / len(train_batches)
-                            save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                 set_type='dev', name=epoch_name)
+                        if round(dev_mets['f1'],2) != best_ep_dev_f1:
+                            logger.info(f"Performance not the same: {dev_mets['f1']} not same as {best_ep_dev_f1} for {epoch_name}")
 
                         # check if best
                         high_score = ''
@@ -188,13 +162,12 @@ if __name__ == '__main__':
                     for EMB_TYPE in ['poolbert']:
                         basil_w_BERT = pd.DataFrame(index=all_ids)
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
-                        embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                        embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                         basil_w_BERT[EMB_TYPE] = embs
                         emb_name = f'{name}_basil_w_{EMB_TYPE}'
                         basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                         logger.info(f'Got embs: \n({basil_w_BERT.head()}')
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-
 
                     # ''''''
 
