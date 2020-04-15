@@ -471,6 +471,7 @@ for BATCH_SIZE in [BATCH_SIZE, 8]:
 
                 fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                 fold_results_table = fold_results_table.append(test_results, ignore_index=True)
+                fold_results_table.to_csv(f'reports/cam/tables/{fold_name}_results_table.csv', index=False)
                 logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
                 setting_results_table = setting_results_table.append(fold_results_table)
                 logger.info(f"Logged to: {LOG_NAME}.")
