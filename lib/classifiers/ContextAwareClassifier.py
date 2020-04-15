@@ -77,7 +77,7 @@ class ContextAwareModel(nn.Module):
             else:
                 bert_outputs = self.bert_pretrained.bert(token_ids, attention_mask=token_mask)
                 embedded_sentence = self.dropout(bert_outputs[1])
-            sentence_representations = embedded_sentence
+                sentence_representations = embedded_sentence
 
         else:
             hidden = self.init_hidden(batch_size)
