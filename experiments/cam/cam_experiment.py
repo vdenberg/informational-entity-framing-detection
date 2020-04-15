@@ -169,8 +169,8 @@ SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
 PREPROCESS = args.preprocess
-if DEBUG:
-    SUBSET = 0.5
+#if DEBUG:
+#    SUBSET = 0.5
 
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
