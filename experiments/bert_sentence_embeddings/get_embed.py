@@ -72,17 +72,21 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    model_locs = {'1': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f1_ep3', 41.63),
-                     '2': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f2_ep4', 40.32),
-                     '3': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f3_ep2', 47.339999999999996),
-                     '4': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f4_ep1', 43.24),
-                     '5': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f5_ep4', 25.77),
-                     '6': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f6_ep4', 23.7),
-                     '7': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f7_ep4', 33.67),
-                     '8': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f8_ep3', 31.819999999999997),
-                     '9': ('models/checkpoints/bert_baseline/bert_182_bs16_lr2e-05_f9_ep4', 36.5)}
+    model_locs = {'1': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f1_ep2', 44.18),
+                     '10': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f10_ep4',
+                            28.860000000000003),
+                     '2': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f2_ep2',
+                           35.089999999999996),
+                     '3': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f3_ep4', 41.72),
+                     '4': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f4_ep2', 32.73),
+                     '5': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f5_ep4',
+                           38.129999999999995),
+                     '6': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f6_ep4', 32.65),
+                     '7': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f7_ep4', 30.34),
+                     '8': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f8_ep3', 27.93),
+                     '9': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f9_ep4', 34.53)}
 
-    for SEED in [182]:
+    for SEED in [231]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
