@@ -89,7 +89,7 @@ def make_weight_matrix(embed_df, EMB_DIM):
         if emb != 0:
             #emb = re.sub('\s+', ' ', emb)
             #emb = emb[6:-17]
-            #emb = re.sub('[\(\[\]\)]', '', emb)
+            emb = re.sub('[\(\[\]\)]', '', emb)
             emb = emb.split(', ')
             print(emb)
             emb = np.array(emb, dtype=float)
