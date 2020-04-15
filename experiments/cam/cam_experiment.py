@@ -424,7 +424,7 @@ logger.info(f" Use cuda: {USE_CUDA}")
 
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
-for SEED in [231]:
+for SEED in [231, 199, 2336]:
     if SEED == 0:
         SEED_VAL = random.randint(0, 300)
     else:
@@ -436,9 +436,9 @@ for SEED in [231]:
     torch.manual_seed(SEED_VAL)
     torch.cuda.manual_seed_all(SEED_VAL)
 
-    for BATCH_SIZE in [BATCH_SIZE]:
+    for BATCH_SIZE in [BATCH_SIZE, 8]:
         bs_name = seed_name + f"_bs{BATCH_SIZE}"
-        for LR in [LR]:
+        for LR in [2e-4, 5e-4, 1e-4]:
             setting_name = bs_name + f"_lr{LR}"
             setting_results_table = pd.DataFrame(columns=table_columns.split(','))
 
