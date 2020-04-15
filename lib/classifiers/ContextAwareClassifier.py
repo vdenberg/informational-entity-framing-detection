@@ -68,12 +68,12 @@ class ContextAwareModel(nn.Module):
         # init containers for outputs
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+        target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
-            sentence_representations = target_sent_reps
 
         else:
             hidden = self.init_hidden(batch_size)
@@ -82,14 +82,12 @@ class ContextAwareModel(nn.Module):
                 encoded, hidden = self.lstm(embedded_sentence, hidden)
                 sentence_representations[:, seq_idx] = encoded
 
-            target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
                 target_sent_reps[item] = sentence_representations[item, position].view(1, -1)
-            sentence_representations = target_sent_reps
 
-        logits = self.classifier(sentence_representations)
+        logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
-        return logits, probs, sentence_representations
+        return logits, probs, target_sent_reps
 
     def init_hidden(self, batch_size):
         hidden = torch.zeros(self.bilstm_layers * 2, batch_size, self.hidden_size, device=self.device)
