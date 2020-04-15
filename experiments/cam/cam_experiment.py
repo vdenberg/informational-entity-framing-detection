@@ -138,14 +138,14 @@ parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=24)
+parser.add_argument('-bs', '--batch_size', type=int, default=32)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
 parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=2e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=50)
+parser.add_argument('-hid', '--hidden_size', type=int, default=500)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
@@ -412,6 +412,7 @@ for fold in folds:
 logger.info("============ TRAINING CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
+logger.info(f" Hidden layer size: {HIDDEN}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
 logger.info(f" Batch size: {BATCH_SIZE}")
 logger.info(f" Starting LR: {LR}")
