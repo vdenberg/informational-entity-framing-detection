@@ -169,8 +169,8 @@ SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
 PREPROCESS = args.preprocess
-#if DEBUG:
-#    SUBSET = 0.5
+if DEBUG:
+    SUBSET = 0.5
 
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
@@ -399,8 +399,7 @@ for fold in folds:
     data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
 
     # transform into matrix
-    #weights_matrix = make_weight_matrix(data, EMB_DIM)
-    weights_matrix = make_weight_matrix(data_w_embeds, EMB_DIM)
+    weights_matrix = make_weight_matrix(data, EMB_DIM)
 
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
