@@ -77,7 +77,7 @@ class Classifier:
         tr_mets, tr_perf = eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
         val_preds, val_loss, _ = self.wrapper.predict(dev_bs)
-        val_mets, val_perf = eval(dev_lbs, val_preds, set_type='val', av_loss=val_loss, name="")
+        val_mets, val_perf = eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name="")
 
         best_log = ''
         if val_mets['f1'] > self.best_val_mets['f1']:
