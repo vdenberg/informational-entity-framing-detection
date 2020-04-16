@@ -446,6 +446,7 @@ for HIDDEN in [250, 500, 768]:
 
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
+                logger.info(f'Setting table in: {setting_table_fp}.')
                 if os.path.exists(setting_table_fp):
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
