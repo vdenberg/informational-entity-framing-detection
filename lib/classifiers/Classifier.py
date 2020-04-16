@@ -24,7 +24,7 @@ class Classifier:
             self.n_epochs += load_from_ep
             self.epochs = range(load_from_ep, self.n_epochs)
         else:
-            self.epochs = range(self.n_epochs)
+            self.epochs = range(1, self.n_epochs+1)
 
         # empty now and set during or after training
         self.train_time = 0
@@ -101,7 +101,7 @@ class Classifier:
             tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold)
             losses.append((tr_mets['loss'], val_mets['loss']))
 
-        for ep in range(1, self.epochs+1):
+        for ep in self.epochs:
             self.wrapper.model.train()
 
             av_tr_loss, ep_elapsed = self.train_epoch(tr_bs)

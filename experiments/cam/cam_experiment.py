@@ -445,7 +445,7 @@ for HIDDEN in [250, 500, 768]:
                 torch.cuda.manual_seed_all(SEED_VAL)
 
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
-                setting_table_fp = f'{TABLE_DIR}/{setting_name}_results_table.csv'
+                setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
                 if os.path.exists(setting_table_fp):
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
@@ -456,7 +456,7 @@ for HIDDEN in [250, 500, 768]:
                         logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
                         logger.info(f" Nr batches: {len(fold['train_batches'])}")
                         fold_name = setting_name + f"_f{fold['name']}"
-                        fold_table_fp = f'{TABLE_DIR}/{fold_name}_results_table.csv'
+                        fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
                         if os.path.exists(fold_table_fp):
                             logger.info(f'Fold {fold_name} done already.')
