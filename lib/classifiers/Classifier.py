@@ -142,6 +142,8 @@ class Classifier:
 
             self.logger.info(f' FINISHED training {name} (took {self.train_time})')
             self.logger.info(f" {test_mets}")
+        else:
+            test_mets = None
 
         return self.best_val_mets, test_mets
 
