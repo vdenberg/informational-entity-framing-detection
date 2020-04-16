@@ -217,7 +217,7 @@ REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET
 FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-TABLE_DIR = f"reports/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
+TABLE_DIR = f"reports/tables/cam/{EMB_TYPE}_{CONTEXT_TYPE}"
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -446,7 +446,7 @@ for HIDDEN in [250, 500, 768]:
 
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
-                logger.info(f'Setting table in: {setting_table_fp}.')
+                logger.info(f' Setting table in: {setting_table_fp}.')
                 if os.path.exists(setting_table_fp):
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
