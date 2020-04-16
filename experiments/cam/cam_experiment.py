@@ -426,68 +426,69 @@ table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,re
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
-for BATCH_SIZE in [BATCH_SIZE, 8]:
-    bs_name = f"_bs{BATCH_SIZE}"
-    for SEED in [231, 199, 2336]:
-        if SEED == 0:
-            SEED_VAL = random.randint(0, 300)
-        else:
-            SEED_VAL = SEED
+for HIDDEN in [250, 500, 768]:
+    h_name = f"_h{HIDDEN}"
+    for BATCH_SIZE in [BATCH_SIZE, 8]:
+        bs_name = f"_bs{BATCH_SIZE}"
+        for LR in [0.001, 0.002, 0.005, 0.01]:
+            lr_name = f"_lr{LR}"
+            for SEED in [231, 199, 2336]:
+                if SEED == 0:
+                    SEED_VAL = random.randint(0, 300)
+                else:
+                    SEED_VAL = SEED
 
-        random.seed(SEED_VAL)
-        np.random.seed(SEED_VAL)
-        torch.manual_seed(SEED_VAL)
-        torch.cuda.manual_seed_all(SEED_VAL)
+                random.seed(SEED_VAL)
+                np.random.seed(SEED_VAL)
+                torch.manual_seed(SEED_VAL)
+                torch.cuda.manual_seed_all(SEED_VAL)
 
-        seed_name = base_name + f"_{SEED_VAL}" + bs_name
+                setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
 
-        for LR in [1e-4, 0.001, 0.01]:
-            setting_name = seed_name + f"_lr{LR}"
+                if os.path.exists(f'reports/cam/tables/{setting_name}_results_table.csv'):
+                    logger.info(f'Setting {setting_name} done already.')
+                    setting_results_table = pd.read_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index_col=None)
 
-            if os.path.exists(f'reports/cam/tables/{setting_name}_results_table.csv'):
-                logger.info('Done already.')
-                setting_results_table = pd.read_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index_col=None)
+                else:
+                    setting_results_table = pd.DataFrame(columns=table_columns.split(','))
+                    for fold in folds:
+                        logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
+                        logger.info(f" Nr batches: {len(fold['train_batches'])}")
+                        fold_name = setting_name + f"_f{fold['name']}"
 
-            else:
-                setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold in folds:
-                    logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
-                    logger.info(f" Nr batches: {len(fold['train_batches'])}")
-                    fold_name = setting_name + f"_f{fold['name']}"
+                        if os.path.exists(f'reports/cam/tables/{fold_name}_results_table.csv'):
+                            logger.info(f'Fold {fold_name} done already.')
+                            fold_results_table = pd.read_csv(f'reports/cam/tables/{fold_name}_results_table.csv', index_col=None)
+                        else:
+                            fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                    if os.path.exists(f'reports/cam/tables/{fold_name}_results_table.csv'):
-                        logger.info('Done already.')
-                        fold_results_table = pd.read_csv(f'reports/cam/tables/{fold_name}_results_table.csv', index_col=None)
-                    else:
-                        fold_results_table = pd.DataFrame(columns=table_columns.split(','))
+                            model_type = 'cnm' if CN else 'cam'
 
-                        model_type = 'cnm' if CN else 'cam'
+                            val_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'dev'}
+                            test_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'test'}
 
-                        val_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'dev'}
-                        test_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'set_type': 'test'}
+                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                                                         weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                                        b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
-                        cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                                     weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                    b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
+                            cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                                printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                        cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
-                                            printing=PRINT_STEP_EVERY, load_from_ep=None)
+                            best_val_mets, test_mets = cam_cl.train_on_fold(fold)
+                            val_results.update(best_val_mets)
+                            val_results.update({'model_loc': cam_cl.best_model_loc})
+                            if test_mets:
+                                test_results.update(test_mets)
 
-                        best_val_mets, test_mets = cam_cl.train_on_fold(fold)
-                        val_results.update(best_val_mets)
-                        val_results.update({'model_loc': cam_cl.best_model_loc})
-                        if test_mets:
-                            test_results.update(test_mets)
+                            fold_results_table = fold_results_table.append(val_results, ignore_index=True)
+                            fold_results_table = fold_results_table.append(test_results, ignore_index=True)
+                            fold_results_table.to_csv(f'reports/cam/tables/{fold_name}_results_table.csv', index=False)
+                            logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                        setting_results_table = setting_results_table.append(fold_results_table)
+                        logger.info(f"Logged to: {LOG_NAME}.")
 
-                        fold_results_table = fold_results_table.append(val_results, ignore_index=True)
-                        fold_results_table = fold_results_table.append(test_results, ignore_index=True)
-                        fold_results_table.to_csv(f'reports/cam/tables/{fold_name}_results_table.csv', index=False)
-                        logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
-                    setting_results_table = setting_results_table.append(fold_results_table)
-                    logger.info(f"Logged to: {LOG_NAME}.")
-
-                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
-                setting_results_table.to_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index=False)
-                main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-        main_results_table.to_csv(f'reports/cam/tables/{base_name}_main_results_table_1.csv', index=False)
-        logger.info(f"Logged to: {LOG_NAME}.")
+                    logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                    setting_results_table.to_csv(f'reports/cam/tables/{setting_name}_results_table.csv', index=False)
+                    main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
+            main_results_table.to_csv(f'reports/cam/tables/{base_name}_main_results_table_1.csv', index=False)
+            logger.info(f"Logged to: {LOG_NAME}.")
