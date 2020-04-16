@@ -101,7 +101,7 @@ class Classifier:
             tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold)
             losses.append((tr_mets['loss'], val_mets['loss']))
 
-        for ep in self.epochs:
+        for ep in range(1, self.epochs+1):
             self.wrapper.model.train()
 
             av_tr_loss, ep_elapsed = self.train_epoch(tr_bs)
