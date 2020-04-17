@@ -160,14 +160,17 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
 
                     for EMB_TYPE in ['avbert']:
-                        all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
-                        basil_w_BERT = pd.DataFrame(index=all_ids)
-                        embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                        basil_w_BERT[EMB_TYPE] = embs
-                        emb_name = f'{name}_basil_w_{EMB_TYPE}'
-                        basil_w_BERT.to_csv(f'data/{emb_name}.csv')
-                        logger.info(f'Got embs: \n{basil_w_BERT.head()}')
-                        logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
+                        if os.path.exists(f'{name}_basil_w_{EMB_TYPE}'):
+                            logger.info(" Done already.")
+                        else:
+                            all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+                            basil_w_BERT = pd.DataFrame(index=all_ids)
+                            embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                            basil_w_BERT[EMB_TYPE] = embs
+                            emb_name = f'{name}_basil_w_{EMB_TYPE}'
+                            basil_w_BERT.to_csv(f'data/{emb_name}.csv')
+                            logger.info(f'Got embs: \n{basil_w_BERT.head()}')
+                            logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
 
                     test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
