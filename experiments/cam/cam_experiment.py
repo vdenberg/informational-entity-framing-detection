@@ -458,6 +458,7 @@ for HIDDEN in [HIDDEN, 250, 500, 768]:
                     for fold in folds:
                         logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
                         logger.info(f" Nr batches: {len(fold['train_batches'])}")
+                        logger.info(f" Logging to: {LOG_NAME}.")
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
@@ -474,7 +475,7 @@ for HIDDEN in [HIDDEN, 250, 500, 768]:
 
                             cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                        b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
+                                                         b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
 
                             cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
@@ -490,7 +491,6 @@ for HIDDEN in [HIDDEN, 250, 500, 768]:
                             fold_results_table.to_csv(fold_table_fp, index=False)
                             logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
                         setting_results_table = setting_results_table.append(fold_results_table)
-                        logger.info(f"Logged to: {LOG_NAME}.")
 
                     logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
                     setting_results_table.to_csv(setting_table_fp, index=False)
