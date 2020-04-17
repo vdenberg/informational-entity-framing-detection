@@ -159,7 +159,7 @@ if __name__ == '__main__':
                     logger.info(f"***** Embeds (and Test) - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
-                    for EMB_TYPE in ['poolbert']:
+                    for EMB_TYPE in ['poolbert', 'avbert']:
                         all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                         basil_w_BERT = pd.DataFrame(index=all_ids)
                         embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
