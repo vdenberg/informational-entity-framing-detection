@@ -391,24 +391,32 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
     
 '''
 
+
+def get_weights_matrix(data, emb_fp, emb_dim=None):
+    data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
+    data_w_emb = data_w_emb.rename(
+        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+    data_w_emb.index = [el.lower() for el in data_w_emb.index]
+    data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
+    # transform into matrix
+    wm = make_weight_matrix(data, emb_dim)
+    return wm
+
+
+if EMB_TYPE in ['use', 'sbert']:
+    embed_fp = f"data/basil_w_{EMB_TYPE}.csv"
+    weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+    logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+
 for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert']:
         embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-    else:
-        embed_fp = f"data/basil_w_{EMB_TYPE}.csv"
-
-    data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
-    data_w_embeds = data_w_embeds.rename(
-        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-    data_w_embeds.index = [el.lower() for el in data_w_embeds.index]
-    data.loc[data_w_embeds.index, 'embeddings'] = data_w_embeds['embeddings']
-
-    # transform into matrix
-    weights_matrix = make_weight_matrix(data, EMB_DIM)
-
-    logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+        weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+        logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
+
+
 
 
 # =====================================================================================
