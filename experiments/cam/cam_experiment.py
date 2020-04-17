@@ -393,7 +393,7 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
 
 for fold in folds:
     # read embeddings file
-    if EMB_TYPE is in ['poolbert', 'avbert']:
+    if EMB_TYPE in ['poolbert', 'avbert']:
         embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
     else:
         embed_fp = f"data/basil_w_{EMB_TYPE}.csv"
