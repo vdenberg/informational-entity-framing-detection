@@ -179,7 +179,6 @@ if DEBUG:
 BATCH_SIZE = args.batch_size
 WARMUP_PROPORTION = args.warmup_proportion
 LR = args.learning_rate
-BERT_LR = args.bert_learning_rate
 GAMMA = args.gamma
 PATIENCE = args.patience
 
