@@ -429,11 +429,16 @@ table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,re
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
-for HIDDEN in [HIDDEN, 250, 500, 768]:
+
+hiddens = [HIDDEN]
+batch_sizes = [BATCH_SIZE]
+learning_rates = [0.005] #, 0.001, 0.002]
+
+for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
-    for BATCH_SIZE in [BATCH_SIZE, 8]:
+    for BATCH_SIZE in batch_sizes:
         bs_name = f"_bs{BATCH_SIZE}"
-        for LR in [LR, 0.005, 0.002, 0.001, 0.01]:
+        for LR in learning_rates:
             lr_name = f"_lr{LR}"
             for SEED in [231, 199, 2336]:
                 if SEED == 0:
