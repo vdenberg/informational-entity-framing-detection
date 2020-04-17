@@ -140,12 +140,11 @@ parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn of
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-4)
-parser.add_argument('-bert_lr', '--bert_learning_rate', type=float, default=2e-5)
+parser.add_argument('-lr', '--learning_rate', type=float, default=0.005)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=500)
+parser.add_argument('-hid', '--hidden_size', type=int, default=250)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
@@ -432,7 +431,7 @@ base_name = 'cnm' if CN else "cam"
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
-learning_rates = [0.005] #, 0.001, 0.002]
+learning_rates = [LR] #, 0.001, 0.002]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
