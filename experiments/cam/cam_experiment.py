@@ -433,7 +433,7 @@ for HIDDEN in [250, 500, 768]:
     h_name = f"_h{HIDDEN}"
     for BATCH_SIZE in [BATCH_SIZE, 8]:
         bs_name = f"_bs{BATCH_SIZE}"
-        for LR in [0.001, 0.002, 0.005, 0.01]:
+        for LR in [0.005, 0.002, 0.001, 0.01]:
             lr_name = f"_lr{LR}"
             for SEED in [231, 199, 2336]:
                 if SEED == 0:
