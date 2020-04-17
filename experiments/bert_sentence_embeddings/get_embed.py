@@ -160,7 +160,7 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
 
                     for EMB_TYPE in ['avbert']:
-                        if os.path.exists(f'{name}_basil_w_{EMB_TYPE}'):
+                        if os.path.exists(f'data/{emb_name}.csv'):
                             logger.info(" Done already.")
                         else:
                             all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
