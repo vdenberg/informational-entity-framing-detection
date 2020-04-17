@@ -390,9 +390,14 @@ with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
                                                                output_attentions=True)
     
 '''
+
 for fold in folds:
     # read embeddings file
-    embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    if EMB_TYPE is in ['poolbert', 'avbert']:
+        embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+    else:
+        embed_fp = f"data/basil_w_{EMB_TYPE}.csv"
+
     data_w_embeds = pd.read_csv(embed_fp, index_col=0).fillna('')
     data_w_embeds = data_w_embeds.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
