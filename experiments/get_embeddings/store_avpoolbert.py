@@ -72,19 +72,16 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    model_locs = {'1': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f1_ep2', 44.18),
-                     '10': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f10_ep4',
-                            28.860000000000003),
-                     '2': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f2_ep2',
-                           35.089999999999996),
-                     '3': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f3_ep4', 41.72),
-                     '4': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f4_ep2', 32.73),
-                     '5': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f5_ep4',
-                           38.129999999999995),
-                     '6': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f6_ep4', 32.65),
-                     '7': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f7_ep4', 30.34),
-                     '8': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f8_ep3', 27.93),
-                     '9': ('models/checkpoints/bert_baseline/bert_231_bs16_lr2e-05_f9_ep4', 34.53)}
+    model_locs = {'1': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 44.519999999999996),
+                 '10': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f10_ep4', 29.770000000000003),
+                 '2': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f2_ep3', 37.0),
+                 '3': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 46.94),
+                 '4': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f4_ep2', 33.82),
+                 '5': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f5_ep4', 39.269999999999996),
+                 '6': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f6_ep3', 29.17),
+                 '7': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f7_ep4', 36.28),
+                 '8': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 30.48),
+                 '9': ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 40.0)}
 
     for SEED in [231]:
         if SEED == 0:
@@ -98,7 +95,7 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16]:
+        for BATCH_SIZE in [21]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
             for LEARNING_RATE in [2e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
