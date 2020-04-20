@@ -1,3 +1,0 @@
-INFO:root:Namespace(fold='fan', learning_rate=2e-05, load_from_ep=0, n_epochs=10, sv=0)
-INFO:root:Namespace(fold='fan', learning_rate=2e-05, load_from_ep=0, n_epochs=10, sv=0)
-INFO:root:Namespace(fold='fan', learning_rate=2e-05, load_from_ep=0, n_epochs=10, sv=0)
