@@ -192,4 +192,4 @@ half_train_batches = int(n_train_batches / 2)
 num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
 num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
 #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
-'''
+'''#tmp
