@@ -6,12 +6,16 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 
 # path to bert vocab and weights
 export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
+#export BERT_VOCAB=ssc.vocab
 export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
 
 # path to dataset files
-export TRAIN_PATH=data/CSAbstruct/train.jsonl
-export DEV_PATH=data/CSAbstruct/dev.jsonl
-export TEST_PATH=data/CSAbstruct/test.jsonl
+#export TRAIN_PATH=data/CSAbstruct/train.jsonl
+#export DEV_PATH=data/CSAbstruct/dev.jsonl
+#export TEST_PATH=data/CSAbstruct/test.jsonl
+export TRAIN_PATH=data/1_train_ssc.jsonl
+export DEV_PATH=data/1_dev_ssc.jsonl
+export TEST_PATH=data/1_test_ssc.jsonl
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
