@@ -94,7 +94,12 @@ class SeqClassificationModel(Model):
         # Output: embedded_sentences
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
+        logger.info(sentences)
+        logger.info(sentences.shape)
+        logger.info('----')
         embedded_sentences = self.text_field_embedder(sentences)
+        logger.info(embedded_sentences.shape)
+        logger.info('----')
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
 
@@ -103,8 +108,12 @@ class SeqClassificationModel(Model):
             # and arrange them in one list. It does the same for the labels and confidences.
             # TODO: replace 103 with '[SEP]'
             sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
+            logger.info(sentences_mask)
+            logger.info('----')
             embedded_sentences = embedded_sentences[sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
                                                                         # returns num_sentences_per_batch x vector_len
+            logger.info(embedded_sentences)
+            logger.info('----')
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
             # for the rest of the code in this model to work, think of the data we have as one example
@@ -114,19 +123,12 @@ class SeqClassificationModel(Model):
             embedded_sentences = self.dropout(embedded_sentences)
 
             if labels is not None:
-                logger.info(labels)
-                logger.info(labels.shape)
-                logger.info("----")
                 if self.labels_are_scores:
                     labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
                 else:
                     labels_mask = labels != -1  # mask for all the labels in the batch (no padding)
 
                 labels = labels[labels_mask]  # given batch_size x num_sentences_per_example return num_sentences_per_batch
-                logger.info(labels)
-                logger.info(labels.shape)
-                logger.info(labels_mask)
-                logger.info("----")
                 assert labels.dim() == 1
                 if confidences is not None:
                     confidences = confidences[labels_mask]
