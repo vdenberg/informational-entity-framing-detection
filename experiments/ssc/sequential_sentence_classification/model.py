@@ -94,12 +94,12 @@ class SeqClassificationModel(Model):
         # Output: embedded_sentences
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
-        logger.info(sentences['bert'])
-        logger.info(sentences['bert'].shape)
-        logger.info('----')
+        logger.info(sentences['bert']) #torch.Size([4, 1, 495])
+
         embedded_sentences = self.text_field_embedder(sentences)
-        logger.info(embedded_sentences.shape)
-        logger.info('----')
+
+        logger.info(embedded_sentences.shape) #torch.Size([4, 1, 495, ...])
+
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
 
