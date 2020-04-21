@@ -20,7 +20,7 @@ local boolToInt(s) =
     "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),
     "token_indexers": {
           "bert": {
-              "type": "bert-base-uncased",
+              "type": "bert-pretrained",
               "pretrained_model": std.extVar("BERT_VOCAB"),
               "do_lowercase": false,
               "use_starting_offsets": false
