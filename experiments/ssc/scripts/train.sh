@@ -29,7 +29,7 @@ export LR=5e-5
 #export TRAINING_DATA_INSTANCES=1668
 #export NUM_EPOCHS=2
 export TRAINING_DATA_INSTANCES=248
-export NUM_EPOCHS=5
+export NUM_EPOCHS=2
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
 #export MAX_SENT_PER_EXAMPLE=10
