@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/run.py", line 18, in <module>
+    main(prog="allennlp")
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/__init__.py", line 72, in main
+    args.func(args)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 111, in train_model_from_args
+    args.force)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 144, in train_model_from_file
+    return train_model(params, serialization_dir, file_friendly_logging, recover, force)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 289, in train_model
+    check_for_gpu(cuda_device)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/checks.py", line 51, in check_for_gpu
+    raise ConfigurationError("Experiment specified a GPU but none are available;"
+allennlp.common.checks.ConfigurationError: "Experiment specified a GPU but none are available; if you want to run on CPU use the override 'trainer.cuda_device=-1' in the json config file."
