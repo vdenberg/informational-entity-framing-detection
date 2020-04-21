@@ -32,7 +32,9 @@ export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=5
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
-export MAX_SENT_PER_EXAMPLE=5
+#export MAX_SENT_PER_EXAMPLE=10
+#export SENT_MAX_LEN=80
+export MAX_SENT_PER_EXAMPLE=10
 export SENT_MAX_LEN=95
 
 # this is for the evaluation of the summarization dataset
