@@ -16,7 +16,7 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 
 #data/ssc.vocab
 
-export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
+export BERT_VOCAB=bert-base-uncased-vocab.txt
 export BERT_WEIGHTS=bert-base-uncased.tar.gz
 
 # path to dataset files
