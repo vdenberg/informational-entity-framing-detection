@@ -114,6 +114,7 @@ class SeqClassificationModel(Model):
             embedded_sentences = self.dropout(embedded_sentences)
 
             if labels is not None:
+                logger.info(labels)
                 if self.labels_are_scores:
                     labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
                 else:
@@ -197,8 +198,6 @@ class SeqClassificationModel(Model):
             flattened_gold = labels.contiguous().view(-1)
 
             if not self.with_crf:
-                logger.info(labels)
-                logger.info(flattened_gold)
                 label_loss = self.loss(flattened_logits.squeeze(), flattened_gold)
                 if confidences is not None:
                     label_loss = label_loss * confidences.type_as(label_loss).view(-1)
