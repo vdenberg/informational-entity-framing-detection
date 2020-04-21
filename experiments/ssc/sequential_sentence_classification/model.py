@@ -116,6 +116,7 @@ class SeqClassificationModel(Model):
             if labels is not None:
                 logger.info(labels)
                 logger.info(labels.shape)
+                logger.info(embedded_sentences.shape)
                 if self.labels_are_scores:
                     labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
                 else:
