@@ -94,8 +94,8 @@ class SeqClassificationModel(Model):
         # Output: embedded_sentences
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
-        logger.info(sentences)
-        logger.info(sentences.shape)
+        logger.info(sentences['bert'])
+        logger.info(sentences['bert'].shape)
         logger.info('----')
         embedded_sentences = self.text_field_embedder(sentences)
         logger.info(embedded_sentences.shape)
