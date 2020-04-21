@@ -105,8 +105,7 @@ class SeqClassificationModel(Model):
             # and arrange them in one list. It does the same for the labels and confidences.
             # TODO: replace 103 with '[SEP]'
             sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
-            logger.info(sentences['bert'][0])
-            logger.info(sentences['bert'][0][:10])
+            logger.info(sentences['bert'][0].shape)
 
             embedded_sentences = embedded_sentences[sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
                                                                         # returns num_sentences_per_batch x vector_len
