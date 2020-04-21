@@ -24,9 +24,11 @@ export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
 export cuda_device=0
-export BATCH_SIZE=4
+export BATCH_SIZE=1
 export LR=5e-5
-export TRAINING_DATA_INSTANCES=1668
+#export TRAINING_DATA_INSTANCES=1668
+#export NUM_EPOCHS=2
+export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=5
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
