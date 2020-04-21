@@ -28,7 +28,7 @@ export DEV_PATH=data/1_dev_ssc.jsonl
 export TEST_PATH=data/1_test_ssc.jsonl
 
 # model
-export USE_SEP=false  # true for our model. false for baseline
+export USE_SEP=true  # true for our model. false for baseline
 export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
@@ -48,7 +48,7 @@ export TRAINING_DATA_INSTANCES=248
 #export MAX_SENT_PER_EXAMPLE=10
 #export SENT_MAX_LEN=80
 export MAX_SENT_PER_EXAMPLE=10
-export SENT_MAX_LEN=95
+export SENT_MAX_LEN=120
 
 # this is for the evaluation of the summarization dataset
 export SCI_SUM=false
