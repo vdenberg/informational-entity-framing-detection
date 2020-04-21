@@ -94,7 +94,6 @@ class SeqClassificationModel(Model):
         # Output: embedded_sentences
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
-        logger.info(sentences['bert']) #torch.Size([4, 1, 495])
 
         embedded_sentences = self.text_field_embedder(sentences)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
