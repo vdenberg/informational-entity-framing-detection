@@ -106,11 +106,10 @@ class SeqClassificationModel(Model):
             # TODO: replace 103 with '[SEP]'
             sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
             logger.info(sentences['bert'][0])
-            logger.info(sentences['bert'][0][:30])
+            logger.info(sentences['bert'][0][:10])
 
             embedded_sentences = embedded_sentences[sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
                                                                         # returns num_sentences_per_batch x vector_len
-            logger.info(embedded_sentences)
 
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
