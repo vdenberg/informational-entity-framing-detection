@@ -98,7 +98,7 @@
 [unused96]
 [unused97]
 [unused98]
-[UNK]
+@@UNKNOWN@@
 [CLS]
 [SEP]
 [MASK]

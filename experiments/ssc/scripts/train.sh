@@ -5,22 +5,15 @@ export PYTORCH_SEED=`expr $SEED / 10`
 export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 
 # path to bert vocab and weights
-export SCIBERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
-export SCIBERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
+if [ "$1" = 'SCIBERT' ]; then
+  export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
+  export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
+fi
 
-#export BERT_VOCAB=https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased-vocab.txt
-#export BERT_WEIGHTS=https://s3.amazonaws.com/models.huggingface.co/bert/bert-base-uncased.tar.gz
-
-#bert-base-uncased-vocab.txt
-#bert-base-uncased.tar.gz
-
-#data/ssc.vocab
-
-export BERT_VOCAB=bert-base-uncased
-export BERT_WEIGHTS=bert-base-uncased
-
-export VOCAB="$1"
-export WEIGHTS="$2"
+if [ "$1" = 'BERT' ]; then
+  export BERT_VOCAB=bert-base-uncased
+  export BERT_WEIGHTS=bert-base-uncased
+fi
 
 # path to dataset files
 #export TRAIN_PATH=data/CSAbstruct/train.jsonl
@@ -36,7 +29,7 @@ export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
 #export cuda_device=0
-export cuda_device="$3"
+export cuda_device="$2"
 
 export BATCH_SIZE=4
 export LR=5e-5
@@ -61,5 +54,9 @@ export USE_ABSTRACT_SCORES=false
 export SCI_SUM_FAKE_SCORES=false  # use fake scores for testing
 
 CONFIG_FILE=sequential_sentence_classification/config.jsonnet
+
+if [ -d "tmp_output_dir" ]; then
+  rm -r tmp_output_dir
+fi
 
 python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR tmp_output_dir

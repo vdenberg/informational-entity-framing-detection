@@ -21,9 +21,10 @@ local boolToInt(s) =
     "token_indexers": {
           "bert": {
               "type": "bert-pretrained",
-              "pretrained_model": std.extVar("VOCAB"),
+              "pretrained_model": std.extVar("BERT_VOCAB"),
               "do_lowercase": true,
-              "use_starting_offsets": false
+              "use_starting_offsets": false,
+              "never_lowercase": ['[UNK]', '[SEP]', '[PAD]', '[CLS]', '[MASK]']
           },
     },
     "use_sep": std.extVar("USE_SEP"),
@@ -47,7 +48,7 @@ local boolToInt(s) =
         "token_embedders": {
             "bert": {
                 "type": "bert-pretrained",
-                "pretrained_model": std.extVar("WEIGHTS"),
+                "pretrained_model": std.extVar("BERT_WEIGHTS"),
                 "requires_grad": 'all',
                 "top_layer_only": false,
             }
