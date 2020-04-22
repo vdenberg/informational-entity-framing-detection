@@ -11,8 +11,20 @@ Traceback (most recent call last):
     args.force)
   File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 144, in train_model_from_file
     return train_model(params, serialization_dir, file_friendly_logging, recover, force)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 289, in train_model
-    check_for_gpu(cuda_device)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/checks.py", line 51, in check_for_gpu
-    raise ConfigurationError("Experiment specified a GPU but none are available;"
-allennlp.common.checks.ConfigurationError: "Experiment specified a GPU but none are available; if you want to run on CPU use the override 'trainer.cuda_device=-1' in the json config file."
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 293, in train_model
+    all_datasets = datasets_from_params(params)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 151, in datasets_from_params
+    dataset_reader = DatasetReader.from_params(params.pop('dataset_reader'))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 277, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 288, in from_params
+    kwargs = create_kwargs(cls, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 182, in create_kwargs
+    value_dict[key] = value_cls.from_params(params=value_params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 277, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 290, in from_params
+    return cls(**kwargs)  # type: ignore
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/data/token_indexers/wordpiece_indexer.py", line 240, in __init__
+    super().__init__(vocab=bert_tokenizer.vocab,
+AttributeError: 'NoneType' object has no attribute 'vocab'
