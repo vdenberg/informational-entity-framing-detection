@@ -11,17 +11,17 @@ if [ "$1" = 'SCIBERT' ]; then
 fi
 
 if [ "$1" = 'BERT' ]; then
-  export BERT_VOCAB=bert-base-uncased
-  export BERT_WEIGHTS=bert-base-uncased
+  export BERT_VOCAB=uncased_L-12_H-768_A-12/vocab.txt
+  export BERT_WEIGHTS=uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
 fi
 
 # path to dataset files
-#export TRAIN_PATH=data/CSAbstruct/train.jsonl
-#export DEV_PATH=data/CSAbstruct/dev.jsonl
-#export TEST_PATH=data/CSAbstruct/test.jsonl
-export TRAIN_PATH=data/1_train_ssc.jsonl
-export DEV_PATH=data/1_dev_ssc.jsonl
-export TEST_PATH=data/1_test_ssc.jsonl
+export TRAIN_PATH=data/CSAbstruct/train.jsonl
+export DEV_PATH=data/CSAbstruct/dev.jsonl
+export TEST_PATH=data/CSAbstruct/test.jsonl
+#export TRAIN_PATH=data/1_train_ssc.jsonl
+#export DEV_PATH=data/1_dev_ssc.jsonl
+#export TEST_PATH=data/1_test_ssc.jsonl
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
@@ -32,7 +32,8 @@ export WITH_CRF=false  # CRF only works for the baseline
 export cuda_device="$2"
 
 export BATCH_SIZE=4
-export LR=5e-5
+#export LR=5e-5
+export LR=0.00005
 #export TRAINING_DATA_INSTANCES=1668
 export NUM_EPOCHS=2
 

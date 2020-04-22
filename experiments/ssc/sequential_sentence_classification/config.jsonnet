@@ -23,8 +23,7 @@ local boolToInt(s) =
               "type": "bert-pretrained",
               "pretrained_model": std.extVar("BERT_VOCAB"),
               "do_lowercase": true,
-              "use_starting_offsets": false,
-              "never_lowercase": ['[UNK]', '[SEP]', '[PAD]', '[CLS]', '[MASK]']
+              "use_starting_offsets": false
           },
     },
     "use_sep": std.extVar("USE_SEP"),
