@@ -1,85 +1,3 @@
-  0%|          | 0/231508 [00:00<?, ?B/s]
-  7%|7         | 16384/231508 [00:00<00:01, 118877.23B/s]
- 23%|##2       | 52224/231508 [00:00<00:01, 146685.11B/s]
- 53%|#####2    | 121856/231508 [00:00<00:00, 170449.61B/s]
-100%|##########| 231508/231508 [00:00<00:00, 454966.05B/s]
-
-0it [00:00, ?it/s]
-19it [00:00, 189.21it/s]
-37it [00:00, 182.66it/s]
-61it [00:00, 195.31it/s]
-93it [00:00, 220.45it/s]
-138it [00:00, 260.18it/s]
-182it [00:00, 295.67it/s]
-214it [00:00, 275.64it/s]
-264it [00:00, 317.42it/s]
-314it [00:00, 352.81it/s]
-369it [00:01, 394.19it/s]
-428it [00:01, 435.96it/s]
-487it [00:01, 471.50it/s]
-538it [00:01, 475.79it/s]
-589it [00:01, 470.02it/s]
-638it [00:01, 468.11it/s]
-697it [00:01, 494.17it/s]
-762it [00:01, 528.84it/s]
-822it [00:01, 544.16it/s]
-883it [00:01, 561.14it/s]
-945it [00:02, 577.18it/s]
-1004it [00:02, 574.08it/s]
-1062it [00:02, 560.31it/s]
-1119it [00:02, 443.55it/s]
-1182it [00:02, 484.60it/s]
-1246it [00:02, 520.39it/s]
-1305it [00:02, 537.52it/s]
-1367it [00:02, 556.48it/s]
-1431it [00:03, 578.91it/s]
-1495it [00:03, 594.28it/s]
-1558it [00:03, 602.46it/s]
-1623it [00:03, 614.84it/s]
-1686it [00:03, 609.63it/s]
-1748it [00:03, 565.00it/s]
-1806it [00:03, 568.26it/s]
-1869it [00:03, 579.53it/s]
-1932it [00:03, 590.40it/s]
-1992it [00:03, 590.64it/s]
-2052it [00:04, 441.74it/s]
-2114it [00:04, 482.79it/s]
-2176it [00:04, 516.26it/s]
-2232it [00:04, 521.80it/s]
-2292it [00:04, 539.22it/s]
-2355it [00:04, 563.08it/s]
-2419it [00:04, 582.45it/s]
-2479it [00:04, 587.42it/s]
-2539it [00:04, 582.86it/s]
-2599it [00:05, 583.64it/s]
-2658it [00:05, 575.84it/s]
-2718it [00:05, 581.63it/s]
-2777it [00:05, 567.00it/s]
-2834it [00:05, 523.44it/s]
-2853it [00:05, 512.59it/s]
-
-0it [00:00, ?it/s]
-58it [00:00, 566.31it/s]
-111it [00:00, 552.36it/s]
-170it [00:00, 413.33it/s]
-237it [00:00, 466.70it/s]
-299it [00:00, 502.13it/s]
-360it [00:00, 529.20it/s]
-413it [00:00, 525.45it/s]
-472it [00:00, 539.28it/s]
-500it [00:00, 507.65it/s]
-
-0it [00:00, ?it/s]
-62it [00:00, 613.70it/s]
-128it [00:00, 626.79it/s]
-198it [00:00, 645.22it/s]
-260it [00:00, 636.25it/s]
-330it [00:00, 651.15it/s]
-358it [00:00, 649.16it/s]
-
-0it [00:00, ?it/s]
-3711it [00:00, 56730.19it/s]
-
 Traceback (most recent call last):
   File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 193, in _run_module_as_main
     "__main__", mod_spec)
@@ -97,30 +15,36 @@ Traceback (most recent call last):
     cache_directory, cache_prefix)
   File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 226, in train_model
     cache_prefix)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/training/trainer_pieces.py", line 65, in from_params
-    model = Model.from_params(vocab=vocab, params=params.pop('model'))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/training/trainer_pieces.py", line 42, in from_params
+    all_datasets = training_util.datasets_from_params(params, cache_directory, cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/training/util.py", line 165, in datasets_from_params
+    dataset_reader = DatasetReader.from_params(dataset_reader_params)
   File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
     return subclass.from_params(params=params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 386, in from_params
-    kwargs = create_kwargs(cls, params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 133, in create_kwargs
-    kwargs[name] = construct_arg(cls, name, annotation, param.default, params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 229, in construct_arg
-    return annotation.from_params(params=subparams, **subextras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
-    return subclass.from_params(params=params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in from_params
-    for name, subparams in token_embedder_params.items()
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in <dictcomp>
-    for name, subparams in token_embedder_params.items()
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
-    return subclass.from_params(params=params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 386, in from_params
-    kwargs = create_kwargs(cls, params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 133, in create_kwargs
-    kwargs[name] = construct_arg(cls, name, annotation, param.default, params, **extras)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 243, in construct_arg
-    return params.pop_bool(name, default) if optional else params.pop_bool(name)
-  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/params.py", line 304, in pop_bool
-    raise ValueError("Cannot convert variable to bool: " + value)
-ValueError: Cannot convert variable to bool: all
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 388, in from_params
+    return cls(**kwargs)  # type: ignore
+  File "/Users/ester/Projects/PhD/EntityFramingDetection/experiments/ssc/sequential_sentence_classification/dataset_reader.py", line 47, in __init__
+    self._tokenizer = WordTokenizer(word_splitter=SpacyWordSplitter(pos_tags=False))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/data/tokenizers/word_splitter.py", line 173, in __init__
+    self.spacy = get_spacy_model(language, pos_tags, parse, ner)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/util.py", line 289, in get_spacy_model
+    spacy_model = spacy.load(spacy_model_name, disable=disable)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/__init__.py", line 27, in load
+    return util.load_model(name, **overrides)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/util.py", line 134, in load_model
+    return load_model_from_package(name, **overrides)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/util.py", line 155, in load_model_from_package
+    return cls.load(**overrides)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/en_core_web_sm/__init__.py", line 12, in load
+    return load_model_from_init_py(__file__, **overrides)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/util.py", line 196, in load_model_from_init_py
+    return load_model_from_path(data_path, meta, **overrides)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/util.py", line 179, in load_model_from_path
+    return nlp.from_disk(model_path)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/language.py", line 836, in from_disk
+    util.from_disk(path, deserializers, exclude)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/util.py", line 636, in from_disk
+    reader(path / key)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/spacy/language.py", line 823, in <lambda>
+    p, exclude=["vocab"]
+KeyboardInterrupt
