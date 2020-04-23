@@ -5,15 +5,11 @@ export PYTORCH_SEED=`expr $SEED / 10`
 export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 
 # path to bert vocab and weights
-if [ "$1" = 'SCIBERT' ]; then
-  export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
-  export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
-fi
+#export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab#
+#export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
 
-if [ "$1" = 'BERT' ]; then
-  export BERT_VOCAB=bert-base-cased #uncased_L-12_H-768_A-12/vocab.txt
-  export BERT_WEIGHTS=bert-base-cased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
-fi
+export BERT_VOCAB=bert-base-cased #uncased_L-12_H-768_A-12/vocab.txt
+export BERT_WEIGHTS=bert-base-cased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
 
 # path to dataset files
 #export TRAIN_PATH=data/CSAbstruct/train.jsonl
