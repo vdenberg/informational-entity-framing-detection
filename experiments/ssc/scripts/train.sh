@@ -25,7 +25,7 @@ export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
 #export cuda_device=0
-export cuda_device="$2"
+export cuda_device=0
 
 #export BATCH_SIZE=4
 #export LR=5e-5
@@ -34,7 +34,7 @@ export cuda_device="$2"
 
 #export cuda_device=0
 export BATCH_SIZE=1
-export LR=0.0008
+export LR=0.0005
 export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=20
 
