@@ -54,4 +54,4 @@ if [ -d "tmp_output_dir" ]; then
   rm -r tmp_output_dir
 fi
 
-python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR tmp_output_dir > $3
+python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR tmp_output_dir
