@@ -19,9 +19,9 @@ fi
 #export TRAIN_PATH=data/CSAbstruct/train.jsonl
 #export DEV_PATH=data/CSAbstruct/dev.jsonl
 #export TEST_PATH=data/CSAbstruct/test.jsonl
-export TRAIN_PATH=data/1_train_ssc.jsonl
-export DEV_PATH=data/1_dev_ssc.jsonl
-export TEST_PATH=data/1_test_ssc.jsonl
+export TRAIN_PATH=data/basil/1_train_ssc.jsonl
+export DEV_PATH=data/basil/1_dev_ssc.jsonl
+export TEST_PATH=data/basil/1_test_ssc.jsonl
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
