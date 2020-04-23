@@ -34,7 +34,7 @@ export cuda_device="$2"
 #export BATCH_SIZE=4
 export LR=5e-4
 #export TRAINING_DATA_INSTANCES=1668
-export NUM_EPOCHS=2
+export NUM_EPOCHS=4
 
 #export cuda_device=0
 export BATCH_SIZE=1
