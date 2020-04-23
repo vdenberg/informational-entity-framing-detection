@@ -32,7 +32,7 @@ export WITH_CRF=false  # CRF only works for the baseline
 export cuda_device="$2"
 
 #export BATCH_SIZE=4
-export LR=5e-5
+export LR=5e-4
 #export TRAINING_DATA_INSTANCES=1668
 export NUM_EPOCHS=2
 
