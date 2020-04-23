@@ -11,8 +11,8 @@ if [ "$1" = 'SCIBERT' ]; then
 fi
 
 if [ "$1" = 'BERT' ]; then
-  export BERT_VOCAB=bert-large-uncased #uncased_L-12_H-768_A-12/vocab.txt
-  export BERT_WEIGHTS=bert-large-uncased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
+  export BERT_VOCAB=bert-large-cased #uncased_L-12_H-768_A-12/vocab.txt
+  export BERT_WEIGHTS=bert-large-cased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
 fi
 
 # path to dataset files

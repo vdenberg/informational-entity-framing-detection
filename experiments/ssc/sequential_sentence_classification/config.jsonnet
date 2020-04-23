@@ -22,7 +22,7 @@ local boolToInt(s) =
           "bert": {
               "type": "bert-pretrained",
               "pretrained_model": std.extVar("BERT_VOCAB"),
-              "do_lowercase": true,
+              "do_lowercase": false,
               "use_starting_offsets": false
           },
     },
