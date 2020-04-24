@@ -34,12 +34,12 @@ export cuda_device=0
 
 #export cuda_device=0
 export BATCH_SIZE=1
-export LR=0.001
+export LR=0.00001
 export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=5
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
-export MAX_SENT_PER_EXAMPLE=$3
+export MAX_SENT_PER_EXAMPLE=10
 export SENT_MAX_LEN=90
 #export MAX_SENT_PER_EXAMPLE=5
 #export SENT_MAX_LEN=20
