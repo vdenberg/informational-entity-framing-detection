@@ -34,7 +34,7 @@ export cuda_device=0
 
 #export cuda_device=0
 export BATCH_SIZE=1
-export LR=0.0001
+export LR='0.000'$3
 export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=4
 
@@ -56,3 +56,5 @@ if [ -d "tmp_output_dir" ]; then
 fi
 
 python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR tmp_output_dir
+
+# good seed and fold 199, 2
