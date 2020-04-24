@@ -20,7 +20,7 @@ export DEV_PATH="data/basil/"$2"_dev_ssc.jsonl"
 export TEST_PATH="data/basil/"$2"_test_ssc.jsonl"
 
 # model
-export USE_SEP=false  # true for our model. false for baseline
+export USE_SEP=true  # true for our model. false for baseline
 export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
