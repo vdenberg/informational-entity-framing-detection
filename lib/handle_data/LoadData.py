@@ -7,11 +7,41 @@ import numpy as np
 import json
 from transformers import BertTokenizer
 import spacy
+import re
 
 nlp = spacy.load("en_core_web_sm")
+
+
 def tokenize(x):
     global nlp
     return [token.text for token in nlp(x)]
+
+
+def tokenize_w_span(sentence, tokens, span):
+    before = sentence[:span[0]]
+    during = sentence[span[0]:span[1]]
+    after = sentence[span[1]:]
+
+    before = tokenize(before)
+    during = tokenize(during)
+    after = tokenize(after)
+
+    token_sequence = before + during + after
+    return token_sequence, before, during, after
+
+def clean_up_start_ends(start_ends):
+    start_ends = start_ends[2:-2]
+    start_ends = re.sub('\), \(', ';', start_ends)
+    start_ends = start_ends.split(';')
+    start_ends = [tuple(map(int, s_e.split(', '))) for s_e in start_ends]
+    return start_ends
+
+
+def clean_up_tokens(tokens):
+    tokens = tokens[2:-2]
+    clean_tokens = tokens.split("', '")
+    return clean_tokens
+
 
 class LoadBasil:
     def __init__(self):
@@ -101,40 +131,66 @@ class LoadBasil:
     def to_token(self):
         df = pd.read_csv('data/basil_w_tokens.csv', index_col=0)
         df = df[df.bias == 1]
-        sentences = df.sentence.values[:3]
-        tokens = df.tokens.values[:3]
-        spans = df.inf_start_ends[:3]
+        sentences = df.sentence.values[:100]
+        tokens = df.tokens.values[:100]
+        spans = df.inf_start_ends[:100]
 
         spanbased_labels = []
         for s, t, sps in zip(sentences, tokens, spans):
-            spb_lbls = [0] * len(t)
+            t = clean_up_tokens(t)
+            sps = clean_up_start_ends(sps)
+            spb_lbls = {i: (subt, 'O') for i, subt in enumerate(t)}
 
-            sps = list(sps)
             print(sps)
+            if len(sps) > 1:
+                print(s)
+
             for sp in sps:
-                sp = tuple(sp)
-                print(sp[0])
-                before = s[:sp[0]]
-                during = s[sp[0]:sp[1]]
-                after = s[sp[1]:]
+                all_tokens, before_tokens, during_tokens, after_tokens = tokenize_w_span(s, t, sp)
 
-                before_tokens = tokenize(before)
-                during_tokens = tokenize(during)
-                after_tokens = tokenize(after)
-
-                before_labels = len(before_tokens) * [0]
+                before_labels = len(before_tokens) * ['O']
                 during_labels = len(during_tokens) * [1]
-                after_labels = len(after_tokens) * [0]
-
+                after_labels = len(after_tokens) * ['O']
                 label_sequence = before_labels + during_labels + after_labels
 
-                for i, l in enumerate(label_sequence):
-                    if l == 1:
-                        spb_lbls[i] = 1
-            spanbased_labels.append(spb_lbls)
-        targetoutput = [['The', 'agents', 'were', 'confused', '.'],[0,1,0,0,0]]
+                print(len(t), t)
+                print(len(label_sequence), before_tokens + during_tokens + after_tokens)
+                if len(t) != len(label_sequence):
+                    t = before_tokens + during_tokens + after_tokens
+
+                for i in range(len(t)):
+                    label = label_sequence[i]
+                    if label == 1:
+                        spb_lbls[i] = (t[i], label)
+
+                if len(sps) > 1:
+                    print(" ".join(during_tokens))
+
+
+            prev_label = None
+            for i in range(len(t)):
+                subt, label = spb_lbls[i]
+                if label == 1:
+                    if (prev_label is None) or (prev_label == "O"):
+                        bio_label = 'B-BIAS'
+                    else:
+                        bio_label = 'I-BIAS'
+                    spb_lbls[i] = (subt, bio_label)
+                prev_label = label
+
+            out_toks = []
+            out_labels = []
+            for i in range(len(t)):
+                subt, label = spb_lbls[i]
+                out_toks.append(subt)
+                out_labels.append(label)
+            out_dict = {'seq_words': out_toks, "BIO": out_labels}
+
+            if len(sps) > 1:
+                print(out_dict['BIO'])
+
+            spanbased_labels.append(out_dict)
         print(spanbased_labels)
-        print(targetoutput)
 
 def load_basil_features():
     # features are added in create_data folder

@@ -208,7 +208,7 @@ torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
-DATA_DIR = f'data/cam_input/{CONTEXT_TYPE}'
+DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
@@ -305,9 +305,9 @@ logger.info(f" --> Columns: {list(data.columns)}")
 
 for fold in folds:
     '''
-    train_fp = os.path.join('data/features_for_bert', f"folds/{fold['name']}_train_features.pkl")
-    dev_fp = os.path.join('data/features_for_bert', f"folds/{fold['name']}_dev_features.pkl")
-    test_fp = os.path.join('data/features_for_bert', f"folds/{fold['name']}_test_features.pkl")
+    train_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_test_features.pkl")
 
     with open(train_fp, "rb") as f:
         train_features = pickle.load(f)
@@ -340,7 +340,7 @@ for fold in folds:
 '''
 logger.info(f"Get embeddings")
     # load bert features
-    with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+    with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
         all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
         bert_all_batches = to_batches(all_data, 1)
 
@@ -387,9 +387,9 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
           8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
           9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
           10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1)
                         
-with open(f"data/features_for_bert/folds/all_features.pkl", "rb") as f:
+with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
     bert_all_batches = to_batches(all_data, 1)
         # bert model
@@ -410,7 +410,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
 
 
 if EMB_TYPE in ['use', 'sbert']:
-    embed_fp = f"data/basil_w_{EMB_TYPE}.csv"
+    embed_fp = f"data/sent_clf/embeddings/basil_w_{EMB_TYPE}.csv"
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
 
