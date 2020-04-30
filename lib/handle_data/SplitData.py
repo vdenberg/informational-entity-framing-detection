@@ -306,21 +306,44 @@ class Split:
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': i+1}
+
+            #print("Label distribution of fold:", filled_fold['name'])
+            #print(train_df.label.value_counts(normalize=0))
+            #print(dev_df.label.value_counts())
+            #print(test_df.label.value_counts())
+
             filled_folds.append(filled_fold)
 
         return filled_folds
 
 
-def split_input_for_bert():
-    infp = 'data/huggingface_input/basil.csv'
-    data = pd.read_csv(infp, index_col=0)
+def split_input_for_bert(data_dir, task):
+    ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
+    our data, and saves them for each berg-fold seperately. '''
 
-    SPL = 'fan'
-    spl = Split(data, which=SPL, split_loc='data/splits/fan_split', tst=False)
-    folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'], input_as='huggingface',
-                            output_as='huggingface')
+    # load basil data with BERT-relevant columns
+    basil_infp = f'data/{task}/basil.csv'
+    data = pd.read_csv(basil_infp, index_col=0, names=['id', 'label', 'alpha', 'sentence'])
+    data.index = [el.lower() for el in data.index]
+
+    # write data with only these columns to all.tsv
+    data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
+
+    # write data into folds
+    spl = Split(data, which='berg')
+    folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
+
+    # write data for each fold with only BERT-relevant columns to all.tsv
     for fold in folds:
-        fold['train'].to_csv('data/train.tsv', sep='\t', index=False, header=False)
-        fold['dev'].to_csv('data/dev.tsv', sep='\t', index=False, header=False)
-        fold['test'].to_csv('data/test.tsv', sep='\t', index=False, header=False)
-        # note: data/all.tsv was made by hand
+        train_ofp = os.path.join(data_dir, f"{fold['name']}_train.tsv")
+        dev_ofp = os.path.join(data_dir, f"{fold['name']}_dev.tsv")
+        test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
+
+        if not os.path.exists(train_ofp):
+            fold['train'].to_csv(train_ofp, sep='\t', index=False, header=False)
+
+        if not os.path.exists(dev_ofp):
+            fold['dev'].to_csv(dev_ofp, sep='\t', index=False, header=False)
+
+        if not os.path.exists(test_ofp):
+            fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)

@@ -183,9 +183,16 @@ class Inferencer():
         else:
             return preds
 
-    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil'):
+    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data)
-        metrics_dict, metrics_string = eval(labels.numpy(), preds, set_type=set_type, av_loss=av_loss, name=name)
+        print('Evaluation these predictions:', preds[:10])
+        print('Evaluation above predictions with these labels:', labels[:10])
+        if output_mode == 'bio_classification':
+            preds = preds.flatten()
+            labels = labels.numpy().flatten()
+        else:
+            labels = labels.numpy()
+        metrics_dict, metrics_string = eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         #self.logger.info(f'{metrics_string}')

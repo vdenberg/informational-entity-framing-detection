@@ -50,6 +50,7 @@ TASK_NAME = 'bert_tokclf_baseline'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+OUTPUT_MODE = 'bio_classification'
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
@@ -57,7 +58,7 @@ LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
-NUM_LABELS = 2
+NUM_LABELS = 4
 PRINT_EVERY = 100
 
 ################
@@ -79,6 +80,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
+    '''
     model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
                   '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
                   '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
@@ -90,6 +92,7 @@ if __name__ == '__main__':
                   '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
+    '''
 
     for SEED in [231]: #26354, 182,
         if SEED == 0:
@@ -128,7 +131,7 @@ if __name__ == '__main__':
                     logger.info(f"  Logging to {LOG_NAME}")
 
                     model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
+                                                                       output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
@@ -143,7 +146,7 @@ if __name__ == '__main__':
                                                                                             output_hidden_states=True,
                                                                                             output_attentions=True)
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 set_type='dev', name=epoch_name)
+                                                                 set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
                         else:
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
@@ -163,7 +166,7 @@ if __name__ == '__main__':
                             av_loss = tr_loss / len(train_batches)
                             save_model(model, CHECKPOINT_DIR, epoch_name)
                             dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                 set_type='dev', name=epoch_name)
+                                                                 set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
 
                         # check if best
                         high_score = ''
@@ -179,8 +182,9 @@ if __name__ == '__main__':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
                     best_model = BertForTokenClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                               output_hidden_states=True,
-                                                                               output_attentions=True)
+                                                                            output_hidden_states=False,
+                                                                            output_attentions=False)
+
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
@@ -195,7 +199,7 @@ if __name__ == '__main__':
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
                     '''
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
+                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc', output_mode=OUTPUT_MODE)
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 

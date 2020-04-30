@@ -5,23 +5,172 @@ import logging
 import pandas as pd
 from lib.handle_data.SplitData import Split
 import csv
+import spacy
+from lib.handle_data.LoadData import load_basil_spans
 
 logger = logging.getLogger()
 csv.field_size_limit(2147483647) # Increase CSV reader's field limit incase we have long text.
 
+class SpanToBio():
+    """ Gives BIO tags corresponding to spans """
 
-def split_input():
-    infp = 'data/huggingface_input/basil.csv'
-    data = pd.read_csv(infp, index_col=0)
+    def __init__(self):
+        self.spacy_tokenizer = spacy.load("en_core_web_sm")
 
-    SPL = 'fan'
-    spl = Split(data, which=SPL, split_loc='/Users/ester/Projects/PhD/InformationalBiasDetection/data/fan_split',
-                tst=False)
-    folds = spl.apply_split(features=['id', 'bias', 'alpha', 'sentence'])
-    for fold in folds:
-        fold['train'].to_csv('data/train.tsv', sep='\t', index=False, header=False)
-        fold['dev'].to_csv('data/dev.tsv', sep='\t', index=False, header=False)
-        fold['test'].to_csv('data/test.tsv', sep='\t', index=False, header=False)
+    def tokenize(self, sent):
+        if not isinstance(sent, float):
+            return [token.text for token in self.spacy_tokenizer(sent)]
+        else:
+            return []
+
+    def get_char_mapping(self, sent, toks):
+        """ Returns a list of len(sentence) but instead of characters
+        it has the number of the token that character belongs to
+        E.g: "The man sleeps", "000 111 222"""
+
+        tok_in_progress = ''
+        current_tok_nr = 0
+        mapping = []
+
+        for char in sent:
+
+            if char == ' ':
+                mapping_value = ' '
+
+            else:
+                tok_in_progress += char
+                mapping_value = current_tok_nr
+                if tok_in_progress == toks[0]:
+                    # token finished, update counter
+                    current_tok_nr += 1
+                    # remove from list of tokens that still need to be matches
+                    toks = toks[1:]
+                    # clear temp token
+                    tok_in_progress = ''
+
+            mapping.append(mapping_value)
+
+        return mapping
+
+    def get_lab_seq(self, sent, toks, spans):
+        token_indices = range(len(toks))
+        lab_database = {i: 0 for i in token_indices}
+        lab_seq = []
+
+        for span in spans:
+            # apply span to sequence of token ids & reduce sequence of ids to set of ids that fall within span
+            classified_chars = self.get_char_mapping(sent, toks)
+            cl_chars_in_span = classified_chars[span[0]:span[1]]
+            tok_idxs_in_span = set(cl_chars_in_span) - set(' ')
+
+            # mark for each token whether it is a member of that set
+            current_seq = [int(i in tok_idxs_in_span) for i in token_indices]
+            for i in token_indices:
+                if bool(current_seq[i]):
+                    lab_database[i] = 1
+
+        lab_seq = [lab_database[i] for i in token_indices]
+
+        return lab_seq
+
+    def lab_seq_to_bio_tags(self, lab_seq):
+        # convert to bio tags
+        bio_tags = []
+        prev_bio_tag = None
+
+        for lab in lab_seq:
+
+            bio_tag = 'O'
+
+            if lab == 1:
+                if prev_bio_tag in [None, 'O']:
+                    bio_tag = 'B-BIAS'
+
+                if prev_bio_tag in ['B-BIAS', 'I-BIAS']:
+                    bio_tag = 'I-BIAS'
+
+            bio_tags.append(bio_tag)
+            prev_bio_tag = bio_tag
+
+        return bio_tags
+
+    def span_to_bio(self, sent, spans):
+        toks = self.tokenize(sent)
+        spans = load_basil_spans(spans)
+
+        if spans:
+            lab_seq = self.get_lab_seq(sent, toks, spans)
+            #print('Label sequence:', lab_seq)
+        else:
+            lab_seq = ['O' for t in toks]
+        bio_tags = self.lab_seq_to_bio_tags(lab_seq)
+        return toks, bio_tags
+
+
+def convert_to_bio(sentences, spans):
+    """ Converts span annotations to BIO tags
+    For example:
+    #df = pd.read_csv('data/basil.csv', index_col=0)
+
+    sentences = df.sentence
+    spans = df.inf_start_ends
+    bio_tags = convert_to_bio(sentences, spans)
+    """
+    sph = SpanToBio()
+
+    all_bio_tags = []
+    for sent, spans in zip(sentences, spans):
+        toks, bio_tags = sph.span_to_bio(sent, spans)
+
+        bio_tags_as_string = " ".join(bio_tags)
+        all_bio_tags.append(bio_tags_as_string)
+
+    return all_bio_tags
+
+
+def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
+    """
+    Maps a BIO Label Sequence to the BERT WordPieces length preserving the BIO Format
+    :param original_sentence: String of complete-word tokens separated by spaces
+    :param original_labels: List of labels 1-1 mapped to tokens
+    :param tokenizer: BertTokenizer with do_basic_tokenize=False to respect the original_sentence tokenization.
+    :return:
+    """
+
+    word_pieces = tokenizer.tokenize(original_sentence)
+
+    #print('Original sentence:', original_sentence)
+    #print('Original label:', original_labels)
+    #print('Word pieces:', word_pieces)
+
+    tmp_labels, lbl_ix = [], 0
+    for tok in word_pieces:
+        if "##" in tok:
+            tmp_labels.append("X")
+        else:
+            tmp_labels.append(original_labels[lbl_ix])
+            lbl_ix += 1
+
+    # print("TMP ", tmp_labels)
+    expanded_labels = []
+    for i, lbl in enumerate(tmp_labels):
+        if lbl == "X":
+            # prev = tmp_labels[i-1]
+            prev = expanded_labels[-1]
+            if prev.startswith("B-"):
+                expanded_labels.append("I-" + prev[2:])
+            else:
+                expanded_labels.append(prev)
+        else:
+            expanded_labels.append(lbl)
+
+    assert len(word_pieces) == len(expanded_labels)
+
+    #print('Expanded labels:', expanded_labels)
+    #if original_sentence.startswith('Huckabee , an ordained'):
+        #exit(0)
+
+    return word_pieces, expanded_labels
 
 
 class InputExample(object):
@@ -80,9 +229,12 @@ class BinaryClassificationProcessor(DataProcessor):
         return self._create_examples(
             self._read_tsv(os.path.join(fp), sep), name)
 
-    def get_labels(self):
+    def get_labels(self, output_mode):
         """See base class."""
-        return ["0", "1"]
+        if output_mode == 'bio_classification':
+            return ["O", "B-BIAS", "I-BIAS"]
+        else:
+            return ["0", "1"]
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev and test sets."""
@@ -129,32 +281,50 @@ def convert_example_to_feature(example_row):
     # return example_row
     example, label_map, max_seq_length, tokenizer, output_mode = example_row
 
-    tokens_a = tokenizer.tokenize(example.text_a)
+    # tokens
 
-    tokens_b = None
-    if example.text_b:
-        tokens_b = tokenizer.tokenize(example.text_b)
+    if output_mode == 'bio_classification':
+        sp2bio = SpanToBio()
+        spacy_tokens, spacy_labels = sp2bio.span_to_bio(example.text_a, example.label)
+        assert len(spacy_tokens) == len(spacy_labels)
+
+        tokens_a = " ".join(spacy_tokens)
+        labels = spacy_labels
+        tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
+
+    else:
+        tokens_a = tokenizer.tokenize(example.text_a)
+
+    #tokens_b = None
+    #if example.text_b:
+        #    tokens_b = tokenizer.tokenize(example.text_b)
         # Modifies `tokens_a` and `tokens_b` in place so that the total
         # length is less than the specified length.
         # Account for [CLS], [SEP], [SEP] with "- 3"
-        _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
-    else:
+    #   _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
+    #else:
         # Account for [CLS] and [SEP] with "- 2"
-        if len(tokens_a) > max_seq_length - 2:
-            tokens_a = tokens_a[:(max_seq_length - 2)]
+
+    if len(tokens_a) > max_seq_length - 2:
+        tokens_a = tokens_a[:(max_seq_length - 2)]
 
     tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
+
+    # segment ids
+
     segment_ids = [0] * len(tokens)
 
-    if tokens_b:
-        tokens += tokens_b + ["[SEP]"]
-        segment_ids += [1] * (len(tokens_b) + 1)
+    #if tokens_b:
+    #    tokens += tokens_b + ["[SEP]"]
+    #    segment_ids += [1] * (len(tokens_b) + 1)
+
+    # input ids
 
     input_ids = tokenizer.convert_tokens_to_ids(tokens)
 
-    # The mask has 1 for real tokens and 0 for padding tokens. Only real
-    # tokens are attended to.
-    input_mask = [1] * len(input_ids)
+    input_mask = [1] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
+
+    # padding
 
     # Zero-pad up to the sequence length.
     padding = [0] * (max_seq_length - len(input_ids))
@@ -166,11 +336,21 @@ def convert_example_to_feature(example_row):
     assert len(input_mask) == max_seq_length
     assert len(segment_ids) == max_seq_length
 
+    # labels
     if output_mode == "classification":
-        #print(vars(example))
         label_id = label_map[example.label]
+
     elif output_mode == "regression":
         label_id = float(example.label)
+
+    elif output_mode == "bio_classification":
+        labels = ['O'] + labels + ['O']
+
+        label_id = [label_map.get(lab) for lab in labels]
+        label_id += padding
+
+        assert len(label_id) == max_seq_length
+
     else:
         raise KeyError(output_mode)
 
