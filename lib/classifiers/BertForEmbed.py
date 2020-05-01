@@ -183,7 +183,7 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data)
-        print('Evaluation these predictions:', preds[:10])
+        print('Evaluation these predictions:', preds.shape, preds[:10])
         print('Evaluation above predictions with these labels:', labels[:10])
         if output_mode == 'bio_classification':
             #preds = preds.flatten()
