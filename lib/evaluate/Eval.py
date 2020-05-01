@@ -12,6 +12,7 @@ def get_metrics(labels, preds):
         preds = [1 if lab == 0 else lab for lab in preds]
         labels = [2 if lab == 3 else lab for lab in labels]
         labels = [1 if lab == 0 else lab for lab in labels]
+    assert len(nr_labels) == 2
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
