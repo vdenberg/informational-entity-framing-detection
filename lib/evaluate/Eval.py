@@ -3,15 +3,21 @@ from sklearn.metrics import precision_recall_fscore_support
 import pandas as pd
 
 
+def convert_bio_to_binary(labels):
+    labels = [2 if lab == 3 else lab for lab in labels]
+    labels = [1 if lab == 0 else lab for lab in labels]
+    labels = [0 if lab == 1 else lab for lab in labels]
+    labels = [1 if lab == 2 else lab for lab in labels]
+    return labels
+
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
     nr_labels = len(set(labels))
     if nr_labels > 2:
-        preds = [2 if lab == 3 else lab for lab in preds]
-        preds = [1 if lab == 0 else lab for lab in preds]
-        labels = [2 if lab == 3 else lab for lab in labels]
-        labels = [1 if lab == 0 else lab for lab in labels]
+        preds = convert_bio_to_binary(preds)
+        labels = convert_bio_to_binary(labels)
+
     nr_labels = len(set(labels))
     assert nr_labels  == 2
 
