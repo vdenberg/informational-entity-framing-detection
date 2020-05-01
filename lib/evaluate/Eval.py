@@ -6,12 +6,14 @@ import pandas as pd
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
-    if len(set(labels)) > 2:
+    nr_labels = len(set(labels))
+    if nr_labels > 2:
         preds = [2 if lab == 3 else lab for lab in preds]
         preds = [1 if lab == 0 else lab for lab in preds]
         labels = [2 if lab == 3 else lab for lab in labels]
         labels = [1 if lab == 0 else lab for lab in labels]
-    assert len(set(labels)) == 2
+    nr_labels = len(set(labels))
+    assert nr_labels  == 2
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
