@@ -189,7 +189,7 @@ class Inferencer():
         if output_mode == 'bio_classification':
             labels = labels.numpy().flatten()
             preds = np.asarray(preds)
-            preds = np.reshape(labels.shape)
+            preds = np.reshape(preds, labels.shape)
         else:
             labels = labels.numpy()
         metrics_dict, metrics_string = eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
