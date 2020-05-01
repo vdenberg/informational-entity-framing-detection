@@ -150,6 +150,7 @@ class Inferencer():
             input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
+                print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
                 #logits, probs, sequence_output, pooled_output = outputs
                 logits, probs = outputs
