@@ -17,8 +17,7 @@ def get_metrics(labels, preds):
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
-    print(set(labels))
-    assert set(labels) == (0,1)
+    assert set(labels) == set(0,1)
 
 
     #mcc = matthews_corrcoef(labels, preds)
