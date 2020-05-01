@@ -150,7 +150,7 @@ class Inferencer():
             input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
-                print(input_mask)
+                #print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
                 #logits, probs, sequence_output, pooled_output = outputs
                 logits, probs = outputs
@@ -184,8 +184,8 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data)
-        print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
-        print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
+        #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
+        #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
             labels = labels.numpy().flatten()
             preds = np.asarray(preds)
