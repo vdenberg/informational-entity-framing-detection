@@ -172,6 +172,7 @@ class Inferencer():
                 emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
             '''
+            logits = logits.detach().cpu().numpy()
             preds.extend([list(p) for p in np.argmax(logits, axis=2)])
 
         model.train()
