@@ -13,13 +13,13 @@ def convert_bio_to_binary(labels):
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
-    nr_labels = len(set(labels))
-    if nr_labels > 2:
+    if len(set(labels)) > 2:
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
-    nr_labels = len(set(labels))
+    print(set(labels))
     assert set(labels) == (0,1)
+
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
