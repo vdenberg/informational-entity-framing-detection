@@ -152,15 +152,18 @@ class Inferencer():
             with torch.no_grad():
                 outputs = model(input_ids, input_mask, labels=None)
                 #logits, probs, sequence_output, pooled_output = outputs
+                print([el.shape for el in outputs])
                 logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
+            '''
             if emb_type == 'poolbert':
                 emb_output = pooled_output
             elif emb_type == "avbert":
                 emb_output = sequence_output.mean(axis=1)
+            '''
 
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu

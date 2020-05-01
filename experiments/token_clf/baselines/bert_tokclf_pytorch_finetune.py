@@ -142,8 +142,8 @@ if __name__ == '__main__':
                             # this epoch for this setting has been trained before already
                             trained_model = BertForTokenClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=True,
-                                                                                            output_attentions=True)
+                                                                                            output_hidden_states=False,
+                                                                                            output_attentions=False)
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
                                                                  set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
                         else:
