@@ -187,7 +187,7 @@ class Inferencer():
         print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:10])
         print('Evaluation above predictions with these labels:', labels[:10])
         if output_mode == 'bio_classification':
-            #preds = preds.flatten()
+            preds = preds.numpy()
             labels = labels.numpy().flatten()
         else:
             labels = labels.numpy()
