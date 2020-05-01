@@ -11,7 +11,9 @@ def get_metrics(labels, preds):
     prec_rec_fscore = precision_recall_fscore_support(labels, preds, labels=[0, 1])
     prec, rec, _ = [el[1] for el in prec_rec_fscore[:-1]]
 
-    f1 = f1_score(labels, preds)
+    nr_labels = set(labels)
+    average = 'binary' if len(nr_labels) == 2 else 'macro'
+    f1 = f1_score(labels, preds, average=average)
 
     tn, fp, fn, tp = confusion_matrix(labels, preds).ravel()
 

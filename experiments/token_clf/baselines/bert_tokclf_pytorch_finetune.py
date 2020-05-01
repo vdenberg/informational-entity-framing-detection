@@ -165,8 +165,9 @@ if __name__ == '__main__':
 
                             av_loss = tr_loss / len(train_batches)
                             save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                            preds, dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                  set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
+
 
                         # check if best
                         high_score = ''
