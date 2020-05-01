@@ -172,14 +172,7 @@ class Inferencer():
                 emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
             '''
-
-            if len(preds) == 0:
-                preds.append(probs.detach().cpu().numpy())
-            else:
-                preds[0] = np.append(preds[0], probs.detach().cpu().numpy(), axis=0)
-
-        preds = preds[0]
-        preds = np.argmax(preds, axis=1)
+            preds.extend([list(p) for p in np.argmax(logits, axis=2)])
 
         model.train()
         if return_embeddings:
@@ -192,7 +185,7 @@ class Inferencer():
         print('Evaluation these predictions:', preds[:10])
         print('Evaluation above predictions with these labels:', labels[:10])
         if output_mode == 'bio_classification':
-            preds = preds.flatten()
+            #preds = preds.flatten()
             labels = labels.numpy().flatten()
         else:
             labels = labels.numpy()
