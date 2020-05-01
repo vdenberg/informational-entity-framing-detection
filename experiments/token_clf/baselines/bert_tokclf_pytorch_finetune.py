@@ -93,7 +93,7 @@ if __name__ == '__main__':
                   }
     '''
 
-    for SEED in [231]: #26354, 182,
+    for SEED in [132, 281, 45362]: #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -110,7 +110,7 @@ if __name__ == '__main__':
             for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+                for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 

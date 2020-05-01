@@ -301,11 +301,18 @@ class Split:
             #dev_X, dev_y = dev_df[features], dev_df.label
             #test_X, test_y = test_df[features], test_df.label
 
+            if self.which == 'fan':
+                name = 'fan'
+            elif self.which == 'berg':
+                name = i+1
+            elif self.which == 'both':
+                name = 'fan' if i == 0 else i
+
             filled_fold = {'train': train_df,
                            'dev': dev_df,
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
-                           'name': i+1}
+                           'name': name}
 
             #print("Label distribution of fold:", filled_fold['name'])
             #print(train_df.label.value_counts(normalize=0))
@@ -347,3 +354,5 @@ def split_input_for_bert(data_dir, task):
 
         if not os.path.exists(test_ofp):
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
+
+    return folds
