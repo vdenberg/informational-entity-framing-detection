@@ -163,7 +163,7 @@ class Inferencer():
                 emb_output = pooled_output
             elif emb_type == "avbert":
                 emb_output = sequence_output.mean(axis=1)
-            '''
+            
 
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
@@ -172,6 +172,7 @@ class Inferencer():
                 self.logger.info("NOT USING CUDA")
                 emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
+            '''
 
             if len(preds) == 0:
                 preds.append(probs.detach().cpu().numpy())
