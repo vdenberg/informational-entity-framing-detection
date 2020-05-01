@@ -19,7 +19,7 @@ def get_metrics(labels, preds):
         labels = convert_bio_to_binary(labels)
 
     nr_labels = len(set(labels))
-    assert nr_labels  == 2
+    assert set(labels) == (0,1)
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
