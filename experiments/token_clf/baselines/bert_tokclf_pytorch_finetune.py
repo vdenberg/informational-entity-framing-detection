@@ -7,11 +7,10 @@ from datetime import datetime
 
 import numpy as np
 import torch
-from transformers import BertForTokenClassification
 from transformers.optimization import AdamW
 
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import load_features
+from lib.classifiers.BertWrapper import load_features, BertForTokenClassification
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 
