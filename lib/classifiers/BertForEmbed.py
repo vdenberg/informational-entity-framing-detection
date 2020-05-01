@@ -185,11 +185,12 @@ class Inferencer():
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data)
         print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:10])
-        print('Evaluation above predictions with these labels:', labels[:10])
+        print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:10])
         if output_mode == 'bio_classification':
             labels = labels.numpy().flatten()
             preds = np.asarray(preds)
             preds = np.reshape(preds, labels.shape)
+            print(labels.shape, preds.shape)
         else:
             labels = labels.numpy()
         metrics_dict, metrics_string = eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
