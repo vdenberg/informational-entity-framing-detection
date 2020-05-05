@@ -9,6 +9,7 @@ def find_102(vocab):
 
 special_tokens = {"<s>": "[ClS]", "</s>": "[SEP]", "<unk>": "[UNK]", "<pad>": "[PAD]", "<mask>": "[MASK]"}
 models_dir = '../pretrained_models'
+print(os.getcwd())
 
 for model_dir in os.listdir(models_dir):
     vocab_json_fp = os.path.join(models_dir, model_dir, 'vocab.json')
