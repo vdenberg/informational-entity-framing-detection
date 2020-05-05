@@ -12,7 +12,7 @@ def run(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='SSC experiment', usage='singleEM [-noise] [-initialize] [-true_theta] ')
-    parser.add_argument('-reproc', '--startiter', type=int)
+    parser.add_argument('-model', '--startiter', type=int)
     parser.add_argument('-e', '--enditer', type=int)
     parser.add_argument('-bit', '--bilty_train_iters', type=int)
     args = parser.parse_args()
