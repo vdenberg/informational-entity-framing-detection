@@ -48,6 +48,7 @@ BERT_MODEL = 'bert-base-cased' #bert-large-cased
 TASK_NAME = 'bert_tokclf_baseline'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = f'{REPORTS_DIR}/tables'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 OUTPUT_MODE = 'bio_classification'
 
@@ -105,9 +106,9 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16, 21, 24]:
+        for BATCH_SIZE in [16, 21]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:
+            for LEARNING_RATE in [1e-5, 5e-6]: #2e-5, 3e-5, 5e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
@@ -210,9 +211,9 @@ if __name__ == '__main__':
                     setting_results_table = setting_results_table.append(fold_results_table)
 
                 logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
-                setting_results_table.to_csv(f'{REPORTS_DIR}/tables/{setting_name}_results_table.csv', index=False)
+                setting_results_table.to_csv(f'{TABLE_DIR}/{setting_name}_results_table.csv', index=False)
                 main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-            main_results_table.to_csv(f'{REPORTS_DIR}/tables/main_results_table.csv', index=False)
+            main_results_table.to_csv(f'{TABLE_DIR}/main_results_table.csv', index=False)
 
 '''
 n_train_batches = len(train_batches)
