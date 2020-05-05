@@ -22,6 +22,6 @@ if __name__ == '__main__':
     for seed in [183, 212, 3456]:
         for fold in range(1,11):
             log_name = f"ssc_{seed}_{fold}"
-            run(['experiments/sent_clf/ssc/scripts/train.sh',str(seed),str(fold)])
+            run(['scripts/train.sh',str(seed),str(fold)])
 
 
