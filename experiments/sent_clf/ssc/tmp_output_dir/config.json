@@ -2,15 +2,15 @@
     "dataset_reader": {
         "type": "SeqClassificationReader",
         "lazy": false,
-        "max_sent_per_example": "3",
+        "max_sent_per_example": "1",
         "sci_sum": false,
         "sci_sum_fake_scores": false,
-        "sent_max_len": "90",
+        "sent_max_len": "76",
         "token_indexers": {
             "bert": {
                 "type": "bert-pretrained",
                 "do_lowercase": false,
-                "pretrained_model": "pretrained_models/news_roberta_base/vocab.txt",
+                "pretrained_model": "bert-base-cased",
                 "use_starting_offsets": false
             }
         },
@@ -20,7 +20,7 @@
     },
     "iterator": {
         "type": "bucket",
-        "batch_size": 1,
+        "batch_size": 16,
         "biggest_batch_first": true,
         "cache_instances": true,
         "sorting_keys": [
@@ -57,8 +57,8 @@
             "token_embedders": {
                 "bert": {
                     "type": "bert-pretrained",
-                    "pretrained_model": "pretrained_models/news_roberta_base",
-                    "requires_grad": true,
+                    "pretrained_model": "bert-base-cased",
+                    "requires_grad": "all",
                     "top_layer_only": false
                 }
             }
@@ -66,9 +66,9 @@
         "use_sep": "true",
         "with_crf": "false"
     },
-    "train_data_path": "data/basil/1_train_ssc.jsonl",
-    "validation_data_path": "data/basil/1_dev_ssc.jsonl",
-    "test_data_path": "data/basil/1_test_ssc.jsonl",
+    "train_data_path": "data/basil/9_train_ssc.jsonl",
+    "validation_data_path": "data/basil/9_dev_ssc.jsonl",
+    "test_data_path": "data/basil/9_test_ssc.jsonl",
     "trainer": {
         "cuda_device": -1,
         "grad_clipping": 1,
@@ -84,7 +84,7 @@
         "num_epochs": 5,
         "optimizer": {
             "type": "bert_adam",
-            "lr": "0.0002",
+            "lr": "0.0005",
             "max_grad_norm": 1,
             "parameter_groups": [
                 [
