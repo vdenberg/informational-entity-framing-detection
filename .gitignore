@@ -11,3 +11,5 @@ create_data/emnlp19-BASIL/*
 models/checkpoints/bert_for_embed/
 reports/bert_baseline/results_table_before.csv
 data/*.csv
+/experiments/sent_class/ssc/tmp_output_dir/
+experiments/sent_clf/ssc/pretrained_models/
