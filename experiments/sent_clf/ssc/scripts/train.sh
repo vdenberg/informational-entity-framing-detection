@@ -11,8 +11,8 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 #export BERT_VOCAB=bert-base-cased #uncased_L-12_H-768_A-12/vocab.txt
 #export BERT_WEIGHTS=bert-base-cased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
 
-export BERT_VOCAB=pretrained_models/news_roberta_base/vocab.txt
-export BERT_WEIGHTS=pretrained_models/news_roberta_base
+export BERT_VOCAB=pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015/vocab.txt
+export BERT_WEIGHTS=pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015
 
 # path to dataset files
 #export TRAIN_PATH=data/CSAbstruct/train.jsonl
@@ -42,7 +42,7 @@ export TRAINING_DATA_INSTANCES=248
 export NUM_EPOCHS=5
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
-export MAX_SENT_PER_EXAMPLE=3
+export MAX_SENT_PER_EXAMPLE=5
 export SENT_MAX_LEN=90
 #export MAX_SENT_PER_EXAMPLE=5
 #export SENT_MAX_LEN=20
