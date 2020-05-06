@@ -108,7 +108,7 @@ if __name__ == '__main__':
 
         for BATCH_SIZE in [16, 21]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [1e-5, 5e-6]: #2e-5, 3e-5, 5e-5]:
+            for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:  #1e-5, 5e-6]: #2e-5, 3e-5, 5e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
