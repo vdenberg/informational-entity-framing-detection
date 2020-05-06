@@ -188,7 +188,7 @@ if __name__ == '__main__':
                                                                             output_attentions=False)
 
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
-                    logger.info(f"  Details: {best_val_res}")
+                    logger.info(f"  CUDA: {USE_CUDA}, Details: {best_val_res}")
 
                     '''
                     for EMB_TYPE in ['poolbert', 'avbert']:
