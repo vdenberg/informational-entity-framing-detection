@@ -58,8 +58,7 @@ BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  
 TASK_NAME = 'bert_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
-if not os.path.exists(CHECKPOINT_DIR):
-    os.makedirs(CHECKPOINT_DIR)
+if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
