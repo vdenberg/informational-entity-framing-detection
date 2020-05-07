@@ -139,7 +139,7 @@ class Inferencer():
         self.device = device
         self.use_cuda = use_cuda
 
-    def predict(self, model, data, return_embeddings=False, emb_type='poolbert'):
+    def predict(self, model, data, return_embeddings=False, emb_type='poolbert', output_mode='classification'):
         model.to(self.device)
         model.eval()
 
@@ -174,7 +174,11 @@ class Inferencer():
             embeddings.append(emb_output)
             '''
             logits = logits.detach().cpu().numpy()
-            preds.extend([list(p) for p in np.argmax(logits, axis=logits.shape[-1])])
+            if output_mode == 'bio_classification':
+                preds.extend([list(p) for p in np.argmax(logits, axis=2)])
+            elif output_mode == 'classification':
+                preds.extend(np.argmax(logits, axis=1))
+                print(preds)
 
         model.train()
         if return_embeddings:
