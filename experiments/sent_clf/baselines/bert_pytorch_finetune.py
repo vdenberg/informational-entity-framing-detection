@@ -98,7 +98,7 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [2564, 16354, 1872]:
+    for SEED in [658, 16354, 1872]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
