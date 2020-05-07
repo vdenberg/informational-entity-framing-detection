@@ -178,7 +178,6 @@ class Inferencer():
                 preds.extend([list(p) for p in np.argmax(logits, axis=2)])
             elif output_mode == 'classification':
                 preds.extend(np.argmax(logits, axis=1))
-                print(preds)
 
         model.train()
         if return_embeddings:
