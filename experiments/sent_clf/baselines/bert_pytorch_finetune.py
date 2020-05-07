@@ -53,8 +53,8 @@ args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015' # 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_baseline'
+BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015' # 'bert-base-cased' #bert-large-cased
+TASK_NAME = 'bert_baseline_dapttapt'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
