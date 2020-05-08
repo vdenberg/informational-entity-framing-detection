@@ -149,7 +149,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
                             # this epoch for this setting has been trained before already
                             trained_model = mybert.init_model(bert_model=os.path.join(CHECKPOINT_DIR, epoch_name))
 
-                            dev_mets, dev_perf = mybert.eval(trained_model, dev_batches, dev_labels,
+                            dev_mets, dev_perf = mybert.my_eval(trained_model, dev_batches, dev_labels,
                                                                      set_type='dev', name=epoch_name)
                         else:
                             tr_loss = 0
@@ -169,7 +169,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
 
                             av_loss = tr_loss / len(train_batches)
                             save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = mybert.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                            dev_mets, dev_perf = mybert.my_eval(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                  set_type='dev', name=epoch_name)
 
                         # check if best
@@ -186,7 +186,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
 
-                    best_model = MyBert.init_model(bert_model=best_val_res['model_loc'])
+                    best_model = mybert.init_model(bert_model=best_val_res['model_loc'])
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
@@ -201,7 +201,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
                     '''
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
+                    test_mets, test_perf = mybert.my_eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 

@@ -94,7 +94,7 @@ class MyBert():
         return outputs
 
     def my_predict(self, model, data, return_embeddings=False, output_mode='classification'):
-        model.my_eval()
+        model.eval()
         preds = []
         embeddings = []
         for step, batch in enumerate(data):
@@ -117,7 +117,7 @@ class MyBert():
         model.train()
         return preds, embeddings
 
-    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
+    def my_eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds, embeddings = self.my_predict(model, data, output_mode)
 
         if output_mode == 'bio_classification':
