@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapperOld, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
