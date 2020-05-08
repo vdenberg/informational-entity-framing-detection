@@ -54,7 +54,7 @@ class MyBert():
 
     def init_model(self, bert_model=None, cache_dir=None, num_labels=2):
         if not bert_model:
-            model = self.init_fresh(self.start_bert_model)
+            model = self.init_fresh()
 
         else:
             if self.ROBERTA:
