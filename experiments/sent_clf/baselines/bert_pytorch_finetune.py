@@ -56,7 +56,7 @@ args = parser.parse_args()
 device, USE_CUDA = get_torch_device()
 TASK_NAME = 'test_dapttapt'
 dapttapt = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
-for BERT_MODEL in [dapttapt, 'bert_base_cased', 'roberta_base']:
+for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', dapttapt]:
     bertmodelname = BERT_MODEL.split('/')[-1]
 
     CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/{bertmodelname}'
