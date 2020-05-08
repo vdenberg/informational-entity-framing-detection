@@ -55,7 +55,7 @@ args = parser.parse_args()
 # find GPU if present
 device, USE_CUDA = get_torch_device()
 TASK_NAME = 'test_dapttapt'
-dapttapt = 'news_roberta_base'  # 'bert-base-cased' #bert-large-cased
+dapttapt = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
 for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
     bertmodelname = BERT_MODEL.split('/')[-1]
 
