@@ -31,23 +31,24 @@ def load_features(fp, batch_size):
 
 
 class MyBert():
-    def __init__(self, start_bert_model, device):
+    def __init__(self, start_bert_model, num_labels, device):
         self.start_bert_model = start_bert_model
 
         self.ROBERTA = True if 'roberta' in self.start_bert_model else False
         self.device = device
         self.sigm = nn.Sigmoid()
         self.loss_fct = CrossEntropyLoss()
+        self.num_labels = num_labels
 
     def init_model(self, bert_model=None, cache_dir=None, num_labels=2):
         if not bert_model:
             bert_model = self.start_bert_model
         if self.ROBERTA:
             model = RobertaForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir,
-                                                                     num_labels=num_labels, output_hidden_states=False,
+                                                                     num_labels=self.num_labels, output_hidden_states=False,
                                                                      output_attentions=False)
         else:
-            model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir, num_labels=num_labels,
+            model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir, num_labels=self.num_labels,
                                                                   output_hidden_states=False, output_attentions=False)
 
         model.to(self.device)

@@ -136,8 +136,8 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    mybert = MyBert(start_bert_model=BERT_MODEL, device=device)
-                    model = mybert.init_model(cache_dir=CACHE_DIR, num_labels=NUM_LABELS)
+                    mybert = MyBert(start_bert_model=BERT_MODEL, num_labels=NUM_LABELS, device=device)
+                    model = mybert.init_model(cache_dir=CACHE_DIR)
 
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
@@ -147,7 +147,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
 
                         if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = mybert.init_model(bert_model=os.path.join(CHECKPOINT_DIR, epoch_name), num_labels=NUM_LABELS)
+                            trained_model = mybert.init_model(bert_model=os.path.join(CHECKPOINT_DIR, epoch_name))
 
                             dev_mets, dev_perf = mybert.eval(trained_model, dev_batches, dev_labels,
                                                                      set_type='dev', name=epoch_name)
