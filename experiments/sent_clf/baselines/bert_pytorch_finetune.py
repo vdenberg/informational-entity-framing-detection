@@ -46,7 +46,7 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=1) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
@@ -56,6 +56,10 @@ args = parser.parse_args()
 device, USE_CUDA = get_torch_device()
 TASK_NAME = 'test_dapttapt'
 dapttapt = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
+
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
+
 for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', dapttapt]:
     bertmodelname = BERT_MODEL.split('/')[-1]
 
@@ -75,8 +79,6 @@ for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', daptt
     PRINT_EVERY = 100
 
     inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-    table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
-    main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
     # set logger
     now = datetime.now()
@@ -100,7 +102,7 @@ for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', daptt
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [1873]:
+    for SEED in [123123]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -114,7 +116,7 @@ for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', daptt
 
         for BATCH_SIZE in [16]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [1e-5]:
+            for LEARNING_RATE in [2e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['1']:  #, '2', '3', '4', '5', '6', '7', '8', '9', '10']:
@@ -213,7 +215,8 @@ for BERT_MODEL in ['bert-base-cased', 'bert-base-uncased', 'roberta-base', daptt
             logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
             setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
             main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-        main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
+
+        main_results_table.to_csv(f'reports/bert_baseline/tables/{bertmodelname}_main_results_table_2.csv', index=False)
 
     '''
     n_train_batches = len(train_batches)
