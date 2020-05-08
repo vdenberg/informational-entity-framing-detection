@@ -41,19 +41,34 @@ class MyBert():
         self.num_labels = num_labels
         self.cache_dir = cache_dir
 
-    def init_model(self, bert_model=None, cache_dir=None, num_labels=2):
-        if not bert_model:
-            bert_model = self.start_bert_model
-            cache_dir = self.cache_dir
+    def init_fresh(self):
         if self.ROBERTA:
-            model = RobertaForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir,
+            model = RobertaForSequenceClassification.from_pretrained(self.start_bert_model, cache_dir=self.cache_dir,
                                                                      num_labels=self.num_labels, output_hidden_states=False,
                                                                      output_attentions=False)
         else:
-            model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir, num_labels=self.num_labels,
+            model = BertForSequenceClassification.from_pretrained(self.start_bert_model, cache_dir=self.cache_dir, num_labels=self.num_labels,
                                                                   output_hidden_states=False, output_attentions=False)
-
         model.to(self.device)
+        return model
+
+    def init_model(self, bert_model=None, cache_dir=None, num_labels=2):
+        if not bert_model:
+            model = self.init_fresh(self.start_bert_model)
+
+        else:
+            if self.ROBERTA:
+                model = RobertaForSequenceClassification.from_pretrained(bert_model,
+                                                                         num_labels=self.num_labels,
+                                                                         output_hidden_states=False,
+                                                                         output_attentions=False)
+            else:
+                model = BertForSequenceClassification.from_pretrained(bert_model,
+                                                                      num_labels=self.num_labels,
+                                                                      output_hidden_states=False,
+                                                                      output_attentions=False)
+
+            model.to(self.device)
         return model
 
     def my_forward(self, model, input_ids=None, attention_mask=None, labels=None, emb_type='regular'):
