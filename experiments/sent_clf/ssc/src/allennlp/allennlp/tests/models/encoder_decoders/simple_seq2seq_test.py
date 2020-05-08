@@ -64,7 +64,7 @@ class SimpleSeq2SeqTest(ModelTestCase):
         assert numpy.equal(expected_loss.data.numpy(), actual_loss.data.numpy())
 
     def test_decode_runs_correctly(self):
-        self.model.eval()
+        self.model.my_eval()
         training_tensors = self.dataset.as_tensor_dict()
         output_dict = self.model(**training_tensors)
         decode_output_dict = self.model.decode(output_dict)

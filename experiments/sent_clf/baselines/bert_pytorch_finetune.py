@@ -2,7 +2,8 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
+from lib.classifiers.BertWrapper import MyBert, load_features
+from transformers import RobertaForSequenceClassification
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -45,7 +46,7 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=1) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
@@ -53,28 +54,30 @@ args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
-BERT_MODEL = 'roberta-base' #bert-large-cased
-TASK_NAME = 'bert_test'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+TASK_NAME = 'test_dapttapt'
+dapttapt = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
+for BERT_MODEL in [dapttapt, 'bert_base_uncased', 'roberta_base']:
+    bertmodelname = f'{BERT_MODEL}'
 
-N_EPS = args.n_epochs
-LEARNING_RATE = args.learning_rate
-LOAD_FROM_EP = args.load_from_ep
-BATCH_SIZE = args.batch_size
-GRADIENT_ACCUMULATION_STEPS = 1
-WARMUP_PROPORTION = 0.1
-NUM_LABELS = 2
-PRINT_EVERY = 100
+    CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/{bertmodelname}'
+    REPORTS_DIR = f'reports/{TASK_NAME}/{bertmodelname}'
+    if not os.path.exists(REPORTS_DIR):
+        os.makedirs(REPORTS_DIR)
+    CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
-inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
-main_results_table = pd.DataFrame(columns=table_columns.split(','))
-if __name__ == '__main__':
+    N_EPS = args.n_epochs
+    LEARNING_RATE = args.learning_rate
+    LOAD_FROM_EP = args.load_from_ep
+    BATCH_SIZE = args.batch_size
+    GRADIENT_ACCUMULATION_STEPS = 1
+    WARMUP_PROPORTION = 0.1
+    NUM_LABELS = 2
+    PRINT_EVERY = 100
+
+    inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
+    table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+    main_results_table = pd.DataFrame(columns=table_columns.split(','))
+
     # set logger
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
@@ -97,24 +100,24 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [65841, 16354, 1872]:
+    for SEED in [1873]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
             SEED_VAL = SEED
 
-        seed_name = f"bert_{SEED_VAL}"
+        seed_name = bertmodelname + f"bert_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16, 21]:
+        for BATCH_SIZE in [16]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [1e-5, 2e-5, 3e-5, 1e-5]:
+            for LEARNING_RATE in [1e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+                for fold_name in ['1']:  #, '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
@@ -133,9 +136,9 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
-                    model.to(device)
+                    mybert = MyBert(start_bert_model=BERT_MODEL, device=device)
+                    model = mybert.init_model(cache_dir=CACHE_DIR, num_labels=NUM_LABELS)
+
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
 
@@ -144,20 +147,18 @@ if __name__ == '__main__':
 
                         if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                            num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=True,
-                                                                                            output_attentions=True)
-                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 set_type='dev', name=epoch_name)
+                            trained_model = mybert.init_model(bert_model=os.path.join(CHECKPOINT_DIR, epoch_name), num_labels=NUM_LABELS)
+
+                            dev_mets, dev_perf = mybert.eval(trained_model, dev_batches, dev_labels,
+                                                                     set_type='dev', name=epoch_name)
                         else:
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
                                 batch = tuple(t.to(device) for t in batch)
 
                                 model.zero_grad()
-                                outputs = model(batch[0], batch[1], labels=batch[2])
-                                (loss), logits, probs, sequence_output, pooled_output = outputs
+                                outputs = mybert.my_forward(model, batch[0], batch[1], labels=batch[2])
+                                (loss), logits, emb_output, probs = outputs
 
                                 loss.backward()
                                 tr_loss += loss.item()
@@ -168,7 +169,7 @@ if __name__ == '__main__':
 
                             av_loss = tr_loss / len(train_batches)
                             save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                            dev_mets, dev_perf = mybert.eval(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                  set_type='dev', name=epoch_name)
 
                         # check if best
@@ -184,9 +185,8 @@ if __name__ == '__main__':
                     if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                               output_hidden_states=True,
-                                                                               output_attentions=True)
+
+                    best_model = MyBert.init_model(bert_model=best_val_res['model_loc'])
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
@@ -210,15 +210,15 @@ if __name__ == '__main__':
                     logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type","f1"]]}')
                     setting_results_table = setting_results_table.append(fold_results_table)
 
-                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
-                setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
-                main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-            main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
+            logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
+            setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
+            main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
+        main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
 
-'''
-n_train_batches = len(train_batches)
-half_train_batches = int(n_train_batches / 2)
-num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
-#scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
-'''
+    '''
+    n_train_batches = len(train_batches)
+    half_train_batches = int(n_train_batches / 2)
+    num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
+    num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
+    #scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
+    '''

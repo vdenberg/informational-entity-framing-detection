@@ -11,7 +11,7 @@ class BidafEnsembleTest(ModelTestCase):
         super(BidafEnsembleTest, self).setUp()
         self.set_up_model(self.FIXTURES_ROOT / 'bidaf' / 'experiment.json',
                           self.FIXTURES_ROOT / 'data' /  'squad.json')
-        self.model.eval()
+        self.model.my_eval()
 
     def test_ensemble_chooses_highest_average_confidence_2(self):
         subresults = [

@@ -38,7 +38,7 @@ def get_metrics(labels, preds):
     }
 
 
-def eval(labels, preds, av_loss=None, set_type="", name=""):
+def my_eval(labels, preds, av_loss=None, set_type="", name=""):
     """
     Compares labels to predictions, Loss can be added to also
     display the loss associated to the model that made those predictions

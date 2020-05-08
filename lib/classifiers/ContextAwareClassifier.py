@@ -4,7 +4,7 @@ from torch.autograd import Variable
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from torch.optim import lr_scheduler
 from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
-from lib.evaluate.Eval import eval
+from lib.evaluate.Eval import my_eval
 from transformers import BertModel, BertPreTrainedModel, BertForSequenceClassification
 from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_device
 import os, time

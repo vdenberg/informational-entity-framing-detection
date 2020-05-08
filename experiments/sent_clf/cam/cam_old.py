@@ -250,7 +250,7 @@ for fold_i, fold in enumerate(folds):
 
     # set model into eval mode, or train model
     if EVAL:
-        cl.model.eval()
+        cl.model.my_eval()
         for parameter in cl.model.parameters():
             parameter.requires_grad = False
     elif TRAIN:

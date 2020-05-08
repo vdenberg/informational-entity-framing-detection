@@ -1,4 +1,4 @@
-from transformers import BertPreTrainedModel, BertModel
+from transformers import BertForSequenceClassification, RobertaForSequenceClassification
 from torch.nn import Dropout, Linear
 from torch.nn import CrossEntropyLoss, MSELoss
 import torch
@@ -9,7 +9,7 @@ import os, pickle
 import numpy as np
 from lib.utils import get_torch_device, to_tensor, to_batches
 from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
-
+from lib.evaluate.Eval import my_eval
 
 # helpers
 class InputFeatures(object):
@@ -193,7 +193,96 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, probs, sequence_ouput, pooled_output, # (hidden_states), (attentions)
+        return outputs  # (loss), logits, sequence_ouput, pooled_output, # (hidden_states), (attentions)
+
+
+class MyBert():
+    def __init__(self, start_bert_model, device):
+        self.start_bert_model = start_bert_model
+
+        self.ROBERTA = True if 'roberta' in self.start_bert_model else False
+        self.device = device
+        self.sigm = nn.Sigmoid()
+        self.loss_fct = CrossEntropyLoss()
+
+    def init_model(self, bert_model=None, cache_dir=None, num_labels=2):
+        if not bert_model:
+            bert_model = self.start_bert_model
+        if self.ROBERTA:
+            model = RobertaForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir,
+                                                                     num_labels=num_labels, output_hidden_states=False,
+                                                                     output_attentions=False)
+        else:
+            model = BertForSequenceClassification.from_pretrained(bert_model, cache_dir=cache_dir, num_labels=num_labels,
+                                                                  output_hidden_states=False, output_attentions=False)
+
+        model.to(self.device)
+        return model
+
+    def my_forward(self, model, input_ids=None, attention_mask=None, labels=None, emb_type='regular'):
+        if self.ROBERTA:
+            outputs = model.roberta(input_ids, attention_mask=attention_mask)
+            sequence_output = outputs[0]
+            logits = model.classifier(sequence_output)
+
+            emb_output = sequence_output.mean(axis=1)
+        else:
+            outputs = model.bert(input_ids, attention_mask=attention_mask)
+            pooled_output = outputs[1]
+            pooled_output = model.dropout(pooled_output)
+            logits = model.classifier(pooled_output)
+
+            emb_output = pooled_output
+
+        outputs = (logits, emb_output)
+
+        if labels is not None:
+            loss = self.loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+            outputs = (loss,) + outputs
+
+        logits = outputs[1]
+        probs = self.sigm(logits)
+        outputs = outputs + (probs,)
+        return outputs
+
+    def my_predict(self, model, data, return_embeddings=False, output_mode='classification'):
+        model.my_eval()
+        preds = []
+        embeddings = []
+        for step, batch in enumerate(data):
+            batch = tuple(t.to(self.device) for t in batch)
+            with torch.no_grad():
+                # print(input_mask)
+                outputs = self.my_forward(model, batch[0], batch[1], labels=None)
+                logits, emb_output, probs = outputs
+
+            logits = logits.detach().cpu().numpy()
+            if output_mode == 'bio_classification':
+                preds.extend([list(p) for p in np.argmax(logits, axis=2)])
+            elif output_mode == 'classification':
+                preds.extend(np.argmax(logits, axis=1))
+
+            if return_embeddings:
+                emb_output = list(emb_output[0].detach().cpu().numpy())
+                embeddings.append(emb_output)
+
+        model.train()
+        return preds, embeddings
+
+    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
+        preds, embeddings = self.my_predict(model, data, output_mode)
+
+        if output_mode == 'bio_classification':
+            labels = labels.numpy().flatten()
+            preds = np.asarray(preds)
+            preds = np.reshape(preds, labels.shape)
+        else:
+            labels = labels.numpy()
+
+        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
+
+        return metrics_dict, metrics_string
+
 
 
 def save_bert_model(model_to_save, model_dir, identifier):
@@ -253,7 +342,7 @@ class BertWrapper:
         return loss.item()
 
     def predict(self, batches):
-        self.model.eval()
+        self.model.my_eval()
 
         y_pred = []
         sum_loss = 0
@@ -299,7 +388,7 @@ class BertWrapper:
         if model_path:
             self.load_model(load_from_path=model_path)
 
-        self.model.eval()
+        self.model.my_eval()
         embeddings = []
         for step, batch in enumerate(batches):
             emb_output = self.get_embedding_output(batch, emb_type)

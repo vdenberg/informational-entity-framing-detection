@@ -1,6 +1,6 @@
 import time, os
 from lib.utils import format_runtime, plot_scores
-from lib.evaluate.Eval import eval
+from lib.evaluate.Eval import my_eval
 
 from sklearn.model_selection import learning_curve
 
@@ -74,10 +74,10 @@ class Classifier:
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
         tr_preds, tr_loss, _ = self.wrapper.predict(tr_bs)
-        tr_mets, tr_perf = eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
+        tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
         val_preds, val_loss, _ = self.wrapper.predict(dev_bs)
-        val_mets, val_perf = eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name="")
+        val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name="")
 
         best_log = ''
         if val_mets['f1'] > self.best_val_mets['f1']:
@@ -120,7 +120,7 @@ class Classifier:
 
     def test_model(self, fold, name):
         preds, test_loss, _ = self.wrapper.predict(fold['test_batches'])
-        test_mets, test_perf = eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
+        test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
         return test_mets, test_perf
 
     def train_on_fold(self, fold, save_embeddings=False):

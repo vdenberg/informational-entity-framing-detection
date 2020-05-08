@@ -62,7 +62,7 @@ class Validate(Callback):
             # We have a validation set, so compute all the metrics on it.
             logger.info("Validating")
 
-            trainer.model.eval()
+            trainer.model.my_eval()
 
             num_gpus = len(trainer._cuda_devices)  # pylint: disable=protected-access
 

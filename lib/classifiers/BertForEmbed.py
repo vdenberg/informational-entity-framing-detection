@@ -5,7 +5,7 @@ import torch
 from torch import nn
 import numpy as np
 from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from lib.evaluate.Eval import eval
+from lib.evaluate.Eval import my_eval
 import os
 
 
@@ -141,7 +141,7 @@ class Inferencer():
 
     def predict(self, model, data, return_embeddings=False, emb_type='poolbert', output_mode='classification'):
         model.to(self.device)
-        model.eval()
+        model.my_eval()
 
         preds = []
         embeddings = []
@@ -186,7 +186,7 @@ class Inferencer():
             return preds
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
-        preds = self.predict(model, data)
+        preds = self.predict(model, data, output_mode)
         #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
@@ -195,7 +195,7 @@ class Inferencer():
             preds = np.reshape(preds, labels.shape)
         else:
             labels = labels.numpy()
-        metrics_dict, metrics_string = eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
+        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         #self.logger.info(f'{metrics_string}')

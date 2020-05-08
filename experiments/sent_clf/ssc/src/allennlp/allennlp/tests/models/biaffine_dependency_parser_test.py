@@ -25,7 +25,7 @@ class BiaffineDependencyParserTest(ModelTestCase):
         self.ensure_batch_predictions_are_consistent()
 
     def test_decode_runs(self):
-        self.model.eval()
+        self.model.my_eval()
         training_tensors = self.dataset.as_tensor_dict()
         output_dict = self.model(**training_tensors)
         decode_output_dict = self.model.decode(output_dict)

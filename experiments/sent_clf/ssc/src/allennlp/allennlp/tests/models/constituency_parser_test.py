@@ -35,7 +35,7 @@ class SpanConstituencyParserTest(ModelTestCase):
         self.model(text, spans, [{"tokens": ["hello"]}], pos_tags, label)
 
     def test_decode_runs(self):
-        self.model.eval()
+        self.model.my_eval()
         training_tensors = self.dataset.as_tensor_dict()
         output_dict = self.model(**training_tensors)
         decode_output_dict = self.model.decode(output_dict)
