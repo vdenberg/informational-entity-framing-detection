@@ -136,7 +136,7 @@ for BERT_MODEL in [dapttapt, 'bert_base_cased', 'roberta_base']:
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    mybert = MyBert(start_bert_model=BERT_MODEL, num_labels=NUM_LABELS, device=device)
+                    mybert = MyBert(start_bert_model=BERT_MODEL, num_labels=NUM_LABELS, device=device, cache_dir=CACHE_DIR)
                     model = mybert.init_model(cache_dir=CACHE_DIR)
 
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
