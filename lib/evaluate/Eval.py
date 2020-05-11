@@ -10,6 +10,7 @@ def convert_bio_to_binary(labels):
     labels = [1 if lab == 2 else lab for lab in labels]
     return labels
 
+
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
