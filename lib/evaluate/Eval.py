@@ -21,10 +21,10 @@ def get_metrics(labels, preds):
     else:
         print(set(preds))
         print(set(labels))
-        preds = [0 if lab == 1 else 1 for lab in preds]
-        labels = [0 if lab == 1 else 1 for lab in labels]
+        #preds = [0 if lab == 1 else 1 for lab in preds]
+        #labels = [0 if lab == 1 else 1 for lab in labels]
 
-    assert set(labels) == {0, 1}
+    # assert set(labels) == {0, 1}
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
