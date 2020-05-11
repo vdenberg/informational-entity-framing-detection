@@ -103,9 +103,9 @@ if __name__ == '__main__':
                                     'f1': 0, 'model_loc': ''}
                     test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
-                    train_fp = f"data/sent_clf/features_for_roberta/folds/{fold_name}_train_features.pkl"
-                    dev_fp = f"data/sent_clf/features_for_roberta/folds/{fold_name}_dev_features.pkl"
-                    test_fp = f"data/sent_clf/features_for_roberta/folds/{fold_name}_test_features.pkl"
+                    train_fp = f"data/sent_clf/features_for_roberta/{fold_name}_train_features.pkl"
+                    dev_fp = f"data/sent_clf/features_for_roberta/{fold_name}_dev_features.pkl"
+                    test_fp = f"data/sent_clf/features_for_roberta/{fold_name}_test_features.pkl"
                     _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
                     _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
                     _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
