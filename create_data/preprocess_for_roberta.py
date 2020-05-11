@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers import RobertaTokenizer
 import pickle
-from lib.handle_data.PreprocessForBert import *
+from lib.handle_data.PreprocessForRoberta import *
 import csv
 from lib.handle_data.SplitData import split_input_for_bert
 
