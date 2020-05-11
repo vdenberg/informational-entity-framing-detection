@@ -327,7 +327,6 @@ def convert_example_to_feature(example_row):
     # padding
 
     # Zero-pad up to the sequence length.
-    print(tokenizer.pad_token_id)
 
     padding = [tokenizer.pad_token_id] * (max_seq_length - len(input_ids))
     masking = [tokenizer.mask_token_id] * (max_seq_length - len(input_ids))
@@ -343,14 +342,6 @@ def convert_example_to_feature(example_row):
 
     elif output_mode == "regression":
         label_id = float(example.label)
-
-    elif output_mode == "bio_classification":
-        label_id = [label_map.get(lab) for lab in labels]
-        label_id = [tokenizer.pad_token_id] + label_id + [tokenizer.pad_token_id]
-
-        label_id += padding
-
-        assert len(label_id) == max_seq_length
 
     else:
         raise KeyError(output_mode)
