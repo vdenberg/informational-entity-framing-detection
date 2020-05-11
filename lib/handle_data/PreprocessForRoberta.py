@@ -311,15 +311,13 @@ def convert_example_to_feature(example_row):
     if len(tokens_a) > max_seq_length - 2:
         tokens_a = tokens_a[:(max_seq_length - 2)]
 
-    # segment ids
-
-    segment_ids = [0] * len(tokens_a)
-
     #if tokens_b:
     #    tokens += tokens_b + ["[SEP]"]
     #    segment_ids += [1] * (len(tokens_b) + 1)
 
     # input ids
+
+    # segment ids
 
     input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
@@ -335,11 +333,9 @@ def convert_example_to_feature(example_row):
     masking = [tokenizer.mask_token_id] * (max_seq_length - len(input_ids))
     input_ids += padding
     input_mask += masking
-    segment_ids += padding
 
     assert len(input_ids) == max_seq_length
     assert len(input_mask) == max_seq_length
-    assert len(segment_ids) == max_seq_length
 
     # labels
     if output_mode == "classification":
@@ -362,5 +358,5 @@ def convert_example_to_feature(example_row):
     return InputFeatures(my_id=example.my_id,
                          input_ids=input_ids,
                          input_mask=input_mask,
-                         segment_ids=segment_ids,
+                         segment_ids=[],
                          label_id=label_id)
