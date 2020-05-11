@@ -210,6 +210,7 @@ class Inferencer():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output = outputs
+                print(logits.shape, probs.shape, sequence_output.shape)
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
@@ -256,9 +257,6 @@ class Inferencer():
         else:
             labels = labels.numpy()
 
-        print(preds)
-        print(labels)
-        exit(0)
         if len(preds) != len(labels):
             print('Sizes not equal')
             print(preds, labels)
