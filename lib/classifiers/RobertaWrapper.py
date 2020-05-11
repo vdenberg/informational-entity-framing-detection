@@ -8,6 +8,7 @@ from torch.optim.lr_scheduler import CyclicLR
 import os, pickle
 import numpy as np
 from lib.utils import get_torch_device, to_tensor, to_batches
+from lib.evaluate.Eval import my_eval
 from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 from transformers.configuration_roberta import RobertaConfig
 
