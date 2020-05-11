@@ -322,7 +322,7 @@ def convert_example_to_feature(example_row):
     input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
-    input_mask = [1] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
+    input_mask = [tokenizer.mask_token_id] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
 
     # padding
 
