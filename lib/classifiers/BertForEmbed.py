@@ -180,9 +180,7 @@ class Inferencer():
                 preds = [list(p) for p in np.argmax(logits, axis=2)]
                 preds.extend(preds)
             elif output_mode == 'classification':
-                print(probs)
                 pred = np.argmax(probs, axis=1)
-                print(pred)
                 preds.append(pred)
 
         model.train()
@@ -193,8 +191,6 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data, output_mode)
-        print(preds)
-        exit(0)
         #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
