@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapperOld, load_features
+from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -45,7 +45,7 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
