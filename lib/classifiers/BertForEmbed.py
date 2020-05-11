@@ -177,10 +177,10 @@ class Inferencer():
             probs = probs.detach().cpu().numpy()
 
             if output_mode == 'bio_classification':
-                preds.extend([list(p) for p in np.argmax(logits, axis=2)])
+                pred = [list(p) for p in np.argmax(logits, axis=2)]
             elif output_mode == 'classification':
                 pred = np.argmax(probs, axis=1)
-                preds.append(pred)
+            preds.extend(pred)
 
         model.train()
         if return_embeddings:
