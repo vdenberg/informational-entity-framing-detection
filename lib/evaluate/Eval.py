@@ -18,11 +18,6 @@ def get_metrics(labels, preds):
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
-    else:
-        print(preds)
-        print(labels)
-        labels = [0 if lab == 1 else 1 for lab in labels]
-
     assert set(labels) == {0, 1}
 
     #mcc = matthews_corrcoef(labels, preds)
