@@ -296,7 +296,7 @@ def convert_example_to_feature(example_row):
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
     else:
-        tokens_a = tokenizer.tokenize(example.text_a)
+        tokens_a = tokenizer._tokenize(example.text_a)
 
     #tokens_b = None
     #if example.text_b:
@@ -311,7 +311,6 @@ def convert_example_to_feature(example_row):
     if len(tokens_a) > max_seq_length - 2:
         tokens_a = tokens_a[:(max_seq_length - 2)]
 
-    tokens = ["<s>"] + tokens_a + ["</s>"]
 
     # segment ids
 
@@ -324,14 +323,15 @@ def convert_example_to_feature(example_row):
     # input ids
 
     input_ids = tokenizer.convert_tokens_to_ids(tokens)
+    input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
     input_mask = [1] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
 
     # padding
 
     # Zero-pad up to the sequence length.
-    padding = [PAD_TOKEN] * (max_seq_length - len(input_ids))
-    masking = ['<mask>'] * (max_seq_length - len(input_ids))
+    padding = [tokenizer.pad_token_id] * (max_seq_length - len(input_ids))
+    masking = [tokenizer.mask_token_id] * (max_seq_length - len(input_ids))
     input_ids += padding
     input_mask += masking
     segment_ids += padding
