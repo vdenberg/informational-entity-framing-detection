@@ -319,7 +319,7 @@ def convert_example_to_feature(example_row):
 
     # segment ids
 
-    input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
+    input_ids = tokenizer.encode(tokens_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
     # Zero-pad up to the sequence length.
