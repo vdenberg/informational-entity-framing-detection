@@ -330,6 +330,8 @@ def convert_example_to_feature(example_row):
     # padding
 
     # Zero-pad up to the sequence length.
+    print(tokenizer.pad_token_id)
+
     padding = [tokenizer.pad_token_id] * (max_seq_length - len(input_ids))
     masking = [tokenizer.mask_token_id] * (max_seq_length - len(input_ids))
     input_ids += padding
