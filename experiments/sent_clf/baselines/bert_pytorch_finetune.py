@@ -97,7 +97,7 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [65841]:
+    for SEED in [182]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
         for BATCH_SIZE in [16]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [1e-5]:
+            for LEARNING_RATE in [2e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['2']:
