@@ -92,7 +92,7 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
         logits = self.classifier(sequence_output)
-        probs = self.sigm(sequence_output)
+        probs = self.sigm(logits)
 
         outputs = (logits, probs, sequence_output) + outputs[2:]
 
@@ -210,7 +210,6 @@ class Inferencer():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output = outputs
-                print(logits.shape, probs.shape, sequence_output.shape)
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
