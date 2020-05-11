@@ -296,7 +296,8 @@ def convert_example_to_feature(example_row):
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
     else:
-        tokens_a = tokenizer.tokenize(example.text_a)
+        pass
+        #tokens_a = tokenizer.tokenize(example.text_a)
 
     #tokens_b = None
     #if example.text_b:
@@ -319,7 +320,7 @@ def convert_example_to_feature(example_row):
 
     # segment ids
 
-    input_ids = tokenizer.encode(tokens_a)
+    input_ids = tokenizer.encode(example.text_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
     # Zero-pad up to the sequence length.
