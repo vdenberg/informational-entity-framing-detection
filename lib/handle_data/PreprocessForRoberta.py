@@ -296,8 +296,7 @@ def convert_example_to_feature(example_row):
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
     else:
-        pass
-        #tokens_a = tokenizer.tokenize(example.text_a)
+        tokens_a = tokenizer.tokenize(example.text_a)
 
     #tokens_b = None
     #if example.text_b:
@@ -309,7 +308,8 @@ def convert_example_to_feature(example_row):
     #else:
         # Account for [CLS] and [SEP] with "- 2"
 
-
+    if len(tokens_a) > max_seq_length - 2:
+        tokens_a = tokens_a[:(max_seq_length - 2)]
 
     #if tokens_b:
     #    tokens += tokens_b + ["[SEP]"]
@@ -319,9 +319,7 @@ def convert_example_to_feature(example_row):
 
     # segment ids
 
-    input_ids = tokenizer.encode(example.text_a)
-    if len(input_ids) > max_seq_length - 2:
-        input_ids = input_ids[:(max_seq_length - 2)]
+    input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
     # Zero-pad up to the sequence length.
