@@ -311,10 +311,9 @@ def convert_example_to_feature(example_row):
     if len(tokens_a) > max_seq_length - 2:
         tokens_a = tokens_a[:(max_seq_length - 2)]
 
-
     # segment ids
 
-    segment_ids = [0] * len(tokens)
+    segment_ids = [0] * len(tokens_a)
 
     #if tokens_b:
     #    tokens += tokens_b + ["[SEP]"]
@@ -322,7 +321,7 @@ def convert_example_to_feature(example_row):
 
     # input ids
 
-    input_ids = tokenizer.convert_tokens_to_ids(tokens)
+    input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
     input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
 
     input_mask = [1] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
@@ -350,9 +349,9 @@ def convert_example_to_feature(example_row):
         label_id = float(example.label)
 
     elif output_mode == "bio_classification":
-        labels = [PAD_TOKEN] + labels + [PAD_TOKEN]
-
         label_id = [label_map.get(lab) for lab in labels]
+        label_id = [tokenizer.pad_token_id] + label_id + [tokenizer.pad_token_id]
+
         label_id += padding
 
         assert len(label_id) == max_seq_length
