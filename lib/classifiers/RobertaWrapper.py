@@ -256,6 +256,9 @@ class Inferencer():
         else:
             labels = labels.numpy()
 
+        print(preds)
+        print(labels)
+        exit(0)
         if len(preds) != len(labels):
             print('Sizes not equal')
             print(preds, labels)
