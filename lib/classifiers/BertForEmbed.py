@@ -181,7 +181,8 @@ class Inferencer():
                 preds.extend(preds)
             elif output_mode == 'classification':
                 print(probs)
-                pred = np.argmax(probs)
+                pred = np.argmax(probs, axis=0)
+                print(pred)
                 preds.append(pred)
 
         model.train()
@@ -192,6 +193,8 @@ class Inferencer():
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data, output_mode)
+        print(preds)
+        exit(0)
         #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
@@ -201,11 +204,6 @@ class Inferencer():
         else:
             labels = labels.numpy()
 
-        if len(preds) != len(labels):
-            print('Shapes not equal')
-            print(preds)
-            print('Preds:', len(preds), len(preds[0]))
-            print('Labs:', len(labels), len(labels[0]))
         metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
