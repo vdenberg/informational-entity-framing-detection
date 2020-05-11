@@ -11,10 +11,6 @@ from matplotlib import ticker
 
 def to_tensor(features):
     example_ids = [f.my_id for f in features]
-    print(features[0].input_ids)
-    print(features[0].input_mask)
-    print(features[0].label_id)
-    exit(0)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)

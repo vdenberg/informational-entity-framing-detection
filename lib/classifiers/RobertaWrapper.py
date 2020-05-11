@@ -31,7 +31,6 @@ class InputFeatures(object):
 def load_features(fp, batch_size):
     with open(fp, "rb") as f:
         ids, data, labels = to_tensor(pickle.load(f))
-
     batches = to_batches(data, batch_size=batch_size)
     return ids, batches, labels
 
@@ -237,6 +236,7 @@ class Inferencer():
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
             elif output_mode == 'classification':
+                assert len(probs[0]) == 2
                 pred = np.argmax(probs, axis=1)
             preds.extend(pred)
 
