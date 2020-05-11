@@ -1,8 +1,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 import pickle
-from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
+from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -19,6 +18,7 @@ import logging
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
 
+
 class InputFeatures(object):
     """A single set of features of data."""
 
@@ -29,15 +29,6 @@ class InputFeatures(object):
         self.segment_ids = segment_ids
         self.label_id = label_id
 
-'''
-def to_tensor(features):
-    example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(input_ids, input_mask, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-'''
 
 ################
 # HYPERPARAMETERS
@@ -54,8 +45,8 @@ args = parser.parse_args()
 # find GPU if present
 device, USE_CUDA = get_torch_device()
 #BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
-BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_test'
+BERT_MODEL = 'roberta-base' #bert-large-cased
+TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
@@ -74,6 +65,7 @@ PRINT_EVERY = 100
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
+
 if __name__ == '__main__':
     # set logger
     now = datetime.now()
@@ -85,25 +77,13 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
-                  '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
-                  '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
-                  '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
-                  '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
-                  '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
-                  '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
-                  '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
-                  '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                  }
-
     for SEED in [182]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
             SEED_VAL = SEED
 
-        seed_name = f"bert_{SEED_VAL}"
+        seed_name = f"{BERT_MODEL}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -133,8 +113,8 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = BertForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=True, output_attentions=True)
+                    model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                                                                          output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
@@ -144,10 +124,10 @@ if __name__ == '__main__':
 
                         if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
+                            trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=True,
-                                                                                            output_attentions=True)
+                                                                                            output_hidden_states=False,
+                                                                                            output_attentions=False)
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
                                                                  set_type='dev', name=epoch_name)
                         else:
@@ -157,7 +137,7 @@ if __name__ == '__main__':
 
                                 model.zero_grad()
                                 outputs = model(batch[0], batch[1], labels=batch[2])
-                                (loss), logits, probs, sequence_output, pooled_output = outputs
+                                (loss), logits, probs, sequence_output = outputs
 
                                 loss.backward()
                                 tr_loss += loss.item()
@@ -184,9 +164,9 @@ if __name__ == '__main__':
                     if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = BertForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                               output_hidden_states=True,
-                                                                               output_attentions=True)
+                    best_model = RobertaForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+                                                                               output_hidden_states=False,
+                                                                               output_attentions=False)
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
