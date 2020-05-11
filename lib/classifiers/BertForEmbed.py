@@ -195,6 +195,11 @@ class Inferencer():
             preds = np.reshape(preds, labels.shape)
         else:
             labels = labels.numpy()
+
+        if len(preds) != len(labels):
+            print('Shapes not equal')
+            print('Preds:', len(preds), len(preds[0]))
+            print('Labs:', len(labels), len(labels[0]))
         metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
