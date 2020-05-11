@@ -182,6 +182,7 @@ class Inferencer():
             elif output_mode == 'classification':
                 pred = np.argmax(probs)
                 preds.append(pred)
+                print(preds, preds)
 
         model.train()
         if return_embeddings:
