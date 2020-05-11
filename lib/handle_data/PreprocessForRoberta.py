@@ -86,7 +86,7 @@ class SpanToBio():
             bio_tag = 'O'
 
             if lab == 1:
-                if prev_bio_tag in [None, 'O']:
+                if prev_bio_tag in [None, '<pad>']:
                     bio_tag = 'B-BIAS'
 
                 if prev_bio_tag in ['B-BIAS', 'I-BIAS']:
