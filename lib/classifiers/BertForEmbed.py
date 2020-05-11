@@ -181,7 +181,7 @@ class Inferencer():
                 preds.extend(preds)
             elif output_mode == 'classification':
                 print(probs)
-                pred = np.argmax(probs, axis=0)
+                pred = np.argmax(probs, axis=1)
                 print(pred)
                 preds.append(pred)
 
