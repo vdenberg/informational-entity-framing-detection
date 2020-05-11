@@ -177,8 +177,7 @@ class Inferencer():
             probs = probs.detach().cpu().numpy()
 
             if output_mode == 'bio_classification':
-                preds = [list(p) for p in np.argmax(logits, axis=2)]
-                preds.extend(preds)
+                preds.extend([list(p) for p in np.argmax(logits, axis=2)])
             elif output_mode == 'classification':
                 pred = np.argmax(probs, axis=1)
                 preds.append(pred)
@@ -187,6 +186,7 @@ class Inferencer():
         if return_embeddings:
             return embeddings
         else:
+            print(preds)
             return preds
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
