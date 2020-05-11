@@ -19,8 +19,8 @@ def get_metrics(labels, preds):
         labels = convert_bio_to_binary(labels)
 
     else:
-        preds = [0 if lab == 1 else 1 for lab in preds]
-        labels = [0 if lab == 1 else 1 for lab in labels]
+        preds = [lab - 1 for lab in preds]
+        labels = [lab - 1 for lab in labels]
 
     assert set(labels) == {0, 1}
 
