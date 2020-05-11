@@ -38,7 +38,8 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=3) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
+parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
@@ -77,7 +78,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [182]:
+    for SEED in [args.sv]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -89,9 +90,9 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16]:
+        for BATCH_SIZE in [BATCH_SIZE]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5]:
+            for LEARNING_RATE in [LEARNING_RATE]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                 for fold_name in ['2']:
