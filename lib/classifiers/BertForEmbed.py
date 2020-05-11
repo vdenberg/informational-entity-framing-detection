@@ -180,9 +180,9 @@ class Inferencer():
                 preds = [list(p) for p in np.argmax(logits, axis=2)]
                 preds.extend(preds)
             elif output_mode == 'classification':
+                print(probs)
                 pred = np.argmax(probs)
                 preds.append(pred)
-                print(pred, preds)
 
         model.train()
         if return_embeddings:
@@ -203,6 +203,7 @@ class Inferencer():
 
         if len(preds) != len(labels):
             print('Shapes not equal')
+            print(preds)
             print('Preds:', len(preds), len(preds[0]))
             print('Labs:', len(labels), len(labels[0]))
         metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
