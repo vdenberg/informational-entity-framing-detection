@@ -1,5 +1,5 @@
 from __future__ import absolute_import, division, print_function
-from transformers import BertTokenizer
+from transformers import RobertaTokenizer
 import pickle
 from lib.handle_data.PreprocessForBert import *
 import csv
@@ -42,9 +42,9 @@ NR_FOLDS = len(folds)
 
 if OUTPUT_MODE == 'bio_classification':
     spacy_tokenizer = spacy.load("en_core_web_sm")
-    tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False, do_basic_tokenize=False)
+    tokenizer = RobertaTokenizer.from_pretrained('roberta-base', do_lower_case=False, do_basic_tokenize=False)
 else:
-    tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
+    tokenizer = RobertaTokenizer.from_pretrained('roberta-base', do_lower_case=False)
 
 dataloader = BinaryClassificationProcessor()
 
@@ -90,7 +90,5 @@ for fold in folds:
 
             with open(ofp, "wb") as f:
                 pickle.dump(features, f)
-
-
 
 tokenizer.save_vocabulary(FEAT_DIR)
