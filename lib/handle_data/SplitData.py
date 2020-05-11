@@ -329,7 +329,7 @@ def split_input_for_bert(data_dir, task):
     our data, and saves them for each berg-fold seperately. '''
 
     # load basil data with BERT-relevant columns
-    basil_infp = f'data/{task}/basil.csv'
+    basil_infp = os.path.join(data_dir, 'basil.csv')
     data = pd.read_csv(basil_infp, index_col=0, names=['id', 'label', 'alpha', 'sentence'])
     data.index = [el.lower() for el in data.index]
 
