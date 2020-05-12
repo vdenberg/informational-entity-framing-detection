@@ -286,55 +286,12 @@ def convert_example_to_feature(example_row):
 
     # tokens
 
-    if output_mode == 'bio_classification':
-        sp2bio = SpanToBio()
-        spacy_tokens, spacy_labels = sp2bio.span_to_bio(example.text_a, example.label)
-        assert len(spacy_tokens) == len(spacy_labels)
-
-        tokens_a = " ".join(spacy_tokens)
-        labels = spacy_labels
-        tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
-
-    else:
-        print(example.text_a)
-        tokens_a = tokenizer.encode(example.text_a)
-
-    print(tokens_a)
-    exit(0)
-
-    #tokens_b = None
-    #if example.text_b:
-        #    tokens_b = tokenizer.tokenize(example.text_b)
-        # Modifies `tokens_a` and `tokens_b` in place so that the total
-        # length is less than the specified length.
-        # Account for [CLS], [SEP], [SEP] with "- 3"
-    #   _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
-    #else:
-        # Account for [CLS] and [SEP] with "- 2"
-
-    if len(tokens_a) > max_seq_length - 2:
-        tokens_a = tokens_a[:(max_seq_length - 2)]
-
-    #if tokens_b:
-    #    tokens += tokens_b + ["[SEP]"]
-    #    segment_ids += [1] * (len(tokens_b) + 1)
-
-    # tokenize
-    tokens = [tokenizer.cls_token] + tokens_a + [tokenizer.sep_token]
-
-    # make mask and add padding
-    input_mask = [1] * len(tokens)  # The mask has 1 for real tokens and 0 for padding tokens.
-    input_mask += [0] * (max_seq_length - len(tokens))
-
-    # add padding to tokens
-    padding = [tokenizer.pad_token] * (max_seq_length - len(tokens))
-    tokens += padding
-
-    input_ids = tokenizer.convert_tokens_to_ids(tokens)
-    # Zero-pad up to the sequence length.
+    encoded = tokenizer.encode(example.text_a, max_length=max_seq_length, pad_to_max_length=True)
+    input_ids = encoded['input_ids']
+    attention_mask = encoded['attention_mask']
 
     assert len(input_ids) == max_seq_length
-    assert len(input_mask) == max_seq_length
+    assert len(attention_mask) == max_seq_length
 
     # labels
     if output_mode == "classification":
@@ -348,6 +305,6 @@ def convert_example_to_feature(example_row):
 
     return InputFeatures(my_id=example.my_id,
                          input_ids=input_ids,
-                         input_mask=input_mask,
+                         input_mask=attention_mask,
                          segment_ids=[],
                          label_id=label_id)
