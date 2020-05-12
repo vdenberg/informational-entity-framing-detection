@@ -15,12 +15,12 @@ export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/a
 #export BERT_WEIGHTS=pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015
 
 # path to dataset files
-#export TRAIN_PATH=data/CSAbstruct/train.jsonl
-#export DEV_PATH=data/CSAbstruct/dev.jsonl
-#export TEST_PATH=data/CSAbstruct/test.jsonl
-export TRAIN_PATH="data/basil/"$2"_train_ssc.jsonl"
-export DEV_PATH="data/basil/"$2"_dev_ssc.jsonl"
-export TEST_PATH="data/basil/"$2"_test_ssc.jsonl"
+export TRAIN_PATH=data/CSAbstruct/train.jsonl
+export DEV_PATH=data/CSAbstruct/dev.jsonl
+export TEST_PATH=data/CSAbstruct/test.jsonl
+#export TRAIN_PATH="data/basil/"$2"_train_ssc.jsonl"
+#export DEV_PATH="data/basil/"$2"_dev_ssc.jsonl"
+#export TEST_PATH="data/basil/"$2"_test_ssc.jsonl"
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
