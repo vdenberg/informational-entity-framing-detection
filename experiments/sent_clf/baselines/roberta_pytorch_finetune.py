@@ -46,8 +46,8 @@ args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
-#BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
-BERT_MODEL = 'roberta-base' #bert-large-cased
+BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
+#BERT_MODEL = 'roberta-base' #bert-large-cased
 TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
@@ -85,7 +85,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{BERT_MODEL}_{SEED_VAL}"
+        seed_name = f"{BERT_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
