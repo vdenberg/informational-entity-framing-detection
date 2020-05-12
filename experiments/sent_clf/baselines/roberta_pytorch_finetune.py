@@ -38,9 +38,9 @@ class InputFeatures(object):
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=3) #2,3,4
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
+parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
+parser.add_argument('-bs', '--batch_size', type=int, default=8) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
@@ -118,7 +118,16 @@ if __name__ == '__main__':
                     model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                           output_hidden_states=False, output_attentions=False)
                     model.to(device)
-                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.1, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
+
+                    n_train_batches = len(train_batches)
+                    half_train_batches = int(n_train_batches / 2)
+                    GRADIENT_ACCUMULATION_STEPS = 2
+                    WARMUP_PROPORTION = 0.06
+                    num_tr_opt_steps = n_train_batches * N_EPS / GRADIENT_ACCUMULATION_STEPS
+                    num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
+                    scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
+
                     model.train()
 
                     for ep in range(1, N_EPS + 1):
