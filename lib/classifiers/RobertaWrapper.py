@@ -159,9 +159,7 @@ class RobertaForTokenClassification(BertPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
                 position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
 
-        print(input_ids)
-        print(attention_mask)
-        outputs = self.roberta(input_ids,
+        poutputs = self.roberta(input_ids,
                                attention_mask=attention_mask,
                                token_type_ids=token_type_ids,
                                position_ids=position_ids,
@@ -172,8 +170,7 @@ class RobertaForTokenClassification(BertPreTrainedModel):
         sequence_output = self.dropout(sequence_output)
         logits = self.classifier(sequence_output)
         probs = self.sigm(logits)
-        print(logits)
-        print(probs)
+
 
         outputs = (logits, probs, sequence_output) + outputs[2:]  # add hidden states and attention if they are here
         if labels is not None:

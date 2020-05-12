@@ -124,7 +124,8 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        LOAD_ALLOWED = False
+                        if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
@@ -138,8 +139,14 @@ if __name__ == '__main__':
                                 batch = tuple(t.to(device) for t in batch)
 
                                 model.zero_grad()
+                                print("---")
+                                print(batch[0])
+                                print(batch[1])
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 (loss), logits, probs, sequence_output = outputs
+                                print(logits)
+                                print(probs)
+                                print("---")
 
                                 loss.backward()
                                 tr_loss += loss.item()
