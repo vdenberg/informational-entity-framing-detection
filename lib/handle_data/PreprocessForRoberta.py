@@ -286,7 +286,7 @@ def convert_example_to_feature(example_row):
 
     # tokens
 
-    encoded = tokenizer.encode(example.text_a, max_length=max_seq_length, pad_to_max_length=True)
+    encoded = tokenizer.encode_plus(example.text_a, max_length=max_seq_length, pad_to_max_length=True)
     input_ids = encoded['input_ids']
     attention_mask = encoded['attention_mask']
 
