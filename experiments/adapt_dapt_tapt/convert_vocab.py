@@ -22,8 +22,9 @@ for model_dir in os.listdir(models_dir):
     vocab = {tok.strip('Ġ'): idx for tok, idx in vocab.items()}
 
     # replace special tokens
-    vocab = {special_tokens[tok] if tok in special_tokens else tok: idx for tok, idx in vocab.items()}
+    #vocab = {special_tokens[tok] if tok in special_tokens else tok: idx for tok, idx in vocab.items()}
 
+    '''
     # replace token with index 102
     currently_at_102 = find_102(vocab)
     current_loc_of_sep = vocab["[SEP]"]
@@ -33,6 +34,7 @@ for model_dir in os.listdir(models_dir):
 
     vocab["[SEP]"] = new_loc_of_sep
     vocab[currently_at_102] = new_loc_of_current_at_102
+    '''
 
     # make text lines out of dict
     reverse_vocab = {idx: tok for tok, idx in vocab.items()}
