@@ -1,0 +1,123 @@
+0it [00:00, ?it/s]
+50it [00:00, 448.29it/s]
+127it [00:00, 503.94it/s]
+184it [00:00, 454.20it/s]
+235it [00:00, 468.44it/s]
+301it [00:00, 510.38it/s]
+396it [00:00, 583.07it/s]
+487it [00:00, 644.83it/s]
+583it [00:00, 705.23it/s]
+680it [00:01, 766.30it/s]
+765it [00:01, 778.04it/s]
+850it [00:01, 792.17it/s]
+948it [00:01, 825.05it/s]
+1040it [00:01, 841.65it/s]
+1135it [00:01, 855.48it/s]
+1235it [00:01, 889.77it/s]
+1325it [00:01, 725.09it/s]
+1436it [00:01, 804.90it/s]
+1541it [00:02, 848.50it/s]
+1634it [00:02, 867.23it/s]
+1725it [00:02, 653.73it/s]
+1801it [00:02, 633.12it/s]
+1872it [00:02, 598.69it/s]
+1943it [00:02, 617.83it/s]
+2009it [00:02, 609.90it/s]
+2077it [00:02, 603.19it/s]
+2169it [00:03, 649.65it/s]
+2265it [00:03, 710.45it/s]
+2342it [00:03, 541.38it/s]
+2433it [00:03, 612.07it/s]
+2506it [00:03, 640.89it/s]
+2577it [00:03, 632.26it/s]
+2645it [00:03, 498.68it/s]
+2703it [00:04, 466.47it/s]
+2711it [00:04, 668.35it/s]
+
+0it [00:00, ?it/s]
+56it [00:00, 556.46it/s]
+119it [00:00, 574.68it/s]
+209it [00:00, 641.06it/s]
+257it [00:00, 561.09it/s]
+332it [00:00, 668.93it/s]
+
+0it [00:00, ?it/s]
+64it [00:00, 632.25it/s]
+163it [00:00, 701.90it/s]
+240it [00:00, 696.87it/s]
+334it [00:00, 846.23it/s]
+
+0it [00:00, ?it/s]
+3377it [00:00, 65132.48it/s]
+
+Traceback (most recent call last):
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1645, in gzopen
+    t = cls.taropen(name, mode, fileobj, **kwargs)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1621, in taropen
+    return cls(name, mode, fileobj, **kwargs)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1484, in __init__
+    self.firstmember = self.next()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 2289, in next
+    tarinfo = self.tarinfo.fromtarfile(self)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1094, in fromtarfile
+    buf = tarfile.fileobj.read(BLOCKSIZE)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/gzip.py", line 276, in read
+    return self._buffer.read(size)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/_compression.py", line 68, in readinto
+    data = self.read(len(byte_view))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/gzip.py", line 463, in read
+    if not self._read_gzip_header():
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/gzip.py", line 411, in _read_gzip_header
+    raise OSError('Not a gzipped file (%r)' % magic)
+OSError: Not a gzipped file (b'\x80\x02')
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/run.py", line 21, in <module>
+    run()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/run.py", line 18, in run
+    main(prog="allennlp")
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/__init__.py", line 102, in main
+    args.func(args)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 124, in train_model_from_args
+    args.cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 168, in train_model_from_file
+    cache_directory, cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 226, in train_model
+    cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/training/trainer_pieces.py", line 65, in from_params
+    model = Model.from_params(vocab=vocab, params=params.pop('model'))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 386, in from_params
+    kwargs = create_kwargs(cls, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 133, in create_kwargs
+    kwargs[name] = construct_arg(cls, name, annotation, param.default, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 229, in construct_arg
+    return annotation.from_params(params=subparams, **subextras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in from_params
+    for name, subparams in token_embedder_params.items()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in <dictcomp>
+    for name, subparams in token_embedder_params.items()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 388, in from_params
+    return cls(**kwargs)  # type: ignore
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/token_embedders/bert_token_embedder.py", line 270, in __init__
+    model = PretrainedBertModel.load(pretrained_model)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/token_embedders/bert_token_embedder.py", line 38, in load
+    model = BertModel.from_pretrained(model_name)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/pytorch_pretrained_bert/modeling.py", line 589, in from_pretrained
+    with tarfile.open(resolved_archive_file, 'r:gz') as archive:
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1591, in open
+    return func(name, filemode, fileobj, **kwargs)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/tarfile.py", line 1649, in gzopen
+    raise ReadError("not a gzip file")
+tarfile.ReadError: not a gzip file
