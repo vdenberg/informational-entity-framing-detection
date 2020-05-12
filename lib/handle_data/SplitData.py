@@ -99,6 +99,7 @@ def load_basil():
     basil_df = pd.read_csv(fp, index_col=0).fillna('')
     basil_df.index = [el.lower() for el in basil_df.index]
     basil_df = basil_df.rename({'bias': 'label'})
+    basil_df = basil_df.drop('58fox62')
     return basil_df
 
 
@@ -331,7 +332,6 @@ def split_input_for_bert(data_dir, task):
     # load basil data with BERT-relevant columns
     basil_infp = os.path.join(data_dir, 'basil.csv')
     data = pd.read_csv(basil_infp, index_col=0, names=['id', 'label', 'alpha', 'sentence'])
-    data = data.drop(index='58fox62')
     data.index = [el.lower() for el in data.index]
 
     # write data with only these columns to all.tsv
