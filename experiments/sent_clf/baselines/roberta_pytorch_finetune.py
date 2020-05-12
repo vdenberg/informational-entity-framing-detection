@@ -140,13 +140,9 @@ if __name__ == '__main__':
 
                                 model.zero_grad()
                                 print("---")
-                                print(batch[0])
-                                print(batch[1])
+                                print(batch[2])
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 (loss), logits, probs, sequence_output = outputs
-                                print(logits)
-                                print(probs)
-                                print("---")
 
                                 loss.backward()
                                 tr_loss += loss.item()
