@@ -17,12 +17,12 @@ local boolToInt(s) =
     "lazy": false,
     "sent_max_len": std.extVar("SENT_MAX_LEN"),
     "word_splitter": "bert-basic",
-    "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),
+    "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),,
     "token_indexers": {
           "bert": {
               "type": "bert-pretrained",
               "pretrained_model": std.extVar("BERT_VOCAB"),
-              "do_lowercase": true,
+              "do_lowercase": false,
               "use_starting_offsets": false
           },
     },
@@ -48,7 +48,7 @@ local boolToInt(s) =
             "bert": {
                 "type": "bert-pretrained",
                 "pretrained_model": std.extVar("BERT_WEIGHTS"),
-                "requires_grad": 'all',
+                "requires_grad": true,
                 "top_layer_only": false,
             }
         }

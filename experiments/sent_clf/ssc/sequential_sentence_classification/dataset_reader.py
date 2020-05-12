@@ -11,7 +11,7 @@ from allennlp.data import Tokenizer
 from allennlp.data.instance import Instance
 from allennlp.data.fields.field import Field
 from allennlp.data.fields import TextField, LabelField, ListField, ArrayField, MultiLabelField
-from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer, wordpiece_indexer
+from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
 from allennlp.data.tokenizers import WordTokenizer
 from allennlp.data.tokenizers.token import Token
 from allennlp.data.tokenizers.word_splitter import SimpleWordSplitter, WordSplitter, SpacyWordSplitter
@@ -196,8 +196,6 @@ class SeqClassificationReader(DatasetReader):
                 self._tokenizer.tokenize(sentence_text)[:self.sent_max_len]
                 for sentence_text in sentences
             ]
-
-
 
         fields: Dict[str, Field] = {}
         fields["sentences"] = ListField([
