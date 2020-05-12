@@ -142,7 +142,8 @@ if __name__ == '__main__':
                                 print("---")
                                 print(batch[2])
                                 outputs = model(batch[0], batch[1], labels=batch[2])
-                                (loss), logits, probs, sequence_output = outputs
+                                #(loss), logits, probs, sequence_output = outputs
+                                (loss), logits, sequence_output = outputs
 
                                 loss.backward()
                                 tr_loss += loss.item()
