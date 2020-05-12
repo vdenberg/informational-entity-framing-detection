@@ -46,7 +46,7 @@ args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
+BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015'  # 'bert-base-cased' #bert-large-cased
 #BERT_MODEL = 'roberta-base' #bert-large-cased
 TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
