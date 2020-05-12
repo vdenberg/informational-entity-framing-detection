@@ -118,7 +118,7 @@ if __name__ == '__main__':
                     model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                           output_hidden_states=False, output_attentions=False)
                     model.to(device)
-                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.1, eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
 
                     for ep in range(1, N_EPS + 1):
