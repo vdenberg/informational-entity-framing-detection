@@ -37,7 +37,7 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=3) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=8) #16, 21
@@ -148,8 +148,6 @@ if __name__ == '__main__':
                                 batch = tuple(t.to(device) for t in batch)
 
                                 model.zero_grad()
-                                print("---")
-                                print(batch[2])
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 #(loss), logits, probs, sequence_output = outputs
                                 (loss), logits, sequence_output = outputs

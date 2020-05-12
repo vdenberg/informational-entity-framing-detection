@@ -296,7 +296,11 @@ def convert_example_to_feature(example_row):
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
     else:
-        tokens_a = tokenizer.tokenize(example.text_a)
+        print(example.text_a)
+        tokens_a = tokenizer.encode(example.text_a)
+
+    print(tokens_a)
+    exit(0)
 
     #tokens_b = None
     #if example.text_b:
