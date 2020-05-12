@@ -11,8 +11,8 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 #export BERT_VOCAB=bert-base-cased #uncased_L-12_H-768_A-12/vocab.txt
 #export BERT_WEIGHTS=bert-base-cased #uncased_L-12_H-768_A-12/bert_model.ckpt.data-00000-of-00001
 
-export BERT_VOCAB=roberta-base
-export BERT_WEIGHTS=roberta-base
+export BERT_VOCAB=bert-base-cased
+export BERT_WEIGHTS=bert-base-cased
 
 # path to dataset files
 #export TRAIN_PATH=data/CSAbstruct/train.jsonl
