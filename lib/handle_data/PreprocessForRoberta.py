@@ -291,6 +291,8 @@ def convert_example_to_feature(example_row):
     input_ids = encoded['input_ids']
     attention_mask = encoded['attention_mask']
 
+    print(input_ids)
+    print(attention_mask)
     assert len(input_ids) == max_seq_length
     assert len(attention_mask) == max_seq_length
 

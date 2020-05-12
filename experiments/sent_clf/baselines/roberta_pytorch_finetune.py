@@ -155,6 +155,7 @@ if __name__ == '__main__':
                                 loss.backward()
                                 tr_loss += loss.item()
                                 optimizer.step()
+                                scheduler.step()
 
                                 if step % PRINT_EVERY == 0 and step != 0:
                                     logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
