@@ -90,7 +90,7 @@ for fold in folds:
 
         #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
         #features = [convert_example_to_feature(row) for row in examples]
-        features = [features_dict[example.my_id] for example in examples]
+        features = [features_dict[example.my_id] for example in examples if example.text_a]
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
