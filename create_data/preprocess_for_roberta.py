@@ -45,7 +45,7 @@ if OUTPUT_MODE == 'bio_classification':
     spacy_tokenizer = spacy.load("en_core_web_sm")
     tokenizer = RobertaTokenizer.from_pretrained('roberta-base', do_lower_case=False, do_basic_tokenize=False)
 else:
-    tokenizer = RobertaTokenizer.from_pretrained('roberta-base', do_lower_case=False)
+    tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
     tokenizer.encode_plus('test')
 
 dataloader = BinaryClassificationProcessor()
