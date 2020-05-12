@@ -44,6 +44,7 @@ class SeqClassificationReader(DatasetReader):
                  predict: bool = False,
                  ) -> None:
         super().__init__(lazy)
+        print(token_indexers)
         self._tokenizer = WordTokenizer(word_splitter=SpacyWordSplitter(pos_tags=False))
         self._token_indexers = token_indexers or {"tokens": SingleIdTokenIndexer()}
         self.sent_max_len = sent_max_len
