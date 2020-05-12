@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+from transformers.configuration_roberta import RobertaConfig
 import pickle
 from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
 from datetime import datetime

@@ -315,22 +315,19 @@ def convert_example_to_feature(example_row):
     #    tokens += tokens_b + ["[SEP]"]
     #    segment_ids += [1] * (len(tokens_b) + 1)
 
-    # input ids
+    # tokenize
+    tokens = [tokenizer.cls_token] + tokens_a + [tokenizer.sep_token]
 
-    # segment ids
+    # make mask and add padding
+    input_mask = [1] * len(tokens)  # The mask has 1 for real tokens and 0 for padding tokens.
+    input_mask += [0] * (max_seq_length - len(tokens))
 
-    input_ids = tokenizer.convert_tokens_to_ids(tokens_a)
-    input_ids = tokenizer.build_inputs_with_special_tokens(token_ids_0=input_ids)
+    # add padding to tokens
+    padding = [tokenizer.pad_token] * (max_seq_length - len(tokens))
+    tokens += padding
 
+    input_ids = tokenizer.convert_tokens_to_ids(tokens)
     # Zero-pad up to the sequence length.
-
-    input_mask = [1] * len(input_ids)  # The mask has 1 for real tokens and 0 for padding tokens.
-
-    masking = [0] * (max_seq_length - len(input_ids))
-    padding = [tokenizer.pad_token_id] * (max_seq_length - len(input_ids))
-
-    input_ids += padding
-    input_mask += masking
 
     assert len(input_ids) == max_seq_length
     assert len(input_mask) == max_seq_length

@@ -1,5 +1,6 @@
 from __future__ import absolute_import, division, print_function
 from transformers import RobertaTokenizer
+from transformers.configuration_roberta import RobertaConfig
 import pickle
 from lib.handle_data.PreprocessForRoberta import *
 import csv
@@ -50,6 +51,8 @@ dataloader = BinaryClassificationProcessor()
 
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
 label_map = {label: i for i, label in enumerate(label_list)}
+config = RobertaConfig.from_pretrained('roberta-base')
+config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
