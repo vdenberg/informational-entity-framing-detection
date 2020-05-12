@@ -26,8 +26,6 @@ local boolToInt(s) =
               // "use_starting_offsets": false
           },
     },
-
-    },
     "use_sep": std.extVar("USE_SEP"),
     "sci_sum": stringToBool(std.extVar("SCI_SUM")),
     "use_abstract_scores": stringToBool(std.extVar("USE_ABSTRACT_SCORES")),
