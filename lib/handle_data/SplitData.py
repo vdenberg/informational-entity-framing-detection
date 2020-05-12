@@ -99,7 +99,7 @@ def load_basil():
     basil_df = pd.read_csv(fp, index_col=0).fillna('')
     basil_df.index = [el.lower() for el in basil_df.index]
     basil_df = basil_df.rename({'bias': 'label'})
-    basil_df = basil_df.drop(['58fox62','48fox19','11fox23'])
+    basil_df = basil_df.drop(['58fox62','48fox19','11fox23', '47nyt19'])
     return basil_df
 
 
