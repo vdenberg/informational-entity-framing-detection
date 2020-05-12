@@ -22,7 +22,7 @@ local boolToInt(s) =
           "bert": {
               "type": "pretrained_transformer",
               "model_name": std.extVar("MODEL_NAME"),
-              "do_lowercase": true,
+              "do_lowercase": true
               // "use_starting_offsets": false
           },
     },
@@ -49,7 +49,7 @@ local boolToInt(s) =
         "token_embedders": {
             "bert": {
                 "type": "pretrained_transformer",
-                "model_name": std.extVar("MODEL_NAME"),
+                "model_name": std.extVar("MODEL_NAME")
                 //"requires_grad": 'all',
                 //"top_layer_only": false,
             }
