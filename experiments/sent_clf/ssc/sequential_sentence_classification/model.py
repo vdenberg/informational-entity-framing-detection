@@ -23,8 +23,8 @@ class SeqClassificationModel(Model):
     """
 
     def __init__(self, vocab: Vocabulary,
-                 #transformer_model_name: str = "bert-base-cased",
                  text_field_embedder: TextFieldEmbedder,
+                 transformer_model_name: str = "bert-base-cased",
                  use_sep: bool = True,
                  with_crf: bool = False,
                  self_attn: Seq2SeqEncoder = None,
