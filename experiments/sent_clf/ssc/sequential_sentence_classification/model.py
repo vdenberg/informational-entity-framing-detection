@@ -60,7 +60,7 @@ class SeqClassificationModel(Model):
                 label_name = self.vocab.get_token_from_index(namespace='labels', index=label_index)
                 self.label_f1_metrics[label_name] = F1Measure(label_index)
 
-        print(vars(self.text_field_embedder._token_embedders))
+        print(vars(self.text_field_embedder))
         encoded_sentence_dim = self.text_field_embedder._token_embedders['bert'].output_dim
 
         ff_in_dim = encoded_sentence_dim if self.use_sep else self_attn.get_output_dim()
