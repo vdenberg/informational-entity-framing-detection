@@ -43,7 +43,7 @@ class SeqClassificationReader(DatasetReader):
                  ) -> None:
         super().__init__(lazy)
         self._tokenizer = PretrainedTransformerTokenizer(transformer_model_name, do_lowercase=False)
-        self._token_indexers = {"tokens": PretrainedTransformerIndexer(transformer_model_name)}
+        self._token_indexers = {"tokens": PretrainedTransformerIndexer(transformer_model_name, do_lowercase=False)}
         self.sent_max_len = sent_max_len
         self.use_sep = use_sep
         self.predict = predict
