@@ -48,7 +48,7 @@ local boolToInt(s) =
            "bert": {
                "type": "bert-pretrained",
                "pretrained_model": std.extVar("BERT_WEIGHTS"),
-             "requires_grad": true,
+             "requires_grad": all,
              "top_layer_only": false,
            }
        }
