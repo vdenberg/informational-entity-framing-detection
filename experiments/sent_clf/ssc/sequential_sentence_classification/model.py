@@ -5,8 +5,10 @@ import torch
 from torch.nn import Linear
 from allennlp.data import Vocabulary
 from allennlp.models.model import Model
-from allennlp.modules import TimeDistributed, Seq2SeqEncoder
+from allennlp.modules import TextFieldEmbedder, TimeDistributed, Seq2SeqEncoder
+
 from allennlp.modules.text_field_embedders import BasicTextFieldEmbedder
+
 from allennlp.modules.token_embedders import PretrainedTransformerEmbedder
 from allennlp.nn.util import get_text_field_mask
 from allennlp.training.metrics import F1Measure, CategoricalAccuracy
@@ -22,6 +24,7 @@ class SeqClassificationModel(Model):
 
     def __init__(self, vocab: Vocabulary,
                  transformer_model_name: str = "bert-base-cased",
+                 #text_field_embedder: TextFieldEmbedder,
                  use_sep: bool = True,
                  with_crf: bool = False,
                  self_attn: Seq2SeqEncoder = None,
@@ -32,7 +35,8 @@ class SeqClassificationModel(Model):
         super(SeqClassificationModel, self).__init__(vocab)
 
         self.text_field_embedder = BasicTextFieldEmbedder(token_embedders=
-            {"tokens": PretrainedTransformerEmbedder(transformer_model_name)})
+            {"tokens": PretrainedTransformerEmbedder(transformer_model_name)}, allow_unmatched_keys=True, embedder_to_indexer_map=
+            {"bert": ["bert"], "tokens": ["tokens"]})
         self.vocab = vocab
         self.use_sep = use_sep
         self.with_crf = with_crf
@@ -98,7 +102,6 @@ class SeqClassificationModel(Model):
         # Output: embedded_sentences
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
-        print(sentences.keys())
         embedded_sentences = self.text_field_embedder(sentences)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
