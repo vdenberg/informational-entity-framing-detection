@@ -20,10 +20,10 @@ local boolToInt(s) =
     "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),
     "token_indexers": {
           "bert": {
-              "type": "pretrained_transformer",
-              "model_name": std.extVar("MODEL_NAME"),
-              "do_lowercase": true
-              // "use_starting_offsets": false
+              "type": "bert-pretrained",
+              "pretrained_model": std.extVar("BERT_VOCAB"),
+              "do_lowercase": true,
+              "use_starting_offsets": false
           },
     },
     "use_sep": std.extVar("USE_SEP"),
@@ -46,10 +46,10 @@ local boolToInt(s) =
         },
         "token_embedders": {
             "bert": {
-                "type": "pretrained_transformer",
-                "model_name": std.extVar("MODEL_NAME")
-                //"requires_grad": 'all',
-                //"top_layer_only": false,
+                "type": "bert-pretrained",
+                "pretrained_model": std.extVar("BERT_WEIGHTS"),
+                "requires_grad": 'all',
+                "top_layer_only": false,
             }
         }
     },

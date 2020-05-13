@@ -14,19 +14,19 @@ local boolToInt(s) =
   "numpy_seed": std.parseInt(std.extVar("NUMPY_SEED")),
   "dataset_reader":{
     "type":"SeqClassificationReader",
+    "transformer_model_name": std.extVar("MODEL_NAME"),
     "lazy": false,
     "sent_max_len": std.extVar("SENT_MAX_LEN"),
     "word_splitter": "bert-basic",
-    "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),
-
-    "token_indexers": {
-          "bert": {
-              "type": "bert-pretrained",
-              "pretrained_model": std.extVar("BERT_VOCAB"),
-              "do_lowercase": false,
-              "use_starting_offsets": false
-          },
-    },
+    "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE")//,
+    //"token_indexers": {
+    //      "bert": {
+    //          "type": "bert-pretrained",
+    //         "pretrained_model": std.extVar("BERT_VOCAB"),
+    //          "do_lowercase": false,
+    //          "use_starting_offsets": false
+    //      },
+    //},
     "use_sep": std.extVar("USE_SEP"),
     "sci_sum": stringToBool(std.extVar("SCI_SUM")),
     "use_abstract_scores": stringToBool(std.extVar("USE_ABSTRACT_SCORES")),
@@ -44,15 +44,15 @@ local boolToInt(s) =
         "embedder_to_indexer_map": {
             "bert": if stringToBool(std.extVar("USE_SEP")) then ["bert"] else ["bert", "bert-offsets"],
             "tokens": ["tokens"],
-        },
-        "token_embedders": {
-            "bert": {
-                "type": "bert-pretrained",
-                "pretrained_model": std.extVar("BERT_WEIGHTS"),
-                "requires_grad": true,
-                "top_layer_only": false,
-            }
-        }
+        }//,
+        //"token_embedders": {
+        //    "bert": {
+        //        "type": "bert-pretrained",
+        //        "pretrained_model": std.extVar("BERT_WEIGHTS"),
+        //      "requires_grad": true,
+        //      "top_layer_only": false,
+        //    }
+        //}
     },
     "use_sep": std.extVar("USE_SEP"),
     "with_crf": std.extVar("WITH_CRF"),

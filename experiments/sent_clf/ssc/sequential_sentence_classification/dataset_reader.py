@@ -11,9 +11,8 @@ from allennlp.data import Tokenizer
 from allennlp.data.instance import Instance
 from allennlp.data.fields.field import Field
 from allennlp.data.fields import TextField, LabelField, ListField, ArrayField, MultiLabelField
-from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer, PretrainedTransformerIndexer
+from allennlp.data.token_indexers import TokenIndexer, SingleIdTokenIndexer
 from allennlp.data.tokenizers import WordTokenizer
-from transformers.tokenization_auto import AutoTokenizer
 from allennlp.data.tokenizers.token import Token
 from allennlp.data.tokenizers.word_splitter import SimpleWordSplitter, WordSplitter, SpacyWordSplitter
 
@@ -45,8 +44,8 @@ class SeqClassificationReader(DatasetReader):
                  predict: bool = False,
                  ) -> None:
         super().__init__(lazy)
-        self._tokenizer = AutoTokenizer.from_pretrained("allenai/dsp_roberta_base_tapt_hyperpartisan_news_5015")
-        self._token_indexers = PretrainedTransformerIndexer(model_name='roberta-base')
+        self._tokenizer = WordTokenizer(word_splitter=SpacyWordSplitter(pos_tags=False))
+        self._token_indexers = token_indexers or {"tokens": SingleIdTokenIndexer()}
         self.sent_max_len = sent_max_len
         self.use_sep = use_sep
         self.predict = predict
