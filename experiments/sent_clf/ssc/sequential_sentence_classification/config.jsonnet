@@ -41,7 +41,7 @@ local boolToInt(s) =
     "text_field_embedder": {
           "allow_unmatched_keys": true,
           "embedder_to_indexer_map": {
-          "bert": if stringToBool(std.extVar("USE_SEP")) then ["bert"] else ["bert", "bert-offsets"],
+          //"bert": if stringToBool(std.extVar("USE_SEP")) then ["bert"] else ["bert", "bert-offsets"],
            "tokens": ["tokens"],
        },
        "token_embedders": {
