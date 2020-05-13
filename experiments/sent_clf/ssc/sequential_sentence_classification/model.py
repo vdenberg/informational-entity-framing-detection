@@ -35,8 +35,7 @@ class SeqClassificationModel(Model):
         super(SeqClassificationModel, self).__init__(vocab)
 
         self.text_field_embedder = BasicTextFieldEmbedder(token_embedders=
-            {"tokens": PretrainedTransformerEmbedder(transformer_model_name)}, allow_unmatched_keys=True, embedder_to_indexer_map=
-            {"bert": ["bert"], "tokens": ["tokens"]})
+            {"tokens": PretrainedTransformerEmbedder(transformer_model_name)})
         self.vocab = vocab
         self.use_sep = use_sep
         self.with_crf = with_crf

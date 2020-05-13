@@ -7,7 +7,7 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 # path to bert vocab and weights
 #export BERT_VOCAB=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
 #export BERT_WEIGHTS=https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
-export MODEL_NAME='roberta-base'
+export MODEL_NAME='bert-base-base'
 
 # path to dataset files
 export TRAIN_PATH=data/basil/2_train_ssc.jsonl
