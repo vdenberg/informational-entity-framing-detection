@@ -5,7 +5,9 @@ import torch
 from torch.nn import Linear
 from allennlp.data import Vocabulary
 from allennlp.models.model import Model
-from allennlp.modules import TextFieldEmbedder, TimeDistributed, Seq2SeqEncoder
+from allennlp.modules import TimeDistributed, Seq2SeqEncoder
+from allennlp.modules.text_field_embedders import BasicTextFieldEmbedder
+from allennlp.modules.token_embedders import PretrainedTransformerEmbedder
 from allennlp.nn.util import get_text_field_mask
 from allennlp.training.metrics import F1Measure, CategoricalAccuracy
 from allennlp.modules.conditional_random_field import ConditionalRandomField
@@ -19,7 +21,7 @@ class SeqClassificationModel(Model):
     """
 
     def __init__(self, vocab: Vocabulary,
-                 text_field_embedder: TextFieldEmbedder,
+                 transformer_model_name: str = "bert-base-cased",
                  use_sep: bool = True,
                  with_crf: bool = False,
                  self_attn: Seq2SeqEncoder = None,
@@ -29,7 +31,8 @@ class SeqClassificationModel(Model):
                  ) -> None:
         super(SeqClassificationModel, self).__init__(vocab)
 
-        self.text_field_embedder = text_field_embedder
+        self.text_field_embedder = BasicTextFieldEmbedder(
+            {"tokens": PretrainedTransformerEmbedder(transformer_model_name)})
         self.vocab = vocab
         self.use_sep = use_sep
         self.with_crf = with_crf
@@ -57,9 +60,9 @@ class SeqClassificationModel(Model):
                 label_name = self.vocab.get_token_from_index(namespace='labels', index=label_index)
                 self.label_f1_metrics[label_name] = F1Measure(label_index)
 
-        encoded_senetence_dim = text_field_embedder._token_embedders['bert'].output_dim
+        encoded_sentence_dim = self.text_field_embedder._token_embedders['bert'].output_dim
 
-        ff_in_dim = encoded_senetence_dim if self.use_sep else self_attn.get_output_dim()
+        ff_in_dim = encoded_sentence_dim if self.use_sep else self_attn.get_output_dim()
         ff_in_dim += self.additional_feature_size
 
         self.time_distributed_aggregate_feedforward = TimeDistributed(Linear(ff_in_dim, self.num_labels))

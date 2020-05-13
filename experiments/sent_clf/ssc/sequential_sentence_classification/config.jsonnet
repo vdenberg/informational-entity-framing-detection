@@ -16,16 +16,8 @@ local boolToInt(s) =
     "type":"SeqClassificationReader",
     "lazy": false,
     "sent_max_len": std.extVar("SENT_MAX_LEN"),
-    "word_splitter": "bert-basic",
+    "transformer_model_name": std.extVar("MODEL_NAME"),
     "max_sent_per_example": std.extVar("MAX_SENT_PER_EXAMPLE"),
-    "token_indexers": {
-          "bert": {
-              "type": "bert-pretrained",
-              "pretrained_model": std.extVar("BERT_VOCAB"),
-              "do_lowercase": true,
-              "use_starting_offsets": false
-          },
-    },
     "use_sep": std.extVar("USE_SEP"),
     "sci_sum": stringToBool(std.extVar("SCI_SUM")),
     "use_abstract_scores": stringToBool(std.extVar("USE_ABSTRACT_SCORES")),
@@ -38,21 +30,7 @@ local boolToInt(s) =
   "evaluate_on_test": true,
   "model": {
     "type": "SeqClassificationModel",
-    "text_field_embedder": {
-        "allow_unmatched_keys": true,
-        "embedder_to_indexer_map": {
-            "bert": if stringToBool(std.extVar("USE_SEP")) then ["bert"] else ["bert", "bert-offsets"],
-            "tokens": ["tokens"],
-        },
-        "token_embedders": {
-            "bert": {
-                "type": "bert-pretrained",
-                "pretrained_model": std.extVar("BERT_WEIGHTS"),
-                "requires_grad": 'all',
-                "top_layer_only": false,
-            }
-        }
-    },
+    "transformer_model_name": std.extVar("MODEL_NAME"),
     "use_sep": std.extVar("USE_SEP"),
     "with_crf": std.extVar("WITH_CRF"),
     "bert_dropout": 0.1,

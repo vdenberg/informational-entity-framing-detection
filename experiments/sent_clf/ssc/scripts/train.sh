@@ -10,9 +10,9 @@ export NUMPY_SEED=`expr $PYTORCH_SEED / 10`
 export MODEL_NAME='roberta-base'
 
 # path to dataset files
-export TRAIN_PATH=data/CSAbstruct/train.jsonl
-export DEV_PATH=data/CSAbstruct/dev.jsonl
-export TEST_PATH=data/CSAbstruct/test.jsonl
+export TRAIN_PATH=data/basil/2_train_ssc.jsonl
+export DEV_PATH=data/basil/2_dev_ssc.jsonl
+export TEST_PATH=data/basil/2_test_ssc.jsonl
 
 # model
 export USE_SEP=true  # true for our model. false for baseline
@@ -35,5 +35,9 @@ export USE_ABSTRACT_SCORES=false
 export SCI_SUM_FAKE_SCORES=false  # use fake scores for testing
 
 CONFIG_FILE=sequential_sentence_classification/config.jsonnet
+
+if [ -d "tmp_output_dir" ]; then
+  rm -r tmp_output_dir
+fi
 
 python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR "$@"
