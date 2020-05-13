@@ -24,7 +24,7 @@ class SeqClassificationModel(Model):
 
     def __init__(self, vocab: Vocabulary,
                  text_field_embedder: TextFieldEmbedder,
-                 #transformer_model_name: str = "bert-base-cased",
+                 transformer_model_name: str = "bert-base-cased",
                  use_sep: bool = True,
                  with_crf: bool = False,
                  self_attn: Seq2SeqEncoder = None,
