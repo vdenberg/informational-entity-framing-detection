@@ -61,7 +61,7 @@ class SeqClassificationModel(Model):
                 self.label_f1_metrics[label_name] = F1Measure(label_index)
 
         print(vars(self.text_field_embedder))
-        print(self.text_field_embedder._token_embedders))
+        print(self.text_field_embedder._token_embedders)
         exit(0)
         encoded_sentence_dim = self.text_field_embedder._token_embedders['bert'].output_dim
 
