@@ -52,7 +52,7 @@ local boolToInt(s) =
         //      "top_layer_only": false,
         //    }
         //}
-    },
+    //},
     "use_sep": std.extVar("USE_SEP"),
     "with_crf": std.extVar("WITH_CRF"),
     "bert_dropout": 0.1,
