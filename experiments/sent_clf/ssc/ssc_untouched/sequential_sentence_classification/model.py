@@ -95,8 +95,6 @@ class SeqClassificationModel(Model):
 
         # embedded_sentences: batch_size, num_sentences, sentence_length, embedding_size
 
-        print(sentences)
-        exit(0)
         '''
         {'bert': tensor([[[  102, 17678, 30126,  ...,     0,     0,     0]],
 
@@ -125,6 +123,9 @@ class SeqClassificationModel(Model):
         [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
 
         embedded_sentences = self.text_field_embedder(sentences)
+
+        print(embedded_sentences)
+        exit(0)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
 
