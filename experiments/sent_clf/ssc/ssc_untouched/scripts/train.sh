@@ -35,4 +35,8 @@ export SCI_SUM_FAKE_SCORES=false  # use fake scores for testing
 
 CONFIG_FILE=sequential_sentence_classification/config.jsonnet
 
+if [ -d "tmp_output_dir" ]; then
+  rm -r tmp_output_dir
+fi
+
 python -m allennlp.run train $CONFIG_FILE  --include-package sequential_sentence_classification -s $SERIALIZATION_DIR "$@"
