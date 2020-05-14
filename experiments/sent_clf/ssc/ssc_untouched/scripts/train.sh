@@ -18,7 +18,7 @@ export USE_SEP=true  # true for our model. false for baseline
 export WITH_CRF=false  # CRF only works for the baseline
 
 # training params
-export cuda_device=0
+export cuda_device=-1
 export BATCH_SIZE=4
 export LR=5e-5
 export TRAINING_DATA_INSTANCES=1668

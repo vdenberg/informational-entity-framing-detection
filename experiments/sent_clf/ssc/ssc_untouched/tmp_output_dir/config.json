@@ -1,0 +1,110 @@
+{
+    "dataset_reader": {
+        "type": "SeqClassificationReader",
+        "lazy": false,
+        "max_sent_per_example": "10",
+        "sci_sum": false,
+        "sci_sum_fake_scores": false,
+        "sent_max_len": "80",
+        "token_indexers": {
+            "bert": {
+                "type": "bert-pretrained",
+                "do_lowercase": true,
+                "pretrained_model": "https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab",
+                "use_starting_offsets": false
+            }
+        },
+        "use_abstract_scores": false,
+        "use_sep": "true",
+        "word_splitter": "bert-basic"
+    },
+    "iterator": {
+        "type": "bucket",
+        "batch_size": 4,
+        "biggest_batch_first": true,
+        "cache_instances": true,
+        "sorting_keys": [
+            [
+                "sentences",
+                "num_fields"
+            ]
+        ]
+    },
+    "model": {
+        "type": "SeqClassificationModel",
+        "additional_feature_size": 0,
+        "bert_dropout": 0.1,
+        "sci_sum": false,
+        "self_attn": {
+            "type": "stacked_self_attention",
+            "feedforward_hidden_dim": 50,
+            "hidden_dim": 100,
+            "input_dim": 768,
+            "num_attention_heads": 2,
+            "num_layers": 2,
+            "projection_dim": 100
+        },
+        "text_field_embedder": {
+            "allow_unmatched_keys": true,
+            "embedder_to_indexer_map": {
+                "bert": [
+                    "bert"
+                ],
+                "tokens": [
+                    "tokens"
+                ]
+            },
+            "token_embedders": {
+                "bert": {
+                    "type": "bert-pretrained",
+                    "pretrained_model": "https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz",
+                    "requires_grad": "all",
+                    "top_layer_only": false
+                }
+            }
+        },
+        "use_sep": "true",
+        "with_crf": "false"
+    },
+    "train_data_path": "data/CSAbstruct/train.jsonl",
+    "validation_data_path": "data/CSAbstruct/dev.jsonl",
+    "test_data_path": "data/CSAbstruct/test.jsonl",
+    "trainer": {
+        "cuda_device": -1,
+        "grad_clipping": 1,
+        "gradient_accumulation_batch_size": 32,
+        "learning_rate_scheduler": {
+            "type": "slanted_triangular",
+            "cut_frac": 0.1,
+            "num_epochs": 2,
+            "num_steps_per_epoch": 52.125
+        },
+        "min_delta": 0.001,
+        "model_save_interval": 3600,
+        "num_epochs": 2,
+        "optimizer": {
+            "type": "bert_adam",
+            "lr": "5e-5",
+            "max_grad_norm": 1,
+            "parameter_groups": [
+                [
+                    [
+                        "bias",
+                        "LayerNorm.bias",
+                        "LayerNorm.weight",
+                        "layer_norm.weight"
+                    ],
+                    {
+                        "weight_decay": 0
+                    }
+                ]
+            ],
+            "t_total": -1,
+            "weight_decay": 0.01
+        },
+        "patience": 5,
+        "should_log_learning_rate": true,
+        "validation_metric": "+acc"
+    },
+    "evaluate_on_test": true
+}

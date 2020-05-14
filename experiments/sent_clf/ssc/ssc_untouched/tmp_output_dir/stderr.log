@@ -1,0 +1,110 @@
+  0%|          | 0/898823 [00:00<?, ?B/s]
+  2%|1         | 17408/898823 [00:00<00:06, 138887.30B/s]
+  6%|5         | 52224/898823 [00:00<00:05, 165681.48B/s]
+ 14%|#3        | 121856/898823 [00:00<00:03, 205224.02B/s]
+ 31%|###       | 278528/898823 [00:00<00:02, 272290.91B/s]
+ 48%|####8     | 435200/898823 [00:00<00:01, 352127.78B/s]
+ 66%|######5   | 591872/898823 [00:00<00:00, 455681.65B/s]
+ 85%|########5 | 765952/898823 [00:00<00:00, 575173.81B/s]
+100%|##########| 898823/898823 [00:00<00:00, 945749.90B/s]
+
+  0%|          | 0/456318 [00:00<?, ?B/s]
+  4%|3         | 17408/456318 [00:00<00:03, 128929.94B/s]
+ 11%|#1        | 52224/456318 [00:00<00:02, 154001.26B/s]
+ 27%|##6       | 121856/456318 [00:00<00:01, 199290.18B/s]
+ 61%|######1   | 278528/456318 [00:00<00:00, 264492.27B/s]
+100%|##########| 456318/456318 [00:00<00:00, 840678.79B/s]
+
+0it [00:00, ?it/s]
+23it [00:00, 224.61it/s]
+55it [00:00, 245.96it/s]
+79it [00:00, 222.98it/s]
+116it [00:00, 252.07it/s]
+158it [00:00, 285.31it/s]
+206it [00:00, 323.31it/s]
+256it [00:00, 361.09it/s]
+304it [00:00, 388.72it/s]
+357it [00:00, 421.48it/s]
+411it [00:01, 450.64it/s]
+459it [00:01, 387.32it/s]
+507it [00:01, 409.35it/s]
+559it [00:01, 436.04it/s]
+613it [00:01, 462.30it/s]
+678it [00:01, 505.95it/s]
+738it [00:01, 529.04it/s]
+794it [00:01, 432.12it/s]
+851it [00:02, 464.76it/s]
+913it [00:02, 500.72it/s]
+980it [00:02, 540.99it/s]
+1040it [00:02, 555.19it/s]
+1107it [00:02, 583.26it/s]
+1168it [00:02, 586.05it/s]
+1229it [00:02, 446.90it/s]
+1290it [00:02, 485.59it/s]
+1355it [00:02, 525.25it/s]
+1420it [00:03, 556.30it/s]
+1480it [00:03, 563.74it/s]
+1548it [00:03, 592.78it/s]
+1610it [00:03, 567.68it/s]
+1668it [00:03, 484.99it/s]
+
+0it [00:00, ?it/s]
+41it [00:00, 195.54it/s]
+101it [00:00, 244.70it/s]
+171it [00:00, 303.53it/s]
+234it [00:00, 359.15it/s]
+295it [00:00, 483.81it/s]
+
+0it [00:00, ?it/s]
+67it [00:00, 667.17it/s]
+149it [00:00, 704.61it/s]
+225it [00:00, 718.88it/s]
+226it [00:00, 743.34it/s]
+
+0it [00:00, ?it/s]
+2189it [00:00, 26829.60it/s]
+
+Traceback (most recent call last):
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 193, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/run.py", line 21, in <module>
+    run()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/run.py", line 18, in run
+    main(prog="allennlp")
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/__init__.py", line 102, in main
+    args.func(args)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 124, in train_model_from_args
+    args.cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 168, in train_model_from_file
+    cache_directory, cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/commands/train.py", line 226, in train_model
+    cache_prefix)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/training/trainer_pieces.py", line 65, in from_params
+    model = Model.from_params(vocab=vocab, params=params.pop('model'))
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 386, in from_params
+    kwargs = create_kwargs(cls, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 133, in create_kwargs
+    kwargs[name] = construct_arg(cls, name, annotation, param.default, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 229, in construct_arg
+    return annotation.from_params(params=subparams, **subextras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in from_params
+    for name, subparams in token_embedder_params.items()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/modules/text_field_embedders/basic_text_field_embedder.py", line 160, in <dictcomp>
+    for name, subparams in token_embedder_params.items()
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 365, in from_params
+    return subclass.from_params(params=params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 386, in from_params
+    kwargs = create_kwargs(cls, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 133, in create_kwargs
+    kwargs[name] = construct_arg(cls, name, annotation, param.default, params, **extras)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/from_params.py", line 243, in construct_arg
+    return params.pop_bool(name, default) if optional else params.pop_bool(name)
+  File "/Users/ester/.conda/envs/InformationalBiasDetection/lib/python3.7/site-packages/allennlp/common/params.py", line 304, in pop_bool
+    raise ValueError("Cannot convert variable to bool: " + value)
+ValueError: Cannot convert variable to bool: all

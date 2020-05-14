@@ -1,0 +1,71 @@
+2020-05-14 14:59:26,636 - INFO - allennlp.common.params - random_seed = 15270
+2020-05-14 14:59:26,636 - INFO - allennlp.common.params - numpy_seed = 152
+2020-05-14 14:59:26,636 - INFO - allennlp.common.params - pytorch_seed = 1527
+2020-05-14 14:59:26,637 - INFO - allennlp.common.checks - Pytorch version: 1.4.0
+2020-05-14 14:59:26,638 - INFO - allennlp.common.params - evaluate_on_test = True
+2020-05-14 14:59:26,638 - INFO - allennlp.common.params - validation_dataset_reader = None
+2020-05-14 14:59:26,639 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.data.dataset_readers.dataset_reader.DatasetReader'> from params {'lazy': False, 'max_sent_per_example': '10', 'sci_sum': False, 'sci_sum_fake_scores': False, 'sent_max_len': '80', 'token_indexers': {'bert': {'do_lowercase': True, 'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab', 'type': 'bert-pretrained', 'use_starting_offsets': False}}, 'type': 'SeqClassificationReader', 'use_abstract_scores': False, 'use_sep': 'true', 'word_splitter': 'bert-basic'} and extras set()
+2020-05-14 14:59:26,639 - INFO - allennlp.common.params - dataset_reader.type = SeqClassificationReader
+2020-05-14 14:59:26,639 - INFO - allennlp.common.from_params - instantiating class <class 'sequential_sentence_classification.dataset_reader.SeqClassificationReader'> from params {'lazy': False, 'max_sent_per_example': '10', 'sci_sum': False, 'sci_sum_fake_scores': False, 'sent_max_len': '80', 'token_indexers': {'bert': {'do_lowercase': True, 'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab', 'type': 'bert-pretrained', 'use_starting_offsets': False}}, 'use_abstract_scores': False, 'use_sep': 'true', 'word_splitter': 'bert-basic'} and extras set()
+2020-05-14 14:59:26,639 - INFO - allennlp.common.params - dataset_reader.lazy = False
+2020-05-14 14:59:26,639 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.data.token_indexers.token_indexer.TokenIndexer'> from params {'do_lowercase': True, 'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab', 'type': 'bert-pretrained', 'use_starting_offsets': False} and extras set()
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.type = bert-pretrained
+2020-05-14 14:59:26,640 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.data.token_indexers.wordpiece_indexer.PretrainedBertIndexer'> from params {'do_lowercase': True, 'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab', 'use_starting_offsets': False} and extras set()
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.pretrained_model = https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.use_starting_offsets = False
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.do_lowercase = True
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.never_lowercase = None
+2020-05-14 14:59:26,640 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.max_pieces = 512
+2020-05-14 14:59:26,641 - INFO - allennlp.common.params - dataset_reader.token_indexers.bert.truncate_long_sequences = True
+2020-05-14 14:59:27,785 - INFO - pytorch_pretrained_bert.tokenization - loading vocabulary file https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scivocab_uncased.vocab from cache at /Users/ester/.pytorch_pretrained_bert/d2fac719b6d663ae040cb698dfbc553ad2ba1796a6cb1acd74a4cd69168a6559.60287becc5ab96d85a4bf377eb90feaf3b9c80d3b23e84311dccd3588f56d4fb
+2020-05-14 14:59:27,828 - INFO - allennlp.common.params - dataset_reader.word_splitter = bert-basic
+2020-05-14 14:59:27,829 - INFO - allennlp.common.registrable - instantiating registered subclass bert-basic of <class 'allennlp.data.tokenizers.word_splitter.WordSplitter'>
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.sent_max_len = 80
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.max_sent_per_example = 10
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.use_sep = true
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.sci_sum = False
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.use_abstract_scores = False
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.sci_sum_fake_scores = False
+2020-05-14 14:59:27,829 - INFO - allennlp.common.params - dataset_reader.predict = False
+2020-05-14 14:59:28,650 - INFO - pytorch_transformers.file_utils - https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-vocab.json not found in cache, downloading to /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpn88dpy44
+2020-05-14 14:59:30,538 - INFO - pytorch_transformers.file_utils - copying /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpn88dpy44 to cache at /Users/ester/.cache/torch/pytorch_transformers/d0c5776499adc1ded22493fae699da0971c1ee4c2587111707a4d177d20257a2.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+2020-05-14 14:59:30,541 - INFO - pytorch_transformers.file_utils - creating metadata file for /Users/ester/.cache/torch/pytorch_transformers/d0c5776499adc1ded22493fae699da0971c1ee4c2587111707a4d177d20257a2.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+2020-05-14 14:59:30,542 - INFO - pytorch_transformers.file_utils - removing temp file /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpn88dpy44
+2020-05-14 14:59:31,380 - INFO - pytorch_transformers.file_utils - https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-merges.txt not found in cache, downloading to /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpjmkrk7ee
+2020-05-14 14:59:32,586 - INFO - pytorch_transformers.file_utils - copying /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpjmkrk7ee to cache at /Users/ester/.cache/torch/pytorch_transformers/b35e7cd126cd4229a746b5d5c29a749e8e84438b14bcdb575950584fe33207e8.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+2020-05-14 14:59:32,587 - INFO - pytorch_transformers.file_utils - creating metadata file for /Users/ester/.cache/torch/pytorch_transformers/b35e7cd126cd4229a746b5d5c29a749e8e84438b14bcdb575950584fe33207e8.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+2020-05-14 14:59:32,588 - INFO - pytorch_transformers.file_utils - removing temp file /var/folders/s0/015n78c544l93860n29z_q4h0000gp/T/tmpjmkrk7ee
+2020-05-14 14:59:32,589 - INFO - pytorch_transformers.tokenization_utils - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-vocab.json from cache at /Users/ester/.cache/torch/pytorch_transformers/d0c5776499adc1ded22493fae699da0971c1ee4c2587111707a4d177d20257a2.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+2020-05-14 14:59:32,589 - INFO - pytorch_transformers.tokenization_utils - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-merges.txt from cache at /Users/ester/.cache/torch/pytorch_transformers/b35e7cd126cd4229a746b5d5c29a749e8e84438b14bcdb575950584fe33207e8.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+2020-05-14 14:59:34,290 - INFO - pytorch_transformers.tokenization_utils - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-vocab.json from cache at /Users/ester/.cache/torch/pytorch_transformers/d0c5776499adc1ded22493fae699da0971c1ee4c2587111707a4d177d20257a2.ef00af9e673c7160b4d41cfda1f48c5f4cba57d5142754525572a846a1ab1b9b
+2020-05-14 14:59:34,290 - INFO - pytorch_transformers.tokenization_utils - loading file https://s3.amazonaws.com/models.huggingface.co/bert/roberta-base-merges.txt from cache at /Users/ester/.cache/torch/pytorch_transformers/b35e7cd126cd4229a746b5d5c29a749e8e84438b14bcdb575950584fe33207e8.70bec105b4158ed9a1747fea67a43f5dee97855c64d62b6ec3742f4cfdb5feda
+2020-05-14 14:59:34,385 - INFO - allennlp.data.token_indexers.pretrained_transformer_indexer - Using token indexer padding value of 1
+2020-05-14 14:59:34,386 - INFO - allennlp.common.params - train_data_path = data/CSAbstruct/train.jsonl
+2020-05-14 14:59:34,386 - INFO - allennlp.training.util - Reading training data from data/CSAbstruct/train.jsonl
+2020-05-14 14:59:37,826 - INFO - allennlp.common.params - validation_data_path = data/CSAbstruct/dev.jsonl
+2020-05-14 14:59:37,826 - INFO - allennlp.training.util - Reading validation data from data/CSAbstruct/dev.jsonl
+2020-05-14 14:59:38,436 - INFO - allennlp.common.params - test_data_path = data/CSAbstruct/test.jsonl
+2020-05-14 14:59:38,436 - INFO - allennlp.training.util - Reading test data from data/CSAbstruct/test.jsonl
+2020-05-14 14:59:38,744 - INFO - allennlp.training.trainer_pieces - From dataset instances, test, train, validation will be considered for vocabulary creation.
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.type = None
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.extend = False
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.directory_path = None
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.min_count = None
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.max_vocab_size = None
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.non_padded_namespaces = ('*tags', '*labels')
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.pretrained_files = {}
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.min_pretrained_embeddings = None
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.only_include_pretrained_words = False
+2020-05-14 14:59:38,744 - INFO - allennlp.common.params - vocabulary.tokens_to_add = None
+2020-05-14 14:59:38,744 - INFO - allennlp.data.vocabulary - Fitting token dictionary from dataset.
+2020-05-14 14:59:38,827 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.models.model.Model'> from params {'additional_feature_size': 0, 'bert_dropout': 0.1, 'sci_sum': False, 'self_attn': {'feedforward_hidden_dim': 50, 'hidden_dim': 100, 'input_dim': 768, 'num_attention_heads': 2, 'num_layers': 2, 'projection_dim': 100, 'type': 'stacked_self_attention'}, 'text_field_embedder': {'allow_unmatched_keys': True, 'embedder_to_indexer_map': {'bert': ['bert'], 'tokens': ['tokens']}, 'token_embedders': {'bert': {'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz', 'requires_grad': 'all', 'top_layer_only': False, 'type': 'bert-pretrained'}}}, 'type': 'SeqClassificationModel', 'use_sep': 'true', 'with_crf': 'false'} and extras {'vocab'}
+2020-05-14 14:59:38,827 - INFO - allennlp.common.params - model.type = SeqClassificationModel
+2020-05-14 14:59:38,827 - INFO - allennlp.common.from_params - instantiating class <class 'sequential_sentence_classification.model.SeqClassificationModel'> from params {'additional_feature_size': 0, 'bert_dropout': 0.1, 'sci_sum': False, 'self_attn': {'feedforward_hidden_dim': 50, 'hidden_dim': 100, 'input_dim': 768, 'num_attention_heads': 2, 'num_layers': 2, 'projection_dim': 100, 'type': 'stacked_self_attention'}, 'text_field_embedder': {'allow_unmatched_keys': True, 'embedder_to_indexer_map': {'bert': ['bert'], 'tokens': ['tokens']}, 'token_embedders': {'bert': {'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz', 'requires_grad': 'all', 'top_layer_only': False, 'type': 'bert-pretrained'}}}, 'use_sep': 'true', 'with_crf': 'false'} and extras {'vocab'}
+2020-05-14 14:59:38,827 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.modules.text_field_embedders.text_field_embedder.TextFieldEmbedder'> from params {'allow_unmatched_keys': True, 'embedder_to_indexer_map': {'bert': ['bert'], 'tokens': ['tokens']}, 'token_embedders': {'bert': {'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz', 'requires_grad': 'all', 'top_layer_only': False, 'type': 'bert-pretrained'}}} and extras {'vocab'}
+2020-05-14 14:59:38,827 - INFO - allennlp.common.params - model.text_field_embedder.type = basic
+2020-05-14 14:59:38,828 - INFO - allennlp.common.params - model.text_field_embedder.allow_unmatched_keys = True
+2020-05-14 14:59:38,828 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.modules.token_embedders.token_embedder.TokenEmbedder'> from params {'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz', 'requires_grad': 'all', 'top_layer_only': False, 'type': 'bert-pretrained'} and extras {'vocab'}
+2020-05-14 14:59:38,828 - INFO - allennlp.common.params - model.text_field_embedder.token_embedders.bert.type = bert-pretrained
+2020-05-14 14:59:38,828 - INFO - allennlp.common.from_params - instantiating class <class 'allennlp.modules.token_embedders.bert_token_embedder.PretrainedBertEmbedder'> from params {'pretrained_model': 'https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz', 'requires_grad': 'all', 'top_layer_only': False} and extras {'vocab'}
+2020-05-14 14:59:38,828 - INFO - allennlp.common.params - model.text_field_embedder.token_embedders.bert.pretrained_model = https://ai2-s2-research.s3-us-west-2.amazonaws.com/scibert/allennlp_files/scibert_scivocab_uncased.tar.gz
+2020-05-14 14:59:38,828 - INFO - allennlp.common.params - model.text_field_embedder.token_embedders.bert.requires_grad = all

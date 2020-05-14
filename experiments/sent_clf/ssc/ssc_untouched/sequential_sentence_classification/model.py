@@ -32,7 +32,7 @@ class SeqClassificationModel(Model):
         super(SeqClassificationModel, self).__init__(vocab)
 
         #self.text_field_embedder = text_field_embedder
-        self.text_field_embedder = PretrainedTransformerEmbedder('roberta-base')
+        self.text_field_embedder = PretrainedTransformerEmbedder('bert-base-cased')
 
         self.vocab = vocab
         self.use_sep = use_sep
@@ -125,6 +125,7 @@ class SeqClassificationModel(Model):
         [[1, 1, 1,  ..., 0, 0, 0]],
 
         [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
+
 
         embedded_sentences = self.text_field_embedder(sentences['roberta'])
 
