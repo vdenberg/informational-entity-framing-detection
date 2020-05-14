@@ -97,6 +97,32 @@ class SeqClassificationModel(Model):
 
         print(sentences)
         exit(0)
+        '''
+        {'bert': tensor([[[  102, 17678, 30126,  ...,     0,     0,     0]],
+
+        [[  102,   482,   131,  ...,  5201,   205,   103]],
+
+        [[  102,   111,  4626,  ...,     0,     0,     0]],
+
+        [[  102,   453, 25791,  ...,     0,     0,     0]]], device='cuda:0'), 'bert-offsets': tensor([[[  2,   3,   4,  ...,   0,   0,   0]],
+
+        [[  1,   2,   3,  ..., 278, 279, 280]],
+
+        [[  1,   4,   8,  ...,   0,   0,   0]],
+
+        [[  1,   3,   4,  ...,   0,   0,   0]]], device='cuda:0'), 'bert-type-ids': tensor([[[0, 0, 0,  ..., 0, 0, 0]],
+
+        [[0, 0, 0,  ..., 9, 9, 9]],
+
+        [[0, 0, 0,  ..., 0, 0, 0]],
+
+        [[0, 0, 0,  ..., 0, 0, 0]]], device='cuda:0'), 'mask': tensor([[[1, 1, 1,  ..., 0, 0, 0]],
+
+        [[1, 1, 1,  ..., 1, 1, 1]],
+
+        [[1, 1, 1,  ..., 0, 0, 0]],
+
+        [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
 
         embedded_sentences = self.text_field_embedder(sentences)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
