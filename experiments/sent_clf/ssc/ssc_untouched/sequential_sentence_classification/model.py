@@ -10,6 +10,8 @@ from allennlp.nn.util import get_text_field_mask
 from allennlp.training.metrics import F1Measure, CategoricalAccuracy
 from allennlp.modules.conditional_random_field import ConditionalRandomField
 
+from allennlp.modules.token_embedders import PretrainedTransformerEmbedder
+
 logger = logging.getLogger(__name__)
 
 @Model.register("SeqClassificationModel")
@@ -29,7 +31,9 @@ class SeqClassificationModel(Model):
                  ) -> None:
         super(SeqClassificationModel, self).__init__(vocab)
 
-        self.text_field_embedder = text_field_embedder
+        #self.text_field_embedder = text_field_embedder
+        self.text_field_embedder = PretrainedTransformerEmbedder('roberta-base')
+
         self.vocab = vocab
         self.use_sep = use_sep
         self.with_crf = with_crf
@@ -122,7 +126,7 @@ class SeqClassificationModel(Model):
 
         [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
 
-        embedded_sentences = self.text_field_embedder(sentences)
+        embedded_sentences = self.text_field_embedder(sentences['roberta'])
 
         print(embedded_sentences)
         exit(0)
