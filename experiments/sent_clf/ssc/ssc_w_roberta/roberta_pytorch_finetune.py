@@ -99,7 +99,7 @@ if __name__ == '__main__':
     table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-    for SEED in [SEED_VALS]:
+    for SEED in SEED_VALS:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
