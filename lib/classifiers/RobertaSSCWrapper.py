@@ -104,8 +104,9 @@ class RobertaSSC(BertPreTrainedModel):
             self.label_f1_metrics = {}
 
             # define F1 metrics per label
+            self.label_vocab = {0: 0, 1: 1}
             for label_index in range(self.num_labels):
-                label_name = {0: 0, 1: 1}[label_index]
+                label_name = self.label_vocab[label_index]
                 self.label_f1_metrics[label_name] = F1Measure(label_index)
 
         encoded_sentence_dim = 768
@@ -216,7 +217,7 @@ class RobertaSSC(BertPreTrainedModel):
 
                 # compute F1 per label
                 for label_index in range(self.num_labels):
-                    label_name = self.vocab.get_token_from_index(namespace='labels', index=label_index)
+                    label_name = self.self.label_vocab[label_index]
                     metric = self.label_f1_metrics[label_name]
                     metric(flattened_probs, flattened_gold, mask=evaluation_mask)
 
