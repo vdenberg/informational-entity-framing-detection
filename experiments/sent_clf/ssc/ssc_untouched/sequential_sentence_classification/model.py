@@ -137,6 +137,8 @@ class SeqClassificationModel(Model):
 
         print(embedded_sentences.shape)
         print(labels.shape)
+        #torch.Size([4, 1, 282, 768])
+        #torch.Size([4, 10])
         exit(0)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
