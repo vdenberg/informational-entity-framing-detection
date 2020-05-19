@@ -200,12 +200,6 @@ class RobertaSSC(BertPreTrainedModel):
         logits = self.classifier(sequence_output)
         probs = self.sigm(logits)
 
-        print(logits)
-        print(probs)
-        print(label_logits)
-        print(label_probs)
-        exit(0)
-
         if labels is not None:
             # Compute cross entropy loss
             flattened_logits = label_logits.view((batch_size * num_sentences), self.num_labels)
