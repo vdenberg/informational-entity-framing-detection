@@ -139,7 +139,7 @@ class SeqClassificationModel(Model):
         print(labels.shape)
         #torch.Size([4, 1, 282, 768])
         #torch.Size([4, 10])
-        exit(0)
+
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
 
@@ -150,6 +150,8 @@ class SeqClassificationModel(Model):
             sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
             embedded_sentences = embedded_sentences[sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
                                                                         # returns num_sentences_per_batch x vector_len
+            print(embedded_sentences.shape)
+            exit(0)
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
             # for the rest of the code in this model to work, think of the data we have as one example
