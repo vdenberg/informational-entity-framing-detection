@@ -368,6 +368,7 @@ class Inferencer():
                 #print(probs)
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
+                print(probs)
                 pred = np.argmax(probs, axis=1)
             preds.extend(pred)
 
