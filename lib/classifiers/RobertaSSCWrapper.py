@@ -223,7 +223,7 @@ class RobertaSSC(BertPreTrainedModel):
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
         #outputs = (logits, label_probs, sequence_output) + outputs[2:]
-        outputs = (label_logits, sequence_output) + outputs[2:]
+        outputs = (label_logits, label_probs, sequence_output) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
@@ -338,7 +338,7 @@ class Inferencer():
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, sequence_output = outputs
+                logits, probs, sequence_output = outputs
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
@@ -367,9 +367,8 @@ class Inferencer():
             elif output_mode == 'classification':
                 #print(probs)
                 #assert len(probs[0]) == 2
-                print(logits)
-                pred = np.argmax(logits, axis=1)
-                print(pred)
+                #pred = np.argmax(logits, axis=1)
+                pred = np.argmax(probs, axis=1)
             preds.extend(pred)
 
         model.train()
