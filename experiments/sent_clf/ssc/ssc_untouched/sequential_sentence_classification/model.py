@@ -31,8 +31,8 @@ class SeqClassificationModel(Model):
                  ) -> None:
         super(SeqClassificationModel, self).__init__(vocab)
 
-        #self.text_field_embedder = text_field_embedder
-        self.text_field_embedder = PretrainedTransformerEmbedder('bert-base-cased')
+        self.text_field_embedder = text_field_embedder
+        #self.text_field_embedder = PretrainedTransformerEmbedder('bert-base-cased')
 
         self.vocab = vocab
         self.use_sep = use_sep
