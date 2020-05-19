@@ -133,14 +133,15 @@ class RobertaSSC(BertPreTrainedModel):
         sequence_output = outputs[0]
         embedded_sentences = sequence_output
 
-        mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
+        #mask = get_text_field_mask(input_ids, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
 
         if self.use_sep:
             # The following code collects vectors of the SEP tokens from all the examples in the batch,
             # and arrange them in one list. It does the same for the labels and confidences.
             # TODO: replace 103 with '[SEP]'
-            sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
+            #sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
+            sentences_mask = input_ids == 3  # mask for all the SEP tokens in the batch
             embedded_sentences = embedded_sentences[
                 sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
             # returns num_sentences_per_batch x vector_len
@@ -199,12 +200,15 @@ class RobertaSSC(BertPreTrainedModel):
                     additional_features = additional_features.unsqueeze(dim=0)
             '''
         else:
+            pass
+            '''
             # ['CLS'] token
             embedded_sentences = embedded_sentences[:, :, 0, :]
             embedded_sentences = self.dropout(embedded_sentences)
             batch_size, num_sentences, _ = embedded_sentences.size()
             sent_mask = (mask.sum(dim=2) != 0)
             embedded_sentences = self.self_attn(embedded_sentences, sent_mask)
+            '''
 
         label_logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
         label_probs = torch.nn.functional.softmax(label_logits, dim=-1)
