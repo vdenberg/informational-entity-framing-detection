@@ -162,7 +162,6 @@ class RobertaSSC(BertPreTrainedModel):
             embedded_sentences = embedded_sentences.unsqueeze(dim=0)
             embedded_sentences = self.dropout(embedded_sentences)
 
-
             if labels is not None:
                 if self.labels_are_scores:
                     labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
@@ -176,32 +175,14 @@ class RobertaSSC(BertPreTrainedModel):
                 num_labels = labels.shape[0]
                 if num_labels != num_sentences:  # bert truncates long sentences, so some of the SEP tokens might be gone
                     assert num_labels > num_sentences  # but `num_labels` should be at least greater than `num_sentences`
-                    logger.warning(f'Found {num_labels} labels but {num_sentences} sentences')
+                    #logger.warning(f'Found {num_labels} labels but {num_sentences} sentences')
                     labels = labels[:num_sentences]  # Ignore some labels. This is ok for training but bad for testing.
                     # We are ignoring this problem for now.
                     # TODO: fix, at least for testing
 
-                # do the same for `confidences`
-                if confidences is not None:
-                    num_confidences = confidences.shape[0]
-                    if num_confidences != num_sentences:
-                        assert num_confidences > num_sentences
-                        confidences = confidences[:num_sentences]
-
-                # and for `additional_features`
-                if additional_features is not None:
-                    num_additional_features = additional_features.shape[0]
-                    if num_additional_features != num_sentences:
-                        assert num_additional_features > num_sentences
-                        additional_features = additional_features[:num_sentences]
-
                 # similar to `embedded_sentences`, add an additional dimension that corresponds to batch_size=1
                 labels = labels.unsqueeze(dim=0)
-                if confidences is not None:
-                    confidences = confidences.unsqueeze(dim=0)
-                if additional_features is not None:
-                    additional_features = additional_features.unsqueeze(dim=0)
-            '''
+
         else:
             pass
             '''
