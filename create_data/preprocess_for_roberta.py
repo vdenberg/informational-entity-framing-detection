@@ -22,7 +22,7 @@ def preprocess(rows):
     return features
 
 
-def enforce_max_sent_per_example(self, sentences, max_sent_per_example, labels=None):
+def enforce_max_sent_per_example(sentences, max_sent_per_example, labels=None):
     """
     Splits examples with len(sentences) > self.max_sent_per_example into multiple smaller examples
     with len(sentences) <= self.max_sent_per_example.
