@@ -198,7 +198,12 @@ class RobertaSSC(BertPreTrainedModel):
         label_probs = torch.nn.functional.softmax(label_logits, dim=-1)
 
         logits = self.classifier(sequence_output)
-        #probs = self.sigm(logits)
+        probs = self.sigm(logits)
+
+        print(logits)
+        print(probs)
+        print(label_logits)
+        print(label_probs)
 
         if labels is not None:
             # Compute cross entropy loss
