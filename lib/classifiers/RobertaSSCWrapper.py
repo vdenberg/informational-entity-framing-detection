@@ -217,7 +217,7 @@ class RobertaSSC(BertPreTrainedModel):
 
                 # compute F1 per label
                 for label_index in range(self.num_labels):
-                    label_name = self.self.label_vocab[label_index]
+                    label_name = self.label_vocab[label_index]
                     metric = self.label_f1_metrics[label_name]
                     metric(flattened_probs, flattened_gold, mask=evaluation_mask)
 
