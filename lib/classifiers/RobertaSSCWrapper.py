@@ -134,8 +134,8 @@ class RobertaSSC(BertPreTrainedModel):
         embedded_sentences = sequence_output  # torch.Size([6, 124, 768])
 
         #mask = get_text_field_mask(input_ids, num_wrapping_dims=1).float()
-        print(input_ids)
-        print(labels)
+        print(input_ids.shape)
+        print(labels.shape)
         exit(0)
         #batch_size, num_sentences, _, _ = embedded_sentences.size()
         batch_size, num_sentences, _ = embedded_sentences.size()
