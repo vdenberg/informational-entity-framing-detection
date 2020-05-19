@@ -204,6 +204,7 @@ class RobertaSSC(BertPreTrainedModel):
         print(probs)
         print(label_logits)
         print(label_probs)
+        exit(0)
 
         if labels is not None:
             # Compute cross entropy loss
@@ -374,7 +375,8 @@ class Inferencer():
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
                 print(probs)
-                pred = np.argmax(probs, axis=1)
+                #pred = np.argmax(probs, axis=1)
+                pred = probs.argmax(axis=1).tolist()
             preds.extend(pred)
 
         model.train()
