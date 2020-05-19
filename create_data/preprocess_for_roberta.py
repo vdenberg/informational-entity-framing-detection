@@ -21,6 +21,57 @@ def preprocess(rows):
             print(status)
     return features
 
+def enforce_max_sent_per_example(self, sentences, max_sent_per_example, labels=None):
+    """
+    Splits examples with len(sentences) > self.max_sent_per_example into multiple smaller examples
+    with len(sentences) <= self.max_sent_per_example.
+    Recursively split the list of sentences into two halves until each half
+    has len(sentences) < <= self.max_sent_per_example. The goal is to produce splits that are of almost
+    equal size to avoid the scenario where all splits are of size
+    self.max_sent_per_example then the last split is 1 or 2 sentences
+    This will result into losing context around the edges of each examples.
+    """
+    if labels is not None:
+        assert len(sentences) == len(labels)
+
+    if len(sentences) > max_sent_per_example > 0:
+        i = len(sentences) // 2
+        l1 = enforce_max_sent_per_example(
+                sentences[:i], None if labels is None else labels[i:])
+        l2 = enforce_max_sent_per_example(
+                sentences[i:], None if labels is None else labels[i:])
+        return l1 + l2
+    else:
+        return [sentences]
+
+
+def extract_article_id(feat_id):
+    if not feat_id[1].isdigit():
+        feat_id = '0' + feat_id
+    return feat_id[:5]
+
+
+def bunch_features(features, pad_token, max_doc_len, max_sent_len):
+    bunched_by_article = {}
+    for feat in features:
+        article_id = extract_article_id(feat.my_id)
+        bunched_by_article.setdefault(article_id, [])
+        unpadded = [el for el in feat.input_ids if el != pad_token]
+        bunched_by_article[feat.my_id].append(unpadded)
+
+    print("Check these numbers:")
+    print("Nr of articles: ", len(bunched_by_article))
+    print("Max doc len:", max([len(sents) for sents in bunched_by_article.values]))
+
+    unbunched = []
+    for article_id, sentences in bunched_by_article.items():
+        grouped_sentences = enforce_max_sent_per_example(sentences)
+        unbunched.extend(grouped_sentences)
+
+    print("Max ex len:", max([len(sents) for sents in unbunched]))
+
+    return unbunched
+
 
 # choose sentence or bio labels
 task = 'sent_clf'
@@ -28,6 +79,9 @@ DATA_DIR = f'data/{task}/ft_input'
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
+MAX_DOC_LEN = 76
+MAX_SENT_LEN = 122
+MAX_EX_LEN = 10
 
 # structure of project
 CONTEXT_TYPE = 'article'
@@ -58,7 +112,7 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
@@ -85,13 +139,16 @@ for fold in folds:
         #if not os.path.exists(ofp):
         examples = dataloader.get_examples(infp, set_type, sep='\t')
 
-        label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-        label_map = {label: i for i, label in enumerate(label_list)}
-
         #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
         #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
+
+        features = bunch_features(features, pad_token=1, max_sent_per_example=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+
+
+
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
+        exit(0)
 
         with open(ofp, "wb") as f:
             pickle.dump(features, f)
