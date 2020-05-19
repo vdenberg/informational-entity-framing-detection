@@ -48,7 +48,7 @@ class SeqClassificationReader(DatasetReader):
         #self._tokenizer = WordTokenizer(word_splitter=SpacyWordSplitter(pos_tags=False))
         #self._token_indexers = token_indexers or {"tokens": SingleIdTokenIndexer()}
         self._tokenizer = PretrainedTransformerTokenizer('bert-base-cased', do_lowercase=False)
-        self._token_indexers = {"roberta": PretrainedTransformerIndexer('bert-base-cased', do_lowercase=False)}
+        self._token_indexers = {"bert": PretrainedTransformerIndexer('bert-base-cased', do_lowercase=False)}
         self.sent_max_len = sent_max_len
         self.use_sep = use_sep
         self.predict = predict

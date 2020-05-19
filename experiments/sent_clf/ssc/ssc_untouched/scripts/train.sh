@@ -26,7 +26,7 @@ export NUM_EPOCHS=2
 
 # limit number of sentneces per examples, and number of words per sentence. This is dataset dependant
 export MAX_SENT_PER_EXAMPLE=10
-export SENT_MAX_LEN=80
+export SENT_MAX_LEN=90
 
 # this is for the evaluation of the summarization dataset
 export SCI_SUM=false

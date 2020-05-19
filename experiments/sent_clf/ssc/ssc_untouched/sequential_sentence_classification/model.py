@@ -130,6 +130,7 @@ class SeqClassificationModel(Model):
         embedded_sentences = self.text_field_embedder(sentences['roberta'])
 
         print(embedded_sentences)
+        print(labels)
         exit(0)
         mask = get_text_field_mask(sentences, num_wrapping_dims=1).float()
         batch_size, num_sentences, _, _ = embedded_sentences.size()
@@ -227,6 +228,7 @@ class SeqClassificationModel(Model):
             # print(f"len(predicted_labels):{len(predicted_labels)}, (predicted_labels):{predicted_labels}")
 
             label_loss = 0.0
+
         if labels is not None:
             # Compute cross entropy loss
             flattened_logits = label_logits.view((batch_size * num_sentences), self.num_labels)

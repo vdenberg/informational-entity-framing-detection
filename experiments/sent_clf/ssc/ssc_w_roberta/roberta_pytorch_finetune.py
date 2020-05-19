@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
+from lib.classifiers.RobertaSSCWrapper import RobertaSSC, Inferencer, save_model, load_features
 from datetime import datetime
 import torch
 import numpy as np
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
                     # load pretrained model
 
-                    model = RobertaForSequenceClassification.from_pretrained(ROERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                    model = RobertaForSSC.from_pretrained(ROERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                              output_hidden_states=False, output_attentions=False)
                     model.to(device)
 
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                         LOAD_ALLOWED = False
                         if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
+                            trained_model = RobertaSSC.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                              num_labels=NUM_LABELS,
                                                                                              output_hidden_states=False,
                                                                                              output_attentions=False)
@@ -214,7 +214,7 @@ if __name__ == '__main__':
 
                     if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = RobertaForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+                    best_model = RobertaSSC.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=False,
                                                                                output_attentions=False)
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
