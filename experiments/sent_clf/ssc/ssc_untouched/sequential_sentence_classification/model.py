@@ -127,7 +127,7 @@ class SeqClassificationModel(Model):
         [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
 
 
-        embedded_sentences = self.text_field_embedder(sentences['roberta'])
+        embedded_sentences = self.text_field_embedder(sentences['bert'])
 
         print(embedded_sentences)
         print(labels)
