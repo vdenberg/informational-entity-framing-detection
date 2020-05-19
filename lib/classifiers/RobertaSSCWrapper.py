@@ -135,10 +135,10 @@ class RobertaSSC(BertPreTrainedModel):
         embedded_sentences = sequence_output  # torch.Size([6, 124, 768])
 
         #mask = get_text_field_mask(input_ids, num_wrapping_dims=1).float()
-        print(input_ids)
-        print(input_ids.shape)
-        print(labels)
-        print(labels.shape)
+        #print(input_ids)
+        #print(input_ids.shape)
+        #print(labels)
+        #print(labels.shape)
         #torch.Size([6, 124])
         #torch.Size([6])
         #batch_size, num_sentences, _, _ = embedded_sentences.size()
@@ -153,7 +153,7 @@ class RobertaSSC(BertPreTrainedModel):
             embedded_sentences = embedded_sentences[
                 sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
             # returns num_sentences_per_batch x vector_len
-            print(embedded_sentences.shape) # torch.Size([4, 768])
+            #print(embedded_sentences.shape) # torch.Size([4, 768])
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
             # for the rest of the code in this model to work, think of the data we have as one example
@@ -235,12 +235,6 @@ class RobertaSSC(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             #outputs = (loss,) + outputs
             outputs = (label_loss,) + outputs
-
-        print(logits)
-        print(loss)
-        print(label_logits)
-        print(label_loss)
-        exit(0)
 
         return outputs  # (loss), logits, (hidden_states), (attentions)
 
