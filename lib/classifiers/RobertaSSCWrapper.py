@@ -108,7 +108,7 @@ class RobertaSSC(BertPreTrainedModel):
                 label_name = {0: 0, 1: 1}[label_index]
                 self.label_f1_metrics[label_name] = F1Measure(label_index)
 
-        encoded_sentence_dim = 512
+        encoded_sentence_dim = 768
 
         ff_in_dim = encoded_sentence_dim #if self.use_sep else self_attn.get_output_dim()
         #ff_in_dim += self.additional_feature_size
@@ -131,11 +131,13 @@ class RobertaSSC(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
-        embedded_sentences = sequence_output
+        embedded_sentences = sequence_output  # torch.Size([6, 124, 768])
 
         #mask = get_text_field_mask(input_ids, num_wrapping_dims=1).float()
+
         print(embedded_sentences.size())
-        batch_size, num_sentences, _, _ = embedded_sentences.size()
+        #batch_size, num_sentences, _, _ = embedded_sentences.size()
+        batch_size, num_sentences, _ = embedded_sentences.size()
 
         if self.use_sep:
             # The following code collects vectors of the SEP tokens from all the examples in the batch,
