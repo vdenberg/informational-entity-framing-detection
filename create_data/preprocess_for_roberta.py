@@ -58,7 +58,7 @@ def bunch_features(features, pad_token, max_ex_len, max_doc_len, max_sent_len):
         article_id = extract_article_id(feat.my_id)
         bunched_by_article.setdefault(article_id, [])
         unpadded = [el for el in feat.input_ids if el != pad_token]
-        bunched_by_article[feat.my_id].append(unpadded)
+        bunched_by_article[article_id].append(unpadded)
 
     print("Check these numbers:")
     print("Nr of articles: ", len(bunched_by_article))
