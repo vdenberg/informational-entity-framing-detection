@@ -62,7 +62,7 @@ def bunch_features(features, pad_token, max_ex_len, max_doc_len, max_sent_len):
 
     print("Check these numbers:")
     print("Nr of articles: ", len(bunched_by_article))
-    print("Max doc len:", max([len(sents) for sents in bunched_by_article.values]))
+    print("Max doc len:", max([len(sents) for sents in bunched_by_article.values()]))
 
     unbunched = []
     for article_id, sentences in bunched_by_article.items():
