@@ -21,6 +21,7 @@ def preprocess(rows):
             print(status)
     return features
 
+
 def enforce_max_sent_per_example(self, sentences, max_sent_per_example, labels=None):
     """
     Splits examples with len(sentences) > self.max_sent_per_example into multiple smaller examples
@@ -37,9 +38,9 @@ def enforce_max_sent_per_example(self, sentences, max_sent_per_example, labels=N
     if len(sentences) > max_sent_per_example > 0:
         i = len(sentences) // 2
         l1 = enforce_max_sent_per_example(
-                sentences[:i], None if labels is None else labels[i:])
+                sentences[:i], max_sent_per_example, None if labels is None else labels[i:])
         l2 = enforce_max_sent_per_example(
-                sentences[i:], None if labels is None else labels[i:])
+                sentences[i:], max_sent_per_example, None if labels is None else labels[i:])
         return l1 + l2
     else:
         return [sentences]
@@ -51,7 +52,7 @@ def extract_article_id(feat_id):
     return feat_id[:5]
 
 
-def bunch_features(features, pad_token, max_doc_len, max_sent_len):
+def bunch_features(features, pad_token, max_ex_len, max_doc_len, max_sent_len):
     bunched_by_article = {}
     for feat in features:
         article_id = extract_article_id(feat.my_id)
@@ -65,7 +66,7 @@ def bunch_features(features, pad_token, max_doc_len, max_sent_len):
 
     unbunched = []
     for article_id, sentences in bunched_by_article.items():
-        grouped_sentences = enforce_max_sent_per_example(sentences)
+        grouped_sentences = enforce_max_sent_per_example(sentences, max_ex_len)
         unbunched.extend(grouped_sentences)
 
     print("Max ex len:", max([len(sents) for sents in unbunched]))
@@ -143,9 +144,7 @@ for fold in folds:
         #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = bunch_features(features, pad_token=1, max_sent_per_example=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
-
-
+        features = bunch_features(features, pad_token=1, max_ex_len=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
         exit(0)
