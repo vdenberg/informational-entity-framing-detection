@@ -196,11 +196,9 @@ class RobertaSSC(BertPreTrainedModel):
         label_logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
         label_probs = torch.nn.functional.softmax(label_logits, dim=-1)
 
-
         logits = self.classifier(sequence_output)
         #probs = self.sigm(logits)
 
-        '''
         if labels is not None:
             # Compute cross entropy loss
             flattened_logits = label_logits.view((batch_size * num_sentences), self.num_labels)
@@ -208,20 +206,9 @@ class RobertaSSC(BertPreTrainedModel):
 
             if not self.with_crf:
                 label_loss = self.loss(flattened_logits.squeeze(), flattened_gold)
-                if confidences is not None:
-                    label_loss = label_loss * confidences.type_as(label_loss).view(-1)
+
                 label_loss = label_loss.mean()
                 flattened_probs = torch.softmax(flattened_logits, dim=-1)
-            else:
-                clamped_labels = torch.clamp(labels, min=0)
-                log_likelihood = self.crf(label_logits, clamped_labels, mask_sentences)
-                label_loss = -log_likelihood
-                # compute categorical accuracy
-                crf_label_probs = label_logits * 0.
-                for i, instance_labels in enumerate(predicted_labels):
-                    for j, label_id in enumerate(instance_labels):
-                        crf_label_probs[i, j, label_id] = 1
-                flattened_probs = crf_label_probs.view((batch_size * num_sentences), self.num_labels)
 
             if not self.labels_are_scores:
                 evaluation_mask = (flattened_gold != -1)
@@ -232,7 +219,6 @@ class RobertaSSC(BertPreTrainedModel):
                     label_name = self.vocab.get_token_from_index(namespace='labels', index=label_index)
                     metric = self.label_f1_metrics[label_name]
                     metric(flattened_probs, flattened_gold, mask=evaluation_mask)
-        '''
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
         #outputs = (logits, label_probs, sequence_output) + outputs[2:]
