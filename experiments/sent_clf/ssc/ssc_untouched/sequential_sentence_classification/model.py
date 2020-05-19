@@ -149,7 +149,6 @@ class SeqClassificationModel(Model):
             embedded_sentences = embedded_sentences[sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
                                                                         # returns num_sentences_per_batch x vector_len
             print(embedded_sentences.shape)  # torch.Size([34, 768])
-            exit(0)
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
             # for the rest of the code in this model to work, think of the data we have as one example
@@ -173,6 +172,8 @@ class SeqClassificationModel(Model):
                     additional_features = additional_features[labels_mask]
                     assert additional_features.dim() == 2
 
+                print(labels.shape)
+                exit(0)
                 num_labels = labels.shape[0]
                 if num_labels != num_sentences:  # bert truncates long sentences, so some of the SEP tokens might be gone
                     assert num_labels > num_sentences  # but `num_labels` should be at least greater than `num_sentences`

@@ -152,7 +152,7 @@ class RobertaSSC(BertPreTrainedModel):
             embedded_sentences = embedded_sentences[
                 sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
             # returns num_sentences_per_batch x vector_len
-            print(embedded_sentences.shape)
+            print(embedded_sentences.shape) # torch.Size([4, 768])
             exit(0)
             assert embedded_sentences.dim() == 2
             num_sentences = embedded_sentences.shape[0]
@@ -162,7 +162,7 @@ class RobertaSSC(BertPreTrainedModel):
             embedded_sentences = embedded_sentences.unsqueeze(dim=0)
             embedded_sentences = self.dropout(embedded_sentences)
 
-            '''
+
             if labels is not None:
                 if self.labels_are_scores:
                     labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
@@ -172,12 +172,6 @@ class RobertaSSC(BertPreTrainedModel):
                 labels = labels[
                     labels_mask]  # given batch_size x num_sentences_per_example return num_sentences_per_batch
                 assert labels.dim() == 1
-                if confidences is not None:
-                    confidences = confidences[labels_mask]
-                    assert confidences.dim() == 1
-                if additional_features is not None:
-                    additional_features = additional_features[labels_mask]
-                    assert additional_features.dim() == 2
 
                 num_labels = labels.shape[0]
                 if num_labels != num_sentences:  # bert truncates long sentences, so some of the SEP tokens might be gone
