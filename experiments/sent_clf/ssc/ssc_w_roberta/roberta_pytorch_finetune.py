@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
                     # load pretrained model
 
-                    model = RobertaForSSC.from_pretrained(ROERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                    model = RobertaSSC.from_pretrained(ROERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                              output_hidden_states=False, output_attentions=False)
                     model.to(device)
 
