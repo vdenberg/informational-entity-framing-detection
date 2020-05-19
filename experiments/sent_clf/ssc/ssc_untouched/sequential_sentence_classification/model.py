@@ -124,8 +124,14 @@ class SeqClassificationModel(Model):
 
         [[1, 1, 1,  ..., 0, 0, 0]],
 
-        [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}'''
-
+        [[1, 1, 1,  ..., 0, 0, 0]]], device='cuda:0')}
+        
+        LABELS:
+        
+        tensor([[ 0,  0,  0,  1,  2,  2,  2, -1, -1, -1],
+        [ 0,  0,  0,  3,  1,  3,  3,  2,  4,  4],
+        [ 0,  0,  0,  0,  1,  1,  2,  1,  1,  2],
+        [ 0,  0,  0,  0,  0,  3,  1, -1, -1, -1]])'''
 
         embedded_sentences = self.text_field_embedder(sentences)
 
