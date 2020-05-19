@@ -360,7 +360,7 @@ class Inferencer():
             embeddings.append(emb_output)
             '''
             logits = logits.detach().cpu().numpy()
-            #probs = probs.detach().cpu().numpy()
+            probs = probs.detach().cpu().numpy()
 
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
