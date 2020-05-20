@@ -46,32 +46,55 @@ def enforce_max_sent_per_example(sentences, max_sent_per_example, labels=None):
         return [sentences]
 
 
-def extract_article_id(feat_id):
+def get_art_id(feat_id):
     if not feat_id[1].isdigit():
         feat_id = '0' + feat_id
     return feat_id[:5]
 
 
-def bunch_features(features, pad_token, max_ex_len, max_doc_len, max_sent_len):
-    bunched_by_article = {}
+def convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len):
+    example_input_ids = []
+    example_labels = []
+
+    for feats in features_of_example:
+        input_ids = [el for el in feats.input_ids if el not in [cls_token, pad_token]]
+        example_input_ids.extend(feats.input_ids)
+        example_labels.extend([feats.label_id])
+
+    pad_len = max_ex_len - len(input_ids)
+    example_input_ids += [1] * pad_len
+    example_mask = [1] * len(input_ids) + [0] * pad_len
+    return InputFeatures(my_id='',
+                         input_ids=example_input_ids,
+                         input_mask=example_mask,
+                         segment_ids=[],
+                         label_id=example_labels)
+
+
+def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_len=76, max_sent_len=120):
+    by_id = {feat.my_id: feat for feat in features}
+
+    by_article = {}
     for feat in features:
-        article_id = extract_article_id(feat.my_id)
-        bunched_by_article.setdefault(article_id, [])
-        unpadded = [el for el in feat.input_ids if el != pad_token]
-        bunched_by_article[article_id].append(unpadded)
+        article_id = get_art_id(feat.my_id)
+        by_article.setdefault(article_id, [])
+        by_article[article_id].append(feat.my_id)
 
-    print("Check these numbers:")
-    print("Nr of articles: ", len(bunched_by_article))
-    print("Max doc len:", max([len(sents) for sents in bunched_by_article.values()]))
+    examples = []
+    nr_of_examples_per_article = 0  # todo: compute this
+    for article_id, sentences in by_article.items():
+        example = enforce_max_sent_per_example(sentences, max_ex_sents)
+        examples.extend(example)
 
-    unbunched = []
-    for article_id, sentences in bunched_by_article.items():
-        grouped_sentences = enforce_max_sent_per_example(sentences, max_ex_len)
-        unbunched.extend(grouped_sentences)
+    max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in examples])
 
-    print("Max ex len:", max([len(sents) for sents in unbunched]))
+    bunched_features = []
+    for example in examples:
+        features_of_example = [by_id[feat_id] for feat_id in example]
+        feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
+        bunched_features.append(feats)
 
-    return unbunched
+    return bunched_features
 
 
 # choose sentence or bio labels
@@ -82,7 +105,7 @@ DATA_DIR = f'data/{task}/ft_input'
 folds = split_input_for_bert(DATA_DIR, task)
 MAX_DOC_LEN = 76
 MAX_SENT_LEN = 122
-MAX_EX_LEN = 10
+MAX_EX_LEN = 5
 
 # structure of project
 CONTEXT_TYPE = 'article'
@@ -144,10 +167,9 @@ for fold in folds:
         #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = bunch_features(features, pad_token=1, max_ex_len=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+        features = bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
-        exit(0)
 
         with open(ofp, "wb") as f:
             pickle.dump(features, f)
