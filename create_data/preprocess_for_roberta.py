@@ -77,14 +77,17 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
     by_article = {}
     for feat in features:
         article_id = get_art_id(feat.my_id)
+        #print(article_id)
         by_article.setdefault(article_id, [])
         by_article[article_id].append(feat.my_id)
+
+    # print(len(by_article))
 
     examples = []
     nr_of_examples_per_article = 0  # todo: compute this
     for article_id, sentences in by_article.items():
         example = enforce_max_sent_per_example(sentences, max_ex_sents)
-        examples.extend(example)
+        examples.append(example)
 
     max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in examples])
 
