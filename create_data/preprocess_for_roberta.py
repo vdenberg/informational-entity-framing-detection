@@ -61,6 +61,9 @@ def convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, m
         example_input_ids.extend(input_ids)
         example_labels.extend([feats.label_id])
 
+    print(feats.input_ids)
+    exit(0)
+
     pad_len = max_ex_len - len(input_ids)
     example_input_ids += [1] * pad_len
     example_mask = [1] * len(input_ids) + [0] * pad_len
