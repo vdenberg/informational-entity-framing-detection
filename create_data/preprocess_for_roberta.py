@@ -98,6 +98,7 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
     for example in examples:
         features_of_example = [by_id[feat_id] for feat_id in sorted(example)]
         feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
+        print(feats.input_ids)
         bunched_features.append(feats)
 
     return bunched_features
