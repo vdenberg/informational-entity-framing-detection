@@ -5,7 +5,7 @@ import pickle
 from lib.handle_data.PreprocessForRoberta import *
 import csv
 from lib.handle_data.SplitData import split_input_for_bert
-
+import torch
 
 def preprocess(rows):
     count = 0
@@ -100,6 +100,7 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
         feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
         bunched_features.append(feats)
 
+    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     return bunched_features
 
 
