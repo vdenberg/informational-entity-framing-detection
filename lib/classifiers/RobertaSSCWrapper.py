@@ -126,6 +126,8 @@ class RobertaSSC(BertPreTrainedModel):
     def forward(self, input_ids=None, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None,
                 inputs_embeds=None,
                 labels=None, ssc=False):
+        print(input_ids)
+        print(input_ids.shape)
         outputs = self.roberta(input_ids,
                                attention_mask=attention_mask,
                                token_type_ids=token_type_ids,
