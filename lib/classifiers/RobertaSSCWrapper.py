@@ -150,11 +150,11 @@ class RobertaSSC(BertPreTrainedModel):
         # TODO: replace 103 with '[SEP]'
         #sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
         sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
-        print(sentences_mask)
         embedded_sentences = embedded_sentences[
             sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
         # returns num_sentences_per_batch x vector_len
         #print(embedded_sentences.shape) # torch.Size([4, 768])
+        print(embedded_sentences)
         assert embedded_sentences.dim() == 2
         num_sentences = embedded_sentences.shape[0]
         print(num_sentences)
