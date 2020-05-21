@@ -90,7 +90,7 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
         example = []
         for sent in example_sentences:
             example.extend(sent)
-        print(len(example))
+        print(len(example), example)
         examples.append(example)
 
     max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in examples])
