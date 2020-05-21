@@ -341,6 +341,7 @@ class Inferencer():
                 #pred = np.argmax(logits, axis=1)
                 #print(probs)
                 #pred = np.argmax(probs, axis=1)
+                print(probs)
                 pred = probs[0].argmax(axis=1).tolist()
             preds.extend(pred)
 
