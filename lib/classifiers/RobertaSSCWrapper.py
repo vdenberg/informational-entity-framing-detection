@@ -324,7 +324,7 @@ class Inferencer():
 
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
-            elif output_mode == 'classification':
+            else:
                 #print(probs)
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
