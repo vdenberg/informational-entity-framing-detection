@@ -61,6 +61,8 @@ def convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, m
         example_input_ids.extend(feats.input_ids)
         example_labels.extend([feats.label_id])
 
+    print(len(example_input_ids), example_input_ids)
+
     pad_len = max_ex_len - len(input_ids)
     example_input_ids += [1] * pad_len
     example_mask = [1] * len(input_ids) + [0] * pad_len
@@ -96,11 +98,7 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
 
     bunched_features = []
     for example in examples:
-        sort_ex = sorted(example)
-        print(sort_ex)
-
-        features_of_example = [by_id[feat_id] for feat_id in example]
-        print(len(features_of_example), features_of_example)
+        features_of_example = [by_id[feat_id] for feat_id in sorted(example)]
         feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
         bunched_features.append(feats)
 
