@@ -341,7 +341,7 @@ class Inferencer():
         else:
             return preds
 
-    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
+    def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
