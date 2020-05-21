@@ -57,14 +57,15 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len):
     flat_input_ids = []
     flat_labels = []
 
-    for f in seq_rows:
-        input_ids = remove_special(f.input_ids, cls, pad)
+    for sent in seq_rows:
+        input_ids = remove_special(sent.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
-        flat_labels.append(f.label_id)
+        flat_labels.append(sent.label_id)
 
     pad_len = max_ex_len - len(flat_input_ids)
     flat_input_ids += [pad] * pad_len
     mask = [1] * len(input_ids) + [0] * pad_len
+    assert len(mask) == len(flat_input_ids)
     return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
                          input_mask=mask,
@@ -94,7 +95,6 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
         sequences = enforce_max_sent_per_example(row, max_sent)
         for s in sequences:
-
             sequence_rows.append(s)
 
     # measure what the maxlen should be
@@ -110,7 +110,6 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
     for row in sequence_rows:
         ff = flatten_sequence(row, cls, pad, maxlen)
         finfeats.append(ff)
-
     return finfeats
 
 
