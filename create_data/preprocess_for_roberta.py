@@ -46,64 +46,65 @@ def enforce_max_sent_per_example(sentences, max_sent_per_example, labels=None):
         return [sentences]
 
 
-def get_art_id(feat_id):
+def as_art_id(feat_id):
     if not feat_id[1].isdigit():
         feat_id = '0' + feat_id
     return feat_id[:5]
 
 
-def convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len):
-    example_input_ids = []
-    example_labels = []
+def flatten_chunk(chunkfeats, cls, pad, max_ex_len):
+    flat_input_ids = []
+    flat_labels = []
 
-    for feats in features_of_example:
-        input_ids = [el for el in feats.input_ids if el not in [cls_token, pad_token]]
-        example_input_ids.extend(input_ids)
-        example_labels.extend([feats.label_id])
+    for f in chunkfeats:
+        input_ids = remove_special(f.input_ids, cls, pad)
+        flat_input_ids.extend(input_ids)
+        flat_labels.append(f.label_id)
 
-    print(feats.input_ids)
-    exit(0)
-
-    pad_len = max_ex_len - len(input_ids)
-    example_input_ids += [1] * pad_len
-    example_mask = [1] * len(input_ids) + [0] * pad_len
+    pad_len = max_ex_len - len(flat_input_ids)
+    flat_input_ids += [pad] * pad_len
+    mask = [1] * len(input_ids) + [0] * pad_len
     return InputFeatures(my_id='',
-                         input_ids=example_input_ids,
-                         input_mask=example_mask,
+                         input_ids=flat_input_ids,
+                         input_mask=mask,
                          segment_ids=[],
-                         label_id=example_labels)
+                         label_id=flat_labels)
 
 
-def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_len=76, max_sent_len=120):
-    by_id = {feat.my_id: feat for feat in features}
+def remove_special(x, cls=0, pad=1):
+    return [el for el in x if el not in [cls, pad]]
 
-    by_article = {}
-    for feat in features:
-        article_id = get_art_id(feat.my_id)
-        #print(article_id)
-        by_article.setdefault(article_id, [])
-        by_article[article_id].append(feat.my_id)
 
-    # print(len(by_article))
+def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_sent_len=120):
+    flatfeats = {f.my_id: ft for ft in features}
+    article_ids = [as_art_id(i) for i in flatfeats]
 
-    example_ids = []
-    nr_of_examples_per_article = 0  # todo: compute this
-    for article_id, sentences in by_article.items():
-        example_sentences = enforce_max_sent_per_example(sentences, max_ex_sents)
-        example = []
-        for sent in example_sentences:
-            example.extend(sent)
-        example_ids.append(example)
+    articles = {i: [] for i in article_ids}
+    for fi, ai in zip(flatfeats, articles):
+        articles[ai].append(fi)
 
-    max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in example_ids])
+    chunkfeats = []
+    for i, f_ids in articles.items():
+        chunks = enforce_max_sent_per_example(f_ids, max_sent)
+        for c in chunks:
+            cf = [flatfeats[f_i] for f_i in c]
+            chunkfeats.append(sorted(cf))
 
-    bunched_features = []
-    for example in example_ids:
-        features_of_example = [by_id[feat_id] for feat_id in sorted(example)]
-        feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
-        bunched_features.append(feats)
+    maxlen = 0
+    for cf in chunkfeats:
+        toks = [remove_special(f.input_ids, cls, pad) for f in cf]
+        chunklen = sum([len(t) for t in toks])
+        if chunklen > maxlen:
+            maxlen = chunklen
 
-    return bunched_features
+    print('MAX EX LEN:', maxlen)
+
+    finfeats = []
+    for cf in chunkfeats:
+        ff = flatten_chunk(cf, cls, pad, maxlen)
+        finfeats.append(ff)
+
+    return finfeats
 
 
 # choose sentence or bio labels
@@ -176,7 +177,7 @@ for fold in folds:
         #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
