@@ -236,7 +236,7 @@ if __name__ == '__main__':
 
                     # eval on test
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
+                    test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 
