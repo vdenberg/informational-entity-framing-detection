@@ -348,7 +348,8 @@ class Inferencer():
             preds = np.reshape(preds, labels.shape)
         elif output_mode == 'ssc':
             labels = labels.numpy().flatten()
-            labels = [l for l in labels if l != -1]
+            m = labels != -1
+            labels = labels[m]
         else:
             labels = labels.numpy()
 
