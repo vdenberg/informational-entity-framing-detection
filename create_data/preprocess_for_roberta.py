@@ -83,22 +83,21 @@ def bunch_features(features, cls_token=0, pad_token=1, max_ex_sents=10, max_doc_
 
     # print(len(by_article))
 
-    examples = []
+    example_ids = []
     nr_of_examples_per_article = 0  # todo: compute this
     for article_id, sentences in by_article.items():
         example_sentences = enforce_max_sent_per_example(sentences, max_ex_sents)
         example = []
         for sent in example_sentences:
             example.extend(sent)
-        examples.append(example)
+        example_ids.append(example)
 
-    max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in examples])
+    max_ex_len = max([sum([len(by_id[feat_id].input_ids) for feat_id in ex]) for ex in example_ids])
 
     bunched_features = []
-    for example in examples:
+    for example in example_ids:
         features_of_example = [by_id[feat_id] for feat_id in sorted(example)]
         feats = convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, max_ex_len)
-        print(feats.input_ids)
         bunched_features.append(feats)
 
     return bunched_features
@@ -143,7 +142,7 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = False
+FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
