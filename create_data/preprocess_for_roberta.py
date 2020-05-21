@@ -63,9 +63,11 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len):
         flat_labels.append(sent.label_id)
 
     pad_len = max_ex_len - len(flat_input_ids)
+    mask = [1] * len(flat_input_ids) + [0] * pad_len
     flat_input_ids += [pad] * pad_len
-    mask = [1] * len(input_ids) + [0] * pad_len
+
     assert len(mask) == len(flat_input_ids)
+
     return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
                          input_mask=mask,
@@ -152,7 +154,7 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
