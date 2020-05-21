@@ -145,7 +145,6 @@ class RobertaSSC(BertPreTrainedModel):
         #print(embedded_sentences.shape) # torch.Size([4, 768])
         assert embedded_sentences.dim() == 2
         num_sentences = embedded_sentences.shape[0]
-        print(num_sentences)
         # for the rest of the code in this model to work, think of the data we have as one example
         # with so many sentences and a batch of size 1
         batch_size = 1
@@ -329,10 +328,8 @@ class Inferencer():
                 #print(probs)
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
-                print(probs)
                 #pred = np.argmax(probs, axis=1)
-                pred = probs.argmax(axis=1).tolist()
-                print(pred)
+                pred = probs[0].argmax(axis=1).tolist()
             preds.extend(pred)
 
         model.train()
