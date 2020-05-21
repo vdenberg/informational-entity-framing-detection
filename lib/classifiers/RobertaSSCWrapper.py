@@ -133,28 +133,20 @@ class RobertaSSC(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
-        embedded_sentences = sequence_output  # torch.Size([6, 124, 768])
-
-        #mask = get_text_field_mask(input_ids, num_wrapping_dims=1).float()
-        #print(input_ids)
-        #print(input_ids.shape)
-        #print(labels)
-        #print(labels.shape)
-        #torch.Size([6, 124])
-        #torch.Size([6])
-        #batch_size, num_sentences, _, _ = embedded_sentences.size()
+        embedded_sentences = sequence_output
         batch_size, num_sentences, _ = embedded_sentences.size()
 
         # The following code collects vectors of the SEP tokens from all the examples in the batch,
         # and arrange them in one list. It does the same for the labels and confidences.
         # TODO: replace 103 with '[SEP]'
-        #sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
         sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
+        print(embedded_sentences.shape)
         embedded_sentences = embedded_sentences[
             sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
         # returns num_sentences_per_batch x vector_len
         #print(embedded_sentences.shape) # torch.Size([4, 768])
-        print(embedded_sentences)
+        print(embedded_sentences.shape)
+        exit(0)
         assert embedded_sentences.dim() == 2
         num_sentences = embedded_sentences.shape[0]
         print(num_sentences)
