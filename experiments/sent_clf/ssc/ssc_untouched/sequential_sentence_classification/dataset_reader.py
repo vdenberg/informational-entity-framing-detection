@@ -154,6 +154,7 @@ class SeqClassificationReader(DatasetReader):
     def filter_bad_sci_sum_sentences(self, sentences, labels):
         filtered_sentences = []
         filtered_labels = []
+
         if not self.predict:
             for sentence, label in zip(sentences, labels):
                 # most sentences outside of this range are bad sentences
