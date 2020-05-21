@@ -7,6 +7,7 @@ import csv
 from lib.handle_data.SplitData import split_input_for_bert
 import torch
 
+
 def preprocess(rows):
     count = 0
     total = len(rows)
@@ -16,7 +17,7 @@ def preprocess(rows):
         features.append(feats)
         count += 1
 
-        if count % 250 == 0:
+        if count % 500 == 0:
             status = f'Processed {count}/{total} rows'
             print(status)
     return features
@@ -179,7 +180,7 @@ for fold in folds:
 
         features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
-        #print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
+        print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
             pickle.dump(features, f)
