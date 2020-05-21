@@ -90,7 +90,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
             cf = [flatfeats[f_i] for f_i in c]
             chunkfeats.append(sorted(cf))
 
-    maxlen = 0
+    maxlen = 100
     for cf in chunkfeats:
         toks = [remove_special(f.input_ids, cls, pad) for f in cf]
         chunklen = sum([len(t) for t in toks])
