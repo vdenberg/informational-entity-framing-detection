@@ -34,6 +34,7 @@ class InputFeatures(object):
 def load_features(fp, batch_size):
     with open(fp, "rb") as f:
         ids, data, labels = to_tensor(pickle.load(f))
+
     batches = to_batches(data, batch_size=batch_size)
     return ids, batches, labels
 
@@ -144,97 +145,67 @@ class RobertaSSC(BertPreTrainedModel):
         #batch_size, num_sentences, _, _ = embedded_sentences.size()
         batch_size, num_sentences, _ = embedded_sentences.size()
 
-        if self.use_sep:
-            # The following code collects vectors of the SEP tokens from all the examples in the batch,
-            # and arrange them in one list. It does the same for the labels and confidences.
-            # TODO: replace 103 with '[SEP]'
-            #sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
-            sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
-            embedded_sentences = embedded_sentences[
-                sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
-            # returns num_sentences_per_batch x vector_len
-            #print(embedded_sentences.shape) # torch.Size([4, 768])
-            assert embedded_sentences.dim() == 2
-            num_sentences = embedded_sentences.shape[0]
-            # for the rest of the code in this model to work, think of the data we have as one example
-            # with so many sentences and a batch of size 1
-            batch_size = 1
-            embedded_sentences = embedded_sentences.unsqueeze(dim=0)
-            embedded_sentences = self.dropout(embedded_sentences)
-
-            if labels is not None:
-                if self.labels_are_scores:
-                    labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
-                else:
-                    labels_mask = labels != -1  # mask for all the labels in the batch (no padding)
-
-                labels = labels[
-                    labels_mask]  # given batch_size x num_sentences_per_example return num_sentences_per_batch
-                assert labels.dim() == 1
-
-                num_labels = labels.shape[0]
-                if num_labels != num_sentences:  # bert truncates long sentences, so some of the SEP tokens might be gone
-                    assert num_labels > num_sentences  # but `num_labels` should be at least greater than `num_sentences`
-                    #logger.warning(f'Found {num_labels} labels but {num_sentences} sentences')
-                    labels = labels[:num_sentences]  # Ignore some labels. This is ok for training but bad for testing.
-                    # We are ignoring this problem for now.
-                    # TODO: fix, at least for testing
-
-                # similar to `embedded_sentences`, add an additional dimension that corresponds to batch_size=1
-                labels = labels.unsqueeze(dim=0)
-
-        else:
-            pass
-            '''
-            # ['CLS'] token
-            embedded_sentences = embedded_sentences[:, :, 0, :]
-            embedded_sentences = self.dropout(embedded_sentences)
-            batch_size, num_sentences, _ = embedded_sentences.size()
-            sent_mask = (mask.sum(dim=2) != 0)
-            embedded_sentences = self.self_attn(embedded_sentences, sent_mask)
-            '''
-
-        label_logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
-        label_probs = torch.nn.functional.softmax(label_logits, dim=-1)
-
-        logits = self.classifier(sequence_output)
-        probs = self.sigm(logits)
+        # The following code collects vectors of the SEP tokens from all the examples in the batch,
+        # and arrange them in one list. It does the same for the labels and confidences.
+        # TODO: replace 103 with '[SEP]'
+        #sentences_mask = sentences['bert'] == 103  # mask for all the SEP tokens in the batch
+        sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
+        embedded_sentences = embedded_sentences[
+            sentences_mask]  # given batch_size x num_sentences_per_example x sent_len x vector_len
+        # returns num_sentences_per_batch x vector_len
+        #print(embedded_sentences.shape) # torch.Size([4, 768])
+        assert embedded_sentences.dim() == 2
+        num_sentences = embedded_sentences.shape[0]
+        # for the rest of the code in this model to work, think of the data we have as one example
+        # with so many sentences and a batch of size 1
+        batch_size = 1
+        embedded_sentences = embedded_sentences.unsqueeze(dim=0)
+        embedded_sentences = self.dropout(embedded_sentences)
 
         if labels is not None:
-            # Compute cross entropy loss
-            flattened_logits = label_logits.view((batch_size * num_sentences), self.num_labels)
-            flattened_gold = labels.contiguous().view(-1)
-
-            if not self.with_crf:
-                label_loss = self.loss(flattened_logits.squeeze(), flattened_gold)
-
-                label_loss = label_loss.mean()
-                flattened_probs = torch.softmax(flattened_logits, dim=-1)
-
-            if not self.labels_are_scores:
-                evaluation_mask = (flattened_gold != -1)
-                self.label_accuracy(flattened_probs.float().contiguous(), flattened_gold.squeeze(-1), mask=evaluation_mask)
-
-                # compute F1 per label
-                for label_index in range(self.num_labels):
-                    label_name = self.label_vocab[label_index]
-                    metric = self.label_f1_metrics[label_name]
-                    metric(flattened_probs, flattened_gold, mask=evaluation_mask)
-
-        #outputs = (logits, probs, sequence_output) + outputs[2:]
-        #outputs = (logits, label_probs, sequence_output) + outputs[2:]
-        outputs = (label_logits, label_probs, sequence_output) + outputs[2:]
-
-        if labels is not None:
-            if self.num_labels == 1:
-                #  We are doing regression
-                loss_fct = MSELoss()
-                loss = loss_fct(logits.view(-1), labels.view(-1))
+            if self.labels_are_scores:
+                labels_mask = labels != 0.0  # mask for all the labels in the batch (no padding)
             else:
+                labels_mask = labels != -1  # mask for all the labels in the batch (no padding)
+
+            labels = labels[
+                labels_mask]  # given batch_size x num_sentences_per_example return num_sentences_per_batch
+            assert labels.dim() == 1
+
+            num_labels = labels.shape[0]
+            if num_labels != num_sentences:  # bert truncates long sentences, so some of the SEP tokens might be gone
+                assert num_labels > num_sentences  # but `num_labels` should be at least greater than `num_sentences`
+                #logger.warning(f'Found {num_labels} labels but {num_sentences} sentences')
+                labels = labels[:num_sentences]  # Ignore some labels. This is ok for training but bad for testing.
+                # We are ignoring this problem for now.
+                # TODO: fix, at least for testing
+
+            # similar to `embedded_sentences`, add an additional dimension that corresponds to batch_size=1
+            labels = labels.unsqueeze(dim=0)
+
+        if not ssc:
+            logits = self.classifier(sequence_output)
+            probs = self.sigm(logits)
+        else:
+            logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
+            probs = torch.nn.functional.softmax(logits, dim=-1)
+
+        outputs = (logits, probs, sequence_output) + outputs[2:]
+
+        if labels is not None:
+            if not ssc:
                 loss_fct = CrossEntropyLoss()
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
-            #outputs = (loss,) + outputs
-            outputs = (label_loss,) + outputs
+
+            else:
+                # Compute cross entropy loss
+                flattened_logits = logits.view((batch_size * num_sentences), self.num_labels)
+                flattened_gold = labels.contiguous().view(-1)
+
+                label_loss = self.loss(flattened_logits.squeeze(), flattened_gold)
+                loss = label_loss.mean()
+
+            outputs = (loss,) + outputs
 
         return outputs  # (loss), logits, (hidden_states), (attentions)
 

@@ -287,12 +287,12 @@ def convert_example_to_feature(example_row):
     #print(example.my_id)
 
     # tokens
-    encoded = tokenizer.encode_plus(example.text_a, max_length=max_seq_length, pad_to_max_length=True)
+    encoded = tokenizer.encode_plus(example.text_a, max_length=max_seq_length, pad_to_max_length=True,
+                                    add_special_tokens=True)
+
     input_ids = encoded['input_ids']
     attention_mask = encoded['attention_mask']
 
-    print(input_ids)
-    print(attention_mask)
     assert len(input_ids) == max_seq_length
     assert len(attention_mask) == max_seq_length
 
