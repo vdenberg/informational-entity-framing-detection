@@ -58,7 +58,7 @@ def convert_bunched_example_to_feat(features_of_example, cls_token, pad_token, m
 
     for feats in features_of_example:
         input_ids = [el for el in feats.input_ids if el not in [cls_token, pad_token]]
-        example_input_ids.extend(feats.input_ids)
+        example_input_ids.extend(input_ids)
         example_labels.extend([feats.label_id])
 
     print(len(example_input_ids), example_input_ids)
