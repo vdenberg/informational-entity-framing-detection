@@ -178,7 +178,6 @@ class RobertaSSC(BertPreTrainedModel):
             probs = self.sigm(logits)
         else:
             logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
-            print(logits)
             probs = torch.nn.functional.softmax(logits, dim=-1)
 
         outputs = (logits, probs, sequence_output) + outputs[2:]
@@ -330,9 +329,10 @@ class Inferencer():
                 #print(probs)
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
-                #print(probs)
+                print(probs)
                 #pred = np.argmax(probs, axis=1)
                 pred = probs.argmax(axis=1).tolist()
+                print(pred)
             preds.extend(pred)
 
         model.train()
