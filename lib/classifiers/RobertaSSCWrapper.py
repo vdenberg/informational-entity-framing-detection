@@ -329,9 +329,7 @@ class Inferencer():
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
                 #pred = np.argmax(probs, axis=1)
-                print(probs[0])
                 pred = probs[0].argmax(axis=1).tolist()
-                print(pred)
             preds.extend(pred)
 
         model.train()
@@ -340,7 +338,7 @@ class Inferencer():
         else:
             return preds
 
-    def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
+    def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='ssc'):
         preds = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
@@ -348,6 +346,8 @@ class Inferencer():
             labels = labels.numpy().flatten()
             preds = np.asarray(preds)
             preds = np.reshape(preds, labels.shape)
+        elif output_mode == 'ssc':
+            labels = labels.numpy().flatten()
         else:
             labels = labels.numpy()
 
