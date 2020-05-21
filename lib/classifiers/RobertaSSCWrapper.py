@@ -188,8 +188,12 @@ class RobertaSSC(BertPreTrainedModel):
 
             else:
                 # Compute cross entropy loss
+                print(logits)
+                print(labels)
                 flattened_logits = logits.view((batch_size * num_sentences), self.num_labels)
                 flattened_gold = labels.contiguous().view(-1)
+                print(flattened_logits)
+                print(flattened_gold)
 
                 label_loss = self.loss(flattened_logits.squeeze(), flattened_gold)
                 loss = label_loss.mean()
