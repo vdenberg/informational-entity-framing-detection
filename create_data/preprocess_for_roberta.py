@@ -76,7 +76,7 @@ def remove_special(x, cls=0, pad=1):
 
 
 def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_sent_len=120):
-    flatfeats = {f.my_id: ft for ft in features}
+    flatfeats = {ft.my_id: ft for ft in features}
     article_ids = [as_art_id(i) for i in flatfeats]
 
     articles = {i: [] for i in article_ids}
