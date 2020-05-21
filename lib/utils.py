@@ -177,3 +177,10 @@ def format_checkpoint_filepath(cp_dir, bertcam=None, hidden_size='NA', epoch_num
     cp_fn = f'{bertcam}_hidden{hidden_size}_lastepoch{epoch_number}.model'
     return os.path.join(cp_dir, cp_fn)
 
+
+def standardise_id(basil_id):
+    if not basil_id[1].isdigit():
+        basil_id = '0' + basil_id
+    if not basil_id[-2].isdigit():
+        basil_id = basil_id[:-1] + '0' + basil_id[-1]
+    return basil_id

@@ -7,6 +7,7 @@ from lib.handle_data.SplitData import Split
 import csv
 import spacy
 from lib.handle_data.LoadData import load_basil_spans
+from lib.utils import standardise_id
 
 logger = logging.getLogger()
 csv.field_size_limit(2147483647) # Increase CSV reader's field limit incase we have long text.
@@ -244,7 +245,7 @@ class BinaryClassificationProcessor(DataProcessor):
         examples = []
         for (i, line) in enumerate(lines):
             guid = "%s-%s" % (set_type, i)
-            my_id = line[0]
+            my_id = standardise_id(line[0])
             text_a = line[3]
             label = line[1]
             examples.append(
@@ -257,6 +258,13 @@ class InputFeatures(object):
 
     def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
         self.my_id = my_id
+        if my_id:
+            my_id = standardise_id(my_id)
+            self.sent_id = int(my_id[-2:])
+            self.article = my_id[:-2]
+        else:
+            self.sent_id = None
+            self.article = None
         self.input_ids = input_ids
         self.input_mask = input_mask
         self.segment_ids = segment_ids

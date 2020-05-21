@@ -53,11 +53,11 @@ def as_art_id(feat_id):
     return feat_id[:5]
 
 
-def flatten_chunk(chunkfeats, cls, pad, max_ex_len):
+def flatten_sequence(seq_rows, cls, pad, max_ex_len):
     flat_input_ids = []
     flat_labels = []
 
-    for f in chunkfeats:
+    for f in seq_rows:
         input_ids = remove_special(f.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
         flat_labels.append(f.label_id)
@@ -65,7 +65,7 @@ def flatten_chunk(chunkfeats, cls, pad, max_ex_len):
     pad_len = max_ex_len - len(flat_input_ids)
     flat_input_ids += [pad] * pad_len
     mask = [1] * len(input_ids) + [0] * pad_len
-    return InputFeatures(my_id='',
+    return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
                          input_mask=mask,
                          segment_ids=[],
@@ -76,33 +76,39 @@ def remove_special(x, cls=0, pad=1):
     return [el for el in x if el not in [cls, pad]]
 
 
+def seps(x):
+    #mask = x == 2
+    return [el for el in x if el == 2]#x[mask]
+
+
 def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_sent_len=120):
-    flatfeats = {ft.my_id: ft for ft in features}
-    article_ids = [as_art_id(i) for i in flatfeats]
+    ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
-    articles = {i: [] for i in article_ids}
-    for fi, ai in zip(flatfeats, articles):
-        articles[ai].append(fi)
+    article_rows = {}
+    for f in features:
+        row = article_rows.setdefault(f.article, [])
+        row.append(f)
 
-    chunkfeats = []
-    for i, f_ids in articles.items():
-        chunks = enforce_max_sent_per_example(f_ids, max_sent)
-        for c in chunks:
-            cf = [flatfeats[f_i] for f_i in c]
-            chunkfeats.append(sorted(cf))
+    sequence_rows = []
+    for row in article_rows.values():
+        row = sorted(row, key=lambda x: x.sent_id, reverse=False)
+        sequences = enforce_max_sent_per_example(row, max_sent)
+        for s in sequences:
 
-    maxlen = 100
-    for cf in chunkfeats:
-        toks = [remove_special(f.input_ids, cls, pad) for f in cf]
-        chunklen = sum([len(t) for t in toks])
-        if chunklen > maxlen:
-            maxlen = chunklen
+            sequence_rows.append(s)
 
+    # measure what the maxlen should be
+    maxlen = 305
+    for row in sequence_rows:
+        toks = [remove_special(f.input_ids, cls, pad) for f in row]
+        exlen = sum([len(t) for t in toks])
+        if exlen > maxlen:
+            maxlen = exlen
             print('MAX EX LEN:', maxlen)
 
     finfeats = []
-    for cf in chunkfeats:
-        ff = flatten_chunk(cf, cls, pad, maxlen)
+    for row in sequence_rows:
+        ff = flatten_sequence(row, cls, pad, maxlen)
         finfeats.append(ff)
 
     return finfeats
@@ -147,7 +153,7 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
@@ -174,13 +180,11 @@ for fold in folds:
         #if not os.path.exists(ofp):
         examples = dataloader.get_examples(infp, set_type, sep='\t')
 
-        #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
-        #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
         features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
-        print(features[0].input_ids)
+        # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
