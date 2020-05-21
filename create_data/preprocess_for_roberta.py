@@ -180,6 +180,7 @@ for fold in folds:
 
         features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
+        print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
