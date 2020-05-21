@@ -126,7 +126,7 @@ DATA_DIR = f'data/{task}/ft_input'
 folds = split_input_for_bert(DATA_DIR, task)
 MAX_DOC_LEN = 76
 MAX_SENT_LEN = 122
-MAX_EX_LEN = sys.argv[1]
+MAX_EX_LEN = int(sys.argv[1])
 
 # structure of project
 CONTEXT_TYPE = 'article'
