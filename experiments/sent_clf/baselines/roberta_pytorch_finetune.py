@@ -59,6 +59,8 @@ REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+
 SAMPLER = args.sampler
 
 N_EPS = args.n_epochs
@@ -232,7 +234,7 @@ if __name__ == '__main__':
 
                 setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
 
-            main_results_table.to_csv(os.path.join(TABLE_DIR, f'main_results_table.csv'), index=False)
+            main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)

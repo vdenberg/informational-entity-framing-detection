@@ -249,7 +249,7 @@ if __name__ == '__main__':
 
                 setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
 
-            main_results_table.to_csv(os.path.join(TABLE_DIR, f'main_results_table.csv'), index=False)
+            main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)

@@ -66,7 +66,7 @@ PRINT_EVERY = 100
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = 'roberta_test'
+TASK_NAME = f'SSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
@@ -266,7 +266,7 @@ if __name__ == '__main__':
 
                 setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
 
-            main_results_table.to_csv(os.path.join(TABLE_DIR, f'main_results_table.csv'), index=False)
+            main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)
