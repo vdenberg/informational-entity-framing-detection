@@ -132,18 +132,12 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
-        s_vectors = sequence_output[:, 0, :].detach().cpu().numpy()
-        similarities = cosine_similarity(s_vectors)
-        print(similarities)
-        print(similarities.shape)
-        avsim = similarities.mean()
-        print(avsim.shape)
 
         logits = self.classifier(sequence_output)
         #probs = self.sigm(logits)
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
-        outputs = (logits, avsim, sequence_output) + outputs[2:]
+        outputs = (logits, sequence_output) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
@@ -335,6 +329,15 @@ class Inferencer():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
                 logits, sequence_output = outputs
+
+                s_tokens = sequence_output[:, 0, :]
+                s_vectors = s_tokens.detach().cpu().numpy()
+                similarities = cosine_similarity(s_vectors)
+                similarities = similarities.ravel()
+                print(similarities)
+                print(similarities.shape)
+                avsim = similarities.mean()
+                print(avsim)
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
