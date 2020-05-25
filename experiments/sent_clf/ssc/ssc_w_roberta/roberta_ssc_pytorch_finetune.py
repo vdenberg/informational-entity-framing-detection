@@ -4,6 +4,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from lib.classifiers.RobertaSSCWrapper import RobertaSSC, Inferencer, save_model, load_features
+from lib.classifiers.RobertaWrapper import Inferencer, save_model, load_features
 from datetime import datetime
 import torch
 import numpy as np
@@ -29,7 +30,7 @@ class InputFeatures(object):
 ########################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-model', '--model', type=str, default='dapttapt') #5e-5, 3e-5, 2e-5
+parser.add_argument('-model', '--model', type=str, default='rob_base-') #5e-5, 3e-5, 2e-5
 parser.add_argument('-ep', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
