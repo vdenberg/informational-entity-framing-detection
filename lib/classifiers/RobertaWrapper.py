@@ -58,7 +58,7 @@ class RobertaClassificationHeadwTDFF(nn.Module):
     """Head for sentence-level classification tasks."""
 
     def __init__(self, config):
-        super(RobertaClassificationHead, self).__init__()
+        super(RobertaClassificationHeadwTDFF, self).__init__()
         #self.dense = nn.Linear(config.hidden_size, config.hidden_size)
         self.dense = TimeDistributed(Linear(config.hidden_size, config.num_labels))
 
