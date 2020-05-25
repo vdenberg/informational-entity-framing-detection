@@ -14,7 +14,7 @@ from transformers.configuration_roberta import RobertaConfig
 
 from transformers.modeling_roberta import RobertaModel, ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 from allennlp.modules import TimeDistributed
-
+from sklearn.metrics.pairwise import cosine_similarity
 
 # helpers
 class InputFeatures(object):
@@ -132,11 +132,18 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
+        print(sequence_output.shape)
+        similarities = cosine_similarity(sequence_output)
+        print(similarities)
+        print(similarities.shape)
+        avsim = similarities.mean()
+        print(avsim.shape)
+
         logits = self.classifier(sequence_output)
         #probs = self.sigm(logits)
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
-        outputs = (logits, sequence_output) + outputs[2:]
+        outputs = (logits, avsim, sequence_output) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
