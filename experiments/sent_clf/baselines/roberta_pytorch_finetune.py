@@ -65,7 +65,7 @@ parser.add_argument('-batch', '--batch_size', type=int, default=5,
                     help='note that in this expertise batch size is the nr of sentence in a group')
 parser.add_argument('-eps', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-svs', '--seed_vals', type=list, default=[182, 342, 82]) #5e-5, 3e-5, 2e-5
+parser.add_argument('-svs', '--seed_vals', type=list, default=[182]) #5e-5, 3e-5, 2e-5
 args = parser.parse_args()
 
 model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
