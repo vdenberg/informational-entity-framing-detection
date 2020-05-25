@@ -3,6 +3,7 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from transformers.configuration_roberta import RobertaConfig
 import pickle
 from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
+from lib.classifiers.BertWrapper import BertForSequenceClassification
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -18,6 +19,16 @@ import logging
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
+
+
+def get_model(model_name, cache_dir=None, num_labels=2):
+    if model_name == 'bert':
+        model = BertForSequenceClassification.from_pretrained(model_name, cache_dir=cache_dir, num_labels=num_labels,
+                                                                          output_hidden_states=False, output_attentions=False)
+    else:
+        model = RobertaForSequenceClassification.from_pretrained(model_name, cache_dir=cache_dir, num_labels=num_labels,
+                                                              output_hidden_states=False, output_attentions=False)
+    return model
 
 
 class InputFeatures(object):
@@ -45,30 +56,52 @@ parser.add_argument('-bs', '--batch_size', type=int, default=8) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
-# find GPU if present
 model_mapping = {'rob_base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
+                 'bert': 'bert-base-cased'
                  }
-ROBERTA_MODEL = model_mapping[args.model]
-
-device, USE_CUDA = get_torch_device()
-#BERT_MODEL = 'roberta-base' #bert-large-cased
-TASK_NAME = 'roberta_test'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-
+LM_MODEL = model_mapping[args.model]
+BATCH_SIZE = args.batch_size
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-LOAD_FROM_EP = args.load_from_ep
-BATCH_SIZE = args.batch_size
+SEED_VALS = args.seed_vals
+
+
+########################
+# SET HYPERPARAMETERS
+########################
+
+MAX_SENT_LEN = 90
+device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
 PRINT_EVERY = 100
+
+########################
+# WHERE ARE THE FILES
+########################
+
+TASK_NAME = 'roberta_test'
+
+lm = 'roberta' if 'rob' in args.model else 'bert/folds'
+FEAT_DIR = f'data/sent_clf/features_for_{lm}/'
+CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
+if not os.path.exists(TABLE_DIR):
+    os.makedirs(TABLE_DIR)
+
+########################
+# MAIN
+########################
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
@@ -91,7 +124,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{LM_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -106,9 +139,9 @@ if __name__ == '__main__':
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
-                    best_val_res = {'model': ROBERTA_MODEL.split('/')[-1], 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
+                    best_val_res = {'model': LM_MODEL.split('/')[-1], 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                     'f1': 0, 'model_loc': ''}
-                    test_res = {'model': ROBERTA_MODEL.split('/')[-1], 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                    test_res = {'model': LM_MODEL.split('/')[-1], 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/sent_clf/features_for_roberta/{fold_name}_train_features.pkl"
                     dev_fp = f"data/sent_clf/features_for_roberta/{fold_name}_dev_features.pkl"
@@ -121,8 +154,8 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                             output_hidden_states=False, output_attentions=False)
+                    model = get_model(LM_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS)
+
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
 
@@ -142,10 +175,9 @@ if __name__ == '__main__':
                         LOAD_ALLOWED = True
                         if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                            num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=False,
-                                                                                            output_attentions=False)
+                            model_name = os.path.join(CHECKPOINT_DIR, epoch_name)
+                            trained_model = get_model(model_name, cache_dir=CACHE_DIR, num_labels=NUM_LABELS)
+
                             dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
                                                                  set_type='dev', name=epoch_name)
                         else:
@@ -184,36 +216,57 @@ if __name__ == '__main__':
                     if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = RobertaForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                               output_hidden_states=False,
-                                                                               output_attentions=False)
+                    best_model = get_model(best_val_res['model_loc'], num_labels=NUM_LABELS)
+
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
 
-                    '''
-                    for EMB_TYPE in ['poolbert', 'avbert']:
-                        all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
-                        embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                        basil_w_BERT = pd.DataFrame(index=all_ids)
-                        basil_w_BERT[EMB_TYPE] = embs
-                        emb_name = f'{name}_basil_w_{EMB_TYPE}'
-                        basil_w_BERT.to_csv(f'data/{emb_name}.csv')
-                        logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-                    '''
+                    # if you want to save embeddings from a model, set this flag to true
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
+                    GET_EMBEDS = False
+                    if GET_EMBEDS:
+                        for EMB_TYPE in ['poolbert', 'avbert']:
+                            all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
+                            embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                            basil_w_BERT = pd.DataFrame(index=all_ids)
+                            basil_w_BERT[EMB_TYPE] = embs
+                            emb_name = f'{name}_basil_w_{EMB_TYPE}'
+                            basil_w_BERT.to_csv(f'data/{emb_name}.csv')
+                            logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
+
+                    # eval on test
+
+                    test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 
+
+                    # store performance in table
+
                     fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                     fold_results_table = fold_results_table.append(test_res, ignore_index=True)
-                    logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type", "f1"]]}')
                     setting_results_table = setting_results_table.append(fold_results_table)
 
-                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
-                setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
+                    # print result on fold
+
+                    logging.info(
+                        f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
+                    # print result of setting
+
+                logging.info(
+                    f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
+                # store performance of setting
+
                 main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-            main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
+
+                # write performance to file
+
+                setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'),
+                                             index=False)
+
+            main_results_table.to_csv(os.path.join(TABLE_DIR, f'main_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)

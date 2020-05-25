@@ -198,7 +198,7 @@ class RobertaSSC(BertPreTrainedModel):
             logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
             probs = torch.nn.functional.softmax(logits, dim=-1)
 
-        outputs = (logits, probs, sequence_output) + outputs[2:]
+        outputs = (logits, sequence_output) + outputs[2:]
 
         if labels is not None:
             if not ssc:
