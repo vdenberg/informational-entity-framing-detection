@@ -66,6 +66,7 @@ parser.add_argument('-batch', '--batch_size', type=int, default=5,
 parser.add_argument('-eps', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-svs', '--seed_vals', type=int, default=182) #5e-5, 3e-5, 2e-5
+parser.add_argument('-allow', '--allow_load', action='store_true', default=False) #5e-5, 3e-5, 2e-5
 args = parser.parse_args()
 
 model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
@@ -185,7 +186,7 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        LOAD_ALLOWED = True
+                        LOAD_ALLOWED = args.allow_load
                         if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
