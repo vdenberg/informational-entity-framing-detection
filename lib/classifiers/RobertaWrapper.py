@@ -65,7 +65,7 @@ class RobertaClassificationHeadwTDFF(nn.Module):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
         #self.out_proj = nn.Linear(config.hidden_size, config.num_labels)
-        self.out_proj = TimeDistributed(config.hidden_size, config.num_labels)
+        self.out_proj = TimeDistributed(Linear(config.hidden_size, config.num_labels))
 
     def forward(self, features, **kwargs):
         x = features[:, 0, :]  # take <s> token (equiv. to [CLS]) #todo: process this!!!!
