@@ -65,7 +65,7 @@ LM_MODEL = model_mapping[args.model]
 BATCH_SIZE = args.batch_size
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED_VALS = args.seed_vals
+SEED_VALS = args.sv
 
 
 ########################
