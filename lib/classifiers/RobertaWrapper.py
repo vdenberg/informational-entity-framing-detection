@@ -368,6 +368,7 @@ class Inferencer():
             elif output_mode == 'classification':
                 #print(probs)
                 #assert len(probs[0]) == 2
+                print(logits)
                 pred = np.argmax(logits, axis=1)
             preds.extend(pred)
 
