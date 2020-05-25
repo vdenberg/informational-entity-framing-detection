@@ -94,7 +94,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{args.model}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
