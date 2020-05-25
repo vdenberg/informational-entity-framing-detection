@@ -97,7 +97,7 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [182]:
+    for SEED in [263]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -142,7 +142,8 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        ALLOW_LOAD = False
+                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)) and ALLOW_LOAD:
                             # this epoch for this setting has been trained before already
                             trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
