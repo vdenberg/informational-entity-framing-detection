@@ -41,7 +41,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=4) #16, 21
-parser.add_argument('-load', '--load', action='store_true', default=False)
+parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
 
@@ -148,8 +148,8 @@ if __name__ == '__main__':
                                                                                             num_labels=NUM_LABELS,
                                                                                             output_hidden_states=False,
                                                                                             output_attentions=False)
-                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 set_type='dev', name=epoch_name)
+                            dev_mets, dev_perf = inferencer.evaluate(trained_model, dev_batches, dev_labels,
+                                                                     set_type='dev', name=epoch_name)
                         else:
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
@@ -170,8 +170,8 @@ if __name__ == '__main__':
 
                             av_loss = tr_loss / len(train_batches)
                             save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                 set_type='dev', name=epoch_name)
+                            dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                     set_type='dev', name=epoch_name)
 
                         # check if best
                         high_score = ''

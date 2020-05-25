@@ -199,7 +199,7 @@ class RobertaSSC(BertPreTrainedModel):
             logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
             probs = torch.nn.functional.softmax(logits, dim=-1)
 
-        outputs = (logits, sequence_output) + outputs[2:]
+        outputs = (logits, probs, sequence_output) + outputs[2:]
 
         if labels is not None:
             if not ssc:
@@ -308,7 +308,7 @@ class Inferencer():
 
     def predict(self, model, data, return_embeddings=False, emb_type='poolbert', output_mode='classification'):
         model.to(self.device)
-        model.eval()
+        model.evaluate()
 
         preds = []
         embeddings = []
@@ -320,7 +320,7 @@ class Inferencer():
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, sequence_output = outputs
+                logits, probs, sequence_output = outputs
 
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()

@@ -252,7 +252,7 @@ class BertWrapper:
         return loss.item()
 
     def predict(self, batches):
-        self.model.eval()
+        self.model.evaluate()
 
         y_pred = []
         sum_loss = 0
@@ -298,7 +298,7 @@ class BertWrapper:
         if model_path:
             self.load_model(load_from_path=model_path)
 
-        self.model.eval()
+        self.model.evaluate()
         embeddings = []
         for step, batch in enumerate(batches):
             emb_output = self.get_embedding_output(batch, emb_type)
