@@ -30,28 +30,32 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-model', '--model', type=str, default='dapttapt') #5e-5, 3e-5, 2e-5
-parser.add_argument('-batch', '--batch_size', type=int, default=5,
+parser.add_argument('-ep', '--n_epochs', type=int, default=5)
+parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
+parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--batch_size', type=int, default=1,
                     help='note that in this expertise batch size is the nr of sentence in a group')
-parser.add_argument('-eps', '--n_epochs', type=int, default=5)
-parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-svs', '--seed_vals', type=list, default=[182, 342, 82]) #5e-5, 3e-5, 2e-5
+parser.add_argument('-load', '--load', action='store_true', default=False)
+parser.add_argument('-sampler', '--sampler', type=str, default='random') #5e-5, 3e-5, 2e-5
+parser.add_argument('-exlen', '--example_length', type=int, default=1) #5e-5, 3e-5, 2e-5
 args = parser.parse_args()
 
-model_mapping = {'bamose': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
-                 'dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
-                 'dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
+model_mapping = {'rob_base': 'roberta-base',
+                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+                 'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
-ROERTA_MODEL = model_mapping[args.model]
+ROBERTA = model_mapping[args.model]
 BATCH_SIZE = args.batch_size
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED_VALS = args.seed_vals
+SAMPLER = args.sampler
+EX_LEN = args.example_length
 
 ########################
 # SET HYPERPARAMETERS
 ########################
 
-MAX_SENT_LEN = 90
 device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
@@ -63,7 +67,7 @@ PRINT_EVERY = 100
 ########################
 
 TASK_NAME = 'roberta_test'
-FEAT_DIR = f'data/sent_clf/features_for_roberta/'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
@@ -96,16 +100,16 @@ if __name__ == '__main__':
     # get inferencer and place to store results
 
     inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-    table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+    table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,acc,prec,rec,f1,fn,fp,tn,tp'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-    for SEED in SEED_VALS:
+    for SEED in [args.sv, args.sv*2, args.sv*3]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{ROERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{ROBERTA.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -118,7 +122,7 @@ if __name__ == '__main__':
             for LEARNING_RATE in [LEARNING_RATE]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['2']:
+                for fold_name in [str(el) for el in range(1,11)]:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
                     best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
@@ -127,12 +131,12 @@ if __name__ == '__main__':
 
                     # gather data
 
-                    train_fp = f"data/sent_clf/features_for_roberta/{fold_name}_train_features.pkl"
-                    dev_fp = f"data/sent_clf/features_for_roberta/{fold_name}_dev_features.pkl"
-                    test_fp = f"data/sent_clf/features_for_roberta/{fold_name}_test_features.pkl"
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
+                    train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
+                    dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
+                    test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
@@ -140,8 +144,8 @@ if __name__ == '__main__':
 
                     # load pretrained model
 
-                    model = RobertaSSC.from_pretrained(ROERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                             output_hidden_states=False, output_attentions=False)
+                    model = RobertaSSC.from_pretrained(ROBERTA, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                                                       output_hidden_states=False, output_attentions=False)
                     model.to(device)
 
                     # set scheduler/optimizer

@@ -102,8 +102,8 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
         for s in sequences:
             sequence_rows.append(s)
 
-    # measure what the maxlen should be
-    maxlen = 305
+    # help measure what the maxlen should be
+    maxlen = 124
     for row in sequence_rows:
         toks = [remove_special(f.input_ids, cls, pad) for f in row]
         exlen = sum([len(t) for t in toks])
@@ -118,13 +118,15 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
     return finfeats
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-seqlen', '--sequence_length', type=int, default=5, help='Number of sentences per example#') #2,3,4
+parser.add_argument('-seqlen', '--sequence_length', type=int, default=1, help='Number of sentences per example#') #2,3,4
 args = parser.parse_args()
-
 
 # choose sentence or bio labels
 task = 'sent_clf'
 DATA_DIR = f'data/{task}/ft_input'
+
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
@@ -134,7 +136,7 @@ MAX_EX_LEN = args.sequence_length
 
 # structure of project
 CONTEXT_TYPE = 'article'
-FEAT_DIR = f'data/{task}/features_for_roberta/'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/sss{MAX_EX_LEN}/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
@@ -190,7 +192,7 @@ for fold in folds:
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        #features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")

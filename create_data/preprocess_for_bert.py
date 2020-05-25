@@ -25,7 +25,7 @@ task = 'tok_clf'
 DATA_DIR = f'data/{task}/ft_input'
 
 # load and split data
-split_input_for_bert(DATA_DIR, task)
+folds = split_input_for_bert(DATA_DIR, task)
 
 # structure of project
 CONTEXT_TYPE = 'article'
@@ -33,11 +33,13 @@ FEAT_DIR = f'data/{task}/features_for_bert/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
+split_input_for_bert(DATA_DIR, task)
+
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
 OUTPUT_MODE = 'bio_classification' # or 'classification', or 'regression'
-NR_FOLDS = 10
+NR_FOLDS = len(folds)
 
 if OUTPUT_MODE == 'bio_classification':
     spacy_tokenizer = spacy.load("en_core_web_sm")
@@ -63,9 +65,15 @@ if not os.path.exists(ofp):
 
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
+else:
+    with open(ofp, "rb") as f:
+       features = pickle.load(f)
+       features_dict = {feat.my_id: feat for feat in features}
+       print(f"Processed fold all - {len(features)} items")
 
 # start
-for fold_name in [str(i+1) for i in range(NR_FOLDS)]:
+for fold in folds:
+    fold_name = fold['name']
     for set_type in ['train', 'dev', 'test']:
         infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")

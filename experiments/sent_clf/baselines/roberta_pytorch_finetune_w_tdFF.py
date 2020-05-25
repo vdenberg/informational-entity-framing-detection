@@ -41,7 +41,7 @@ parser.add_argument('-model', '--model', type=str, default='rob_base') #2,3,4
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
+parser.add_argument('-bs', '--batch_size', type=int, default=4) #16, 21
 parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
@@ -53,23 +53,40 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
-
 device, USE_CUDA = get_torch_device()
-TASK_NAME = 'roberta_test'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 SAMPLER = args.sampler
-
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
 BATCH_SIZE = args.batch_size
+
+
+########################
+# SET HYPERPARAMETERS
+########################
+
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
 PRINT_EVERY = 100
+
+########################
+# WHERE ARE THE FILES
+########################
+
+TASK_NAME = 'SCtdFF'
+FEAT_DIR = f'data/sent_clf/features_for_roberta/'
+CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
+if not os.path.exists(TABLE_DIR):
+    os.makedirs(TABLE_DIR)
+
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
@@ -86,7 +103,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [args.sv]:
+    for SEED in [args.sv, args.sv*2, args.sv*3]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -103,7 +120,7 @@ if __name__ == '__main__':
             for LEARNING_RATE in [LEARNING_RATE]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in [str(el) for el in range(2,3)]:
+                for fold_name in [str(el) for el in range(1,11)]:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
@@ -201,19 +218,38 @@ if __name__ == '__main__':
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
                     '''
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc')
+                    # eval on test
+
+                    test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test',
+                                                               name='best_model_loc')
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 
+                    # store performance in table
+
                     fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                     fold_results_table = fold_results_table.append(test_res, ignore_index=True)
-                    logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type", "f1"]]}')
                     setting_results_table = setting_results_table.append(fold_results_table)
 
-                logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
-                setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
+                    # print result on fold
+
+                    logging.info(
+                        f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
+                    # print result of setting
+
+                logging.info(
+                    f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
+                # store performance of setting
+
                 main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-            main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
+
+                # write performance to file
+
+                setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
+
+            main_results_table.to_csv(os.path.join(TABLE_DIR, f'main_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)
