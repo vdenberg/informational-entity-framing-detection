@@ -37,7 +37,7 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-model', '--model', type=str, default='base') #2,3,4
+parser.add_argument('-model', '--model', type=str, default='rob_base') #2,3,4
 parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
@@ -46,9 +46,9 @@ parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 # find GPU if present
-model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
-                 'dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
-                 'dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
+model_mapping = {'rob_base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+                 'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
 
@@ -71,7 +71,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,av_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
@@ -106,9 +106,9 @@ if __name__ == '__main__':
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
-                    best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
+                    best_val_res = {'model': ROBERTA_MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                     'f1': 0, 'model_loc': ''}
-                    test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                    test_res = {'model': ROBERTA_MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/sent_clf/features_for_roberta/{fold_name}_train_features.pkl"
                     dev_fp = f"data/sent_clf/features_for_roberta/{fold_name}_dev_features.pkl"
