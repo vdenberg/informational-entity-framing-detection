@@ -4,7 +4,7 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from lib.classifiers.RobertaSSCWrapper import RobertaSSC, Inferencer, save_model, load_features
-from lib.classifiers.RobertaWrapper import Inferencer, save_model, load_features
+from lib.classifiers.RobertaWrapper import load_features
 from datetime import datetime
 import torch
 import numpy as np
