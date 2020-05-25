@@ -71,8 +71,13 @@ parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 # find GPU if present
+model_mapping = {'rob_base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+                 'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
+                 }
+ROBERTA_MODEL = model_mapping[args.model]
+
 device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015'  # 'bert-base-cased' #bert-large-cased
 #BERT_MODEL = 'roberta-base' #bert-large-cased
 TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
@@ -91,7 +96,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,avsim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':

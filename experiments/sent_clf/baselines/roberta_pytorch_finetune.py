@@ -71,7 +71,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,av_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':

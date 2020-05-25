@@ -321,7 +321,7 @@ class Inferencer():
 
         preds = []
         embeddings = []
-        avsim = []
+        rep_sim = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, label_ids = batch
@@ -331,15 +331,14 @@ class Inferencer():
                 outputs = model(input_ids, input_mask, labels=None)
                 logits, sequence_output = outputs
 
-                s_tokens = sequence_output[:, 0, :]
-                s_vectors = s_tokens.detach().cpu().numpy()
+                r = sequence_output[:, 0, :]
+                r = r.detach().cpu().numpy()
 
-                similarities = cosine_similarity(s_vectors)
-                similarities = similarities.ravel()
+                batch_r_sim = cosine_similarity(r)
+                batch_r_sim = batch_r_sim.ravel()
 
-                batchsim = similarities.mean()
-                print(batchsim)
-                avsim.append(batchsim)
+                batch_r_sim = batch_r_sim.mean()
+                rep_sim.append(batch_r_sim)
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
@@ -371,16 +370,16 @@ class Inferencer():
                 pred = np.argmax(logits, axis=1)
             preds.extend(pred)
 
-        avsim = sum(avsim) / len(avsim)
+        rep_sim = sum(rep_sim) / len(rep_sim)
 
         model.train()
         if return_embeddings:
             return embeddings
         else:
-            return preds, avsim
+            return preds, rep_sim
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
-        preds, avsim = self.predict(model, data, output_mode=output_mode)
+        preds, rep_sim = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
@@ -397,7 +396,7 @@ class Inferencer():
             print(len(labels), len(labels[0]))
             exit(0)
 
-        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name, avsim=avsim)
+        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name, rep_sim=rep_sim)
 
         # output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         # self.logger.info(f'{metrics_string}')

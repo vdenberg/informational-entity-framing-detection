@@ -39,7 +39,7 @@ def get_metrics(labels, preds):
     }
 
 
-def my_eval(labels, preds, av_loss=None, set_type="", name="", avsim=None):
+def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None):
     """
     Compares labels to predictions, Loss can be added to also
     display the loss associated to the model that made those predictions
@@ -57,8 +57,8 @@ def my_eval(labels, preds, av_loss=None, set_type="", name="", avsim=None):
     if av_loss:
         metrics_dict['loss'] = av_loss
 
-    if avsim:
-        metrics_dict['avsim'] = avsim
+    if rep_sim:
+        metrics_dict['rep_sim'] = rep_sim
 
     if set_type:
         metrics_dict['set_type'] = set_type
@@ -81,8 +81,8 @@ def my_eval(labels, preds, av_loss=None, set_type="", name="", avsim=None):
     else:
         metrics_string = f"On {set_type} {conf_mat}: acc {metrics[0]} prec {metrics[1]} rec {metrics[2]} > {set_type} f1: {metrics[3]} <"
 
-    if avsim:
-        metrics_string += f'(avsim: {avsim})'
+    if rep_sim:
+        metrics_string += f'(rep_sim: {rep_sim})'
     return metrics_dict, metrics_string
 
 
