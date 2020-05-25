@@ -69,6 +69,7 @@ class RobertaClassificationHeadwTDFF(nn.Module):
 
     def forward(self, features, **kwargs):
         x = features[:, 0, :]  # take <s> token (equiv. to [CLS]) #todo: process this!!!!
+        x = x.unsqueeze(dim=0)
         x = self.dropout(x)
         x = self.dense(x)
         x = torch.tanh(x)
