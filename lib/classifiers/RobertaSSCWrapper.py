@@ -308,7 +308,7 @@ class Inferencer():
 
     def predict(self, model, data, return_embeddings=False, emb_type='poolbert', output_mode='classification'):
         model.to(self.device)
-        model.evaluate()
+        model.eval()
 
         preds = []
         embeddings = []
