@@ -11,7 +11,7 @@ from lib.utils import get_torch_device, to_tensor, to_batches
 from lib.evaluate.Eval import my_eval
 from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 from transformers.configuration_roberta import RobertaConfig
-from transformers.modeling_roberta import RobertaModel, RobertaClassificationHead, ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
+from transformers.modeling_roberta import RobertaModel, ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
 
 # ssc
 from allennlp.training.metrics import F1Measure, CategoricalAccuracy
@@ -37,6 +37,25 @@ def load_features(fp, batch_size):
 
     batches = to_batches(data, batch_size=batch_size)
     return ids, batches, labels
+
+
+class RobertaClassificationHead(nn.Module):
+    """Head for sentence-level classification tasks."""
+
+    def __init__(self, config):
+        super(RobertaClassificationHead, self).__init__()
+        self.dense = nn.Linear(config.hidden_size, config.hidden_size)
+        self.dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.out_proj = nn.Linear(config.hidden_size, config.num_labels)
+
+    def forward(self, features, **kwargs):
+        x = features[:, 0, :]  # take <s> token (equiv. to [CLS])
+        x = self.dropout(x)
+        x = self.dense(x)
+        x = torch.tanh(x)
+        x = self.dropout(x)
+        x = self.out_proj(x)
+        return x
 
 
 #@add_start_docstrings("""RoBERTa Model transformer with a sequence classification/regression head on top (a linear layer

@@ -125,7 +125,7 @@ DATA_DIR = f'data/{task}/ft_input'
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
 MAX_DOC_LEN = 76
-MAX_SENT_LEN = 122
+MAX_SENT_LEN = 486
 MAX_EX_LEN = int(sys.argv[1])
 
 # structure of project
@@ -186,7 +186,7 @@ for fold in folds:
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+        #features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
