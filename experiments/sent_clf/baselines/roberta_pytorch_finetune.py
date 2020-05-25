@@ -22,7 +22,7 @@ import logging
 
 
 def get_model(model_name, cache_dir=None, num_labels=2):
-    if model_name == 'ber-base-cased':
+    if model_name == 'bert-base-cased':
         model = BertForSequenceClassification.from_pretrained(model_name, cache_dir=cache_dir, num_labels=num_labels,
                                                                           output_hidden_states=False, output_attentions=False)
     else:
