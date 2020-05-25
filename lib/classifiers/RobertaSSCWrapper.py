@@ -202,8 +202,7 @@ class RobertaSSC(BertPreTrainedModel):
 
         if labels is not None:
             if not ssc:
-                loss_fct = CrossEntropyLoss()
-                loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
+                loss = self.loss(logits.view(-1, self.num_labels), labels.view(-1))
 
             else:
                 # Compute cross entropy loss

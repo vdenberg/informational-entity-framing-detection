@@ -75,6 +75,7 @@ class RobertaClassificationHeadwTDFF(nn.Module):
         x = torch.tanh(x)
         x = self.dropout(x)
         x = self.out_proj(x)
+        x = x.squeeze()
         return x
 
 #@add_start_docstrings("""RoBERTa Model transformer with a sequence classification/regression head on top (a linear layer
@@ -368,7 +369,6 @@ class Inferencer():
             elif output_mode == 'classification':
                 #print(probs)
                 #assert len(probs[0]) == 2
-                print(logits)
                 pred = np.argmax(logits, axis=1)
             preds.extend(pred)
 
