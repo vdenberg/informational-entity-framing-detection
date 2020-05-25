@@ -62,10 +62,10 @@ class InputFeatures(object):
 parser = argparse.ArgumentParser()
 parser.add_argument('-model', '--model', type=str, default='dapttapt') #5e-5, 3e-5, 2e-5
 parser.add_argument('-batch', '--batch_size', type=int, default=5,
-                    help='note that in this expertise batch size is the nr of sentence in a group')
+                    help='note that in this experimentsv batch size is the nr of sentence in a group')
 parser.add_argument('-eps', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-svs', '--seed_vals', type=list, default=[182]) #5e-5, 3e-5, 2e-5
+parser.add_argument('-svs', '--seed_vals', type=int, default=182) #5e-5, 3e-5, 2e-5
 args = parser.parse_args()
 
 model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
@@ -129,7 +129,7 @@ if __name__ == '__main__':
     table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-    for SEED in SEED_VALS:
+    for SEED in [SEED_VALS]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
