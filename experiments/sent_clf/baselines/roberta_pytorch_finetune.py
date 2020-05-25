@@ -13,35 +13,11 @@ from lib.utils import get_torch_device
 import time
 from pprint import pprint
 import logging
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
-
-def to_batches(tensors, batch_size):
-    ''' Creates dataloader with input divided into batches. '''
-    sampler = RandomSampler(tensors)
-    #sampler = SequentialSampler(tensors) #RandomSampler(tensors)
-    loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
-    return loader
-
-
-def to_tensor(features):
-    example_ids = [f.my_id for f in features]
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(input_ids, input_mask, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-
-
-def load_features(fp, batch_size):
-    with open(fp, "rb") as f:
-        ids, data, labels = to_tensor(pickle.load(f))
-    batches = to_batches(data, batch_size=batch_size)
-    return ids, batches, labels
 
 
 class InputFeatures(object):
@@ -60,62 +36,40 @@ class InputFeatures(object):
 ################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-model', '--model', type=str, default='dapttapt') #5e-5, 3e-5, 2e-5
-parser.add_argument('-batch', '--batch_size', type=int, default=5,
-                    help='note that in this experimentsv batch size is the nr of sentence in a group')
-parser.add_argument('-eps', '--n_epochs', type=int, default=5)
+# TRAINING PARAMS
+parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-svs', '--seed_vals', type=int, default=182) #5e-5, 3e-5, 2e-5
-parser.add_argument('-allow', '--allow_load', action='store_true', default=False) #5e-5, 3e-5, 2e-5
+parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--batch_size', type=int, default=8) #16, 21
+parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
-model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
-                 'dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
-                 'dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
-                 }
-ROBERTA_MODEL = model_mapping[args.model]
-BATCH_SIZE = args.batch_size
+# find GPU if present
+device, USE_CUDA = get_torch_device()
+BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015'  # 'bert-base-cased' #bert-large-cased
+#BERT_MODEL = 'roberta-base' #bert-large-cased
+TASK_NAME = 'roberta_test'
+CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+REPORTS_DIR = f'reports/{TASK_NAME}'
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-SEED_VALS = args.seed_vals
-
-########################
-# SET HYPERPARAMETERS
-########################
-
-MAX_SENT_LEN = 90
-device, USE_CUDA = get_torch_device()
+LOAD_FROM_EP = args.load_from_ep
+BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
 PRINT_EVERY = 100
 
-########################
-# WHERE ARE THE FILES
-########################
-
-TASK_NAME = 'roberta_test'
-FEAT_DIR = f'data/sent_clf/features_for_roberta/'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
-CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
-
-if not os.path.exists(CHECKPOINT_DIR):
-    os.makedirs(CHECKPOINT_DIR)
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-if not os.path.exists(TABLE_DIR):
-    os.makedirs(TABLE_DIR)
-
-########################
-# MAIN
-########################
+inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
-
     # set logger
-
     now = datetime.now()
     now_string = now.strftime(format=f'%b-%d-%Hh-%-M_{TASK_NAME}')
     LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
@@ -125,24 +79,17 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    # get inferencer and place to store results
-    inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-    table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
-    main_results_table = pd.DataFrame(columns=table_columns.split(','))
-
-    for SEED in [SEED_VALS]:
+    for SEED in [args.sv]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{BERT_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
-
-        # set settings for experiment
 
         for BATCH_SIZE in [BATCH_SIZE]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
@@ -168,7 +115,7 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                    model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                           output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
@@ -186,7 +133,7 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        LOAD_ALLOWED = args.allow_load
+                        LOAD_ALLOWED = False
                         if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
