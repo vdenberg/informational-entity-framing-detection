@@ -136,7 +136,7 @@ MAX_EX_LEN = args.sequence_length
 
 # structure of project
 CONTEXT_TYPE = 'article'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/sss{MAX_EX_LEN}/'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{MAX_EX_LEN}/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
