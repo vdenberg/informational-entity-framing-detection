@@ -133,8 +133,7 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
         print(sequence_output.shape)
-        sequence_output = sequence_output.detach().cpu().numpy()
-        similarities = cosine_similarity(sequence_output)
+        similarities = cosine_similarity(sequence_output.detach().cpu().numpy())
         print(similarities)
         print(similarities.shape)
         avsim = similarities.mean()
