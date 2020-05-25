@@ -321,6 +321,7 @@ class Inferencer():
 
         preds = []
         embeddings = []
+        avsim = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, label_ids = batch
@@ -332,12 +333,13 @@ class Inferencer():
 
                 s_tokens = sequence_output[:, 0, :]
                 s_vectors = s_tokens.detach().cpu().numpy()
+
                 similarities = cosine_similarity(s_vectors)
                 similarities = similarities.ravel()
-                print(similarities)
-                print(similarities.shape)
-                avsim = similarities.mean()
-                print(avsim)
+
+                batchsim = similarities.mean()
+                print(batchsim)
+                avsim.append(batchsim)
                 # logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
@@ -369,14 +371,16 @@ class Inferencer():
                 pred = np.argmax(logits, axis=1)
             preds.extend(pred)
 
+        avsim = sum(avsim) / len(avsim)
+
         model.train()
         if return_embeddings:
             return embeddings
         else:
-            return preds
+            return preds, avsim
 
     def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
-        preds = self.predict(model, data, output_mode=output_mode)
+        preds, avsim = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
@@ -393,7 +397,7 @@ class Inferencer():
             print(len(labels), len(labels[0]))
             exit(0)
 
-        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
+        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name, avsim=avsim)
 
         # output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         # self.logger.info(f'{metrics_string}')
