@@ -13,37 +13,11 @@ from lib.utils import get_torch_device
 import time
 from pprint import pprint
 import logging
-from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
-
-
-def to_batches(tensors, batch_size):
-    ''' Creates dataloader with input divided into batches. '''
-    sampler = RandomSampler(tensors)
-    #sampler = SequentialSampler(tensors) #RandomSampler(tensors)
-    loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
-    return loader
-
-
-def to_tensor(features):
-    example_ids = [f.my_id for f in features]
-    print(features[0].input_ids)
-    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
-    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
-    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
-    data = TensorDataset(input_ids, input_mask, label_ids)
-    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
-
-
-def load_features(fp, batch_size):
-    with open(fp, "rb") as f:
-        ids, data, labels = to_tensor(pickle.load(f))
-    batches = to_batches(data, batch_size=batch_size)
-    return ids, batches, labels
 
 
 class InputFeatures(object):
@@ -63,32 +37,34 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
-parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=5) #16, 21
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-model', '--model', type=str, default='rob_base') #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
+parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
+parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
+parser.add_argument('-load', '--load', action='store_true', default=False)
+parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
 
 # find GPU if present
-model_mapping = {'rob_base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
-                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+model_mapping = {'rob_base': 'roberta-base',
+                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
 
 device, USE_CUDA = get_torch_device()
-#BERT_MODEL = 'roberta-base' #bert-large-cased
 TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+SAMPLER = args.sampler
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
@@ -96,7 +72,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,avsim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
@@ -116,7 +92,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{BERT_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -127,27 +103,27 @@ if __name__ == '__main__':
             for LEARNING_RATE in [LEARNING_RATE]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['2']:
+                for fold_name in [str(el) for el in range(2,3)]:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
-                    best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
+                    best_val_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                     'f1': 0, 'model_loc': ''}
-                    test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                    test_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/sent_clf/features_for_roberta/{fold_name}_train_features.pkl"
                     dev_fp = f"data/sent_clf/features_for_roberta/{fold_name}_dev_features.pkl"
                     test_fp = f"data/sent_clf/features_for_roberta/{fold_name}_test_features.pkl"
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=False, output_attentions=False)
+                    model = RobertaForSequenceClassificationWithTDFF.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                                                                             output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
 
@@ -164,10 +140,9 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        LOAD_ALLOWED = False
-                        if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        if args.load and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
-                            trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
+                            trained_model = RobertaForSequenceClassificationWithTDFF.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
                                                                                             output_hidden_states=False,
                                                                                             output_attentions=False)
@@ -209,7 +184,7 @@ if __name__ == '__main__':
                     if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
                         best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = RobertaForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+                    best_model = RobertaForSequenceClassificationWithTDFF.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
                                                                                output_hidden_states=False,
                                                                                output_attentions=False)
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
