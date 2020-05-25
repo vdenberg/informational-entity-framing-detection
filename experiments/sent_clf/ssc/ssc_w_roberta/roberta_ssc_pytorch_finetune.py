@@ -189,7 +189,7 @@ if __name__ == '__main__':
 
                                 model.zero_grad()
                                 outputs = model(batch[0], batch[1], labels=batch[2], ssc=True)
-                                (loss), logits, sequence_output = outputs
+                                (loss), logits, _, sequence_output = outputs
 
                                 loss.backward()
                                 tr_loss += loss.item()
