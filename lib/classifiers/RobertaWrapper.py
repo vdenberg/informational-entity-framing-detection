@@ -60,7 +60,7 @@ class RobertaClassificationHeadwTDFF(nn.Module):
     def __init__(self, config):
         super(RobertaClassificationHeadwTDFF, self).__init__()
         #self.dense = nn.Linear(config.hidden_size, config.hidden_size)
-        self.dense = TimeDistributed(Linear(config.hidden_size, config.num_labels))
+        self.dense = TimeDistributed(Linear(config.hidden_size, config.hidden_size))
 
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
 
