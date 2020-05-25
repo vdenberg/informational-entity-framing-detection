@@ -42,7 +42,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
 
@@ -141,8 +141,7 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        LOAD_ALLOWED = False
-                        if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        if args.load and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
