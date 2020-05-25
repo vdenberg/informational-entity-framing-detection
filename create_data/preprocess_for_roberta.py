@@ -6,7 +6,7 @@ from lib.handle_data.PreprocessForRoberta import *
 import csv
 from lib.handle_data.SplitData import split_input_for_bert
 import torch
-
+import argparse
 
 def preprocess(rows):
     count = 0
@@ -116,6 +116,10 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
         ff = flatten_sequence(row, cls, pad, maxlen, max_sent)
         finfeats.append(ff)
     return finfeats
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-seqlen', '--sequence_length', type=int, default=5, help='Number of sentences per example#') #2,3,4
+args = parser.parse_args()
 
 
 # choose sentence or bio labels

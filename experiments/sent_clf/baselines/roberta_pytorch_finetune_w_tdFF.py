@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from transformers.configuration_roberta import RobertaConfig
 import pickle
-from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
+from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, RobertaForSequenceClassificationWithTDFF, Inferencer, save_model, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -13,11 +13,37 @@ from lib.utils import get_torch_device
 import time
 from pprint import pprint
 import logging
+from torch.utils.data import (DataLoader, SequentialSampler, RandomSampler, TensorDataset)
 
 #######
 # FROM:
 # https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
 #####
+
+
+def to_batches(tensors, batch_size):
+    ''' Creates dataloader with input divided into batches. '''
+    sampler = RandomSampler(tensors)
+    #sampler = SequentialSampler(tensors) #RandomSampler(tensors)
+    loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
+    return loader
+
+
+def to_tensor(features):
+    example_ids = [f.my_id for f in features]
+    print(features[0].input_ids)
+    input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
+    input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
+    label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
+    data = TensorDataset(input_ids, input_mask, label_ids)
+    return example_ids, data, label_ids  # example_ids, input_ids, input_mask, segment_ids, label_ids
+
+
+def load_features(fp, batch_size):
+    with open(fp, "rb") as f:
+        ids, data, labels = to_tensor(pickle.load(f))
+    batches = to_batches(data, batch_size=batch_size)
+    return ids, batches, labels
 
 
 class InputFeatures(object):
@@ -40,7 +66,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=8) #16, 21
+parser.add_argument('-bs', '--batch_size', type=int, default=5) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
