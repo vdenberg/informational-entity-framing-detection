@@ -47,8 +47,9 @@ parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
 
 # find GPU if present
-model_mapping = {'rob_base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
-                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+model_mapping = {'rob_base': 'roberta-base',
+                 'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [args.sv]:
+    for SEED in [args.sv, args.sv * 2]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -103,7 +104,7 @@ if __name__ == '__main__':
             for LEARNING_RATE in [LEARNING_RATE]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['2']:
+                for fold_name in [str(el) for el in range(2,3)]:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
