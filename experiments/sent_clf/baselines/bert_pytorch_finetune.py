@@ -49,6 +49,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
 
 # find GPU if present
@@ -61,6 +62,8 @@ REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+
+SAMPLER = args.sampler
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
@@ -125,9 +128,9 @@ if __name__ == '__main__':
                     train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
                     dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl"
                     test_fp = f"data/features_for_bert/folds/{fold_name}_test_features.pkl"
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")

@@ -23,10 +23,10 @@ class InputFeatures(object):
         self.label_id = label_id
 
 
-def load_features(fp, batch_size):
+def load_features(fp, batch_size, sampler='random'):
     with open(fp, "rb") as f:
         ids, data, labels = to_tensor(pickle.load(f))
-    batches = to_batches(data, batch_size=batch_size)
+    batches = to_batches(data, batch_size=batch_size, sampler=sampler)
     return ids, batches, labels
 
 

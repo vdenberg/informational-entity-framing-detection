@@ -77,10 +77,12 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             return TensorDataset(token_ids, token_mask, contexts, positions, labels)
 
 
-def to_batches(tensors, batch_size):
+def to_batches(tensors, batch_size, sampler):
     ''' Creates dataloader with input divided into batches. '''
-    sampler = RandomSampler(tensors)
-    #sampler = SequentialSampler(tensors) #RandomSampler(tensors)
+    if sampler == 'random':
+        sampler = RandomSampler(tensors)
+    elif sampler == 'sequential':
+        sampler = SequentialSampler(tensors) #RandomSampler(tensors)
     loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
     return loader
 
