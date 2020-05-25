@@ -30,7 +30,7 @@ class InputFeatures(object):
 ########################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-model', '--model', type=str, default='rob_base-') #5e-5, 3e-5, 2e-5
+parser.add_argument('-model', '--model', type=str, default='rob_base') #5e-5, 3e-5, 2e-5
 parser.add_argument('-ep', '--n_epochs', type=int, default=5)
 parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
