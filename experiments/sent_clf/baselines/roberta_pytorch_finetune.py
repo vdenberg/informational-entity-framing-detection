@@ -72,7 +72,7 @@ model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_rob
                  'dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
-ROERTA_MODEL = model_mapping[args.model]
+ROBERTA_MODEL = model_mapping[args.model]
 BATCH_SIZE = args.batch_size
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
@@ -135,7 +135,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{ROERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -167,7 +167,7 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                    model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                           output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
