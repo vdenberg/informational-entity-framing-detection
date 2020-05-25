@@ -37,6 +37,7 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
+parser.add_argument('-model', '--model', type=str, default='base') #2,3,4
 parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=1.5e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-sv', '--sv', type=int, default=182) #5e-5, 3e-5, 2e-5
@@ -45,8 +46,13 @@ parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 # find GPU if present
+model_mapping = {'base': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
+                 'dapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
+                 'dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
+                 }
+ROBERTA_MODEL = model_mapping[args.model]
+
 device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015'  # 'bert-base-cased' #bert-large-cased
 #BERT_MODEL = 'roberta-base' #bert-large-cased
 TASK_NAME = 'roberta_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
@@ -85,7 +91,7 @@ if __name__ == '__main__':
         else:
             SEED_VAL = SEED
 
-        seed_name = f"{BERT_MODEL.split('/')[-1]}_{SEED_VAL}"
+        seed_name = f"{ROBERTA_MODEL.split('/')[-1]}_{SEED_VAL}"
         random.seed(SEED_VAL)
         np.random.seed(SEED_VAL)
         torch.manual_seed(SEED_VAL)
@@ -115,8 +121,8 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = RobertaForSequenceClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                          output_hidden_states=False, output_attentions=False)
+                    model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                                                                             output_hidden_states=False, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
 
