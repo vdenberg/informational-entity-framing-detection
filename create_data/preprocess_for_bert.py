@@ -50,7 +50,7 @@ else:
 dataloader = BinaryClassificationProcessor()
 
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-label_map = {label: i + 1 for i, label in enumerate(label_list)}
+label_map = {label: i for i, label in enumerate(label_list)}
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
