@@ -367,7 +367,7 @@ class Inferencer():
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
             elif output_mode == 'classification':
-                if logits.dim == 1:
+                if len(logits.shape) == 1:
                     logits = logits.unsqueeze()
                 try:
                     pred = np.argmax(logits, axis=1)
