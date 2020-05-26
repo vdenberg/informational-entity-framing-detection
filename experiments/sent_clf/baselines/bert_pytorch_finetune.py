@@ -45,33 +45,24 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=4) #16, 21
-parser.add_argument('-load', '--load', action='store_true', default=False)
-parser.add_argument('-sampler', '--sampler', type=str, default='random')
+parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
+parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
-#BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-
-TASK_NAME = 'SC_BERT'
+TASK_NAME = 'bert_baseline'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
-
-SAMPLER = args.sampler
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
+LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
-
-device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
@@ -103,7 +94,7 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [182, 263, 526, 789]:
+    for SEED in [231]: #26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -115,12 +106,12 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16]:
+        for BATCH_SIZE in [16, 21, 24]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5]:
+            for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['2']:
+                for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
@@ -128,12 +119,12 @@ if __name__ == '__main__':
                                     'f1': 0, 'model_loc': ''}
                     test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
-                    train_fp = f"data/sent_clf/features_for_bert/{fold_name}_train_features.pkl"
-                    dev_fp = f"data/sent_clf/features_for_bert/{fold_name}_dev_features.pkl"
-                    test_fp = f"data/sent_clf/features_for_bert/{fold_name}_test_features.pkl"
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
+                    train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
+                    dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl"
+                    test_fp = f"data/features_for_bert/folds/{fold_name}_test_features.pkl"
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
@@ -148,7 +139,7 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        if args.load and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
@@ -213,7 +204,7 @@ if __name__ == '__main__':
 
                     fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                     fold_results_table = fold_results_table.append(test_res, ignore_index=True)
-                    logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type", "f1"]]}')
+                    logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type","f1"]]}')
                     setting_results_table = setting_results_table.append(fold_results_table)
 
                 logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
