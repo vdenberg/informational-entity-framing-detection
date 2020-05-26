@@ -369,7 +369,11 @@ class Inferencer():
             elif output_mode == 'classification':
                 #print(probs)
                 #assert len(probs[0]) == 2
-                pred = np.argmax(logits, axis=1)
+                try:
+                    pred = np.argmax(logits, axis=1)
+                except:
+                    print(logits)
+                    print(logits.shape)
             preds.extend(pred)
 
         rep_sim = sum(rep_sim) / len(rep_sim)
