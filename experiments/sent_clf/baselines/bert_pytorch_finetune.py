@@ -45,9 +45,9 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
+parser.add_argument('-bs', '--batch_size', type=int, default=4) #16, 21
 parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
 args = parser.parse_args()
@@ -56,18 +56,22 @@ args = parser.parse_args()
 device, USE_CUDA = get_torch_device()
 #BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_test'
+
+TASK_NAME = 'SC_BERT'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 
 SAMPLER = args.sampler
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
 BATCH_SIZE = args.batch_size
+
+device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
