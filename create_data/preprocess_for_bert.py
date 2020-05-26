@@ -21,7 +21,7 @@ def preprocess(rows):
     return features
 
 # choose sentence or bio labels
-task = 'tok_clf'
+task = 'sent_clf'
 DATA_DIR = f'data/{task}/ft_input'
 
 # load and split data
@@ -38,7 +38,7 @@ split_input_for_bert(DATA_DIR, task)
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'bio_classification' # or 'classification', or 'regression'
+OUTPUT_MODE = 'classification' # or 'bio_classification', or 'regression'
 NR_FOLDS = len(folds)
 
 if OUTPUT_MODE == 'bio_classification':
