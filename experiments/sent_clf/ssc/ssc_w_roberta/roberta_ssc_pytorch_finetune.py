@@ -104,7 +104,7 @@ if __name__ == '__main__':
     table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,acc,prec,rec,f1,fn,fp,tn,tp'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-    for SEED in [args.sv, args.sv*2, args.sv*3]:
+    for SEED in [263, 526, 789]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:

@@ -88,7 +88,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [263, 526, 1052]:
+    for SEED in [263, 526, 789]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
