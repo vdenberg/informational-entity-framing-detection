@@ -33,12 +33,10 @@ FEAT_DIR = f'data/{task}/features_for_bert/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
-split_input_for_bert(DATA_DIR, task)
-
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'classification' # or 'bio_classification', or 'regression'
+OUTPUT_MODE = 'classification' # or 'bio-classification', or 'regression'
 NR_FOLDS = len(folds)
 
 if OUTPUT_MODE == 'bio_classification':
@@ -55,8 +53,7 @@ label_map = {label: i for i, label in enumerate(label_list)}
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
-if not os.path.exists(ofp) or FORCE:
+if not os.path.exists(ofp):
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
@@ -79,19 +76,19 @@ for fold in folds:
         infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
-        #if not os.path.exists(ofp):
-        examples = dataloader.get_examples(infp, set_type, sep='\t')
+        if not os.path.exists(ofp):
+            examples = dataloader.get_examples(infp, set_type, sep='\t')
 
-        label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-        label_map = {label: i for i, label in enumerate(label_list)}
+            label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
+            label_map = {label: i for i, label in enumerate(label_list)}
 
-        #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
-        #features = [convert_example_to_feature(row) for row in examples]
-        features = [features_dict[example.my_id] for example in examples]
-        print(f"Processed fold {fold_name} {set_type} - {len(features)} items - to {ofp}")
+            #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
+            #features = [convert_example_to_feature(row) for row in examples]
+            features = [features_dict[example.my_id] for example in examples]
+            print(f"Processed fold {fold_name} {set_type} - {len(features)} items - to {ofp}")
 
-        with open(ofp, "wb") as f:
-            pickle.dump(features, f)
+            with open(ofp, "wb") as f:
+                pickle.dump(features, f)
 
 
 
