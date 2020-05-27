@@ -90,6 +90,4 @@ for fold in folds:
         with open(ofp, "wb") as f:
             pickle.dump(features, f)
 
-
-
 tokenizer.save_vocabulary(FEAT_DIR)

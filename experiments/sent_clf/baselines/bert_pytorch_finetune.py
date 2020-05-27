@@ -57,6 +57,8 @@ device, USE_CUDA = get_torch_device()
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
 TASK_NAME = 'bert_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+TASK = 'sent_clf'
+FEAT_DIR = f'data/{TASK}/features_for_bert'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
@@ -122,9 +124,9 @@ if __name__ == '__main__':
                                     'f1': 0, 'model_loc': ''}
                     test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
-                    train_fp = f"data/features_for_bert/folds/{fold_name}_train_features.pkl"
-                    dev_fp = f"data/features_for_bert/folds/{fold_name}_dev_features.pkl"
-                    test_fp = f"data/features_for_bert/folds/{fold_name}_test_features.pkl"
+                    train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
+                    dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
+                    test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                     _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
                     _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
                     _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
