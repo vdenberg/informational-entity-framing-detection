@@ -71,7 +71,6 @@ if not os.path.exists(REPORTS_DIR):
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 
-
 device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
@@ -93,7 +92,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [seeds]:
+    for SEED in seeds:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -105,12 +104,12 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [bss]:
+        for BATCH_SIZE in bss:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [lrs]:
+            for LEARNING_RATE in lrs:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in [folds]:
+                for fold_name in folds:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
