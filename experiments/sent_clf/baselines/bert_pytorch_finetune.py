@@ -56,6 +56,8 @@ seeds = [args.sv] if args.sv else [0]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [2e-5]
 folds = [args.fold] if args.fold else ['2']
+SAMPLER = args.sampler
+N_EPS = args.n_epochs
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
@@ -70,7 +72,7 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
-N_EPS = args.n_epochs
+
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
@@ -131,9 +133,9 @@ if __name__ == '__main__':
                     train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                     dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
                     test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
