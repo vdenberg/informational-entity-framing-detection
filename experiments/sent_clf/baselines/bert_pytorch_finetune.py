@@ -45,18 +45,21 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-load', '--load', action='store_true', default=False)
 args = parser.parse_args()
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
+#BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_baseline'
+TASK_NAME = 'bert_test'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
+if not os.path.exists(REPORTS_DIR):
+    os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 N_EPS = args.n_epochs
@@ -94,7 +97,7 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [231]: #26354, 182,
+    for SEED in [182]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -106,12 +109,12 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16, 21, 24]:
+        for BATCH_SIZE in [16]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5, 3e-5, 5e-5]:
+            for LEARNING_RATE in [2e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
+                for fold_name in ['2']:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
@@ -139,7 +142,8 @@ if __name__ == '__main__':
                     for ep in range(1, N_EPS + 1):
                         epoch_name = name + f"_ep{ep}"
 
-                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
+                        ALLOW_LOAD = args.load
+                        if ALLOW_LOAD and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
                                                                                             num_labels=NUM_LABELS,
