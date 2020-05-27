@@ -96,7 +96,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [263, 526, 789]:
+    for SEED in [seeds]:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -108,12 +108,12 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [30, 20, 10]:
+        for BATCH_SIZE in [bss]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [LEARNING_RATE]:
+            for LEARNING_RATE in [lrs]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in [str(el) for el in range(1,4)]:
+                for fold_name in [folds]:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
