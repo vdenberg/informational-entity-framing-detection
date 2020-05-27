@@ -46,7 +46,7 @@ parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
 
 # HYPER PARAMS
-parser.add_argument('-lr', '--learning_rate', type=float, default=None) #5e-5, 3e-5, 2e-5
+parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
@@ -163,6 +163,8 @@ if __name__ == '__main__':
                                 batch = tuple(t.to(device) for t in batch)
 
                                 model.zero_grad()
+                                print(batch[0], batch[1], batch[2])
+                                exit(0)
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 (loss), logits, probs, sequence_output, pooled_output = outputs
 
