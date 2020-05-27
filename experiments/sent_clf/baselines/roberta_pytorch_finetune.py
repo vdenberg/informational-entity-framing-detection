@@ -47,10 +47,10 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-seeds = [args.sv] if args.sv else [0]
-bss = [args.bs] if args.bs else [16]
+seeds = [args.sv] if args.sv else [69]
+bss = [args.bs] if args.bs else [22]
 lrs = [args.lr] if args.lr else [2e-5]
-folds = [args.fold] if args.fold else ['2']
+folds = [args.fold] if args.fold else ['5']
 
 
 # find GPU if present
