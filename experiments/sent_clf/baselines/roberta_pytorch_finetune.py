@@ -52,6 +52,8 @@ bss = [args.bs] if args.bs else [22]
 lrs = [args.lr] if args.lr else [2e-5]
 folds = [args.fold] if args.fold else ['5']
 
+SAMPLER = args.sampler
+N_EPS = args.n_epochs
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
@@ -69,11 +71,6 @@ if not os.path.exists(REPORTS_DIR):
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 
-SAMPLER = args.sampler
-
-N_EPS = args.n_epochs
-LEARNING_RATE = args.learning_rate
-BATCH_SIZE = args.batch_size
 
 device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
