@@ -64,7 +64,7 @@ CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained model
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-LOAD_FROM_EP = args.load_from_ep
+#LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
