@@ -44,6 +44,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
+parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 # HYPER PARAMS
 parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
@@ -58,6 +59,7 @@ lrs = [args.lr] if args.lr else [2e-5]
 folds = [args.fold] if args.fold else ['2']
 SAMPLER = args.sampler
 N_EPS = args.n_epochs
+DEBUG = args.debug
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
@@ -165,8 +167,9 @@ if __name__ == '__main__':
                                 batch = tuple(t.to(device) for t in batch)
 
                                 model.zero_grad()
-                                #print(batch[0], batch[1], batch[2])
-                                #exit(0)
+                                if DEBUG:
+                                    print(batch[0], batch[1], batch[2])
+                                    exit(0)
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 (loss), logits, probs, sequence_output, pooled_output = outputs
 
