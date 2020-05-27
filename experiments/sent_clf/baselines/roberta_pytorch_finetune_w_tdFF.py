@@ -39,12 +39,18 @@ parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-model', '--model', type=str, default='rob_base') #2,3,4
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
-parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-sv', '--sv', type=int, default=263) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=4) #16, 21
 parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-sampler', '--sampler', type=str, default='random')
+parser.add_argument('-lr', '--learning_rate', type=float, default=None) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
+parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
+parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
+
+seeds = [args.sv] if args.sv else [0]
+bss = [args.bs] if args.bs else [16]
+lrs = [args.lr] if args.lr else [2e-5]
+folds = [args.fold] if args.fold else ['2']
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',

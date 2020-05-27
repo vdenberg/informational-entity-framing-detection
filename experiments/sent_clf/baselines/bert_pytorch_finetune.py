@@ -1,17 +1,13 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-import pickle
 from lib.classifiers.BertForEmbed import Inferencer, save_model
 from lib.classifiers.BertWrapper import BertForSequenceClassification, BertWrapper, load_features
 from datetime import datetime
-from torch.nn import CrossEntropyLoss
 import torch
-import os, sys, random, argparse
+import os, random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
-import time
-from pprint import pprint
 import logging
 
 #######
@@ -45,11 +41,21 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=2) #2,3,4
-parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
-parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-load', '--load', action='store_true', default=False)
+parser.add_argument('-sampler', '--sampler', type=str, default='random')
+
+# HYPER PARAMS
+parser.add_argument('-lr', '--learning_rate', type=float, default=None) #5e-5, 3e-5, 2e-5
+parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
+parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
+parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
+
+seeds = [args.sv] if args.sv else [0]
+bss = [args.bs] if args.bs else [16]
+lrs = [args.lr] if args.lr else [2e-5]
+folds = [args.fold] if args.fold else ['2']
 
 # find GPU if present
 device, USE_CUDA = get_torch_device()
@@ -65,9 +71,6 @@ if not os.path.exists(REPORTS_DIR):
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 N_EPS = args.n_epochs
-LEARNING_RATE = args.learning_rate
-#LOAD_FROM_EP = args.load_from_ep
-BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
@@ -99,7 +102,8 @@ if __name__ == '__main__':
                   '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
                   }
 
-    for SEED in [182]:
+    for SEED in seeds:
+
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -111,12 +115,12 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16]:
+        for BATCH_SIZE in bss:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [2e-5]:
+            for LEARNING_RATE in lrs:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in ['2']:
+                for fold_name in folds:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
