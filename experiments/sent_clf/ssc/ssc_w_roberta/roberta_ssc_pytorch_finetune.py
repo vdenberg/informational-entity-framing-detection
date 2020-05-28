@@ -54,11 +54,10 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA = model_mapping[args.model]
-BATCH_SIZE = args.batch_size
-N_EPS = args.n_epochs
-LEARNING_RATE = args.learning_rate
-SAMPLER = args.sampler
 EX_LEN = args.example_length
+SAMPLER = args.sampler
+N_EPS = args.n_epochs
+
 
 ########################
 # SET HYPERPARAMETERS
