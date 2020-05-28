@@ -44,14 +44,16 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-seeds = [args.sv] if args.sv else [0, 0, 0]
 
-bss = [args.bs] if args.bs else [32, 24, 16]
+seeds = [args.sv] if args.sv else [0, 0]
+bss = [args.bs] if args.bs else [26, 16]
 if args.example_length > 1:
-    bss = [args.bs] if args.bs else [4, 8, 10]
+    bss = [args.bs] if args.bs else [6, 10]
 
-lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
+lrs = [args.lr] if args.lr else [2e-5, 1e-5]
+folds = [args.fold] if args.fold else ['1', '2', '3']
+
+
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 EX_LEN = args.example_length
 N_EPS = args.n_epochs
