@@ -46,7 +46,7 @@ args = parser.parse_args()
 
 
 seeds = [args.sv] if args.sv else [0, 0]
-bss = [args.bs] if args.bs else [26, 16]
+bss = [args.bs] if args.bs else [32, 21]
 if args.example_length > 1:
     bss = [args.bs] if args.bs else [6, 10]
 
