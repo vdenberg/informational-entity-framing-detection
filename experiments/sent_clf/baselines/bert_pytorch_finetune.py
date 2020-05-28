@@ -62,23 +62,36 @@ samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
 DEBUG = args.debug
 
+########################
+# WHERE ARE THE FILES
+########################
+
 # find GPU if present
-device, USE_CUDA = get_torch_device()
-#BERT_MODEL = 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base'  # 'bert-base-cased' #bert-large-cased
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'SC'
+TASK_NAME = 'SC_bert'
+FEAT_DIR = f'data/sent_clf/features_for_bert'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-TASK = 'sent_clf'
-FEAT_DIR = f'data/{TASK}/features_for_bert'
 REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+if not os.path.exists(TABLE_DIR):
+    os.makedirs(TABLE_DIR)
 
+device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
 PRINT_EVERY = 100
+
+########################
+# MAIN
+########################
+
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'

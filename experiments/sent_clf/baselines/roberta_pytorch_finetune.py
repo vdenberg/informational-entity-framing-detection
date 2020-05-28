@@ -63,13 +63,28 @@ model_mapping = {'rob_base': 'roberta-base',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
 
-TASK_NAME = 'SC_HYP'
+
+########################
+# WHERE ARE THE FILES
+########################
+
+TASK_NAME = f'SC_rob'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
+if not os.path.exists(TABLE_DIR):
+    os.makedirs(TABLE_DIR)
+
+########################
+# MAIN
+########################
 
 device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
