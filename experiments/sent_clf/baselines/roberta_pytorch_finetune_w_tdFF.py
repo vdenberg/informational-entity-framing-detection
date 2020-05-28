@@ -51,7 +51,7 @@ args = parser.parse_args()
 seeds = [args.sv] if args.sv else [69]
 bss = [args.bs] if args.bs else [22]
 lrs = [args.lr] if args.lr else [2e-5]
-folds = [args.fold] if args.fold else ['5', '2']
+folds = [args.fold] if args.fold else ['5']
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
