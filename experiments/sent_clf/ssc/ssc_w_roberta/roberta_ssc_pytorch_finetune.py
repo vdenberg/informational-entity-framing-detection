@@ -50,6 +50,7 @@ lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 EX_LEN = args.example_length
+N_EPS = args.n_epochs
 
 DEBUG = args.debug
 if DEBUG:
@@ -59,6 +60,7 @@ if DEBUG:
     folds = ['1']
     samplers = ['sequential', 'random']
     EX_LEN = 1
+    N_EPS = 2
 
 model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
@@ -66,15 +68,13 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA = model_mapping[args.model]
-SAMPLER = args.sampler
-N_EPS = args.n_epochs
+device, USE_CUDA = get_torch_device()
 
 
 ########################
 # SET HYPERPARAMETERS
 ########################
 
-device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2

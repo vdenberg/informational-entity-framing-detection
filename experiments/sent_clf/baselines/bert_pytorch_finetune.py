@@ -59,6 +59,8 @@ lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 
+N_EPS = args.n_epochs
+
 DEBUG = args.debug
 if DEBUG:
     seeds = [0]
@@ -66,9 +68,7 @@ if DEBUG:
     lrs = [2e-5]
     folds = ['1']
     samplers = ['sequential', 'random']
-
-N_EPS = args.n_epochs
-DEBUG = args.debug
+    N_EPS = 2
 
 ########################
 # WHERE ARE THE FILES

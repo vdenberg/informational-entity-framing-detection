@@ -54,6 +54,7 @@ bss = [args.bs] if args.bs else [32, 24, 16]
 lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
+N_EPS = args.n_epochs
 
 DEBUG = args.debug
 if DEBUG:
@@ -62,6 +63,7 @@ if DEBUG:
     lrs = [2e-5]
     folds = ['1']
     samplers = ['sequential', 'random']
+    N_EPS = 2
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
@@ -71,10 +73,6 @@ model_mapping = {'rob_base': 'roberta-base',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
 device, USE_CUDA = get_torch_device()
-SAMPLER = args.sampler
-N_EPS = args.n_epochs
-LEARNING_RATE = args.lr
-BATCH_SIZE = args.bs
 
 
 ########################

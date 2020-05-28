@@ -53,6 +53,7 @@ bss = [args.bs] if args.bs else [32, 24, 16]
 lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
+N_EPS = args.n_epochs
 
 DEBUG = args.debug
 if DEBUG:
@@ -61,8 +62,9 @@ if DEBUG:
     lrs = [2e-5]
     folds = ['1']
     samplers = ['sequential', 'random']
+    N_EPS = 2
 
-N_EPS = args.n_epochs
+
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
@@ -71,7 +73,7 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
 ROBERTA_MODEL = model_mapping[args.model]
-
+device, USE_CUDA = get_torch_device()
 
 ########################
 # WHERE ARE THE FILES
@@ -95,7 +97,6 @@ if not os.path.exists(TABLE_DIR):
 # MAIN
 ########################
 
-device, USE_CUDA = get_torch_device()
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 2
