@@ -58,6 +58,7 @@ bss = [args.bs] if args.bs else [32, 24, 16]
 lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
+
 N_EPS = args.n_epochs
 DEBUG = args.debug
 
@@ -73,7 +74,6 @@ REPORTS_DIR = f'reports/{TASK_NAME}'
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-
 
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
