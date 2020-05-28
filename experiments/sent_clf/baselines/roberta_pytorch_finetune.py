@@ -80,7 +80,7 @@ device, USE_CUDA = get_torch_device()
 ########################
 
 TASK_NAME = f'SC_rob'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
+FEAT_DIR = f'data/sent_clf/features_for_roberta'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
