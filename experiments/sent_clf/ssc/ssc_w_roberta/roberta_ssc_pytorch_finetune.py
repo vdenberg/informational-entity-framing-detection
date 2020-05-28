@@ -48,7 +48,7 @@ args = parser.parse_args()
 seeds = [args.sv] if args.sv else [0, 0]
 bss = [args.bs] if args.bs else [1]
 if args.example_length > 1:
-    bss = [args.bs] if args.bs else [6, 10]
+    bss = [args.bs] if args.bs else [1]
 
 lrs = [args.lr] if args.lr else [2e-5, 1e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3']
