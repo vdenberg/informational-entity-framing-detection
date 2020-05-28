@@ -111,7 +111,7 @@ if __name__ == '__main__':
     table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,acc,prec,rec,f1,fn,fp,tn,tp'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-    for SEED in [263, 526, 789]:
+    for SEED in seeds:
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -125,12 +125,12 @@ if __name__ == '__main__':
 
         # set settings for experiment
 
-        for BATCH_SIZE in [BATCH_SIZE]:
+        for BATCH_SIZE in bss:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
-            for LEARNING_RATE in [LEARNING_RATE]:
+            for LEARNING_RATE in lrs:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
                 setting_results_table = pd.DataFrame(columns=table_columns.split(','))
-                for fold_name in [str(el) for el in range(1,11)]:
+                for fold_name in folds:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
                     best_val_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
@@ -177,7 +177,7 @@ if __name__ == '__main__':
 
                         # if debugging is done, allow reloading of eps that have been trained already
 
-                        LOAD_ALLOWED = False
+                        LOAD_ALLOWED = args.load
                         if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                             # this epoch for this setting has been trained before already
                             trained_model = RobertaSSC.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
