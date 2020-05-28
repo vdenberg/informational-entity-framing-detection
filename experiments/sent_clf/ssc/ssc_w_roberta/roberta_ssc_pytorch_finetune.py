@@ -46,7 +46,7 @@ args = parser.parse_args()
 seeds = [args.sv] if args.sv else [0]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [2e-5]
-folds = [args.fold] if args.fold else ['2']
+folds = [args.fold] if args.fold else ['2', '5']
 
 model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
