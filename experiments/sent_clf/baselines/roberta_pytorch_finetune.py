@@ -103,7 +103,7 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
@@ -140,8 +140,8 @@ if __name__ == '__main__':
                         name = setting_name + f"_f{fold_name}"
 
                         best_val_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
-                                        'f1': 0, 'model_loc': ''}
-                        test_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                                        'f1': 0, 'model_loc': '', 'sampler': SAMPLER}
+                        test_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test', 'sampler': SAMPLER}
 
                         train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                         dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")

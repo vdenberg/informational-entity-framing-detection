@@ -102,7 +102,7 @@ PRINT_EVERY = 100
 
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 if __name__ == '__main__':
     # set logger
@@ -135,7 +135,7 @@ if __name__ == '__main__':
             else:
                 SEED_VAL = SEED
 
-            seed_name = f"bert_{SEED_VAL}"
+            seed_name = f"{args.model}_{SAMPLER}_{SEED_VAL}"
             random.seed(SEED_VAL)
             np.random.seed(SEED_VAL)
             torch.manual_seed(SEED_VAL)
@@ -151,8 +151,8 @@ if __name__ == '__main__':
                         name = setting_name + f"_f{fold_name}"
 
                         best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
-                                        'f1': 0, 'model_loc': ''}
-                        test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                                        'f1': 0, 'model_loc': '', 'sampler': SAMPLER}
+                        test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test', 'sampler': SAMPLER}
 
                         train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                         dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
