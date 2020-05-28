@@ -251,7 +251,7 @@ if __name__ == '__main__':
                         logging.info(
                             f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
 
-                        # print result of setting
+                    # print result of setting
 
                     logging.info(
                         f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')

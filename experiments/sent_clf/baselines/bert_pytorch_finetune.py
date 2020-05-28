@@ -244,13 +244,22 @@ if __name__ == '__main__':
 
                         fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                         fold_results_table = fold_results_table.append(test_res, ignore_index=True)
-                        logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type","f1"]]}')
                         setting_results_table = setting_results_table.append(fold_results_table)
 
+                        logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed","bs", "lr", "fold", "set_type","f1"]]}')
+
                     logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed","bs","lr", "fold", "set_type","f1"]]}')
-                    setting_results_table.to_csv(f'reports/bert_baseline/tables/{setting_name}_results_table.csv', index=False)
+
+                    # store performance of setting
+
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
-                main_results_table.to_csv(f'reports/bert_baseline/tables/main_results_table_2.csv', index=False)
+
+                    # write performance to file
+
+                    setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'),
+                                                 index=False)
+
+                main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)
