@@ -64,7 +64,7 @@ device, USE_CUDA = get_torch_device()
 SAMPLER = args.sampler
 N_EPS = args.n_epochs
 LEARNING_RATE = args.lr
-BATCH_SIZE = args.batch_size
+BATCH_SIZE = args.bs
 
 
 ########################
