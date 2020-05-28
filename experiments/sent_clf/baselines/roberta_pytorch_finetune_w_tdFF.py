@@ -55,6 +55,14 @@ lrs = [args.lr] if args.lr else [2e-5, 1e-5, 3e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 
+DEBUG = args.debug
+if DEBUG:
+    seeds = [0]
+    bss = [32]
+    lrs = [2e-5]
+    folds = ['1']
+    samplers = ['sequential', 'random']
+
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',

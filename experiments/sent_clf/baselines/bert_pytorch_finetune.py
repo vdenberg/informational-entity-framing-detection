@@ -60,7 +60,6 @@ folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 
 DEBUG = args.debug
-
 if DEBUG:
     seeds = [0]
     bss = [32]
@@ -191,8 +190,9 @@ if __name__ == '__main__':
 
                                     model.zero_grad()
                                     if DEBUG:
-                                        print(batch[0], batch[1], batch[2])
-                                        exit(0)
+                                        pass
+                                        #print(batch[0], batch[1], batch[2])
+                                        #exit(0)
                                     outputs = model(batch[0], batch[1], labels=batch[2])
                                     (loss), logits, probs, sequence_output, pooled_output = outputs
 
