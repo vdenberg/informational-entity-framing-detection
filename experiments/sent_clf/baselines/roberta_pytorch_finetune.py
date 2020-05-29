@@ -93,6 +93,7 @@ if not os.path.exists(REPORTS_DIR):
 if not os.path.exists(TABLE_DIR):
     os.makedirs(TABLE_DIR)
 if os.path.exists(MAIN_TABLE_FP):
+    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1
     main_results_table = pd.read_csv(MAIN_TABLE_FP)
 else:
     table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
