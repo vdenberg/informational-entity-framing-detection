@@ -94,6 +94,7 @@ CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -101,11 +102,13 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
     os.makedirs(TABLE_DIR)
-
+if os.path.exists(MAIN_TABLE_FP):
+    main_results_table = pd.read_csv(MAIN_TABLE_FP)
+else:
+    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+    main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
-main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
     # set logger

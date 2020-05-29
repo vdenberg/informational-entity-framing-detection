@@ -49,9 +49,9 @@ parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
 seeds = [args.sv] if args.sv else [0, 0]
-bss = [args.bs] if args.bs else [32, 21]
-lrs = [args.lr] if args.lr else [2e-5, 1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3']
+bss = [args.bs] if args.bs else [32, 30, 21]
+lrs = [args.lr] if args.lr else [2e-5, 1.5e-5, 1e-5]
+folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
 
@@ -79,12 +79,13 @@ device, USE_CUDA = get_torch_device()
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SC_rob'
+TASK_NAME = f'SC_rob_hyp'
 FEAT_DIR = f'data/sent_clf/features_for_roberta'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -92,6 +93,11 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
     os.makedirs(TABLE_DIR)
+if os.path.exists(MAIN_TABLE_FP):
+    main_results_table = pd.read_csv(MAIN_TABLE_FP)
+else:
+    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+    main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 ########################
 # MAIN
@@ -103,8 +109,6 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
-main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
     # set logger
@@ -264,7 +268,7 @@ if __name__ == '__main__':
 
                     setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
 
-                main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
+            main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 
 '''
 n_train_batches = len(train_batches)
