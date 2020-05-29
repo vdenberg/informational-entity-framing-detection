@@ -84,8 +84,7 @@ CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
-EXP_NAME = 'SC_hyp'
-MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{EXP_NAME}_table.csv')
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
