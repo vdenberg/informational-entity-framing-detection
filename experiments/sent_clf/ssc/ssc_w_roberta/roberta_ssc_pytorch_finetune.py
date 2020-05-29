@@ -33,7 +33,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-model', '--model', type=str, default='rob_base') #5e-5, 3e-5, 2e-5
 parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-load', '--load', action='store_true', default=False)
-parser.add_argument('-sampler', '--sampler', type=str, default='random') #5e-5, 3e-5, 2e-5
+parser.add_argument('-sampler', '--sampler', type=str, default='sequential') #5e-5, 3e-5, 2e-5
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 parser.add_argument('-exlen', '--example_length', type=int, default=1) #5e-5, 3e-5, 2e-5
 
