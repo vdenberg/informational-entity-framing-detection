@@ -49,7 +49,7 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-seeds = [args.sv] if args.sv else [34, 49, 181]
+seeds = [args.sv] if args.sv else [34, 284, 287]
 bss = [args.bs] if args.bs else [21]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3']
