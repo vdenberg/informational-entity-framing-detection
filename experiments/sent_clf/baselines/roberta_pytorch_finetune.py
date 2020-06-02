@@ -48,11 +48,11 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-models = [args.model] if args.sv else ['rob_base', 'rob_dapt']
+models = [args.model] if args.sv else ['rob_base']
 seeds = [args.sv] if args.sv else [34, 49, 181]
-bss = [args.bs] if args.bs else [16]
-lrs = [args.lr] if args.lr else [2e-5, 1.5e-5, 1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3']
+bss = [args.bs] if args.bs else [21]
+lrs = [args.lr] if args.lr else [1e-5]
+folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
 
@@ -72,7 +72,6 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
-ROBERTA_MODEL = model_mapping[args.model]
 device, USE_CUDA = get_torch_device()
 
 ########################
@@ -123,6 +122,7 @@ if __name__ == '__main__':
     logger.info(args)
 
     for MODEL in models:
+        ROBERTA_MODEL = model_mapping[args.model]
         for SAMPLER in samplers:
             for SEED in seeds:
                 if SEED == 0:
