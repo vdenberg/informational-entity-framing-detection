@@ -38,7 +38,7 @@ class InputFeatures(object):
 parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
-parser.add_argument('-ep', '--n_epochs', type=int, default=15) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 parser.add_argument('-model', '--model', type=str, default=None) #2,3,4
@@ -51,7 +51,7 @@ args = parser.parse_args()
 models = [args.model] if args.sv else ['rob_base', 'rob_dapt']
 seeds = [args.sv] if args.sv else [34, 49, 181]
 bss = [args.bs] if args.bs else [16]
-lrs = [args.lr] if args.lr else [2e-5, 1e-5, 5e-6]
+lrs = [args.lr] if args.lr else [2e-5, 1.5e-5, 1e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
