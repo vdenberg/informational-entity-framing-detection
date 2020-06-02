@@ -48,7 +48,7 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-models = [args.model] if args.sv else ['rob_base'] #, 'rob_dapt', 'rob_dapttapt']
+models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_dapttapt']
 seeds = [args.sv] if args.sv else [34, 49, 181]
 bss = [args.bs] if args.bs else [21]
 lrs = [args.lr] if args.lr else [1e-5]
