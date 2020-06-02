@@ -48,11 +48,11 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-models = [args.model] if args.sv else ['rob_base']
+models = [args.model] if args.sv else ['rob_base'] #, 'rob_dapt', 'rob_dapttapt']
 seeds = [args.sv] if args.sv else [34, 49, 181]
 bss = [args.bs] if args.bs else [21]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
 
@@ -64,7 +64,6 @@ if DEBUG:
     folds = ['1']
     samplers = ['sequential', 'random']
     N_EPS = 2
-
 
 # find GPU if present
 model_mapping = {'rob_base': 'roberta-base',
