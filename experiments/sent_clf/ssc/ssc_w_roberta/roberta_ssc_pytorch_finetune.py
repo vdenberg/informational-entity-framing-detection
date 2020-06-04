@@ -52,6 +52,7 @@ lrs = [args.lr] if args.lr else [2e-5, 1e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
+EX_LEN = args.example_length
 
 DEBUG = args.debug
 if DEBUG:
