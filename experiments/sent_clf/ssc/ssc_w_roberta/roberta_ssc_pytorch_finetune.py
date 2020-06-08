@@ -88,7 +88,7 @@ PRINT_EVERY = 100
 
 TASK_NAME = f'SSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+CHECKPOINT_DIR = f'/remote/gpu07/scratch/models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
@@ -238,6 +238,7 @@ if __name__ == '__main__':
                                 best_val_res.update(dev_mets)
                                 best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
                                 high_score = '(HIGH SCORE)'
+
                             logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                         # load best model, save embeddings, print performance on test
