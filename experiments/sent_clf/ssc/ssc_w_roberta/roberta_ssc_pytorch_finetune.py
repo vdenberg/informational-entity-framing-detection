@@ -51,7 +51,7 @@ seeds = [args.sv] if args.sv else [49] # 34, 49, 181
 bss = [args.bs] if args.bs else [10] # 16, 10
 #if args.example_length > 1:
 #    bss = [args.bs] if args.bs else [1]
-lrs = [args.lr] if args.lr else [2e-5, 3e-5, 5e-5] #
+lrs = [args.lr] if args.lr else [2e-5, 3e-5] #
 folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
