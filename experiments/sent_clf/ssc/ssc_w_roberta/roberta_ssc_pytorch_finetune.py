@@ -47,10 +47,10 @@ args = parser.parse_args()
 #ssc5: 49_bs16_lr3e-05_f2
 #ssc4: 49_bs16_lr0.0002_f1
 #ssc3: 49_bs16_lr1e-05_f3
-seeds = [args.sv] if args.sv else [49] # 34, 49, 181
-bss = [args.bs] if args.bs else [10] # 16, 10
-lrs = [args.lr] if args.lr else [3e-5] #
-folds = [args.fold] if args.fold else ['1', '2', '3']
+seeds = [args.sv] if args.sv else [49, 181] # 34, 49, 181
+bss = [args.bs] if args.bs else [10, 6] # 16, 10
+lrs = [args.lr] if args.lr else [2e-5, 3e-5, 5e-5] #
+folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
 EX_LEN = args.example_length
@@ -233,7 +233,7 @@ if __name__ == '__main__':
 
                                 dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                      set_type='dev', name=epoch_name)
-
+                                save_model(model, CHECKPOINT_DIR, epoch_name)
                             # check if best
 
                             high_score = ''
