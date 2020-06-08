@@ -96,10 +96,14 @@ TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
+print('Location:', os.getcwd())
+print(f"Does the dir {CHECKPOINT_DIR} exist?")
+print(os.path.exists(CHECKPOINT_DIR))
+print(f"What about the dir /scratch/vdberg/checkpoints/?:")
+print(os.path.exists('/scratch/vdberg/checkpoints/'))
+exit(0)
 if not os.path.exists(CHECKPOINT_DIR):
-    print(os.getcwd())
-    print(CHECKPOINT_DIR)
-    os.makedirs(CHECKPOINT_DIR)
+    os.makedirs(CHECKPOINT_DIR)  #todo: fix error
 if not os.path.exists(CURRENT_BEST_DIR):
     os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
