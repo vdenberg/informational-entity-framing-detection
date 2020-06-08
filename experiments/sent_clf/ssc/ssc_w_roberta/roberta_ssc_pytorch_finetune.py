@@ -44,11 +44,14 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
+#ssc5: 49_bs16_lr3e-05_f2
+#ssc4: 49_bs16_lr0.0002_f1
+#ssc3: 49_bs16_lr1e-05_f3
 seeds = [args.sv] if args.sv else [34, 49, 181]
 bss = [args.bs] if args.bs else [16, 10]
 #if args.example_length > 1:
 #    bss = [args.bs] if args.bs else [1]
-lrs = [args.lr] if args.lr else [1e-5, 2e-5, 3e-5, 2e-4]
+lrs = [args.lr] if args.lr else [2e-5, 3e-5, 5e-5]
 folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
@@ -88,14 +91,17 @@ PRINT_EVERY = 100
 
 TASK_NAME = f'SSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
-CHECKPOINT_DIR = f'/remote/gpu07/scratch/models/checkpoints/{TASK_NAME}/'
+CHECKPOINT_DIR = f'/remote/gpu07/scratch/vdberg/checkpoints/{TASK_NAME}/'
+CURRENT_BEST_DIR = f'/remote/gpu07/scratch/vdberg/checkpoints/{TASK_NAME}/current_best/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
-if not os.path.exists(CHECKPOINT_DIR):
-    os.makedirs(CHECKPOINT_DIR)
+#if not os.path.exists(CHECKPOINT_DIR):
+#    os.makedirs(CHECKPOINT_DIR)
+#if not os.path.exists(CURRENT_BEST_DIR):
+#    os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -229,7 +235,6 @@ if __name__ == '__main__':
 
                                 dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                      set_type='dev', name=epoch_name)
-                                save_model(model, CHECKPOINT_DIR, epoch_name)
 
                             # check if best
 
@@ -238,14 +243,16 @@ if __name__ == '__main__':
                                 best_val_res.update(dev_mets)
                                 best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
                                 high_score = '(HIGH SCORE)'
+                                save_model(model, CURRENT_BEST_DIR, name)
 
                             logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                        # load best model, save embeddings, print performance on test
-
-                        if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, use last epoch
+                        # IMPORTANT NOTE! model_loc is just the best epoch now, there is no actual model in that location
+                        if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, set model loc last epoch
                             best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                        best_model = RobertaSSC.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+
+                        # load best model, save embeddings, print performance on test
+                        best_model = RobertaSSC.from_pretrained(os.path.join(CURRENT_BEST_DIR, name), num_labels=NUM_LABELS,
                                                                                    output_hidden_states=False,
                                                                                    output_attentions=False)
                         logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
