@@ -98,10 +98,10 @@ TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
-#if not os.path.exists(CHECKPOINT_DIR):
-#    os.makedirs(CHECKPOINT_DIR)
-#if not os.path.exists(CURRENT_BEST_DIR):
-#    os.makedirs(CURRENT_BEST_DIR)
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
+if not os.path.exists(CURRENT_BEST_DIR):
+    os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -241,15 +241,16 @@ if __name__ == '__main__':
                             high_score = ''
                             if dev_mets['f1'] > best_val_res['f1']:
                                 best_val_res.update(dev_mets)
-                                best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
+                                best_val_res.update({'model_loc': epoch_name})
                                 high_score = '(HIGH SCORE)'
                                 save_model(model, CURRENT_BEST_DIR, name)
 
                             logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                         # IMPORTANT NOTE! model_loc is just the best epoch now, there is no actual model in that location
-                        if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, set model loc last epoch
-                            best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
+                        if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, use model of last epoch
+                            best_val_res['model_loc'] = epoch_name
+                            save_model(model, CURRENT_BEST_DIR, name)
 
                         # load best model, save embeddings, print performance on test
                         best_model = RobertaSSC.from_pretrained(os.path.join(CURRENT_BEST_DIR, name), num_labels=NUM_LABELS,
