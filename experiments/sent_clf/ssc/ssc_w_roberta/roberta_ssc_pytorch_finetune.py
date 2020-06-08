@@ -97,7 +97,7 @@ CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained mode
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
 if not os.path.exists(CHECKPOINT_DIR):
-    print(os.get.cwd())
+    print(os.getcwd())
     print(CHECKPOINT_DIR)
     os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(CURRENT_BEST_DIR):
