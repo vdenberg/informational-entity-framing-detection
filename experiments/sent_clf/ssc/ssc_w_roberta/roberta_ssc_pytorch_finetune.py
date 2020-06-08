@@ -32,7 +32,7 @@ class InputFeatures(object):
 parser = argparse.ArgumentParser()
 parser.add_argument('-model', '--model', type=str, default='rob_base') #5e-5, 3e-5, 2e-5
 parser.add_argument('-ep', '--n_epochs', type=int, default=10)
-parser.add_argument('-load', '--load', action='store_true', default=False)
+parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential') #5e-5, 3e-5, 2e-5
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
@@ -47,11 +47,11 @@ args = parser.parse_args()
 #ssc5: 49_bs16_lr3e-05_f2
 #ssc4: 49_bs16_lr0.0002_f1
 #ssc3: 49_bs16_lr1e-05_f3
-seeds = [args.sv] if args.sv else [34, 49, 181]
-bss = [args.bs] if args.bs else [16, 10]
+seeds = [args.sv] if args.sv else [49] # 34, 49, 181
+bss = [args.bs] if args.bs else [10] # 16, 10
 #if args.example_length > 1:
 #    bss = [args.bs] if args.bs else [1]
-lrs = [args.lr] if args.lr else [2e-5, 3e-5, 5e-5]
+lrs = [args.lr] if args.lr else [2e-5, 3e-5, 5e-5] #
 folds = [args.fold] if args.fold else ['1', '2', '3']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
