@@ -116,7 +116,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
 
     finfeats = []
     for row in sequence_rows:
-        ff = flatten_sequence(row, cls, pad, maxlen, max_sent)
+        ff = flatten_sequence(row, cls, pad, max_len, max_sent)
         finfeats.append(ff)
     return finfeats
 
@@ -146,7 +146,7 @@ SUBSET = 1.0 if not DEBUG else 0.1
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-max_lens = {3: 0, 4: 0, 5: 0, 6: 0}
+max_lens = {3: 190, 4: 0, 5: 0, 6: 0}
 MAX_SEQ_LEN_SSC = max_lens[args.sequence_length]
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
