@@ -8,6 +8,7 @@ from lib.handle_data.SplitData import split_input_for_bert
 import torch
 import argparse
 
+
 def preprocess(rows):
     count = 0
     total = len(rows)
@@ -106,13 +107,12 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
             sequence_rows.append(s)
 
     # help measure what the maxlen should be
-    maxlen = 316
     for row in sequence_rows:
         toks = [remove_special(f.input_ids, cls, pad) for f in row]
         exlen = sum([len(t) for t in toks])
-        if exlen > maxlen:
-            maxlen = exlen
-            print('MAX EX LEN:', maxlen)
+        if exlen > max_len:
+            max_len = exlen
+            print('MAX EX LEN:', max_len)
 
     finfeats = []
     for row in sequence_rows:
