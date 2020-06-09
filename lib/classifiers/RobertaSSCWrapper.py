@@ -319,7 +319,7 @@ class Inferencer():
 
             with torch.no_grad():
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, probs, sequence_output, rep_sim = outputs
+                logits, probs, sequence_output = outputs
 
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()
