@@ -147,7 +147,7 @@ SUBSET = 1.0 if not DEBUG else 0.1
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
 max_lens = {3: 0, 4: 0, 5: 0, 6: 0}
-MAX_SEQ_LEN_SSC = max_lens(args.seq_len)
+MAX_SEQ_LEN_SSC = max_lens(args.example_length)
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
 
