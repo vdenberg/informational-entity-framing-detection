@@ -146,7 +146,7 @@ SUBSET = 1.0 if not DEBUG else 0.1
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 0, 10: 499}
+max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 499, 10: 499}
 MAX_SEQ_LEN_SSC = max_lens[args.sequence_length]
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
