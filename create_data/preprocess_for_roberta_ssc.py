@@ -56,15 +56,18 @@ def as_art_id(feat_id):
 def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     flat_input_ids = []
     flat_labels = []
+    #segment_ids = []
 
-    for sent in seq_rows:
+    for i, sent in enumerate(seq_rows):
         input_ids = remove_special(sent.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
         flat_labels.append(sent.label_id)
+        #segment_ids.extend([i+1] * len(input_ids))
 
     pad_len = max_ex_len - len(flat_input_ids)
     mask = [1] * len(flat_input_ids) + [0] * pad_len
     flat_input_ids += [pad] * pad_len
+    #segment_ids += [pad] * pad_len
 
     assert len(mask) == len(flat_input_ids)
 
@@ -87,7 +90,7 @@ def seps(x):
     return [el for el in x if el == 2]#x[mask]
 
 
-def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_sent_len=120):
+def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
     article_rows = {}
@@ -143,6 +146,8 @@ SUBSET = 1.0 if not DEBUG else 0.1
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
+max_lens = {3: 0, 4: 0, 5: 0, 6: 0}
+MAX_SEQ_LEN_SSC = max_lens(args.seq_len)
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
 
@@ -192,7 +197,7 @@ for fold in folds:
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_doc_len=MAX_DOC_LEN, max_sent_len=MAX_SENT_LEN)
+        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_len=MAX_SEQ_LEN_SSC)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")

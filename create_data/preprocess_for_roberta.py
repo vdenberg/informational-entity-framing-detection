@@ -23,7 +23,7 @@ def preprocess(rows):
 
 
 # choose sentence or bio labels
-task = 'sent_clf'
+task = 'sent_clf/ssc/'
 DATA_DIR = f'data/{task}/ft_input'
 
 # load and split data
