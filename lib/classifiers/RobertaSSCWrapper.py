@@ -318,9 +318,8 @@ class Inferencer():
             input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
-                # print(input_mask)
-                outputs = model(input_ids, input_mask, labels=None)
-                logits, probs, sequence_output = outputs
+                outputs = model(input_ids, input_mask, labels=None, rep_sim=True)
+                logits, probs, sequence_output, rep_sim = outputs
 
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()

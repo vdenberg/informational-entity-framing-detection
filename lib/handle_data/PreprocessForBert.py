@@ -303,10 +303,10 @@ def convert_example_to_feature(example_row):
         # Account for [CLS], [SEP], [SEP] with "- 3"
     #   _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
     #else:
-        # Account for [CLS] and [SEP] with "- 2"
+
 
     if len(tokens_a) > max_seq_length - 2:
-        tokens_a = tokens_a[:(max_seq_length - 2)]
+        tokens_a = tokens_a[:(max_seq_length - 2)]    # Account for [CLS] and [SEP] with "- 2"
 
     tokens = ["[CLS]"] + tokens_a + ["[SEP]"]
 
