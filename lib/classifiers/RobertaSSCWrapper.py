@@ -318,7 +318,7 @@ class Inferencer():
             input_ids, input_mask, label_ids = batch
 
             with torch.no_grad():
-                outputs = model(input_ids, input_mask, labels=None, rep_sim=True)
+                outputs = model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output, rep_sim = outputs
 
                 r = sequence_output[:, 0, :]
