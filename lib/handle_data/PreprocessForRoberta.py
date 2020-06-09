@@ -317,5 +317,5 @@ def convert_example_to_feature(example_row):
     return InputFeatures(my_id=example.my_id,
                          input_ids=input_ids,
                          input_mask=attention_mask,
-                         segment_ids=segment_ids,
+                         segment_ids=[],
                          label_id=label_id)
