@@ -103,7 +103,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_doc_len=76, max_
             sequence_rows.append(s)
 
     # help measure what the maxlen should be
-    maxlen = 305
+    maxlen = 316
     for row in sequence_rows:
         toks = [remove_special(f.input_ids, cls, pad) for f in row]
         exlen = sum([len(t) for t in toks])

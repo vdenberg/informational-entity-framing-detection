@@ -30,7 +30,7 @@ DATA_DIR = f'data/{task}/ft_input'
 folds = split_input_for_bert(DATA_DIR, task)
 
 # structure of project
-CONTEXT_TYPE = 'article'
+#CONTEXT_TYPE = 'article'
 FEAT_DIR = f'data/{task}/features_for_roberta/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
