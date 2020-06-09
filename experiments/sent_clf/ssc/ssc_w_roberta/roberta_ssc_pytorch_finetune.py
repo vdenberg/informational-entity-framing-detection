@@ -30,12 +30,12 @@ class InputFeatures(object):
 ########################
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-model', '--model', type=str, default='rob_base') #5e-5, 3e-5, 2e-5
 parser.add_argument('-ep', '--n_epochs', type=int, default=10)
 parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential') #5e-5, 3e-5, 2e-5
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
+parser.add_argument('-model', '--model', type=str, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-exlen', '--example_length', type=int, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None,
@@ -47,9 +47,10 @@ args = parser.parse_args()
 #ssc5: 49_bs16_lr3e-05_f2
 #ssc4: 49_bs16_lr0.0002_f1
 #ssc3: 49_bs16_lr1e-05_f3
+models = [args.model] if args.model else ['rob_base', 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
 seeds = [args.sv] if args.sv else [34, 49, 181] # 34, 49, 181
-bss = [args.bs] if args.bs else [10, 8] # 16, 10
-lrs = [args.lr] if args.lr else [1.5e-5, 2e-5] #
+bss = [args.bs] if args.bs else [8, 6] # 16, 10
+lrs = [args.lr] if args.lr else [1e-5, 1.5e-5, 2e-5] #
 folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
 samplers = [args.sampler] if args.sampler else ['sequential', 'random']
 N_EPS = args.n_epochs
@@ -70,7 +71,6 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  }
-ROBERTA = model_mapping[args.model]
 device, USE_CUDA = get_torch_device()
 
 
@@ -131,15 +131,17 @@ if __name__ == '__main__':
     # get inferencer and place to store results
 
     inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
+    SAMPLER = 'sequential'
+    for MODEL in models:
+        ROBERTA = model_mapping[MODEL]
 
-    for SAMPLER in samplers:
         for SEED in seeds:
             if SEED == 0:
                 SEED_VAL = random.randint(0, 300)
             else:
                 SEED_VAL = SEED
 
-            seed_name = f"{args.model}_{SAMPLER}_{SEED_VAL}"
+            seed_name = f"{MODEL}_{SAMPLER}_{SEED_VAL}"
             random.seed(SEED_VAL)
             np.random.seed(SEED_VAL)
             torch.manual_seed(SEED_VAL)
@@ -155,9 +157,9 @@ if __name__ == '__main__':
                     for fold_name in folds:
                         fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                         name = setting_name + f"_f{fold_name}"
-                        best_val_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
+                        best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                         'f1': 0, 'model_loc': '', 'sampler': SAMPLER}
-                        test_res = {'model': args.model, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test', 'sampler': SAMPLER}
+                        test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test', 'sampler': SAMPLER}
 
                         # gather data
 
