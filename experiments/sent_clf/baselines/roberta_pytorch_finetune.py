@@ -37,10 +37,10 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
-parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
+parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-model', '--model', type=str, default=None) #2,3,4
 parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
@@ -49,11 +49,11 @@ parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
 models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [34, 49, 181]
-bss = [args.bs] if args.bs else [21]
+seeds = [args.sv] if args.sv else [34]
+bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3']
-samplers = [args.sampler] if args.sampler else ['sequential', 'random']
+folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+samplers = [args.sampler] if args.sampler else ['sequential']
 N_EPS = args.n_epochs
 
 DEBUG = args.debug
@@ -193,7 +193,7 @@ if __name__ == '__main__':
                                         model.zero_grad()
                                         outputs = model(batch[0], batch[1], labels=batch[2])
                                         #(loss), logits, probs, sequence_output = outputs
-                                        (loss), logits, sequence_output = outputs
+                                        (loss), logits, pooled_output, sequence_output = outputs
 
                                         loss.backward()
                                         tr_loss += loss.item()
@@ -204,7 +204,7 @@ if __name__ == '__main__':
                                             logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                                     av_loss = tr_loss / len(train_batches)
-                                    save_model(model, CHECKPOINT_DIR, epoch_name)
+                                    #save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                              set_type='dev', name=epoch_name)
 
@@ -227,7 +227,6 @@ if __name__ == '__main__':
                             logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
 
-                            '''
                             for EMB_TYPE in ['poolbert', 'avbert']:
                                 all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
@@ -236,7 +235,7 @@ if __name__ == '__main__':
                                 emb_name = f'{name}_basil_w_{EMB_TYPE}'
                                 basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                                 logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-                            '''
+
 
                             # eval on test
 
