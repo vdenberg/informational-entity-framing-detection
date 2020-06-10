@@ -121,7 +121,7 @@ if __name__ == '__main__':
     logger.info(args)
 
     for MODEL in models:
-        ROBERTA_MODEL = model_mapping[args.model]
+        ROBERTA_MODEL = model_mapping[MODEL]
         for SAMPLER in samplers:
             for SEED in seeds:
                 if SEED == 0:
@@ -235,7 +235,6 @@ if __name__ == '__main__':
                                 emb_name = f'{name}_basil_w_{EMB_TYPE}'
                                 basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                                 logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-
 
                             # eval on test
 
