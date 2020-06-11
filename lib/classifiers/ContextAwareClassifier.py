@@ -72,7 +72,10 @@ class ContextAwareModel(nn.Module):
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
+                emb = self.embedding(contexts[item, position]).view(1, -1)
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
+
+
 
         else:
             hidden = self.init_hidden(batch_size)
