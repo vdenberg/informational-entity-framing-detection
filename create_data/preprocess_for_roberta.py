@@ -60,7 +60,7 @@ ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
 FORCE = True
 if not os.path.exists(ofp) or FORCE:
-    df = pd.read_csv(all_infp)
+    df = pd.read_csv(all_infp, sep='\t')
     print(df.loc['0fox0'])
 
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
