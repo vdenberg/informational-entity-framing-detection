@@ -480,7 +480,7 @@ for HIDDEN in hiddens:
                 logger.info(f' Setting table in: {setting_table_fp}.')
 
                 FORCE = True
-                if os.path.exists(setting_table_fp) or FORCE:
+                if os.path.exists(setting_table_fp) and not FORCE:
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
 
