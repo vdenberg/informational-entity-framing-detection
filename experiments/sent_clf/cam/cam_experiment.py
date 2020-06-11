@@ -294,7 +294,7 @@ spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
-
+folds = [folds[0], folds[1], folds[2]]
 # todo remove once rest is done
 #folds = [folds[0], folds[1], folds[2]]
 
