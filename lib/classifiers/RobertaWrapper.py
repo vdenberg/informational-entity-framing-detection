@@ -28,7 +28,7 @@ class InputFeatures(object):
         self.label_id = label_id
 
 
-def load_features(fp, batch_size, sampler):
+def load_features(fp, batch_size, sampler='sequential'):
     with open(fp, "rb") as f:
         ids, data, labels = to_tensor(pickle.load(f))
     batches = to_batches(data, batch_size=batch_size, sampler=sampler)
@@ -211,12 +211,13 @@ class RobertaForSequenceClassificationWithTDFF(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
+        pooled_output = outputs[1]
         logits = self.classifier(sequence_output)
 
         #probs = self.sigm(logits)
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
-        outputs = (logits, sequence_output) + outputs[2:]
+        outputs = (logits, pooled_output, sequence_output) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
@@ -331,7 +332,7 @@ class Inferencer():
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, sequence_output = outputs
+                logits, pooled_output, sequence_output = outputs
 
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()
@@ -346,12 +347,11 @@ class Inferencer():
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
-            '''
+
             if emb_type == 'poolbert':
                 emb_output = pooled_output
             elif emb_type == "avbert":
                 emb_output = sequence_output.mean(axis=1)
-
 
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
@@ -359,8 +359,9 @@ class Inferencer():
             else:
                 self.logger.info("NOT USING CUDA")
                 emb_output = list(emb_output[0].numpy())
+            print(emb_output)
             embeddings.append(emb_output)
-            '''
+
             logits = logits.detach().cpu().numpy()
             #probs = probs.detach().cpu().numpy()
 
