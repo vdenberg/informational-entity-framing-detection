@@ -440,7 +440,7 @@ base_name = 'cnm' if CN else "cam"
 hiddens = [150, 100, 200] #100, 150, 200
 batch_sizes = [BATCH_SIZE, 21] #32, 21
 learning_rates = [LR, 1e-2, 2e-3] # 0.005, 0.01, 0.002]
-seeds = [34, 49. 181]
+seeds = [34, 49, 181]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
