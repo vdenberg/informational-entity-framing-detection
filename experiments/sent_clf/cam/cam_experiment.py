@@ -437,9 +437,9 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [HIDDEN, HIDDEN*2, HIDDEN/2]
-batch_sizes = [BATCH_SIZE, BATCH_SIZE*2, BATCH_SIZE/2]
-learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
+hiddens = [150, 100, 200] #100, 150, 200
+batch_sizes = [BATCH_SIZE, 21] #32, 21
+learning_rates = [LR, 1e-2, 2e-3] # 0.005, 0.01, 0.002]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
