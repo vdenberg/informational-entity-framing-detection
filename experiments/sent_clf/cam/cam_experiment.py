@@ -128,7 +128,7 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=150)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
-parser.add_argument('-sv', '--seed_val', type=int, default=798)
+parser.add_argument('-sv', '--seed_val', type=int, default=34)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -276,12 +276,12 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
-folds = [folds[i] for i in list(range(0, 3))]
+folds = [folds[i] for i in list(range(0, 5))]
 
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
@@ -386,6 +386,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
+    data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
     return wm
