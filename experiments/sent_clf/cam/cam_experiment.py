@@ -387,7 +387,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
     try:
-        print(len(data_w_emb), len(data))
+        print(data_w_emb.head(), data.head())
         data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     except:
         print('hm')
