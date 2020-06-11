@@ -502,4 +502,5 @@ for HIDDEN in hiddens:
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
             main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
+            logger.info(f"Results in: {TABLE_DIR}/{base_name}_main_results_table_1.csv.")
             logger.info(f"Logged to: {LOG_NAME}.")
