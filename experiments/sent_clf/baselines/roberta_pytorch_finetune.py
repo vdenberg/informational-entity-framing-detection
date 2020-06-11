@@ -80,13 +80,16 @@ device, USE_CUDA = get_torch_device()
 TASK_NAME = f'SC_rob'
 FEAT_DIR = f'data/sent_clf/features_for_roberta'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
-if not os.path.exists(CHECKPOINT_DIR):
-    os.makedirs(CHECKPOINT_DIR)
+#if not os.path.exists(CHECKPOINT_DIR):
+#    os.makedirs(CHECKPOINT_DIR)
+#if not os.path.exists(CURRENT_BEST_DIR):
+#    os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -214,16 +217,20 @@ if __name__ == '__main__':
                                     best_val_res.update(dev_mets)
                                     best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
                                     high_score = '(HIGH SCORE)'
+                                    save_model(model, CURRENT_BEST_DIR, name)
 
                                 logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                             # load best model, save embeddings, print performance on test
                             if best_val_res['model_loc'] == '':
                                 # none of the epochs performed above f1 = 0, so just use last epoch
-                                best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                            best_model = RobertaForSequenceClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
-                                                                                       output_hidden_states=False,
-                                                                                       output_attentions=False)
+                                best_val_res['model_loc'] = epoch_name
+                                save_model(model, CURRENT_BEST_DIR, name)
+
+                            best_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CURRENT_BEST_DIR, name),
+                                                                                          num_labels=NUM_LABELS,
+                                                                                          output_hidden_states=False,
+                                                                                          output_attentions=False)
                             logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
 
