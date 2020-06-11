@@ -277,7 +277,7 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 
 folds = [folds[i] for i in list(range(0, 5))]
-exit(0)
+
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
@@ -399,7 +399,6 @@ if EMB_TYPE in ['use', 'sbert']:
     embed_fp = f"data/sent_clf/embeddings/basil_w_{EMB_TYPE}.csv"
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-
 
 for fold in folds:
     # read embeddings file
