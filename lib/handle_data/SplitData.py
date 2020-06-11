@@ -115,6 +115,7 @@ class BergSplit:
         self.split_fp = os.path.join(split_dir, split_fn)
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
+        self.basil = self.basil.loc[split_input.index]
 
     def create_split(self):
         # order stories from most to least sentences in a story
