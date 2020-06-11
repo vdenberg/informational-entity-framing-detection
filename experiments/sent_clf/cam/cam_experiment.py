@@ -118,9 +118,9 @@ parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=16)
+parser.add_argument('-bs', '--batch_size', type=int, default=32)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
-parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5)
+parser.add_argument('-lr', '--learning_rate', type=float, default=5e-3)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
@@ -128,7 +128,7 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=150)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
-parser.add_argument('-sv', '--seed_val', type=int, default=34)
+parser.add_argument('-sv', '--seed_val', type=int, default=798)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -276,12 +276,12 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
-folds = [folds[i] for i in list(range(0, 10))]
+folds = [folds[i] for i in list(range(0, 3))]
 
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
