@@ -96,7 +96,7 @@ def make_weight_matrix(embed_df, EMB_DIM):
 
 parser = argparse.ArgumentParser()
 # PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=500)
+parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
