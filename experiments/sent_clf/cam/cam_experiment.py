@@ -440,6 +440,7 @@ base_name = 'cnm' if CN else "cam"
 hiddens = [150, 100, 200] #100, 150, 200
 batch_sizes = [BATCH_SIZE, 21] #32, 21
 learning_rates = [LR, 1e-2, 2e-3] # 0.005, 0.01, 0.002]
+seeds = [34, 49. 181]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -447,7 +448,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in [34, 49. 181]: #[231, 199, 2336]:
+            for SEED in seeds: #[231, 199, 2336]:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
