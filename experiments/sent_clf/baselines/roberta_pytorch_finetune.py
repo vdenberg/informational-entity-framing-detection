@@ -231,7 +231,7 @@ if __name__ == '__main__':
                                 all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1, sampler=SAMPLER)
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                 basil_w_BERT = pd.DataFrame(index=all_ids)
-                                print(len(embs), len(embs[0]))
+                                print(len(embs))
                                 print(embs.shape)
                                 basil_w_BERT[EMB_TYPE] = embs
                                 emb_name = f'{name}_basil_w_{EMB_TYPE}'
