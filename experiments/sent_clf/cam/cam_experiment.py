@@ -327,9 +327,9 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE)
+    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
+    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
+    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
