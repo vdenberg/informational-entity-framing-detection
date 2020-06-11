@@ -134,12 +134,13 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
         sequence_output = outputs[0]
+        pooled_output = outputs[1]
 
         logits = self.classifier(sequence_output)
         #probs = self.sigm(logits)
 
         #outputs = (logits, probs, sequence_output) + outputs[2:]
-        outputs = (logits, sequence_output) + outputs[2:]
+        outputs = (logits, pooled_output, sequence_output) + outputs[2:]
 
         if labels is not None:
             if self.num_labels == 1:
