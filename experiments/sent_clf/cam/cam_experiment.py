@@ -52,7 +52,7 @@ class Processor():
         with open("data/sent_clf/features_for_roberta/all_features.pkl", "rb") as f:
             features = pickle.load(f)
         feat_dict = {f.my_id.lower(): f for f in features}
-        print(feat_dict)
+        print(feat_dict['0fox0'])
         print(sentence_ids)
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
         token_mask = [feat_dict[i].input_mask for i in sentence_ids]
