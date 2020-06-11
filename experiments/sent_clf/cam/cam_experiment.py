@@ -291,6 +291,7 @@ logger.info(f" Split type: {SPLIT_TYPE}")
 logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
+print(data.loc(['11fox23']))
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
