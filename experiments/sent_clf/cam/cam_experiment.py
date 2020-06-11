@@ -253,7 +253,6 @@ if PREPROCESS:
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
 
     token_ids, token_mask, new_ids = processor.to_numeric_sentences(raw_data.sentence_ids)
-    exit(0)
     raw_data = raw_data.loc[new_ids]
     exit(0)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
