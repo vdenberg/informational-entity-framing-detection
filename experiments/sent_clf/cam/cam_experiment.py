@@ -281,7 +281,7 @@ folds = [folds[i] for i in list(range(0, 5))]
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
@@ -387,6 +387,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
     try:
+        print(len(data_w_emb), len(data))
         data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     except:
         print('hm')
