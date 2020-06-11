@@ -254,8 +254,9 @@ if PREPROCESS:
 
     token_ids, token_mask, new_ids = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data = raw_data.loc[new_ids]
-    exit(0)
+
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
+    exit(0)
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
