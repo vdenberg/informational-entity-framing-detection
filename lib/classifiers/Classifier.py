@@ -86,7 +86,7 @@ class Classifier:
             self.best_model_loc = ep_name
             best_log = '(HIGH SCORE)'
 
-        self.logger.info(f" Ep {ep} ({self.model_name.replace('_', ' ')}): "
+        self.logger.info(f" Ep {ep} ({self.model_name.replace('_', '')}): "
                          f"{tr_perf} | {val_perf} {best_log}")
         self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
