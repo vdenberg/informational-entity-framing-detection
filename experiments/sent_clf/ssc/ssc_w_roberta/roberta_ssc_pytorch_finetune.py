@@ -48,7 +48,7 @@ args = parser.parse_args()
 #ssc4: 49_bs16_lr0.0002_f1
 #ssc3: 49_bs16_lr1e-05_f3
 models = [args.model] if args.model else ['rob_dapt', 'rob_tapt', 'rob_dapttapt']
-EX_LEN = 6  #args.example_length
+EX_LEN = args.example_length
 seeds = [args.sv] if args.sv else [34, 49, 181] # 34, 49, 181
 bss = [args.bs] if args.bs else [6]  #, 8, 1
 lrs = [args.lr] if args.lr else [1.5e-5] #, 2e-5
