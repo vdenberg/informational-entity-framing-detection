@@ -276,7 +276,7 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
-folds = [folds[i] for i in list(range(0, 3))]
+folds = [folds[i] for i in list(range(0, 5))]
 
 NR_FOLDS = len(folds)
 
@@ -437,9 +437,9 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [HIDDEN]
-batch_sizes = [BATCH_SIZE]
-learning_rates = [LR] #, 0.001, 0.002]
+hiddens = [HIDDEN, HIDDEN*2, HIDDEN/2]
+batch_sizes = [BATCH_SIZE, BATCH_SIZE*2, BATCH_SIZE/2]
+learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -447,7 +447,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in [34]: #[231, 199, 2336]:
+            for SEED in [34, 49. 181]: #[231, 199, 2336]:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
