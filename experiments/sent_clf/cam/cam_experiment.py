@@ -96,7 +96,7 @@ def make_weight_matrix(embed_df, EMB_DIM):
 
 parser = argparse.ArgumentParser()
 # PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
+parser.add_argument('-inf', '--step_info_every', type=int, default=500)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
@@ -274,6 +274,8 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
+folds = [folds[0], folds[1], folds[2]]
+
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
@@ -286,6 +288,24 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 
 for fold in folds:
+    '''
+    train_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_train_features.pkl")
+    dev_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_dev_features.pkl")
+    test_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_test_features.pkl")
+
+    with open(train_fp, "rb") as f:
+        train_features = pickle.load(f)
+
+    with open(dev_fp, "rb") as f:
+        dev_features = pickle.load(f)
+
+    with open(test_fp, "rb") as f:
+        test_features = pickle.load(f)
+    '''
+
+    # train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
+    # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
     dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
