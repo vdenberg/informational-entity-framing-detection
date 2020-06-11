@@ -75,8 +75,6 @@ class ContextAwareModel(nn.Module):
                 emb = self.embedding(contexts[item, position]).view(1, -1)
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
 
-
-
         else:
             hidden = self.init_hidden(batch_size)
             for seq_idx in range(contexts.shape[0]):

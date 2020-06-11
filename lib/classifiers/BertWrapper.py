@@ -242,8 +242,12 @@ class BertWrapper:
         input_ids, input_mask, _, _ = inputs
 
         self.model.zero_grad()
+        print('---')
+        print(input_ids, input_mask)
         outputs = self.model(input_ids, input_mask, labels=labels)
         (loss), logits, probs, sequence_ouput, pooled_output = outputs
+        print(logits, probs)
+        print('---')
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
