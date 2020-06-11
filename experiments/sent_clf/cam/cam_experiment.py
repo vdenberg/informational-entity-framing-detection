@@ -172,8 +172,8 @@ SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
 PREPROCESS = args.preprocess
-#if DEBUG:
-#    SUBSET = 0.5
+if DEBUG:
+    SUBSET = 0.5
 
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
@@ -465,7 +465,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in [231, 199, 2336]:
+            for SEED in [34]: #[231, 199, 2336]:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
