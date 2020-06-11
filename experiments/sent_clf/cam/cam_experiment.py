@@ -256,7 +256,6 @@ if PREPROCESS:
     raw_data = raw_data.loc[new_ids]
 
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
-    exit(0)
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
@@ -271,7 +270,7 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
-
+exit(0)
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
 if DEBUG:
