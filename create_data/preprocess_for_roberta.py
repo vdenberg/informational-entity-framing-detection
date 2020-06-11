@@ -62,6 +62,9 @@ FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
+    x_dict = {x.my_id: x for x in examples}
+    print(x_dict['0fox0'])
+
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
