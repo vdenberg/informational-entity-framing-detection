@@ -47,7 +47,9 @@ class Processor():
         return numeric_context_docs
 
     def to_numeric_sentences(self, sentence_ids):
-        with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
+        #with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
+            #features = pickle.load(f)
+        with open("data/features_for_roberta/all_features.pkl", "rb") as f:
             features = pickle.load(f)
         feat_dict = {f.my_id.lower(): f for f in features}
         token_ids = [feat_dict[i].input_ids for i in sentence_ids]
@@ -323,7 +325,7 @@ for fold in folds:
         test_features = pickle.load(f)
     '''
 
-    #train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    # train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
@@ -403,6 +405,7 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
                                                                output_attentions=True)
 '''
 
+
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
@@ -423,8 +426,8 @@ if EMB_TYPE in ['use', 'sbert']:
 for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert']:
-        embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        #embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+        #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
