@@ -57,31 +57,7 @@ class Processor():
         token_ids = [feat_dict[i].input_ids for i in sentence_ids if i in feat_dict]
         token_mask = [feat_dict[i].input_mask for i in sentence_ids if i in feat_dict]
         self.max_sent_length = len(token_ids[0])
-        '''
-        tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
-        all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
-        all_tokens = [["[CLS]"] + tokens + ["[SEP]"] for tokens in all_tokens]
-        max_sent_length = max([len(t) for t in all_tokens])
-        self.max_sent_length = max_sent_length
-
-        token_ids = []
-        token_mask = []
-        tok_seg_ids = []
-
-        for tokens in all_tokens:
-            segment_ids = [0] * len(tokens)
-            input_ids = tokenizer.convert_tokens_to_ids(tokens)
-            input_mask = [1] * len(input_ids)
-            padding = [0] * (max_sent_length - len(input_ids))
-            input_ids += padding
-            input_mask += padding
-            segment_ids += padding
-
-            token_ids.append(input_ids)
-            token_mask.append(input_mask)
-            tok_seg_ids.append(segment_ids)
-        '''
         return token_ids, token_mask, new_ids
 
 
@@ -148,7 +124,7 @@ parser.add_argument('-lr', '--learning_rate', type=float, default=1e-5)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=250)
+parser.add_argument('-hid', '--hidden_size', type=int, default=150)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
@@ -304,7 +280,7 @@ folds = [folds[0], folds[1], folds[2]]
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
@@ -383,7 +359,7 @@ logger.info(f"Get embeddings")
 
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
-
+'''
 model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 42.449999999999996),
           2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88),
           3: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 45.97),
@@ -395,7 +371,7 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
           9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
           10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
 
-'''
+
 all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1, sampler='sequential')                        
 with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
