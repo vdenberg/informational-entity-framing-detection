@@ -382,7 +382,10 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
 '''
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
-    data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
+    try:
+        data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
+    except:
+        print('hm')
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
@@ -402,10 +405,7 @@ for fold in folds:
     if EMB_TYPE in ['poolbert', 'avbert']:
         #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        try:
-            weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
-        except:
-            print('hm')
+        weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
 
