@@ -371,8 +371,6 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
           8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
           9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
           10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-
-
 all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1, sampler='sequential')                        
 with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
@@ -382,7 +380,6 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
                                                                num_labels=2, output_hidden_states=True,
                                                                output_attentions=True)
 '''
-
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
@@ -405,7 +402,10 @@ for fold in folds:
     if EMB_TYPE in ['poolbert', 'avbert']:
         #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+        try:
+            weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+        except:
+            print('hm')
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
 
