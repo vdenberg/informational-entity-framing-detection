@@ -235,7 +235,8 @@ if __name__ == '__main__':
                             logger.info(f"  Details: {best_val_res}")
 
                             for EMB_TYPE in ['poolbert', 'avbert']:
-                                all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1, sampler=SAMPLER)
+                                feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
+                                all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                 basil_w_BERT = pd.DataFrame(index=all_ids)
                                 basil_w_BERT[EMB_TYPE] = embs
