@@ -361,7 +361,8 @@ class Inferencer():
             else:
                 self.logger.info("NOT USING CUDA")
                 emb_output = list(emb_output[0].numpy())
-            print(emb_output)
+
+            #print(emb_output)
             embeddings.append(emb_output)
 
             logits = logits.detach().cpu().numpy()
