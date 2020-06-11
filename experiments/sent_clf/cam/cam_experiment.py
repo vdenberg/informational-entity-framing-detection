@@ -274,6 +274,8 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
+folds = [folds[i] for i in list(range(0, 5))]
+
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
