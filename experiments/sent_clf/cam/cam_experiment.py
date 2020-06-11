@@ -232,7 +232,6 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
-exit(0)
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
@@ -248,7 +247,7 @@ if PREPROCESS:
     raw_data['source'] = sentences['source']
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
-
+    exit(0)
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
