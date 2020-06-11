@@ -291,8 +291,8 @@ logger.info(f" Split type: {SPLIT_TYPE}")
 logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
-print(data.loc['11fox23'])
 data.index = data.sentence_ids.values
+print(data.loc['11fox23'])
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
