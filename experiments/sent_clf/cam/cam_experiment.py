@@ -391,8 +391,9 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
           8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
           9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
           10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1)
-                        
+
+'''
+all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1, sampler='sequential')                        
 with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
     bert_all_batches = to_batches(all_data, 1)
@@ -400,7 +401,7 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
                                                                num_labels=2, output_hidden_states=True,
                                                                output_attentions=True)
-
+'''
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
@@ -418,6 +419,7 @@ if EMB_TYPE in ['use', 'sbert']:
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
 
+
 for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert']:
@@ -426,9 +428,6 @@ for fold in folds:
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
-
-
-
 
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
