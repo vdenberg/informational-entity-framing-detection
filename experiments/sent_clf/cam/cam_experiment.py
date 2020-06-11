@@ -128,7 +128,7 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=150)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
-parser.add_argument('-sv', '--seed_val', type=int, default=34)
+parser.add_argument('-sv', '--seed_val', type=int, default=798)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -382,14 +382,15 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
 '''
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
-    try:
-        data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
-    except:
-        print('hm')
+    data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
+    try:
+        data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
+    except:
+        print('hm')
+
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
     return wm
