@@ -251,9 +251,12 @@ if PREPROCESS:
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
+
     exit(0)
     token_ids, token_mask, new_ids = processor.to_numeric_sentences(raw_data.sentence_ids)
+    exit(0)
     raw_data = raw_data.loc[new_ids]
+    exit(0)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
