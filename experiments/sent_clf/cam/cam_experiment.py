@@ -381,11 +381,19 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
                                                                output_attentions=True)
 '''
 
+def standardise_id(basil_id):
+    if not basil_id[1].isdigit():
+        basil_id = '0' + basil_id
+    if not basil_id[-2].isdigit():
+        basil_id = basil_id[:-1] + '0' + basil_id[-1]
+    return basil_id
+
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
+    data.index = data.index.apply(standardise_id)
     data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
