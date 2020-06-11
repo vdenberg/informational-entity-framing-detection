@@ -276,7 +276,7 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 if DEBUG:
     folds = [folds[0], folds[1]]
 
-folds = [folds[i] for i in list(range(0, 5))]
+folds = [folds[i] for i in list(range(0, 3))]
 
 NR_FOLDS = len(folds)
 
@@ -386,12 +386,6 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    try:
-        print(data_w_emb.head(), data.head())
-        data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
-    except:
-        print('hm')
-
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
     return wm
