@@ -292,8 +292,6 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
-print(DATA_FP)
-print(data.loc['11fox23'])
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
@@ -306,7 +304,7 @@ folds = [folds[0], folds[1], folds[2]]
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-#ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
