@@ -242,8 +242,6 @@ if __name__ == '__main__':
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                 basil_w_BERT = pd.DataFrame(index=all_ids)
                                 basil_w_BERT[EMB_TYPE] = embs
-                                print(basil_w_BERT.loc['5nyt13'])
-                                exit(0)
                                 emb_name = f'{name}_basil_w_{EMB_TYPE}'
                                 basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                                 logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
@@ -263,8 +261,10 @@ if __name__ == '__main__':
 
                             # print result on fold
 
-                            logging.info(
-                                f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                            logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
+                        print(basil_w_BERT.loc['5nyt13'])
+                        exit(0)
 
                         # print result of setting
 
