@@ -9,9 +9,16 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
+def standardise_id(basil_id):
+    if not basil_id[1].isdigit():
+        basil_id = '0' + basil_id
+    if not basil_id[-2].isdigit():
+        basil_id = basil_id[:-1] + '0' + basil_id[-1]
+    return basil_id.lower()
+
+
 def to_tensor(features):
     example_ids = [f.my_id for f in features]
-    print(features[0].input_ids)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)

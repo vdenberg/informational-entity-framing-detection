@@ -90,15 +90,6 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
                                             'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [standardise_id(x) for x in data_w_emb.index]
 
-
-    a = data.sentence_ids.values
-    b = data_w_emb.index.values
-    print(a[:20])
-    print(b[:20])
-    print(len(a), len(b))
-    c = set(a) - set(b)
-
-    exit()
     data_w_emb = data_w_emb.loc[data.sentence_ids]
     wm = make_weight_matrix(data_w_emb, emb_dim)
     return wm
