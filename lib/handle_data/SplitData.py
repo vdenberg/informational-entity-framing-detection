@@ -333,7 +333,7 @@ def split_input_for_bert(data_dir, task):
     # load basil data with BERT-relevant columns
     basil_infp = os.path.join(data_dir, 'basil.csv')
     data = pd.read_csv(basil_infp, index_col=0, names=['id', 'label', 'alpha', 'sentence'])
-    data.index = [el.lower() for el in data.index]
+    data.index = [standardise_id(el) for el in data.index]
 
     # write data with only these columns to all.tsv
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
