@@ -288,7 +288,8 @@ folds = [folds[0]]
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+logger.info(f" --> Example: {data.sample(n=1).token_ids.values}")
+logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
