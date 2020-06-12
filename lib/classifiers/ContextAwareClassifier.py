@@ -65,7 +65,7 @@ class ContextAwareModel(nn.Module):
         seq_len = doc_len
 
         # init containers for outputs
-        rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
+        rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2 + self.emb_size
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
         target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
 
@@ -82,7 +82,9 @@ class ContextAwareModel(nn.Module):
                 sentence_representations[:, seq_idx] = encoded
 
             for item, position in enumerate(positions):
-                target_sent_reps[item] = sentence_representations[item, position].view(1, -1) + self.embedding(contexts[item, position]).view(1, -1)
+                target_hid = sentence_representations[item, position].view(1, -1)
+                target_roberta = self.embedding(contexts[item, position]).view(1, -1)
+                target_sent_reps[item] =  torch.concat((target_hid, target_roberta), dim=1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
