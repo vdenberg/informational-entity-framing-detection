@@ -91,8 +91,8 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb.index = [standardise_id(x) for x in data_w_emb.index]
 
 
-    a = set(data.sentence_ids.values())
-    b = set(data_w_emb.sentence_ids.values())
+    a = set(data.sentence_ids.values)
+    b = set(data_w_emb.sentence_ids.values)
     c = a - b
     print(c)
 
