@@ -485,7 +485,8 @@ for HIDDEN in hiddens:
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
-                        if os.path.exists(fold_table_fp):
+                        FORCE = True
+                        if os.path.exists(fold_table_fp) and not FORCE:
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)
                         else:
