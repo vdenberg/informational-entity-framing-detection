@@ -16,7 +16,7 @@ from lib.utils import get_torch_device, to_tensors, to_batches, standardise_id
 
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
-        self.sent_id_map = {str_i: i+1 for i, str_i in enumerate(sentence_ids)}  # maps basil ids to wm indices
+        self.sent_id_map = {standardise_id(str_i): i+1 for i, str_i in enumerate(sentence_ids)}  # maps basil ids to wm indices
         self.PAD_index = 0
         self.EOD_index = len(self.sent_id_map)
         self.max_doc_length = max_doc_length + 1  # add 1 for EOD_index
