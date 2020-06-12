@@ -377,6 +377,7 @@ logger.info(f"Get embeddings")
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
+'''
 model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 42.449999999999996),
           2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88),
           3: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 45.97),
@@ -396,7 +397,7 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
                                                                num_labels=2, output_hidden_states=True,
                                                                output_attentions=True)
-
+'''
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
