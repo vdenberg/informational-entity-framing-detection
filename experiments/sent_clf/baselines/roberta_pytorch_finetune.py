@@ -263,9 +263,6 @@ if __name__ == '__main__':
 
                             logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
 
-                        print(basil_w_BERT.loc['5nyt13'])
-                        exit(0)
-
                         # print result of setting
 
                         logging.info(
