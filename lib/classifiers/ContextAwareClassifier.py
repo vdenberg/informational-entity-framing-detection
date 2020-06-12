@@ -85,7 +85,7 @@ class ContextAwareModel(nn.Module):
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                target_sent_reps[item] = torch.concat((target_hid, target_roberta), dim=1)
+                target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
