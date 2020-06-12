@@ -73,6 +73,8 @@ class ContextAwareModel(nn.Module):
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
                 emb = self.embedding(contexts[item, position]).view(1, -1)
+                print(emb)
+                print(contexts[item, position])
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
 
         else:
