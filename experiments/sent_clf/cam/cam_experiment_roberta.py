@@ -96,7 +96,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     print(a[:20])
     print(b[:20])
     c = set(a) - set(b)
-    print(c)
+    #print(c)
     exit()
     data_w_emb = data_w_emb.loc[data.sentence_ids]
     wm = make_weight_matrix(data_w_emb, emb_dim)
