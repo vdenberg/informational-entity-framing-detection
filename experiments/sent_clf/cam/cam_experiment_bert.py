@@ -39,7 +39,7 @@ class Processor():
         for doc in documents:
             doc = doc.split(' ')
             # to indexes
-            doc = [self.sent_id_map[sent.lower()] for sent in doc if sent != '11fox23']
+            doc = [self.sent_id_map[sent.lower()] for sent in doc if sent not in ['11fox23', '13fox8']]
             # with EOS token
             doc += [self.EOD_index]
             # padded
@@ -266,7 +266,7 @@ if PREPROCESS:
                            names=['sentence_ids', 'context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
-    raw_data = raw_data.drop(['11fox23'])
+    raw_data = raw_data.drop(['11fox23', '13fox8'])
 
     raw_data['source'] = sentences['source']
     raw_data['story'] = sentences['story']
