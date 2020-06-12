@@ -53,7 +53,6 @@ class Processor():
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
-
     # clean embedding string
     embed_df = embed_df.fillna(0).replace({'\n', ' '})
     sentence_embeddings = {}
@@ -87,19 +86,21 @@ def make_weight_matrix(embed_df, EMB_DIM):
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
-    data_w_emb = data_w_emb.rename(  columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+    data_w_emb = data_w_emb.rename(columns={'USE': 'embeddings', 'sbert_pre': 'embeddings',
+                                            'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [standardise_id(x) for x in data_w_emb.index]
     data_w_emb = data_w_emb.loc[data.sentence_ids]
-    wm = make_weight_matrix(data, emb_dim)
+    wm = make_weight_matrix(data_w_emb, emb_dim)
     return wm
+
 
 # =====================================================================================
 #                    PARAMETERS
 # =====================================================================================
 
 # Read arguments from command line
-
 parser = argparse.ArgumentParser()
+
 # PRINT/SAVE PARAMS
 parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
@@ -136,7 +137,6 @@ parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 parser.add_argument('-sv', '--seed_val', type=int, default=798)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
-#GRADIENT_ACCUMULATION_STEPS = 1
 
 args = parser.parse_args()
 
@@ -296,25 +296,6 @@ logger.info(f" --> Columns: {list(data.columns)}")
 # =====================================================================================
 
 for fold in folds:
-    '''
-    train_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_train_features.pkl")
-    dev_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_dev_features.pkl")
-    test_fp = os.path.join('data/sent_clf/features_for_bert', f"folds/{fold['name']}_test_features.pkl")
-
-    with open(train_fp, "rb") as f:
-        train_features = pickle.load(f)
-
-    with open(dev_fp, "rb") as f:
-        dev_features = pickle.load(f)
-
-    with open(test_fp, "rb") as f:
-        test_features = pickle.load(f)
-    '''
-
-    # train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
-    # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
-    # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
-
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
     dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
     test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
@@ -366,26 +347,6 @@ logger.info(f"Get embeddings")
 
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
-'''
-model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 42.449999999999996),
-          2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88),
-          3: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 45.97),
-          4: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f4_ep1', 37.59),
-          5: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f5_ep4', 34.410000000000004),
-          6: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f6_ep3', 26.029999999999998),
-          7: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f7_ep4', 32.629999999999995),
-          8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
-          9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
-          10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1, sampler='sequential')                        
-with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
-    bert_all_batches = to_batches(all_data, 1)
-        # bert model
-    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
-                                                               num_labels=2, output_hidden_states=True,
-                                                               output_attentions=True)
-'''
 
 if EMB_TYPE in ['use', 'sbert']:
     embed_fp = f"data/sent_clf/embeddings/basil_w_{EMB_TYPE}.csv"
@@ -395,7 +356,6 @@ if EMB_TYPE in ['use', 'sbert']:
 for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert']:
-        #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
@@ -423,7 +383,7 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [150, 100, 200] #100, 150, 200
+hiddens = [150] #100, 150, 200
 batch_sizes = [BATCH_SIZE, 21] #32, 21
 learning_rates = [LR, 1e-2, 2e-3] # 0.005, 0.01, 0.002]
 seeds = [34, 49, 181]
@@ -497,6 +457,6 @@ for HIDDEN in hiddens:
                     setting_results_table.to_csv(setting_table_fp, index=False)
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
-            main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
-            logger.info(f"Results in: {TABLE_DIR}/{base_name}_main_results_table_1.csv.")
-            logger.info(f"Logged to: {LOG_NAME}.")
+                    main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
+                    logger.info(f"Results in: {TABLE_DIR}/{base_name}_main_results_table_1.csv.")
+                    logger.info(f"Logged to: {LOG_NAME}.")
