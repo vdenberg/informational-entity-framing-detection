@@ -71,7 +71,6 @@ class ContextAwareModel(nn.Module):
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
-            print([(item, position) for item, position in enumerate(positions)])
             for item, position in enumerate(positions):
                 emb = self.embedding(contexts[item, position]).view(1, -1)
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
@@ -116,6 +115,7 @@ class ContextAwareClassifier():
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
                                            device=self.device, context_naive=context_naive)
+
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
