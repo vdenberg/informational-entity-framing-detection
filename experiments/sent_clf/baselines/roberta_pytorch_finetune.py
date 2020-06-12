@@ -207,7 +207,7 @@ if __name__ == '__main__':
                                             logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                                     av_loss = tr_loss / len(train_batches)
-                                    #save_model(model, CHECKPOINT_DIR, epoch_name)
+                                    save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                              set_type='dev', name=epoch_name)
 
@@ -239,11 +239,11 @@ if __name__ == '__main__':
                                 all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
 
                                 tmp = [i for i in all_ids if '5nyt1' in i]
-                                print(tmp)
-                                exit(0)
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                 basil_w_BERT = pd.DataFrame(index=all_ids)
                                 basil_w_BERT[EMB_TYPE] = embs
+                                print(basil_w_BERT.loc['5nyt13'])
+                                exit(0)
                                 emb_name = f'{name}_basil_w_{EMB_TYPE}'
                                 basil_w_BERT.to_csv(f'data/{emb_name}.csv')
                                 logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
