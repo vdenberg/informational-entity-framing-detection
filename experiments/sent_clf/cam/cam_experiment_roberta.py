@@ -43,8 +43,8 @@ class Processor():
 
         # ensure they are in the same order
         feat_dict = {standardise_id(f.my_id): f for f in features}
-        token_ids = [feat_dict[i].input_ids for i in sentence_ids if i in feat_dict]
-        token_mask = [feat_dict[i].input_mask for i in sentence_ids if i in feat_dict]
+        token_ids = [feat_dict[i].input_ids for i in sentence_ids]
+        token_mask = [feat_dict[i].input_mask for i in sentence_ids]
 
         # set max set length
         self.max_sent_length = len(token_ids[0])
@@ -260,8 +260,8 @@ if PREPROCESS:
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
 
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
-
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
+
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
