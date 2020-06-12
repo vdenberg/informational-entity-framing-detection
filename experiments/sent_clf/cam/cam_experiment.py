@@ -404,7 +404,6 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    print(data_w_emb)
     data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
