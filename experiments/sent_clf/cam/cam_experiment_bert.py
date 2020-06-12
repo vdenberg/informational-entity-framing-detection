@@ -390,15 +390,6 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
               10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
 all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1)
 
-with open(f"data/sent_clf/features_for_bert/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
-    bert_all_batches = to_batches(all_data, 1)
-    # bert model
-    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
-                                                               num_labels=2, output_hidden_states=True,
-                                                               output_attentions=True)
-
-
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
