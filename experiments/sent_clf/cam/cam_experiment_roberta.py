@@ -194,13 +194,14 @@ torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
+TASK = 'cam_bert'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
+DATA_FP = os.path.join(DATA_DIR, f'{TASK}_basil.json')
 TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
 
 if not os.path.exists(CHECKPOINT_DIR):
