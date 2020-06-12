@@ -39,7 +39,7 @@ class Processor():
         for doc in documents:
             doc = doc.split(' ')
             # to indexes
-            doc = [self.sent_id_map[sent.lower()] for sent in doc]
+            doc = [self.sent_id_map[sent.lower()] for sent in doc if sent != '11fox23']
             # with EOS token
             doc += [self.EOD_index]
             # padded
