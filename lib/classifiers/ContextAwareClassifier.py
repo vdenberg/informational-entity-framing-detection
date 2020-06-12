@@ -46,7 +46,7 @@ class ContextAwareModel(nn.Module):
         if self.context_naive:
             self.classifier = Linear(self.emb_size, 2)
         else:
-            self.classifier = Linear(self.hidden_size * 2, 2)
+            self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2)
 
         self.sigm = Sigmoid()
 
@@ -82,7 +82,7 @@ class ContextAwareModel(nn.Module):
                 sentence_representations[:, seq_idx] = encoded
 
             for item, position in enumerate(positions):
-                target_sent_reps[item] = sentence_representations[item, position].view(1, -1)
+                target_sent_reps[item] = sentence_representations[item, position].view(1, -1) + self.embedding(contexts[item, position]).view(1, -1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
