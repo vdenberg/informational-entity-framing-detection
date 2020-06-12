@@ -237,6 +237,10 @@ if __name__ == '__main__':
                             for EMB_TYPE in ['poolbert', 'avbert']:
                                 feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                 all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
+
+                                tmp = [i for i in all_ids if '5nyt1' in i]
+                                print(tmp)
+                                exit(0)
                                 embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                 basil_w_BERT = pd.DataFrame(index=all_ids)
                                 basil_w_BERT[EMB_TYPE] = embs
