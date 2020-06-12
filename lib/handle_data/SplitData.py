@@ -2,7 +2,7 @@ import random
 import json
 import os, re
 import pandas as pd
-from lib.utils import standardise_id
+
 
 # Berg split helpers
 
@@ -115,8 +115,6 @@ class BergSplit:
         self.split_fp = os.path.join(split_dir, split_fn)
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
-        self.basil.index = [standardise_id(i) for i in self.basil.index]
-        self.basil = self.basil.loc[split_input.index]
 
     def create_split(self):
         # order stories from most to least sentences in a story
@@ -333,13 +331,13 @@ def split_input_for_bert(data_dir, task):
     # load basil data with BERT-relevant columns
     basil_infp = os.path.join(data_dir, 'basil.csv')
     data = pd.read_csv(basil_infp, index_col=0, names=['id', 'label', 'alpha', 'sentence'])
-    data.index = [standardise_id(el) for el in data.index]
+    data.index = [el.lower() for el in data.index]
 
     # write data with only these columns to all.tsv
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='berg')
+    spl = Split(data, which='both')
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv

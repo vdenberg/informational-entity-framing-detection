@@ -9,16 +9,9 @@ from matplotlib import ticker
 #import matplotlib.ticker as ticker
 
 
-def standardise_id(basil_id):
-    if not basil_id[1].isdigit():
-        basil_id = '0' + basil_id
-    if not basil_id[-2].isdigit():
-        basil_id = basil_id[:-1] + '0' + basil_id[-1]
-    return basil_id.lower()
-
-
 def to_tensor(features):
     example_ids = [f.my_id for f in features]
+    print(features[0].input_ids)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
@@ -84,12 +77,10 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             return TensorDataset(token_ids, token_mask, contexts, positions, labels)
 
 
-def to_batches(tensors, batch_size, sampler):
+def to_batches(tensors, batch_size):
     ''' Creates dataloader with input divided into batches. '''
-    if sampler == 'random':
-        sampler = RandomSampler(tensors)
-    elif sampler == 'sequential':
-        sampler = SequentialSampler(tensors) #RandomSampler(tensors)
+    sampler = RandomSampler(tensors)
+    #sampler = SequentialSampler(tensors) #RandomSampler(tensors)
     loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
     return loader
 
@@ -193,4 +184,4 @@ def standardise_id(basil_id):
         basil_id = '0' + basil_id
     if not basil_id[-2].isdigit():
         basil_id = basil_id[:-1] + '0' + basil_id[-1]
-    return basil_id.lower()
+    return basil_id
