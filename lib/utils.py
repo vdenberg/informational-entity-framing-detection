@@ -71,6 +71,8 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             return TensorDataset(token_ids, token_mask, labels)
 
         else:
+
+
             contexts = np.array([list(el) for el in split.context_doc_num.values])
             token_ids = [list(el) for el in split.token_ids.values]
             token_mask = [list(el) for el in split.token_mask.values]
