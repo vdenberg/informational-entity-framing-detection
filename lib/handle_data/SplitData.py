@@ -2,7 +2,7 @@ import random
 import json
 import os, re
 import pandas as pd
-
+from lib.utils import standardise_id
 
 # Berg split helpers
 
@@ -115,6 +115,7 @@ class BergSplit:
         self.split_fp = os.path.join(split_dir, split_fn)
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
+        self.basil.index = [standardise_id(i) for i in self.basil.index]
         self.basil = self.basil.loc[split_input.index]
 
     def create_split(self):
