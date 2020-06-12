@@ -71,6 +71,7 @@ class ContextAwareModel(nn.Module):
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
+            print([(item, position) for item, position in enumerate(positions)])
             for item, position in enumerate(positions):
                 emb = self.embedding(contexts[item, position]).view(1, -1)
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
@@ -183,7 +184,7 @@ class ContextAwareClassifier():
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
             inputs, labels = batch[:-1], batch[-1]
-            token_ids, token_mask, _, _ = inputs
+            token_ids, token_mask, context, position = inputs
 
             with torch.no_grad():
                 logits, probs, sentence_representation = self.model(inputs)
@@ -191,9 +192,6 @@ class ContextAwareClassifier():
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
                 embeddings.append(embedding)
-                #sigm_output  = self.model(ids, documents, positions)
-                #sigm_output = sigm_output.detach().cpu().numpy()
-                #loss = self.criterion(sigm_output, labels)
 
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
 
