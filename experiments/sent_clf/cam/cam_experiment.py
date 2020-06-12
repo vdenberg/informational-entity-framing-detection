@@ -200,7 +200,7 @@ BILSTM_LAYERS = args.bilstm_layers
 SEED_VAL = args.seed_val
 BERT_MODEL = args.bert_model
 NUM_LABELS = 2
-SAMPLER = 'sequential'
+SAMPLER = 'random'
 
 # set seed
 random.seed(SEED_VAL)
