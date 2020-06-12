@@ -266,6 +266,7 @@ if PREPROCESS:
                            names=['sentence_ids', 'context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
+    raw_data = raw_data.drop(['11fox23'])
 
     raw_data['source'] = sentences['source']
     raw_data['story'] = sentences['story']
