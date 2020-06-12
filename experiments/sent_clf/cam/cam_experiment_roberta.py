@@ -95,6 +95,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     b = data_w_emb.index.values
     print(a[:20])
     print(b[:20])
+    print(len(a), len(b))
     c = set(a) - set(b)
     #print(c)
     exit()
