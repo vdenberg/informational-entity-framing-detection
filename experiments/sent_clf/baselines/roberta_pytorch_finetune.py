@@ -52,7 +52,7 @@ models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_daptta
 seeds = [args.sv] if args.sv else [34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else ['4', '5', '6', '7', '8', '9', '10'] #1', '2', '3',
+folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'] #1', '2', '3',
 samplers = [args.sampler] if args.sampler else ['sequential']
 N_EPS = args.n_epochs
 
