@@ -35,11 +35,12 @@ class Processor():
         self.PAD_index = 0
 
     def to_numeric_documents(self, documents):
+        global empty_sents
         numeric_context_docs = []
         for doc in documents:
             doc = doc.split(' ')
             # to indexes
-            doc = [self.sent_id_map[sent.lower()] for sent in doc if sent not in ['11fox23', '13fox8']]
+            doc = [self.sent_id_map[sent.lower()] for sent in doc if sent not in empty_sents]
             # with EOS token
             doc += [self.EOD_index]
             # padded
@@ -254,6 +255,7 @@ logger.info(f" Good luck!")
 # =====================================================================================
 #                    PREPROCESS DATA
 # =====================================================================================
+empty_sents = ['11fox23', '13fox8', '14fox8']
 
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
@@ -266,7 +268,7 @@ if PREPROCESS:
                            names=['sentence_ids', 'context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
-    raw_data = raw_data.drop(['11fox23', '13fox8'])
+    raw_data = raw_data.drop(empty_sents)
 
     raw_data['source'] = sentences['source']
     raw_data['story'] = sentences['story']
