@@ -5,76 +5,99 @@ import random
 import torch
 import numpy as np
 import pandas as pd
+from transformers import BertTokenizer
 from lib.handle_data.SplitData import Split
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
-import pickle
+from lib.classifiers.BertWrapper import BertForSequenceClassification, load_features
+from lib.classifiers.BertForEmbed import Inferencer, InputFeatures
+
+from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
+from lib.evaluate.Eval import my_eval
+import pickle, time
+from torch.nn import CrossEntropyLoss, BCELoss
+from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 from lib.classifiers.Classifier import Classifier
-from lib.utils import get_torch_device, to_tensors, to_batches, standardise_id
+from lib.utils import get_torch_device, to_tensors, to_batches
+#from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
 
 
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
-        self.sent_id_map = {str_i: i+1 for i, str_i in enumerate(sentence_ids)}  # maps basil ids to wm indices
-        self.PAD_index = 0
+        self.sent_id_map = {str_i.lower(): i+1 for i, str_i in enumerate(sentence_ids)}
+        #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
         self.EOD_index = len(self.sent_id_map)
-        self.max_doc_length = max_doc_length + 1  # add 1 for EOD_index
-        self.max_sent_length = None  # set after reading token id vectors
+        self.max_doc_length = max_doc_length + 1 # add 1 for EOD_index
+        self.max_sent_length = None # set after processing
+        self.PAD_index = 0
 
     def to_numeric_documents(self, documents):
         numeric_context_docs = []
         for doc in documents:
             doc = doc.split(' ')
-            doc = [standardise_id(i) for i in doc]  # put id in expected format
-            doc = [self.sent_id_map[i] for i in doc]  # transform id to wm index
-
-            doc += [self.EOD_index]  # add EOS token
-            padding = [self.PAD_index] * (self.max_doc_length - len(doc))  # make padding
-            doc += padding  # add padding
-
+            # to indexes
+            doc = [self.sent_id_map[sent.lower()] for sent in doc]
+            # with EOS token
+            doc += [self.EOD_index]
+            # padded
+            padding = [self.PAD_index] * (self.max_doc_length - len(doc))
+            doc += padding
             numeric_context_docs.append(doc)
         return numeric_context_docs
 
     def to_numeric_sentences(self, sentence_ids):
-        # load token ids and token masks
-        with open("data/sent_clf/features_for_roberta/all_features.pkl", "rb") as f:
+        with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
             features = pickle.load(f)
-
-        # ensure they are in the same order
-        feat_dict = {standardise_id(f.my_id): f for f in features}
-        token_ids = [feat_dict[i].input_ids for i in sentence_ids if i in feat_dict]
-        token_mask = [feat_dict[i].input_mask for i in sentence_ids if i in feat_dict]
-
-        # set max set length
+        feat_dict = {f.my_id.lower(): f for f in features}
+        token_ids = [feat_dict[i].input_ids for i in sentence_ids]
+        token_mask = [feat_dict[i].input_mask for i in sentence_ids]
         self.max_sent_length = len(token_ids[0])
+        '''
+        tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
 
+        all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
+        all_tokens = [["[CLS]"] + tokens + ["[SEP]"] for tokens in all_tokens]
+        max_sent_length = max([len(t) for t in all_tokens])
+        self.max_sent_length = max_sent_length
+
+        token_ids = []
+        token_mask = []
+        tok_seg_ids = []
+
+        for tokens in all_tokens:
+            segment_ids = [0] * len(tokens)
+            input_ids = tokenizer.convert_tokens_to_ids(tokens)
+            input_mask = [1] * len(input_ids)
+            padding = [0] * (max_sent_length - len(input_ids))
+            input_ids += padding
+            input_mask += padding
+            segment_ids += padding
+
+            token_ids.append(input_ids)
+            token_mask.append(input_mask)
+            tok_seg_ids.append(segment_ids)
+        '''
         return token_ids, token_mask
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
-
     # clean embedding string
     embed_df = embed_df.fillna(0).replace({'\n', ' '})
     sentence_embeddings = {}
     for index, emb in zip(embed_df.index, embed_df.embeddings):
-
         if emb != 0:
+            #emb = re.sub('\s+', ' ', emb)
+            #emb = emb[6:-17]
             emb = re.sub('[\(\[\]\)]', '', emb)
             emb = emb.split(', ')
             emb = np.array(emb, dtype=float)
-
-        assert len(emb) == EMB_DIM
-
         sentence_embeddings[index.lower()] = emb
 
-    # initialize matrix
     matrix_len = len(embed_df) + 2  # 1 for EOD token and 1 for padding token
     weights_matrix = np.zeros((matrix_len, EMB_DIM))
 
-    # enter embedding into matrix
-    embed_df.index = [standardise_id(x) for x in embed_df.index]
-    sent_id_map = {sent_id: i+1 for i, sent_id in enumerate(embed_df.index.values)}  # recreate map
+    sent_id_map = {sent_id.lower(): sent_num_id+1 for sent_num_id, sent_id in enumerate(embed_df.index.values)}
     for sent_id, index in sent_id_map.items():  # word here is a sentence id like 91fox27
         if sent_id == '11fox23':
             pass
@@ -85,14 +108,6 @@ def make_weight_matrix(embed_df, EMB_DIM):
     return weights_matrix
 
 
-def get_weights_matrix(data, emb_fp, emb_dim=None):
-    data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
-    data_w_emb = data_w_emb.rename(  columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
-    data_w_emb.index = [standardise_id(x) for x in data_w_emb.index]
-    data_w_emb = data_w_emb.loc[data.sentence_ids]
-    wm = make_weight_matrix(data, emb_dim)
-    return wm
-
 # =====================================================================================
 #                    PARAMETERS
 # =====================================================================================
@@ -101,7 +116,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
 
 parser = argparse.ArgumentParser()
 # PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=1000)
+parser.add_argument('-inf', '--step_info_every', type=int, default=250)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
@@ -118,22 +133,22 @@ parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', def
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=10)
+parser.add_argument('-ep', '--epochs', type=int, default=20)
 parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
-parser.add_argument('-lr', '--learning_rate', type=float, default=5e-3)
+parser.add_argument('-lr', '--learning_rate', type=float, default=0.005)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=150)
+parser.add_argument('-hid', '--hidden_size', type=int, default=250)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=4)
 
 # OTHER NN PARAMS
-parser.add_argument('-sv', '--seed_val', type=int, default=798)
+parser.add_argument('-sv', '--seed_val', type=int, default=263)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -153,8 +168,8 @@ SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
 PREPROCESS = args.preprocess
-if DEBUG:
-    SUBSET = 0.5
+#if DEBUG:
+#    SUBSET = 0.5
 
 START_EPOCH = args.start_epoch
 N_EPOCHS = args.epochs
@@ -252,14 +267,11 @@ if PREPROCESS:
     raw_data['source'] = sentences['source']
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
-    raw_data['sentence_ids'] = raw_data.sentence_ids.apply(standardise_id)
 
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
-
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
-
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
@@ -280,13 +292,10 @@ spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
 if DEBUG:
     folds = [folds[0], folds[1]]
-
-folds = [folds[i] for i in list(range(0, 5))]
-
 NR_FOLDS = len(folds)
 
 logger.info(f" --> Read {len(data)} data points")
-#logger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
+#ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
 logger.info(f" --> Columns: {list(data.columns)}")
 
@@ -310,17 +319,19 @@ for fold in folds:
         test_features = pickle.load(f)
     '''
 
-    # train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    #train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler='sequential')
+    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+
+
 
 # =====================================================================================
 #                    GET EMBEDDINGS
@@ -365,7 +376,7 @@ logger.info(f"Get embeddings")
 
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
-'''
+
 model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 42.449999999999996),
           2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88),
           3: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 45.97),
@@ -376,7 +387,8 @@ model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2
           8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
           9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
           10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1, sampler='sequential')                        
+all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1)
+                        
 with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
     bert_all_batches = to_batches(all_data, 1)
@@ -384,7 +396,18 @@ with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
     bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
                                                                num_labels=2, output_hidden_states=True,
                                                                output_attentions=True)
-'''
+
+
+def get_weights_matrix(data, emb_fp, emb_dim=None):
+    data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
+    data_w_emb = data_w_emb.rename(
+        columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings'})
+    data_w_emb.index = [el.lower() for el in data_w_emb.index]
+    data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
+    # transform into matrix
+    wm = make_weight_matrix(data, emb_dim)
+    return wm
+
 
 if EMB_TYPE in ['use', 'sbert']:
     embed_fp = f"data/sent_clf/embeddings/basil_w_{EMB_TYPE}.csv"
@@ -394,11 +417,13 @@ if EMB_TYPE in ['use', 'sbert']:
 for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert']:
-        #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+        embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
+
+
+
 
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
@@ -422,10 +447,9 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [150, 100, 200] #100, 150, 200
-batch_sizes = [BATCH_SIZE, 21] #32, 21
-learning_rates = [LR, 1e-2, 2e-3] # 0.005, 0.01, 0.002]
-seeds = [34, 49, 181]
+hiddens = [HIDDEN]
+batch_sizes = [BATCH_SIZE]
+learning_rates = [LR] #, 0.001, 0.002]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -433,7 +457,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in seeds: #[231, 199, 2336]:
+            for SEED in [231, 199, 2336]:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
@@ -447,9 +471,7 @@ for HIDDEN in hiddens:
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
                 logger.info(f' Setting table in: {setting_table_fp}.')
-
-                FORCE = True
-                if os.path.exists(setting_table_fp) and not FORCE:
+                if os.path.exists(setting_table_fp):
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
 
@@ -462,7 +484,7 @@ for HIDDEN in hiddens:
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
-                        if os.path.exists(fold_table_fp) and not FORCE:
+                        if os.path.exists(fold_table_fp):
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)
                         else:
@@ -497,5 +519,4 @@ for HIDDEN in hiddens:
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
             main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
-            logger.info(f"Results in: {TABLE_DIR}/{base_name}_main_results_table_1.csv.")
             logger.info(f"Logged to: {LOG_NAME}.")
