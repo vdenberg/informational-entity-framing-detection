@@ -116,11 +116,13 @@ class ContextAwareClassifier():
         self.hidden_size = hid_size
         self.batch_size = b_size
         self.criterion = CrossEntropyLoss(weight=torch.tensor([.20, .80], device=self.device))  # could be made to depend on classweight which should be set on input
-        #self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+
+        # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         # set criterion on input
         # n_pos = len([l for l in tr_labs if l == 1])
         # class_weight = 1 - (n_pos / len(tr_labs))
         #self.criterion = nn.BCELoss(weight=torch.tensor([.15, .85], dtype=torch.float, device=self.device))
+
         self.context_naive = context_naive
 
         if start_epoch > 0:
@@ -146,11 +148,14 @@ class ContextAwareClassifier():
         nr_train_batches = int(nr_train_instances / b_size)
         half_tr_bs = int(nr_train_instances/2)
         self.optimizer = AdamW(self.model.parameters(), lr=lr, eps=1e-8)
-        #self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
+
+        # self.scheduler = lr_scheduler.CyclicLR(self.optimizer, base_lr=lr, step_size_up=half_tr_bs,
         #                                       cycle_momentum=False, max_lr=lr * 30)
+
         num_train_optimization_steps = nr_train_batches * n_eps
         num_train_warmup_steps = int(0.1 * num_train_optimization_steps) #warmup_proportion
-        #self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
+
+        # self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
         #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
 
