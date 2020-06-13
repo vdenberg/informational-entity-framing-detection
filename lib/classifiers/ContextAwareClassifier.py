@@ -115,7 +115,11 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        # self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        # set criterion on input
+        # n_pos = len([l for l in tr_labs if l == 1])
+        # class_weight = 1 - (n_pos / len(tr_labs))
+        self.criterion = nn.BCELoss(weight=torch.tensor([.15, .85], dtype=torch.float, device=self.device))
         self.context_naive = context_naive
 
         if start_epoch > 0:
@@ -148,10 +152,6 @@ class ContextAwareClassifier():
         #self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
         #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
 
-        # set criterion on input
-        #n_pos = len([l for l in tr_labs if l == 1])
-        #class_weight = 1 - (n_pos / len(tr_labs))
-        #self.criterion = nn.BCELoss(weight=torch.tensor(class_weight, dtype=torch.float, device=self.device))
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
