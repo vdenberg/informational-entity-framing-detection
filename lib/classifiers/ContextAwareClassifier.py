@@ -10,7 +10,7 @@ from lib.utils import format_runtime, format_checkpoint_filepath, get_torch_devi
 import os, time
 import numpy as np
 
-from torch.nn import CrossEntropyLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
+from torch.nn import CrossEntropyLoss, NLLLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 """
 Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and Attention
