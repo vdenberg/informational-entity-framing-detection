@@ -116,10 +116,11 @@ class ContextAwareClassifier():
         self.hidden_size = hid_size
         self.batch_size = b_size
         # self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         # set criterion on input
         # n_pos = len([l for l in tr_labs if l == 1])
         # class_weight = 1 - (n_pos / len(tr_labs))
-        self.criterion = nn.BCELoss(weight=torch.tensor([.15, .85], dtype=torch.float, device=self.device))
+        #self.criterion = nn.BCELoss(weight=torch.tensor([.15, .85], dtype=torch.float, device=self.device))
         self.context_naive = context_naive
 
         if start_epoch > 0:
@@ -169,7 +170,8 @@ class ContextAwareClassifier():
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
-        loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+        # loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+        loss = self.criterion(probs.view(-1, 2), labels.view(-1))
         loss.backward()
 
         self.optimizer.step()
