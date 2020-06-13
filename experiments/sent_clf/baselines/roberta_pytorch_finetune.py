@@ -242,7 +242,7 @@ if __name__ == '__main__':
                                     embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                     basil_w_BERT = pd.DataFrame(index=all_ids)
                                     basil_w_BERT[EMB_TYPE] = embs
-                                    basil_w_BERT.to_csv(f'data/{emb_name}.csv')
+                                    basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
 
                             # eval on test
