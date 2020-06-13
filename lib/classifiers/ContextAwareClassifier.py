@@ -92,12 +92,7 @@ class ContextAwareModel(nn.Module):
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
 
             # target_sent_reps: bs * hid*2
-            tmp = sentence_representations[:, -1, :]
-            tmp2 = sentence_representations[:, -1, :].squeeze()
-            print(tmp.shape)
-            print(tmp2.shape)
-            exit(0)
-            target_sent_reps = torch.cat(target_sent_reps, sentence_representations[:, -1, :].squeeze(), dim=-1)
+            target_sent_reps = torch.cat(target_sent_reps, sentence_representations[:, -1, :], dim=-1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
