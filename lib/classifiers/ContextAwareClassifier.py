@@ -87,9 +87,8 @@ class ContextAwareModel(nn.Module):
 
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
-                print(contexts[item, position].shape)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                print(target_roberta.shape)
+                print(hidden[0].shape)
                 exit(0)
                 #target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
                 target_sent_reps[item] = torch.cat((hidden[0][-1, item, item], target_roberta), dim=1)
