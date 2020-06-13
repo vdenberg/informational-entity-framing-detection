@@ -243,7 +243,7 @@ if __name__ == '__main__':
                                     basil_w_BERT = pd.DataFrame(index=all_ids)
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
-                                    logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
+                                    logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to {emb_fp}.csv')
 
                             # eval on test
 
