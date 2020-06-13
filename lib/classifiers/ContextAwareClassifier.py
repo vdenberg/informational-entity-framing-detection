@@ -60,7 +60,6 @@ class ContextAwareModel(nn.Module):
 
         # inputs
         token_ids, token_mask, contexts, positions = inputs
-
         # shapes and sizes
         batch_size = inputs[0].shape[0]
         sen_len = token_ids.shape[1]
@@ -71,7 +70,7 @@ class ContextAwareModel(nn.Module):
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
         #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
-        target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
+        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -87,8 +86,9 @@ class ContextAwareModel(nn.Module):
 
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
-                # target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                target_sent_reps[item] = target_hid
+
+                target_roberta = self.embedding(contexts[item, position]).view(1, -1)
+                target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
 
             # target_sent_reps: bs * hid*2
