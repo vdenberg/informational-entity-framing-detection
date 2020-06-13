@@ -430,7 +430,7 @@ for fold in folds:
     # read embeddings file
     if EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert']:
         #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
