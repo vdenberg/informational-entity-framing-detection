@@ -57,8 +57,11 @@ class ContextAwareModel(nn.Module):
         :param target_idx: batchsize, specifies which token is to be classified
         :return: sigmoid output of size batchsize
         """
+
+        # inputs
         token_ids, token_mask, contexts, positions = inputs
 
+        # shapes and sizes
         batch_size = inputs[0].shape[0]
         sen_len = token_ids.shape[1]
         doc_len = contexts.shape[1]
@@ -67,7 +70,7 @@ class ContextAwareModel(nn.Module):
         # init containers for outputs
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
-        #arget_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
+        #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
         target_sent_reps = torch.zeros(batch_size, rep_dimension + self.emb_size, device=self.device)
 
         if self.context_naive:
@@ -85,7 +88,8 @@ class ContextAwareModel(nn.Module):
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                #target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                target_sent_reps[item] = torch.cat((hidden, target_roberta), dim=1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
@@ -108,7 +112,7 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss()  # could be made to depend on classweight which should be set on input
+        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         self.context_naive = context_naive
 
         if start_epoch > 0:

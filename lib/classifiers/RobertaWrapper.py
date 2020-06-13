@@ -354,6 +354,8 @@ class Inferencer():
                 emb_output = pooled_output
             elif emb_type == "avbert":
                 emb_output = sequence_output.mean(axis=1)
+            elif emb_type == "unpoolbert":
+                emb_output = sequence_output[:, 0, :]
 
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
