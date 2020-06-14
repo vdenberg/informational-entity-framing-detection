@@ -46,7 +46,7 @@ class ContextAwareModel(nn.Module):
         if self.context_naive:
             self.classifier = Linear(self.emb_size, 2)
         else:
-            self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2)
+            self.classifier = Linear(self.hidden_size * 2, 2) #+ self.emb_size
 
         self.sigm = Sigmoid()
 
@@ -92,7 +92,7 @@ class ContextAwareModel(nn.Module):
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
 
             # target_sent_reps: bs * hid*2
-            target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
+            #target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
 
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
