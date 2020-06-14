@@ -46,7 +46,8 @@ class ContextAwareModel(nn.Module):
         if self.context_naive:
             self.classifier = Linear(self.emb_size, 2)
         else:
-            self.classifier = Linear(self.hidden_size * 2, 2) #+ self.emb_size
+            #self.classifier = Linear(self.hidden_size * 2, 2)
+            self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
 
         self.sigm = Sigmoid()
 
@@ -69,8 +70,8 @@ class ContextAwareModel(nn.Module):
         # init containers for outputs
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
-        target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
-        #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
+        #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
+        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -88,8 +89,8 @@ class ContextAwareModel(nn.Module):
                 target_hid = sentence_representations[item, position].view(1, -1)
 
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                target_sent_reps[item] = target_hid
-                # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                #target_sent_reps[item] = target_hid
+                target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
 
             # target_sent_reps: bs * hid*2
             #target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
