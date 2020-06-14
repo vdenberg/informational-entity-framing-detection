@@ -40,7 +40,7 @@ class ContextAwareModel(nn.Module):
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
         self.num_labels = 2
-        self.dropout = Dropout(0.1)
+        self.dropout = Dropout(0.4)
         self.context_naive = context_naive
 
         if self.context_naive:
@@ -95,6 +95,7 @@ class ContextAwareModel(nn.Module):
             # target_sent_reps: bs * hid*2
             #target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
 
+        target_sent_reps = self.dropout(target_sent_reps)
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
         return logits, probs, target_sent_reps
@@ -116,7 +117,7 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss(weight=torch.tensor([.20, .80], device=self.device))  # could be made to depend on classweight which should be set on input
+        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         # set criterion on input
