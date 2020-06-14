@@ -116,7 +116,7 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        self.criterion = CrossEntropyLoss(weight=torch.tensor([.20, .80], device=self.device))  # could be made to depend on classweight which should be set on input
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         # set criterion on input
