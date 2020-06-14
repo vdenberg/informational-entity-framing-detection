@@ -460,8 +460,8 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [HIDDEN, HIDDEN-50, HIDDEN+50]
-batch_sizes = [BATCH_SIZE, BATCH_SIZE*2]
+hiddens = [HIDDEN, HIDDEN-100, HIDDEN+100]
+batch_sizes = [BATCH_SIZE, 16, 64]
 learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
 seeds = [args.seed_val, args.seed_val*2, args.seed_val*3]
 
