@@ -148,6 +148,7 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=1024)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=1)
 
 # OTHER NN PARAMS
+parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-sv', '--seed_val', type=int, default=263)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
@@ -200,7 +201,7 @@ BILSTM_LAYERS = args.bilstm_layers
 SEED_VAL = args.seed_val
 BERT_MODEL = args.bert_model
 NUM_LABELS = 2
-SAMPLER = 'random'
+SAMPLER = args.sampler
 
 # set seed
 random.seed(SEED_VAL)
