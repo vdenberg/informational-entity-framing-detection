@@ -471,7 +471,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in [231, 199, 2336]:
+            for SEED in [args.sv]:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
