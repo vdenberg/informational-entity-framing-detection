@@ -304,8 +304,6 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
-folds = [folds[0]]
-
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
@@ -462,9 +460,10 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [HIDDEN]
-batch_sizes = [BATCH_SIZE]
-learning_rates = [LR] #, 0.001, 0.002]
+hiddens = [HIDDEN, HIDDEN-50, HIDDEN+50]
+batch_sizes = [BATCH_SIZE, BATCH_SIZE*2]
+learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
+seeds = [args.seed_val, args.seed_val*2, args.seed_val*3]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -472,7 +471,7 @@ for HIDDEN in hiddens:
         bs_name = f"_bs{BATCH_SIZE}"
         for LR in learning_rates:
             lr_name = f"_lr{LR}"
-            for SEED in [args.seed_val]:
+            for SEED in seeds:
                 if SEED == 0:
                     SEED_VAL = random.randint(0, 300)
                 else:
