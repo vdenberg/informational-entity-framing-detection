@@ -51,7 +51,7 @@ class ContextAwareModel(nn.Module):
 
         self.sigm = Sigmoid()
 
-    def forward(self, inputs, train_flag=True):
+    def forward(self, inputs):
         """
         Forward pass.
         :param input_tensor: batchsize * seq_length
@@ -72,7 +72,7 @@ class ContextAwareModel(nn.Module):
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
         #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
         #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
-        target_sent_reps = torch.zeros(batch_size, self.hidden_size * 2 + self.emb_size, device=self.device)
+        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -90,13 +90,13 @@ class ContextAwareModel(nn.Module):
                 target_hid = sentence_representations[item, position].view(1, -1)
 
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                #target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                target_sent_reps[item] = target_roberta
 
             # target_sent_reps: bs * hid*2
-            #target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
+            target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
 
-        if train_flag:
-            target_sent_reps = self.dropout(target_sent_reps)
+        target_sent_reps = self.dropout(target_sent_reps)
         logits = self.classifier(target_sent_reps)
         probs = self.sigm(logits)
         return logits, probs, target_sent_reps
@@ -177,7 +177,7 @@ class ContextAwareClassifier():
         inputs, labels = batch[:-1], batch[-1]
 
         self.model.zero_grad()
-        logits, probs, _ = self.model(inputs, train_flag=True)
+        logits, probs, _ = self.model(inputs)
         loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss.backward()
 
@@ -204,7 +204,7 @@ class ContextAwareClassifier():
             token_ids, token_mask, _, _ = inputs
 
             with torch.no_grad():
-                logits, probs, sentence_representation = self.model(inputs, train_flag=False)
+                logits, probs, sentence_representation = self.model(inputs)
                 loss = self.criterion(logits.view(-1, 2), labels.view(-1))
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
