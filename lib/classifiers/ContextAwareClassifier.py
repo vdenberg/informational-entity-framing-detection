@@ -213,7 +213,6 @@ class ContextAwareClassifier():
         for step, batch in enumerate(batches):
             batch = tuple(t.to(self.device) for t in batch)
             inputs, labels = batch[:-1], batch[-1]
-            token_ids, token_mask, _, _ = inputs
 
             with torch.no_grad():
                 logits, probs, sentence_representation = self.model(inputs)
