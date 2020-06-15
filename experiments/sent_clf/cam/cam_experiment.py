@@ -267,8 +267,25 @@ if PREPROCESS:
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
+    raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
+    raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
+
+    quartiles = []
+    for position, doc_len in zip(raw_data.position, raw_data.doc_len):
+        relative_pos = position / doc_len
+        if relative_pos < .25:
+            q = 0
+        elif relative_pos < .5:
+            q = 1
+        elif relative_pos < .75:
+            q = 2
+        else:
+            q = 3
+        quartiles.append(q)
+
+    raw_data['quartile'] = quartiles
 
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
@@ -299,7 +316,7 @@ print(len(data))
 print(len(data))
 '''
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position'])
+folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)

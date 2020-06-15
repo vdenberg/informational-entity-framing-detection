@@ -26,16 +26,20 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device):
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device,
+                 pos_dim=50, src_dim=50, pos_quartiles=4, nr_srcs=3):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
-        self.hidden_size = hidden_size
+        self.hidden_size = hidden_size # + pos_dim + src_dim
         self.bilstm_layers = bilstm_layers
         self.device = device
 
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = Embedding.from_pretrained(self.weights_matrix)
+        # self.embedding_pos = Embedding(quartiles, pos_dim) # 4=nr of quart
+        # self.embedding_src = Embedding(nr_srcs, src_dim)
+
         self.emb_size = weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
@@ -60,7 +64,9 @@ class ContextAwareModel(nn.Module):
         """
 
         # inputs
-        token_ids, token_mask, contexts, positions = inputs
+        # token_ids, token_mask, contexts, positions = inputs
+        token_ids, token_mask, contexts, positions, quartiles, srcs = inputs
+
         # shapes and sizes
         batch_size = inputs[0].shape[0]
         sen_len = token_ids.shape[1]
@@ -80,21 +86,27 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
 
         else:
+            # embedded_pos = self.embedding_pos(quartiles)
+            # embedded_src = self.embedding_src(srcs)
+
             hidden = self.init_hidden(batch_size)
             for seq_idx in range(contexts.shape[0]):
                 embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                # lstm_input = torch.cat((embedded_sentence, embedded_src), dim=-1)
+                lstm_input = embedded_sentence
+                encoded, hidden = self.lstm(lstm_input, hidden)
                 sentence_representations[:, seq_idx] = encoded
+
+            final_sent_reps = sentence_representations[:, -1, :]
 
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
-
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
-                #target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
+                # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
                 target_sent_reps[item] = target_roberta
 
-            # target_sent_reps: bs * hid*2
-            target_sent_reps = torch.cat((target_sent_reps, sentence_representations[:, -1, :]), dim=-1)
+            # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+            target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
 
         target_sent_reps = self.dropout(target_sent_reps)
         logits = self.classifier(target_sent_reps)
