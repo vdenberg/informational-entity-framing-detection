@@ -87,7 +87,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
 
         else:
-            # embedded_pos = self.embedding_pos(quartiles)
+            embedded_pos = self.embedding_pos(quartiles)
             embedded_src = self.embedding_src(srcs)
 
             hidden = self.init_hidden(batch_size)
@@ -107,7 +107,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_roberta
 
             # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
-            context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
+            context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
             #target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
             target_sent_reps = context_rep
 

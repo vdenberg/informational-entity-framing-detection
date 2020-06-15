@@ -133,7 +133,7 @@ parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', def
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=150)
+parser.add_argument('-ep', '--epochs', type=int, default=100)
 parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
@@ -325,8 +325,6 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
-folds = [folds[2]]
-
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
@@ -479,9 +477,9 @@ main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
 
-hiddens = [HIDDEN, HIDDEN-100, HIDDEN+100]
-batch_sizes = [BATCH_SIZE, 16, 64]
-learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
+hiddens = [HIDDEN, HIDDEN-100]
+batch_sizes = [BATCH_SIZE]
+learning_rates = [LR] #, 0.001, 0.002]
 seeds = [SEED_VAL, SEED_VAL*2, SEED_VAL*3]
 
 for HIDDEN in hiddens:
