@@ -44,7 +44,7 @@ class ContextAwareModel(nn.Module):
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True)
         self.num_labels = 2
-        self.dropout = Dropout(0.4)
+        self.dropout = Dropout(0.6)
         self.context_naive = context_naive
 
         if self.context_naive:
