@@ -260,7 +260,7 @@ if PREPROCESS:
     logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
     sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
-    sentences.index = sentences.index.lower()
+    sentences.index = [el.lower() for el in sentences.index]
     raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
                            names=['sentence_ids', 'context_document', 'label', 'position'],
