@@ -234,6 +234,14 @@ if __name__ == '__main__':
                             logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
 
+                            # eval on test
+
+                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels,
+                                                                       set_type='test',
+                                                                       name='best_model_loc')
+                            logging.info(f"{test_perf}")
+                            test_res.update(test_mets)
+
                             for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert']:
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
                                 if not os.path.exists(emb_fp):
@@ -245,12 +253,7 @@ if __name__ == '__main__':
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to {emb_fp}.csv')
 
-                            # eval on test
 
-                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test',
-                                                                       name='best_model_loc')
-                            logging.info(f"{test_perf}")
-                            test_res.update(test_mets)
 
                             # store performance in table
 
