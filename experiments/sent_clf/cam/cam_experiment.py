@@ -304,6 +304,8 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
+folds = [folds[2]]
+
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
 logger.info(f" --> Fold sizes: {[f['sizes'] for f in folds]}")
