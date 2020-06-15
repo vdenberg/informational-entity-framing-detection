@@ -177,6 +177,7 @@ if __name__ == '__main__':
 
                             model.train()
 
+                            '''
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
 
@@ -226,6 +227,7 @@ if __name__ == '__main__':
                                 # none of the epochs performed above f1 = 0, so just use last epoch
                                 best_val_res['model_loc'] = epoch_name
                                 save_model(model, CURRENT_BEST_DIR, name)
+                            '''
 
                             best_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CURRENT_BEST_DIR, name),
                                                                                           num_labels=NUM_LABELS,
