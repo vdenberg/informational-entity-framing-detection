@@ -268,7 +268,9 @@ if PREPROCESS:
 
     raw_data['source'] = sentences['source']
     print(sentences['source'])
+    print(sentences['source'].isna())
     print(raw_data['source'])
+    print(raw_data['source'].isna())
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
