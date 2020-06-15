@@ -267,6 +267,7 @@ if PREPROCESS:
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
+    print(raw_data[raw_data.source.isna()])
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
@@ -292,6 +293,7 @@ if PREPROCESS:
     raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
+
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
