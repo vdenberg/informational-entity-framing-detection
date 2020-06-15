@@ -204,10 +204,10 @@ NUM_LABELS = 2
 SAMPLER = args.sampler
 
 # set seed
-random.seed(SEED_VAL)
-np.random.seed(SEED_VAL)
-torch.manual_seed(SEED_VAL)
-torch.cuda.manual_seed_all(SEED_VAL)
+# random.seed(SEED_VAL)
+# np.random.seed(SEED_VAL)
+# torch.manual_seed(SEED_VAL)
+# torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
@@ -445,15 +445,11 @@ for fold in folds:
 logger.info("============ TRAINING CAM =============")
 logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
-logger.info(f" Hidden layer size: {HIDDEN}")
-logger.info(f" Nr layers: {BILSTM_LAYERS}")
-logger.info(f" Batch size: {BATCH_SIZE}")
-logger.info(f" Starting LR: {LR}")
-logger.info(f" Seed: {SEED_VAL}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" Context-naive: {CN}")
 logger.info(f" Use cuda: {USE_CUDA}")
+logger.info(f" Nr layers: {BILSTM_LAYERS}")
 
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
@@ -463,7 +459,7 @@ base_name = 'cnm' if CN else "cam"
 hiddens = [HIDDEN, HIDDEN-100, HIDDEN+100]
 batch_sizes = [BATCH_SIZE, 16, 64]
 learning_rates = [LR, LR*2, LR/2] #, 0.001, 0.002]
-seeds = [args.seed_val, args.seed_val*2, args.seed_val*3]
+seeds = [SEED_VAL, SEED_VAL*2, SEED_VAL*3]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -494,6 +490,10 @@ for HIDDEN in hiddens:
                     setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                     for fold in folds:
                         logger.info(f"--------------- CAM ON FOLD {fold['name']} ---------------")
+                        logger.info(f" Hidden layer size: {HIDDEN}")
+                        logger.info(f" Batch size: {BATCH_SIZE}")
+                        logger.info(f" Starting LR: {LR}")
+                        logger.info(f" Seed: {SEED_VAL}")
                         logger.info(f" Nr batches: {len(fold['train_batches'])}")
                         logger.info(f" Logging to: {LOG_NAME}.")
                         fold_name = setting_name + f"_f{fold['name']}"
