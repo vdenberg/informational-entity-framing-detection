@@ -264,6 +264,7 @@ if PREPROCESS:
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
                            names=['sentence_ids', 'context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+    sentences = sentences.set_index('sentence_ids', drop=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
