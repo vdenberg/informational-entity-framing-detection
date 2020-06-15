@@ -80,8 +80,8 @@ class Classifier:
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name="")
 
         best_log = ''
-        if val_mets['f1'] > self.best_val_mets['f1'] and tr_mets['f1'] > 0.50:
         #if val_mets['f1'] > self.best_val_mets['f1']:
+        if (val_mets['f1'] > self.best_val_mets['f1']) and (tr_mets['f1'] > 0.50):
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
             self.best_model_loc = ep_name
