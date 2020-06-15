@@ -133,7 +133,7 @@ parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', def
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=40)
+parser.add_argument('-ep', '--epochs', type=int, default=150)
 parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
@@ -149,7 +149,7 @@ parser.add_argument('-lay', '--bilstm_layers', type=int, default=1)
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
-parser.add_argument('-sv', '--seed_val', type=int, default=263)
+parser.add_argument('-sv', '--seed_val', type=int, default=6)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
