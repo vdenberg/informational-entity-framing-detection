@@ -245,7 +245,7 @@ if __name__ == '__main__':
                                     logging.info(f'Generating {EMB_TYPE} embeds')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
-                                    embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                                    embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
                                     assert len(embs) == len(all_ids)
 
                                     basil_w_BERT = pd.DataFrame(index=all_ids)
