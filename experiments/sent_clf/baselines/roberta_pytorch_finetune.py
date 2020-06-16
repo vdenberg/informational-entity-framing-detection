@@ -204,7 +204,8 @@ if __name__ == '__main__':
                                     outputs = model(batch[0], batch[1], labels=batch[2])
                                     #(loss), logits, probs, sequence_output = outputs
                                     (loss), logits, pooled_output, sequence_output, hidden_states = outputs
-                                    print(hidden_states.shape)
+                                    print(len(hidden_states))
+                                    print(hidden_states[1].shape)
                                     exit(0)
 
                                     loss.backward()
