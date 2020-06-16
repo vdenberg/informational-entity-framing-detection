@@ -209,8 +209,8 @@ if __name__ == '__main__':
                                     # each item in tuple has shape [16, 124, 768]
                                     tmp = torch.stack(hidden_states[:-1])
                                     print(tmp.shape)
-                                    tmp2 = tmp.mean(dim=1)
-                                    #print(tmp2)
+                                    tmp2 = tmp[:, :, 0, :].mean(dim=0)
+                                    print(tmp2.shape)
                                     #13
                                     #torch.Size([16, 124, 768])
                                     #torch.Size([16, 124, 768])
