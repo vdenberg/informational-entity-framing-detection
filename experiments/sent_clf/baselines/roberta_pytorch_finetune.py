@@ -61,7 +61,7 @@ models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_tapt',
 seeds = [args.sv] if args.sv else [34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+folds = [args.fold] if args.fold else ['1']
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
@@ -168,7 +168,7 @@ if __name__ == '__main__':
                             logger.info(f"  Logging to {LOG_NAME}")
 
                             model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                                     output_hidden_states=False, output_attentions=False)
+                                                                                     output_hidden_states=True, output_attentions=False)
                             model.to(device)
                             optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
 
@@ -203,7 +203,7 @@ if __name__ == '__main__':
                                     model.zero_grad()
                                     outputs = model(batch[0], batch[1], labels=batch[2])
                                     #(loss), logits, probs, sequence_output = outputs
-                                    (loss), logits, pooled_output, sequence_output = outputs
+                                    (loss), logits, pooled_output, sequence_output, hidden_states = outputs
 
                                     loss.backward()
                                     tr_loss += loss.item()
@@ -237,7 +237,7 @@ if __name__ == '__main__':
 
                             best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
-                                                                                          output_hidden_states=False,
+                                                                                          output_hidden_states=True,
                                                                                           output_attentions=False)
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
@@ -249,7 +249,7 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert']:
+                            for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert', 'crossbert']:
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
                                 if not os.path.exists(emb_fp):

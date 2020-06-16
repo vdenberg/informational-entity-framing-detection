@@ -289,14 +289,34 @@ class RobertaForTokenClassification(BertPreTrainedModel):
                                position_ids=position_ids,
                                head_mask=head_mask,
                                inputs_embeds=inputs_embeds)
-        sequence_output = outputs[0]
-        pooled_output = outputs[1]
+        """
+            Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
+                **last_hidden_state**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
+                    Sequence of hidden-states at the output of the last layer of the model.
+                **pooler_output**: ``torch.FloatTensor`` of shape ``(batch_size, hidden_size)``
+                    Last layer hidden-state of the first token of the sequence (classification token)
+                    further processed by a Linear layer and a Tanh activation function. The Linear
+                    layer weights are trained from the next sentence prediction (classification)
+                    objective during Bert pretraining. This output is usually *not* a good summary
+                    of the semantic content of the input, you're often better with averaging or pooling
+                    the sequence of hidden-states for the whole input sequence.
+                **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+                    list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+                    of shape ``(batch_size, sequence_length, hidden_size)``:
+                    Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+                **attentions**: (`optional`, returned when ``config.output_attentions=True``)
+                    list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
+                    Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
+        """
+        sequence_output = outputs[0]  # sequence of hidden-states at the output of the last layer of the model
+        pooled_output = outputs[1]   # last layer hidden-state of the first token of the sequence
+        hidden_states = outputs[2]   # hidden-states of the model at the output of each layer plus the initial embedding outputs
 
         sequence_output = self.dropout(sequence_output)
         logits = self.classifier(sequence_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs, pooled_output, sequence_output) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs, pooled_output, sequence_output, hidden_states) + outputs[2:]  # add hidden states and attention if they are here
         if labels is not None:
             loss_fct = CrossEntropyLoss()
             # Only keep active parts of the loss
@@ -334,7 +354,7 @@ class Inferencer():
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, pooled_output, sequence_output = outputs
+                logits, pooled_output, sequence_output, hidden_states = outputs
 
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()
@@ -351,12 +371,31 @@ class Inferencer():
             # take average of sequence, size (batch_size, hidden_size)
 
             if return_embeddings:
+                '''
+                **sequence_output**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
+                    Sequence of hidden-states at the output of the last layer of the model.
+                **pooler_output**: ``torch.FloatTensor`` of shape ``(batch_size, hidden_size)``
+                    Last layer hidden-state of the first token of the sequence (classification token)
+                    further processed by a Linear layer and a Tanh activation function. The Linear
+                    layer weights are trained from the next sentence prediction (classification)
+                    objective during Bert pretraining. This output is usually *not* a good summary
+                    of the semantic content of the input, you're often better with averaging or pooling
+                    the sequence of hidden-states for the whole input sequence.
+                **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
+                    list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
+                    of shape ``(batch_size, sequence_length, hidden_size)``:
+                    Hidden-states of the model at the output of each layer plus the initial embedding outputs.
+                '''
                 if emb_type == 'poolbert':
                     emb_output = pooled_output
                 elif emb_type == "avbert":
                     emb_output = sequence_output.mean(axis=1)
                 elif emb_type == "unpoolbert":
                     emb_output = sequence_output[:, 0, :]
+                elif emb_output == "crossbert":
+                    emb_output = hidden_states
+                    print(emb_output.shape)
+                    exit(0)
 
                 if self.use_cuda:
                     emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
