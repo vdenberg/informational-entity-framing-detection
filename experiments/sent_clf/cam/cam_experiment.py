@@ -436,7 +436,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings',
-                 'unpoolbert': 'embeddings'})
+                 'unpoolbert': 'embeddings', 'crossbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
     data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
@@ -451,7 +451,7 @@ if EMB_TYPE in ['use', 'sbert']:
 
 for fold in folds:
     # read embeddings file
-    if EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert']:
+    if EMB_TYPE not in ['use', 'sbert']:
         #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         #embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
