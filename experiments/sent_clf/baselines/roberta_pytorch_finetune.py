@@ -241,16 +241,16 @@ if __name__ == '__main__':
                             for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert', 'crossbert']:
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
-                                if not os.path.exists(emb_fp):
-                                    logging.info(f'Generating {EMB_TYPE} embeds')
-                                    feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
-                                    all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
-                                    embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                                    assert len(embs) == len(all_ids)
+                                # if not os.path.exists(emb_fp):
+                                logging.info(f'Generating {EMB_TYPE} embeds')
+                                feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
+                                all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
+                                embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                                assert len(embs) == len(all_ids)
 
-                                    basil_w_BERT = pd.DataFrame(index=all_ids)
-                                    basil_w_BERT[EMB_TYPE] = embs
-                                    basil_w_BERT.to_csv(emb_fp)
+                                basil_w_BERT = pd.DataFrame(index=all_ids)
+                                basil_w_BERT[EMB_TYPE] = embs
+                                basil_w_BERT.to_csv(emb_fp)
                                 logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
 
 
