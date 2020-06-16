@@ -238,7 +238,7 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert', 'crossbert']:
+                            for EMB_TYPE in ['crossbert']: #poolbert', 'avbert', 'unpoolbert',
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
                                 # if not os.path.exists(emb_fp):
