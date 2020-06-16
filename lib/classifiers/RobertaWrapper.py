@@ -393,7 +393,7 @@ class Inferencer():
                 elif emb_type == "unpoolbert":
                     emb_output = sequence_output[:, 0, :]
                 elif emb_type == "crossbert":
-                    hidden_states[:-1] = hidden_states
+                    hidden_states = hidden_states[:-1]
                     hidden_states = torch.stack(hidden_states[-4:])
                     emb_output = hidden_states[:, :, 0, :].sum(dim=0)
 
