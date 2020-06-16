@@ -205,7 +205,8 @@ if __name__ == '__main__':
                                     #(loss), logits, probs, sequence_output = outputs
                                     (loss), logits, pooled_output, sequence_output, hidden_states = outputs
                                     print(len(hidden_states))
-                                    print(hidden_states[1].shape)
+                                    print(hidden_states[0].shape)
+                                    print(hidden_states[-1].shape)
                                     exit(0)
 
                                     loss.backward()
