@@ -193,7 +193,7 @@ class ContextAwareClassifier():
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
-        # loss = self.criterion(probs.view(-1, 1), labels.view(-1))
+        # loss = self.criterion(logits.view(-1, 2), labels.view(-1))
         loss = self.criterion(logits.squeeze(), labels)
         loss.backward()
 
