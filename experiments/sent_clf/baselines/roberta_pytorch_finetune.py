@@ -207,8 +207,13 @@ if __name__ == '__main__':
 
                                     # hidden_states = tuple with len 13
                                     # each item in tuple has shape [16, 124, 768]
-                                    tmp = torch.tensor(hidden_states[:-1]).mean(dim=1)
+                                    tmp = torch.stack(hidden_states[:-1])
                                     print(tmp.shape)
+                                    tmp2 = tmp.mean(dim=1)
+                                    print(tmp2)
+                                    #13
+                                    #torch.Size([16, 124, 768])
+                                    #torch.Size([16, 124, 768])
                                     exit(0)
 
                                     loss.backward()
