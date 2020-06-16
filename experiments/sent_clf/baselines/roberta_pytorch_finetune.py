@@ -182,11 +182,11 @@ if __name__ == '__main__':
 
                             model.train()
 
-
+                            '''
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
 
-                                '''
+                                
                                 if args.load and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                                     # this epoch for this setting has been trained before already
                                     trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
@@ -196,7 +196,7 @@ if __name__ == '__main__':
                                     dev_mets, dev_perf = inferencer.evaluate(trained_model, dev_batches, dev_labels,
                                                                              set_type='dev', name=epoch_name)
                                 else:
-                                '''
+                                
                                 tr_loss = 0
                                 for step, batch in enumerate(train_batches):
                                     batch = tuple(t.to(device) for t in batch)
@@ -227,6 +227,8 @@ if __name__ == '__main__':
                                     save_model(model, CURRENT_BEST_DIR, name)
 
                                 logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+
+                            '''
 
                             # load best model, save embeddings, print performance on test
                             '''
