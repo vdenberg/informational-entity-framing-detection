@@ -203,6 +203,11 @@ BERT_MODEL = args.bert_model
 NUM_LABELS = 2
 SAMPLER = args.sampler
 
+hiddens = [HIDDEN]
+batch_sizes = [BATCH_SIZE]
+learning_rates = [LR] #, 0.001, 0.002]
+seeds = [SEED_VAL]
+
 # set seed
 # random.seed(SEED_VAL)
 # np.random.seed(SEED_VAL)
@@ -479,11 +484,6 @@ table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,re
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
-
-hiddens = [HIDDEN, HIDDEN-100]
-batch_sizes = [BATCH_SIZE]
-learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
