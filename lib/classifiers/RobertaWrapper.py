@@ -350,22 +350,23 @@ class Inferencer():
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
 
-            if emb_type == 'poolbert':
-                emb_output = pooled_output
-            elif emb_type == "avbert":
-                emb_output = sequence_output.mean(axis=1)
-            elif emb_type == "unpoolbert":
-                emb_output = sequence_output[:, 0, :]
+            if return_embeddings:
+                if emb_type == 'poolbert':
+                    emb_output = pooled_output
+                elif emb_type == "avbert":
+                    emb_output = sequence_output.mean(axis=1)
+                elif emb_type == "unpoolbert":
+                    emb_output = sequence_output[:, 0, :]
 
-            if self.use_cuda:
-                emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
+                if self.use_cuda:
+                    emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
 
-            else:
-                self.logger.info("NOT USING CUDA")
-                emb_output = list(emb_output[0].numpy())
+                else:
+                    self.logger.info("NOT USING CUDA")
+                    emb_output = list(emb_output[0].numpy())
 
-            #print(emb_output)
-            embeddings.append(emb_output)
+                #print(emb_output)
+                embeddings.append(emb_output)
 
             logits = logits.detach().cpu().numpy()
             #probs = probs.detach().cpu().numpy()
