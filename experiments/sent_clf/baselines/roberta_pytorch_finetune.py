@@ -182,7 +182,6 @@ if __name__ == '__main__':
 
                             model.train()
 
-
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
 
