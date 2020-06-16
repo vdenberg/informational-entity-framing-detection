@@ -205,17 +205,6 @@ if __name__ == '__main__':
                                     #(loss), logits, probs, sequence_output = outputs
                                     (loss), logits, pooled_output, sequence_output, hidden_states = outputs
 
-                                    # hidden_states = tuple with len 13
-                                    # each item in tuple has shape [16, 124, 768]
-                                    tmp = torch.stack(hidden_states[:-1])
-                                    print(tmp.shape)
-                                    tmp2 = tmp[:, :, 0, :].mean(dim=0)
-                                    print(tmp2.shape)
-                                    #13
-                                    #torch.Size([16, 124, 768])
-                                    #torch.Size([16, 124, 768])
-                                    exit(0)
-
                                     loss.backward()
                                     tr_loss += loss.item()
                                     optimizer.step()

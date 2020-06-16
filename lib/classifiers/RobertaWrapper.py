@@ -393,7 +393,8 @@ class Inferencer():
                 elif emb_type == "unpoolbert":
                     emb_output = sequence_output[:, 0, :]
                 elif emb_output == "crossbert":
-                    emb_output = hidden_states
+                    hidden_states = torch.stack(hidden_states[:-1])
+                    emb_output = hidden_states[:, :, 0, :].mean(dim=0)
 
                 if self.use_cuda:
                     emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
