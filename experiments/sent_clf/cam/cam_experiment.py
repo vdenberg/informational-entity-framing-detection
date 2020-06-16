@@ -138,14 +138,14 @@ parser.add_argument('-pat', '--patience', type=int, default=5)
 parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=4)
+parser.add_argument('-bs', '--batch_size', type=int, default=32)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=1024)
-parser.add_argument('-lay', '--bilstm_layers', type=int, default=1)
+parser.add_argument('-hid', '--hidden_size', type=int, default=500)
+parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
