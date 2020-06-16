@@ -243,7 +243,8 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         #y_pred = y_pred[0]
-        y_pred = np.argmax(y_pred, axis=1)
+        # y_pred = np.argmax(y_pred, axis=1)
+        y_pred = [0 if el < 0.5 else 1 for el in y_pred]
 
         self.model.train()
         return y_pred, sum_loss / len(batches), embeddings
