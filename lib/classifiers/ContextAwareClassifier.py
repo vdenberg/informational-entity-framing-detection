@@ -193,8 +193,6 @@ class ContextAwareClassifier():
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
-        print(probs.shape)
-        print(labels.shape)
         # loss = self.criterion(probs.view(-1, 1), labels.view(-1))
         loss = self.criterion(probs.squeeze(-1), labels)
         loss.backward()
@@ -222,7 +220,8 @@ class ContextAwareClassifier():
 
             with torch.no_grad():
                 logits, probs, sentence_representation = self.model(inputs)
-                loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+                # loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+                loss = self.criterion(probs.squeeze(-1), labels)
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
                 embeddings.append(embedding)
