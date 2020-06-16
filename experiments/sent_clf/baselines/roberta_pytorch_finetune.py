@@ -245,7 +245,7 @@ if __name__ == '__main__':
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
-                            dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, set_type='dev')
+                            dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev')
                             logging.info(f"{dev_perf}")
 
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
