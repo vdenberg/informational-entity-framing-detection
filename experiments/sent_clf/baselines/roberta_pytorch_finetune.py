@@ -210,7 +210,7 @@ if __name__ == '__main__':
                                     tmp = torch.stack(hidden_states[:-1])
                                     print(tmp.shape)
                                     tmp2 = tmp.mean(dim=1)
-                                    print(tmp2)
+                                    #print(tmp2)
                                     #13
                                     #torch.Size([16, 124, 768])
                                     #torch.Size([16, 124, 768])
