@@ -394,8 +394,6 @@ class Inferencer():
                     emb_output = sequence_output[:, 0, :]
                 elif emb_output == "crossbert":
                     emb_output = hidden_states
-                    print(emb_output.shape)
-                    exit(0)
 
                 if self.use_cuda:
                     emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
