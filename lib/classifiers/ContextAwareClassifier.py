@@ -197,6 +197,7 @@ class ContextAwareClassifier():
         # loss = self.criterion(logits.squeeze(), labels)
         loss.backward()
 
+        torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1)
         self.optimizer.step()
         #self.scheduler.step()
         return loss.item()
