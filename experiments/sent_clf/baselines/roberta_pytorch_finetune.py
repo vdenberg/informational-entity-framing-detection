@@ -58,7 +58,7 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [297, 6, 57, 98, 565, 0]
+seeds = [args.sv] if args.sv else [34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
@@ -238,7 +238,6 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            '''
                             for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert', 'crossbert']:
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
@@ -253,7 +252,7 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                 logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
-                            '''
+
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
