@@ -58,7 +58,7 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [34, 49, 181]
+seeds = [args.sv] if args.sv else [49, 34, 181]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
@@ -167,24 +167,30 @@ if __name__ == '__main__':
                             logger.info(f"  Details: {best_val_res}")
                             logger.info(f"  Logging to {LOG_NAME}")
 
-                            model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                                     output_hidden_states=True, output_attentions=False)
-                            model.to(device)
-                            optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01, eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
-
-                            n_train_batches = len(train_batches)
-                            half_train_batches = int(n_train_batches / 2)
-                            GRADIENT_ACCUMULATION_STEPS = 2
-                            WARMUP_PROPORTION = 0.06
-                            num_tr_opt_steps = n_train_batches * N_EPS / GRADIENT_ACCUMULATION_STEPS
-                            num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
-                            scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
-
-                            model.train()
-
                             if not os.path.exists(best_model_loc):
                                 for ep in range(1, N_EPS + 1):
                                     epoch_name = name + f"_ep{ep}"
+
+                                    model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
+                                                                                             cache_dir=CACHE_DIR,
+                                                                                             num_labels=NUM_LABELS,
+                                                                                             output_hidden_states=True,
+                                                                                             output_attentions=False)
+                                    model.to(device)
+                                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE, weight_decay=0.01,
+                                                      eps=1e-6)  # To reproduce BertAdam specific behavior set correct_bias=False
+
+                                    n_train_batches = len(train_batches)
+                                    half_train_batches = int(n_train_batches / 2)
+                                    GRADIENT_ACCUMULATION_STEPS = 2
+                                    WARMUP_PROPORTION = 0.06
+                                    num_tr_opt_steps = n_train_batches * N_EPS / GRADIENT_ACCUMULATION_STEPS
+                                    num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
+                                    scheduler = get_linear_schedule_with_warmup(optimizer,
+                                                                                num_warmup_steps=num_tr_warmup_steps,
+                                                                                num_training_steps=num_tr_opt_steps)
+
+                                    model.train()
 
                                     tr_loss = 0
                                     for step, batch in enumerate(train_batches):
@@ -221,6 +227,7 @@ if __name__ == '__main__':
                                                                                           num_labels=NUM_LABELS,
                                                                                           output_hidden_states=True,
                                                                                           output_attentions=False)
+                            best_model.to(device)
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
