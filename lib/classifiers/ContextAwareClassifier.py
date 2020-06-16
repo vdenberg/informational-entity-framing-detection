@@ -48,11 +48,11 @@ class ContextAwareModel(nn.Module):
         self.context_naive = context_naive
 
         if self.context_naive:
-            self.classifier = Linear(self.emb_size, 2)
+            self.classifier = Linear(self.emb_size, 1)
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
             #self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
-            self.classifier = Linear(self.hidden_size * 2 + self.emb_size + src_dim, 2) #
+            self.classifier = Linear(self.hidden_size * 2 + self.emb_size + src_dim, 1) #
 
         self.sigm = Sigmoid()
 
@@ -133,13 +133,13 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        # self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
         # set criterion on input
         # n_pos = len([l for l in tr_labs if l == 1])
         # class_weight = 1 - (n_pos / len(tr_labs))
-        #self.criterion = nn.BCELoss(weight=torch.tensor([.15, .85], dtype=torch.float, device=self.device))
+        self.criterion = nn.BCELoss(weight=torch.tensor([.85], dtype=torch.float, device=self.device))
 
         self.context_naive = context_naive
 
@@ -193,7 +193,7 @@ class ContextAwareClassifier():
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
-        loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+        loss = self.criterion(probs.view(-1, 1), labels.view(-1))
         loss.backward()
 
         self.optimizer.step()
