@@ -57,8 +57,8 @@ parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [34, 49]
+models = [args.model] if args.model else ['rob_base', 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
+seeds = [args.sv] if args.sv else [34, 49, 181]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
@@ -182,39 +182,40 @@ if __name__ == '__main__':
 
                             model.train()
 
-                            for ep in range(1, N_EPS + 1):
-                                epoch_name = name + f"_ep{ep}"
+                            if not os.path.exists(best_model_loc):
+                                for ep in range(1, N_EPS + 1):
+                                    epoch_name = name + f"_ep{ep}"
 
-                                tr_loss = 0
-                                for step, batch in enumerate(train_batches):
-                                    batch = tuple(t.to(device) for t in batch)
+                                    tr_loss = 0
+                                    for step, batch in enumerate(train_batches):
+                                        batch = tuple(t.to(device) for t in batch)
 
-                                    model.zero_grad()
-                                    outputs = model(batch[0], batch[1], labels=batch[2])
-                                    #(loss), logits, probs, sequence_output = outputs
-                                    (loss), logits, pooled_output, sequence_output, hidden_states = outputs
+                                        model.zero_grad()
+                                        outputs = model(batch[0], batch[1], labels=batch[2])
+                                        #(loss), logits, probs, sequence_output = outputs
+                                        (loss), logits, pooled_output, sequence_output, hidden_states = outputs
 
-                                    loss.backward()
-                                    tr_loss += loss.item()
-                                    optimizer.step()
-                                    scheduler.step()
+                                        loss.backward()
+                                        tr_loss += loss.item()
+                                        optimizer.step()
+                                        scheduler.step()
 
-                                    if step % PRINT_EVERY == 0 and step != 0:
-                                        logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                                        if step % PRINT_EVERY == 0 and step != 0:
+                                            logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                                av_loss = tr_loss / len(train_batches)
-                                save_model(model, CHECKPOINT_DIR, epoch_name)
-                                dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                             set_type='dev', name=epoch_name)
+                                    av_loss = tr_loss / len(train_batches)
+                                    save_model(model, CHECKPOINT_DIR, epoch_name)
+                                    dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                                 set_type='dev', name=epoch_name)
 
-                                # check if best
-                                high_score = ''
-                                if dev_mets['f1'] > best_val_res['f1']:
-                                    best_val_res.update(dev_mets)
-                                    high_score = '(HIGH SCORE)'
-                                    save_model(model, CURRENT_BEST_DIR, name)
+                                    # check if best
+                                    high_score = ''
+                                    if dev_mets['f1'] > best_val_res['f1']:
+                                        best_val_res.update(dev_mets)
+                                        high_score = '(HIGH SCORE)'
+                                        save_model(model, CURRENT_BEST_DIR, name)
 
-                                logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                    logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                             best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
