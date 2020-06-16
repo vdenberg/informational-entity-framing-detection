@@ -242,7 +242,7 @@ if __name__ == '__main__':
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
                                 if not os.path.exists(emb_fp):
-                                    logging.info(f'Generating {EMB_TYPE} embeds')
+                                    logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
                                     embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
