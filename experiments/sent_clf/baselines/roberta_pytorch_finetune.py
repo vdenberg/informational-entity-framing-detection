@@ -205,7 +205,9 @@ if __name__ == '__main__':
                                     #(loss), logits, probs, sequence_output = outputs
                                     (loss), logits, pooled_output, sequence_output, hidden_states = outputs
 
-                                    tmp = hidden_states[:-1].mean(dim=1)
+                                    # hidden_states = tuple with len 13
+                                    # each item in tuple has shape [16, 124, 768]
+                                    tmp = torch.tensor(hidden_states[:-1]).mean(dim=1)
                                     print(tmp.shape)
                                     exit(0)
 
