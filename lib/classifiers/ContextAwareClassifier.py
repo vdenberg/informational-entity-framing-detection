@@ -48,11 +48,11 @@ class ContextAwareModel(nn.Module):
         self.context_naive = context_naive
 
         if self.context_naive:
-            self.classifier = Linear(self.emb_size, 1)
+            self.classifier = Linear(self.emb_size, 2)
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
             #self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
-            self.classifier = Linear(self.hidden_size * 2 + self.emb_size + src_dim, 1) #
+            self.classifier = Linear(self.hidden_size * 2 + self.emb_size + src_dim, 2) #
 
         self.sigm = Sigmoid()
 
@@ -133,13 +133,13 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        # self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
+        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device))  # could be made to depend on classweight which should be set on input
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))
         # set criterion on input
         # n_pos = len([l for l in tr_labs if l == 1])
         # class_weight = 1 - (n_pos / len(tr_labs))
-        self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([.85], dtype=torch.float, device=self.device))
+        # self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([.85], reduction='sum', dtype=torch.float, device=self.device))
 
         self.context_naive = context_naive
 
@@ -193,8 +193,8 @@ class ContextAwareClassifier():
 
         self.model.zero_grad()
         logits, probs, _ = self.model(inputs)
-        # loss = self.criterion(logits.view(-1, 2), labels.view(-1))
-        loss = self.criterion(logits.squeeze(), labels)
+        loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+        # loss = self.criterion(logits.squeeze(), labels)
         loss.backward()
 
         self.optimizer.step()
@@ -220,8 +220,8 @@ class ContextAwareClassifier():
 
             with torch.no_grad():
                 logits, probs, sentence_representation = self.model(inputs)
-                # loss = self.criterion(logits.view(-1, 2), labels.view(-1))
-                loss = self.criterion(logits.squeeze(), labels)
+                loss = self.criterion(logits.view(-1, 2), labels.view(-1))
+                # loss = self.criterion(logits.squeeze(), labels)
 
                 embedding = list(sentence_representation.detach().cpu().numpy())
                 embeddings.append(embedding)
@@ -243,9 +243,8 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         #y_pred = y_pred[0]
-        # y_pred = np.argmax(y_pred, axis=1)
-
-        y_pred = [0 if el < 0.5 else 1 for el in y_pred]
+        y_pred = np.argmax(y_pred, axis=1)
+        # y_pred = [0 if el < 0.5 else 1 for el in y_pred]
 
         self.model.train()
         return y_pred, sum_loss / len(batches), embeddings
