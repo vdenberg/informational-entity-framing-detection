@@ -392,7 +392,7 @@ class Inferencer():
                     emb_output = sequence_output.mean(axis=1)
                 elif emb_type == "unpoolbert":
                     emb_output = sequence_output[:, 0, :]
-                elif emb_output == "crossbert":
+                elif emb_type == "crossbert":
                     hidden_states = torch.stack(hidden_states[:-1])
                     emb_output = hidden_states[:, :, 0, :].mean(dim=0)
 
