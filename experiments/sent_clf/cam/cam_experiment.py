@@ -203,11 +203,6 @@ BERT_MODEL = args.bert_model
 NUM_LABELS = 2
 SAMPLER = args.sampler
 
-hiddens = [HIDDEN]
-batch_sizes = [BATCH_SIZE]
-learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL]
-
 # set seed
 # random.seed(SEED_VAL)
 # np.random.seed(SEED_VAL)
@@ -330,7 +325,7 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
-folds = [folds[0]]
+#folds = [folds[0]]
 
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")
@@ -484,6 +479,11 @@ table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,re
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = 'cnm' if CN else "cam"
+
+hiddens = [HIDDEN]
+batch_sizes = [BATCH_SIZE]
+learning_rates = [LR] #, 0.001, 0.002]
+seeds = [SEED_VAL]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
