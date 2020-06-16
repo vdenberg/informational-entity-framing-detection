@@ -58,10 +58,10 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base'] #, 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [34]
+seeds = [args.sv] if args.sv else [34, 49]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else ['1']
+folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
@@ -182,21 +182,9 @@ if __name__ == '__main__':
 
                             model.train()
 
-                            '''
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
 
-                                
-                                if args.load and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
-                                    # this epoch for this setting has been trained before already
-                                    trained_model = RobertaForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                                    num_labels=NUM_LABELS,
-                                                                                                    output_hidden_states=False,
-                                                                                                    output_attentions=False)
-                                    dev_mets, dev_perf = inferencer.evaluate(trained_model, dev_batches, dev_labels,
-                                                                             set_type='dev', name=epoch_name)
-                                else:
-                                
                                 tr_loss = 0
                                 for step, batch in enumerate(train_batches):
                                     batch = tuple(t.to(device) for t in batch)
@@ -228,16 +216,6 @@ if __name__ == '__main__':
 
                                 logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                            '''
-
-                            # load best model, save embeddings, print performance on test
-                            '''
-                            if best_val_res['model_loc'] == '':
-                                # none of the epochs performed above f1 = 0, so just use last epoch
-                                best_val_res['model_loc'] = epoch_name
-                                save_model(model, CURRENT_BEST_DIR, name)
-                            '''
-
                             best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
                                                                                           output_hidden_states=True,
@@ -253,6 +231,7 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
+                            '''
                             for EMB_TYPE in ['poolbert', 'avbert', 'unpoolbert', 'crossbert']:
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
@@ -267,6 +246,7 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                 logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
+                            '''
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
