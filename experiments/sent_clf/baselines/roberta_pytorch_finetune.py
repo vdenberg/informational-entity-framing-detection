@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
                             model.train()
 
-                            '''
+
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
 
@@ -227,7 +227,7 @@ if __name__ == '__main__':
                                     save_model(model, CURRENT_BEST_DIR, name)
 
                                 logger.info(f'{epoch_name}: {dev_perf} {high_score}')
-                            '''
+
                             # load best model, save embeddings, print performance on test
                             '''
                             if best_val_res['model_loc'] == '':
