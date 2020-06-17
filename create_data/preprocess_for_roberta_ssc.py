@@ -100,9 +100,9 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                                      input_mask=[],
                                      segment_ids=[],
                                      label_id=[])
-    article_rows = {}
-
     window_size = 2
+
+    article_rows = {}
 
     for f in features:
         row = article_rows.setdefault(f.article, [])
@@ -112,15 +112,12 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     for article in article_rows:
         article_rows[article]
 
-
     sequence_rows = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
-        row = [empty_feature]*window_size + row + [empty_feature]*window_size
         sequences = enforce_max_sent_per_example(row, max_sent)
         nr_sequences = len(sequences)
 
-        windowed_sequences = []
         for i, s in enumerate(sequences):
             winseq = s.copy()
             if i != 0:
@@ -129,8 +126,8 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
             if i != nr_sequences-1:
                 winend = sequences[i+1][0:window_size]
                 winseq = winseq + winend
-            windowed_sequences.append(winseq)
-        sequence_rows.append(windowed_sequences)
+
+            sequence_rows.append(winseq)
 
     # help measure what the maxlen should be
     for row in sequence_rows:
