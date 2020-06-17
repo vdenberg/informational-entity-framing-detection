@@ -258,7 +258,7 @@ class InputFeatures(object):
 
     def __init__(self, my_id, input_ids, input_mask, segment_ids, label_id):
         self.my_id = my_id
-        if my_id and my_id != 'PAD':
+        if my_id and my_id != 1:
             my_id = standardise_id(my_id)
             self.sent_id = int(my_id[-2:])
             self.article = my_id[:-2]
