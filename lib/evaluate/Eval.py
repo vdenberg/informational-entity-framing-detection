@@ -14,7 +14,7 @@ def convert_bio_to_binary(labels):
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
 
-    if len(set(labels)) > 2:
+    if len(set(list(labels))) > 2:
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
