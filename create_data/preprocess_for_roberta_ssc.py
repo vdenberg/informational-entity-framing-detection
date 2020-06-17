@@ -122,7 +122,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
         for i, s in enumerate(sequences):
             winseq = s.copy()
             if i != 0:
-                winstart = sequences[i-1][-window_size]
+                winstart = sequences[i-1][-window_size:]
                 winseq = [winstart] + winseq
             if i != nr_sequences-1:
                 winend = sequences[i+1][0:window_size]
