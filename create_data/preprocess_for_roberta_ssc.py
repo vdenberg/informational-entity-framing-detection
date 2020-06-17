@@ -129,6 +129,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                 winseq = winseq + winend
             print([el.my_id for el in winseq])
             sequence_rows.append(winseq)
+    exit(0)
 
     # help measure what the maxlen should be
     for row in sequence_rows:
