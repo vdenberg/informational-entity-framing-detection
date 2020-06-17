@@ -172,7 +172,7 @@ MAX_SEQ_LENGTH = 124
 #max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 499, 10: 499}
 # MAX_SEQ_LEN_SSC = max_lens[args.sequence_length]
 max_lens_w_windows = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 455, 9: 499, 10: 499}
-MAX_SEQ_LEN_SSC = max_lens[args.sequence_length]
+MAX_SEQ_LEN_SSC = max_lens_w_windows[args.sequence_length]
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
 
