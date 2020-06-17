@@ -100,7 +100,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                                      input_mask=[],
                                      segment_ids=[],
                                      label_id=[])
-    window_size = 2
+    window_size = 1
 
     article_rows = {}
 
