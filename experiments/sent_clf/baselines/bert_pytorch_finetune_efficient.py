@@ -48,7 +48,7 @@ device, USE_CUDA = get_torch_device()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
-parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
