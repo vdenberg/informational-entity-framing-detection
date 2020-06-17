@@ -224,7 +224,7 @@ for fold in folds:
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
-        #with open(ofp, "wb") as f:
-            #pickle.dump(features, f)
+        with open(ofp, "wb") as f:
+            pickle.dump(features, f)
 
 tokenizer.save_vocabulary(FEAT_DIR)
