@@ -115,6 +115,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     sequence_rows = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
+        row = [empty_feature]*window_size + row + [empty_feature]*window_size
         sequences = enforce_max_sent_per_example(row, max_sent)
         nr_sequences = len(sequences)
 
@@ -126,7 +127,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
             if i != nr_sequences-1:
                 winend = sequences[i+1][0:window_size]
                 winseq = winseq + winend
-
+            print([el.my_id for el in winseq])
             sequence_rows.append(winseq)
 
     # help measure what the maxlen should be
