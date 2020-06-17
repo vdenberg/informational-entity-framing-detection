@@ -95,7 +95,7 @@ def seps(x):
 def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
-    empty_feature = InputFeatures(my_id=None,
+    empty_feature = InputFeatures(my_id='PAD',
                                      input_ids=[],
                                      input_mask=[],
                                      segment_ids=[],
