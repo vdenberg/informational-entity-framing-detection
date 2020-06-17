@@ -42,7 +42,7 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
                  'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
-                 'bert': 'bert_base_cased'
+                 'bert': 'bert-base-cased'
                  }
 device, USE_CUDA = get_torch_device()
 
