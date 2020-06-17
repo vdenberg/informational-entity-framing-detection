@@ -59,11 +59,12 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     flat_labels = []
     #segment_ids = []
 
+    last_sent = None
     for i, sent in enumerate(seq_rows):
         input_ids = remove_special(sent.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
         flat_labels.append(sent.label_id)
-        #segment_ids.extend([i+1] * len(input_ids))
+        last_sent = sent
 
     pad_len = max_ex_len - len(flat_input_ids)
     mask = [1] * len(flat_input_ids) + [0] * pad_len
@@ -94,17 +95,36 @@ def seps(x):
 def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
+    print(features[0])
+    exit(0)
+    empty_feature = None
     article_rows = {}
+
     for f in features:
-        row = article_rows.setdefault(f.article, [])
+        row = article_rows.setdefault(f.article, [empty_feature])
         row.append(f)
+
+    # add empty feature at the end
+    for article in article_rows:
+        article_rows[article_rows] += [empty_feature]
 
     sequence_rows = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
         sequences = enforce_max_sent_per_example(row, max_sent)
-        for s in sequences:
-            sequence_rows.append(s)
+        nr_sequences = len(sequences)
+
+        windowed_sequences = []
+        for i, s in enumerate(sequences):
+            winseq = s.copy()
+            if i != 0:
+                winstart = sequences[i-1][-1]
+                winseq = [winstart] + winseq
+            if i != nr_sequences-1:
+                winend = sequences[i+1][0]
+                winseq = winseq + winend
+            windowed_sequences.append(winseq)
+        sequence_rows.append(windowed_sequences)
 
     # help measure what the maxlen should be
     for row in sequence_rows:

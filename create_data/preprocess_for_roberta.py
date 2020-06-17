@@ -60,18 +60,10 @@ ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
 FORCE = True
 if not os.path.exists(ofp) or FORCE:
-    df = pd.read_csv(all_infp, sep='\t', index_col=0)
-    print(df.loc['0fox0'])
-
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
-
-    x_dict = {x.my_id: x for x in examples}
-    print(x_dict['0fox0'])
-
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
-    print(features_dict['0fox0'])
     print(f"Processed fold all - {len(features)} items")
 
     with open(ofp, "wb") as f:
