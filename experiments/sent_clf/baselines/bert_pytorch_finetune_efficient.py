@@ -48,7 +48,7 @@ device, USE_CUDA = get_torch_device()
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
-parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
@@ -64,7 +64,7 @@ models = [args.model] if args.model else ['bert']
 seeds = [args.sv] if args.sv else [49, 6, 34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [2e-5]
-folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan'] # + [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
