@@ -82,7 +82,7 @@ if DEBUG:
 ########################
 
 TASK_NAME = f'SSC{EX_LEN}'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
