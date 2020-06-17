@@ -209,7 +209,7 @@ if __name__ == '__main__':
                                             logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                                     av_loss = tr_loss / len(train_batches)
-                                    save_model(model, CHECKPOINT_DIR, epoch_name)
+                                    # save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                  set_type='dev', name=epoch_name)
 

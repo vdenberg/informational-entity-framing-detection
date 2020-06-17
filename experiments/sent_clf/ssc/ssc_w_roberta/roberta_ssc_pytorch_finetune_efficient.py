@@ -2,9 +2,7 @@ from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from transformers.configuration_roberta import RobertaConfig
 import pickle
-from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
-from lib.classifiers.BertWrapper import BertForSequenceClassification
-from lib.classifiers.BertForEmbed import Inferencer
+from lib.classifiers.RobertaSSCWrapper import RobertaSSC, Inferencer, save_model, load_features
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
 import torch
@@ -57,14 +55,16 @@ parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
+parser.add_argument('-exlen', '--example_length', type=int, default=8)
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['bert']
+models = [args.model] if args.model else ['rob_base']
+EX_LEN = args.example_length
 seeds = [args.sv] if args.sv else [49, 6, 34]
-bss = [args.bs] if args.bs else [16]
-lrs = [args.lr] if args.lr else [2e-5]
-folds = [args.fold] if args.fold else ['fan'] # + [str(el+1) for el in range(10)]
+bss = [args.bs] if args.bs else [6]
+lrs = [args.lr] if args.lr else [1.5e-5]
+folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
@@ -75,19 +75,20 @@ if DEBUG:
     lrs = [3e-5]
     folds = ['1']
     samplers = ['sequential']
+    EX_LEN = 1
 
 ########################
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SC_bert'
-FEAT_DIR = f'data/sent_clf/features_for_bert'
+TASK_NAME = f'SSC{EX_LEN}'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
-MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'bert_ft_results.csv')
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'ssc_results.csv')
 
 #if not os.path.exists(CHECKPOINT_DIR):
 #    os.makedirs(CHECKPOINT_DIR)
@@ -171,7 +172,7 @@ if __name__ == '__main__':
                             logger.info(f"  Logging to {LOG_NAME}")
 
                             if not os.path.exists(best_model_loc):
-                                model = BertForSequenceClassification.from_pretrained(ROBERTA_MODEL,
+                                model = RobertaSSC.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
                                                                                          num_labels=NUM_LABELS,
                                                                                          output_hidden_states=True,
@@ -201,7 +202,7 @@ if __name__ == '__main__':
                                         model.zero_grad()
                                         outputs = model(batch[0], batch[1], labels=batch[2])
                                         #(loss), logits, probs, sequence_output = outputs
-                                        (loss), logits, probs, pooled_output, sequence_output, hidden_states = outputs
+                                        loss = outputs[0]
 
                                         loss.backward()
                                         tr_loss += loss.item()
@@ -225,7 +226,7 @@ if __name__ == '__main__':
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                            best_model = BertForSequenceClassification.from_pretrained(best_model_loc,
+                            best_model = RobertaSSC.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
                                                                                           output_hidden_states=True,
                                                                                           output_attentions=False)
@@ -241,20 +242,6 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            for EMB_TYPE in ['poolbert', 'avbert', 'crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
-                                emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
-
-                                if SEED_VAL == 49 and not os.path.exists(emb_fp):
-                                    logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
-                                    feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
-                                    all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
-                                    embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                                    assert len(embs) == len(all_ids)
-
-                                    basil_w_BERT = pd.DataFrame(index=all_ids)
-                                    basil_w_BERT[EMB_TYPE] = embs
-                                    basil_w_BERT.to_csv(emb_fp)
-                                    logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
