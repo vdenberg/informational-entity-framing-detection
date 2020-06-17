@@ -178,7 +178,7 @@ if __name__ == '__main__':
                         for ep in range(1, N_EPS + 1):
                             epoch_name = name + f"_ep{ep}"
 
-                            ALLOW_LOAD = args.load
+                            ALLOW_LOAD = False
                             if ALLOW_LOAD and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
                                 # this epoch for this setting has been trained before already
                                 trained_model = BertForSequenceClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),

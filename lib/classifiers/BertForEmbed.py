@@ -116,7 +116,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output, pooled_output) #+ outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs,) + (sequence_output, pooled_output) + outputs[2:]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
@@ -152,17 +152,26 @@ class Inferencer():
             with torch.no_grad():
                 #print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output = outputs
+                logits, probs, sequence_output, pooled_output, hidden_states = outputs
                 #logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
-            '''
+
             if emb_type == 'poolbert':
                 emb_output = pooled_output
             elif emb_type == "avbert":
                 emb_output = sequence_output.mean(axis=1)
+            elif emb_type == "unpoolbert":
+                emb_output = sequence_output[:, 0, :]
+            elif emb_type == "crossbert":
+                hidden_states = torch.stack(hidden_states[:-1])
+                emb_output = hidden_states[:, :, 0, :].mean(dim=0)
+            elif emb_type == "cross4bert":
+                hidden_states = hidden_states[:-1]
+                hidden_states = torch.stack(hidden_states[-4:])
+                emb_output = hidden_states[:, :, 0, :].mean(dim=0)
             
 
             if self.use_cuda:
@@ -172,7 +181,7 @@ class Inferencer():
                 self.logger.info("NOT USING CUDA")
                 emb_output = list(emb_output[0].numpy())
             embeddings.append(emb_output)
-            '''
+
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
@@ -188,7 +197,7 @@ class Inferencer():
         else:
             return preds
 
-    def eval(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
+    def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds = self.predict(model, data, output_mode=output_mode)
         #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])

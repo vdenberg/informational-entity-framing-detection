@@ -171,7 +171,7 @@ if __name__ == '__main__':
                             logger.info(f"  Logging to {LOG_NAME}")
 
                             if not os.path.exists(best_model_loc):
-                                model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
+                                model = BertForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
                                                                                          num_labels=NUM_LABELS,
                                                                                          output_hidden_states=True,
@@ -225,7 +225,7 @@ if __name__ == '__main__':
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                            best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
+                            best_model = BertForSequenceClassification.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
                                                                                           output_hidden_states=True,
                                                                                           output_attentions=False)
@@ -255,7 +255,6 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
-
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
