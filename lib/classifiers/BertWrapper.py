@@ -268,7 +268,7 @@ class BertWrapper:
 
             with torch.no_grad():
                 outputs = self.model(input_ids, input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output = outputs
+                logits, probs, sequence_output, pooled_output, hidden_states = outputs
                 loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1))
                 probs = probs.detach().cpu().numpy()
 
