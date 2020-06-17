@@ -105,17 +105,18 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     window_size = 2
 
     for f in features:
-        row = article_rows.setdefault(f.article, [empty_feature]*window_size)
+        row = article_rows.setdefault(f.article, [])
         row.append(f)
 
     # add empty feature at the end
     for article in article_rows:
-        article_rows[article] += [empty_feature]*window_size
+        article_rows[article]
 
 
     sequence_rows = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
+        row = [empty_feature]*window_size + row + [empty_feature]*window_size
         sequences = enforce_max_sent_per_example(row, max_sent)
         nr_sequences = len(sequences)
 
