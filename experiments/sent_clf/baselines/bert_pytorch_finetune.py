@@ -41,7 +41,7 @@ def to_tensor(features):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
 parser.add_argument('-load', '--load', action='store_true', default=False)
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
@@ -53,11 +53,11 @@ parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
-seeds = [args.sv] if args.sv else [0, 0]
-bss = [args.bs] if args.bs else [32, 21]
-lrs = [args.lr] if args.lr else [2e-5, 1e-5]
-folds = [args.fold] if args.fold else ['1', '2', '3']
-samplers = [args.sampler] if args.sampler else ['sequential', 'random']
+seeds = [args.sv] if args.sv else [34, 6, 49]
+bss = [args.bs] if args.bs else [16]
+lrs = [args.lr] if args.lr else [2e-5]
+folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
+samplers = [args.sampler] if args.sampler else ['sequential']
 
 N_EPS = args.n_epochs
 
