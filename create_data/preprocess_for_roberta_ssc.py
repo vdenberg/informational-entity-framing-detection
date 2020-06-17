@@ -102,13 +102,16 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                                      label_id=[])
     article_rows = {}
 
+    window_size = 2
+
     for f in features:
-        row = article_rows.setdefault(f.article, [empty_feature])
+        row = article_rows.setdefault(f.article, [empty_feature]*window_size)
         row.append(f)
 
     # add empty feature at the end
     for article in article_rows:
-        article_rows[article_rows] += [empty_feature]
+        article_rows[article_rows] += [empty_feature]*window_size
+
 
     sequence_rows = []
     for row in article_rows.values():
@@ -120,10 +123,10 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
         for i, s in enumerate(sequences):
             winseq = s.copy()
             if i != 0:
-                winstart = sequences[i-1][-1]
+                winstart = sequences[i-1][-window_size]
                 winseq = [winstart] + winseq
             if i != nr_sequences-1:
-                winend = sequences[i+1][0]
+                winend = sequences[i+1][0:window_size]
                 winseq = winseq + winend
             windowed_sequences.append(winseq)
         sequence_rows.append(windowed_sequences)
