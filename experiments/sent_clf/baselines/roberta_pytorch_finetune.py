@@ -58,10 +58,10 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [6, 49, 34]
+seeds = [args.sv] if args.sv else [34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan'] #[str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
