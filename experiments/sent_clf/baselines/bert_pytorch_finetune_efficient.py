@@ -3,7 +3,7 @@ from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 from transformers.configuration_roberta import RobertaConfig
 import pickle
 from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
-from lib.classifiers.BertWrapper import BertForSequenceClassification, Inferencer
+from lib.classifiers.BertWrapper import BertForSequenceClassification
 from lib.classifiers.BertForEmbed import Inferencer
 from datetime import datetime
 from torch.nn import CrossEntropyLoss
