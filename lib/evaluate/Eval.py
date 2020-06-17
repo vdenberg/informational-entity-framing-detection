@@ -1,7 +1,7 @@
 from sklearn.metrics import matthews_corrcoef, confusion_matrix, f1_score, accuracy_score
 from sklearn.metrics import precision_recall_fscore_support
 import pandas as pd
-
+import numpy as np
 
 def convert_bio_to_binary(labels):
     labels = [2 if lab == 3 else lab for lab in labels]
@@ -13,7 +13,11 @@ def convert_bio_to_binary(labels):
 
 def get_metrics(labels, preds):
     assert len(preds) == len(labels)
-    if len(set(labels.squeeze())) > 2:
+
+    if isinstance(labels, np.ndarray):
+        labels = labels.squeeze()
+
+    if len(set(labels)) > 2:
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
