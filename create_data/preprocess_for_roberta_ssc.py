@@ -123,13 +123,12 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
             winseq = s.copy()
             if i != 0:
                 winstart = sequences[i-1][-window_size:]
-                winseq = [winstart] + winseq
+                winseq = winstart + winseq
             if i != nr_sequences-1:
                 winend = sequences[i+1][0:window_size]
                 winseq = winseq + winend
             print([el.my_id for el in winseq])
             sequence_rows.append(winseq)
-    exit(0)
 
     # help measure what the maxlen should be
     for row in sequence_rows:
