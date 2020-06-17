@@ -120,7 +120,7 @@ parser.add_argument('-inf', '--step_info_every', type=int, default=250)
 parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
-parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
+parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='s')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
@@ -325,7 +325,7 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
-# folds = folds[0]
+folds = folds[0]
 
 logger.info(f" --> Read {len(data)} data points")
 #ogger.info(f" --> Example: {data.sample(n=1).context_doc_num.values}")

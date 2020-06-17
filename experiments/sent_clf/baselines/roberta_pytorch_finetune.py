@@ -57,11 +57,11 @@ parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_dapt', 'rob_tapt', 'rob_dapttapt']
+models = [args.model] if args.model else ['rob_base']
 seeds = [args.sv] if args.sv else [6, 49, 34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan']
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
