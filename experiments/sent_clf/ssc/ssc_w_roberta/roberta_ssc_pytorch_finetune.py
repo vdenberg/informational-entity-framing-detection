@@ -47,12 +47,12 @@ args = parser.parse_args()
 #ssc5: 49_bs16_lr3e-05_f2
 #ssc4: 49_bs16_lr0.0002_f1
 #ssc3: 49_bs16_lr1e-05_f3
-models = [args.model] if args.model else ['rob_dapt', 'rob_tapt', 'rob_dapttapt']
+models = [args.model] if args.model else ['rob_base']
 EX_LEN = args.example_length
 seeds = [args.sv] if args.sv else [34, 49, 181] # 34, 49, 181
 bss = [args.bs] if args.bs else [6]  #, 8, 1
 lrs = [args.lr] if args.lr else [1.5e-5] #, 2e-5
-folds = [args.fold] if args.fold else ['1', '2', '3', '4', '5']
+folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 N_EPS = args.n_epochs
 
