@@ -95,9 +95,11 @@ def seps(x):
 def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
-    print(features[0])
-    exit(0)
-    empty_feature = None
+    empty_feature = InputFeatures(my_id=None,
+                                     input_ids=[],
+                                     input_mask=[],
+                                     segment_ids=[],
+                                     label_id=[])
     article_rows = {}
 
     for f in features:
@@ -222,7 +224,7 @@ for fold in folds:
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
-        with open(ofp, "wb") as f:
-            pickle.dump(features, f)
+        #with open(ofp, "wb") as f:
+            #pickle.dump(features, f)
 
 tokenizer.save_vocabulary(FEAT_DIR)
