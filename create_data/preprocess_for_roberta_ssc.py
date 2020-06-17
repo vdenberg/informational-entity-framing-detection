@@ -110,7 +110,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
 
     # add empty feature at the end
     for article in article_rows:
-        article_rows[article_rows] += [empty_feature]*window_size
+        article_rows[article] += [empty_feature]*window_size
 
 
     sequence_rows = []
