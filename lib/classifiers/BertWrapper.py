@@ -180,7 +180,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         logits = self.classifier(pooled_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs,) + (sequence_output, pooled_output,) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs,) + (sequence_output, pooled_output,) + outputs[2]  # add hidden states and attention if they are here
 
         if labels is not None:
             if self.num_labels == 1:
