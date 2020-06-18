@@ -73,6 +73,7 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
 
     assert len(mask) == len(flat_input_ids)
 
+    print(max_sent, len(flat_labels))
     lab_pad_len = max_sent - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
