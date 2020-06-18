@@ -76,6 +76,8 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     lab_pad_len = max_sent - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
+    assert len(flat_labels) == len(flat_input_ids)
+
     return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
                          input_mask=mask,
@@ -140,7 +142,6 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     finfeats = []
     for row in sequence_rows:
         ff = flatten_sequence(row, cls, pad, max_len, max_sent)
-        print(len(ff.label_id))
         finfeats.append(ff)
     return finfeats
 
