@@ -5,22 +5,12 @@ import random
 import torch
 import numpy as np
 import pandas as pd
-from transformers import BertTokenizer
-from lib.handle_data.SplitData import Split
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
-from lib.classifiers.BertWrapper import BertForSequenceClassification, load_features
-from lib.classifiers.BertForEmbed import Inferencer, InputFeatures
-
-from torch.utils.data import (DataLoader, SequentialSampler, TensorDataset)
-from lib.evaluate.Eval import my_eval
 import pickle, time
-from torch.nn import CrossEntropyLoss, BCELoss
-from torch.nn import CrossEntropyLoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
 from lib.classifiers.Classifier import Classifier
-from lib.utils import get_torch_device, to_tensors, to_batches
-#from experiments.bert_sentence_embeddings.finetune import OldFinetuner, InputFeatures
+from lib.utils import get_torch_device, standardise_id
 
 
 class Processor():
@@ -309,7 +299,9 @@ logger.info(f" Split type: {SPLIT_TYPE}")
 logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
-data.index = data.sentence_ids.values
+# data.index = data.sentence_ids.values
+data.index = [standardise_id(el) for el in data.sentence_ids.values]
+
 '''
 pos_cases = data[data.label == 1]
 pos_cases = pd.concat([pos_cases]*5)
@@ -436,8 +428,8 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings',
                  'unpoolbert': 'embeddings', 'crossbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    print(data.index[:10])
-    print(data_w_emb.index[:10])
+    print(data.index[:10])  # not standardized
+    print(data_w_emb.index[:10])  # standardized
     tmp = set(data.index) - set(data_w_emb.index)
     print(list(tmp)[:10])
     exit(0)
