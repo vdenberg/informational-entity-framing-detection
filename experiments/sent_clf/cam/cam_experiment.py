@@ -10,6 +10,7 @@ from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 import pickle, time
 
 from lib.classifiers.Classifier import Classifier
+from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id
 
 
