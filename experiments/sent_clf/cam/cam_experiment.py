@@ -356,45 +356,6 @@ for fold in folds:
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
 
-
-
-# =====================================================================================
-#                    GET EMBEDDINGS
-# =====================================================================================
-
-'''
-logger.info(f"Get embeddings")
-    # load bert features
-    with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
-        all_ids, all_data, all_labels = to_tensor(pickle.load(f), device)
-        bert_all_batches = to_batches(all_data, 1)
-
-    # bert model
-    bert_model = BertForSequenceClassification.from_pretrained('models/checkpoints/bert_baseline/good_dev_model',
-                                                               num_labels=2, output_hidden_states=False,
-                                                               output_attentions=False)
-    bert_model.to(device)
-    bert_model.eval()
-
-    # get embeddings
-    bert_embeddings = []
-    for bert_batch in bert_all_batches:
-        input_ids, input_mask, segment_ids, label_ids = bert_batch
-        with torch.no_grad():
-            bert_outputs = bert_model(input_ids, segment_ids, input_mask, labels=None)
-            logits, probs, sequence_output, pooled_output = bert_outputs
-            print(probs, len(probs))
-            print(probs.shape)
-            emb_output = list(pooled_output.detach().cpu().numpy())
-        bert_embeddings.extend(emb_output)
-    embed_df = pd.DataFrame(index=all_ids)
-    embed_df['embeddings'] = bert_embeddings
-
-    logger.info(data_w_embeds['embeddings'].head(3))
-    logger.info(embed_df['embeddings'].head(3))
-    exit(0)
-'''
-
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
@@ -425,9 +386,10 @@ if EMB_TYPE in ['use', 'sbert']:
 for fold in folds:
     # read embeddings file
     if EMB_TYPE not in ['use', 'sbert']:
-        #embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        #embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+        # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        embed_fp = f"data/rob_dapt_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
