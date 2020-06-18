@@ -133,12 +133,13 @@ class ContextAwareClassifier():
         self.emb_dim = emb_dim
         self.hidden_size = hid_size
         self.batch_size = b_size
-        self.criterion = CrossEntropyLoss(weight=torch.tensor([.25, .75], device=self.device), reduction='sum')  # could be made to depend on classweight which should be set on input
+        self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device), reduction='mean')  # could be made to depend on classweight which should be set on input
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))
         # set criterion on input
-        # n_pos = len([l for l in tr_labs if l == 1])
-        # class_weight = 1 - (n_pos / len(tr_labs))
+        n_pos = len([l for l in tr_labs if l == 1])
+        class_weight = 1 - (n_pos / len(tr_labs))
+        print(class_weight)
         # self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([.85], reduction='sum', dtype=torch.float, device=self.device))
 
         self.context_naive = context_naive
