@@ -59,12 +59,10 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     flat_labels = []
     #segment_ids = []
 
-    last_sent = None
     for i, sent in enumerate(seq_rows):
         input_ids = remove_special(sent.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
         flat_labels.append(sent.label_id)
-        last_sent = sent
 
     pad_len = max_ex_len - len(flat_input_ids)
     mask = [1] * len(flat_input_ids) + [0] * pad_len
@@ -73,8 +71,8 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
 
     assert len(mask) == len(flat_input_ids)
 
-    print(max_sent, len(flat_labels))
-    lab_pad_len = max_sent - len(flat_labels)
+    max_sent_w_window = max_sent+2
+    lab_pad_len = max_sent_w_window - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
     print(max_sent, len(flat_labels))
@@ -111,10 +109,6 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
     for f in features:
         row = article_rows.setdefault(f.article, [])
         row.append(f)
-
-    # add empty feature at the end
-    for article in article_rows:
-        article_rows[article]
 
     sequence_rows = []
     for row in article_rows.values():
