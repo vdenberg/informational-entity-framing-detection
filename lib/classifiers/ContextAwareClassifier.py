@@ -43,16 +43,19 @@ class ContextAwareModel(nn.Module):
         self.emb_size = weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
-        self.num_labels = 2
         self.dropout = Dropout(0.6)
         self.context_naive = context_naive
 
+        self.num_labels = 2
+        self.context_rep_dim = self.hidden_size * 2 + self.hidden_size * 2 + src_dim
+        self.half_context_rep_dim = int(self.context_rep_dim*0.5)
+        self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
+
         if self.context_naive:
-            self.classifier = Linear(self.emb_size, 2)
+            self.classifier = Linear(self.emb_size, self.num_labels)
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
-            #self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
-            self.classifier = Linear(self.hidden_size * 2 + self.hidden_size * 2 + src_dim, 2) # + self.emb_size + src_dim, 2) #
+            self.classifier = Linear(self.half_context_rep_dim, self.num_labels) # + self.emb_size + src_dim, 2) #
 
         self.sigm = Sigmoid()
 
@@ -109,12 +112,15 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_hid
 
             # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
-            context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
+            # context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
             # target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            target_sent_reps = context_rep
+            # target_sent_reps = context_rep
 
-        target_sent_reps = self.dropout(target_sent_reps)
-        logits = self.classifier(target_sent_reps)
+        features = self.dropout(target_sent_reps)
+        features = self.dense(features)
+        features = torch.tanh(features)
+        features = self.dropout(features)
+        logits = self.classifier(features)
         probs = self.sigm(logits)
         return logits, probs, target_sent_reps
 
