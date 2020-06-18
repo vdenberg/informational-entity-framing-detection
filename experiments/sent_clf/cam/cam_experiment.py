@@ -370,7 +370,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings',
                  'unpoolbert': 'embeddings', 'crossbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    #data.index = [standardise_id(el) for el in data.index]
+    data.index = [standardise_id(el) for el in data.index]
     #tmp = set(data.index) - set(data_w_emb.index)
     data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
