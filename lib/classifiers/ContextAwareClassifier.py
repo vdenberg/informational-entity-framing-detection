@@ -52,7 +52,7 @@ class ContextAwareModel(nn.Module):
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
             #self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
-            self.classifier = Linear(self.hidden_size * 2 + self.emb_size + src_dim, 2) #
+            self.classifier = Linear(self.hidden_size * 2, 2) # + self.emb_size + src_dim, 2) #
 
         self.sigm = Sigmoid()
 
@@ -77,9 +77,10 @@ class ContextAwareModel(nn.Module):
         # init containers for outputs
         rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+
         #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
         #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
-        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
+        target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
 
         if self.context_naive:
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -104,12 +105,13 @@ class ContextAwareModel(nn.Module):
                 target_hid = sentence_representations[item, position].view(1, -1)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
-                target_sent_reps[item] = target_roberta
+                # target_sent_reps[item] = target_roberta
+                target_sent_reps[item] = target_hid
 
             # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
-            context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
-            #target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            target_sent_reps = context_rep
+            # context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
+            # target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+            # target_sent_reps = context_rep
 
         target_sent_reps = self.dropout(target_sent_reps)
         logits = self.classifier(target_sent_reps)
@@ -137,9 +139,9 @@ class ContextAwareClassifier():
 
         # self.criterion = NLLLoss(weight=torch.tensor([.15, .85], device=self.device))
         # set criterion on input
-        n_pos = len([l for l in tr_labs if l == 1])
-        class_weight = 1 - (n_pos / len(tr_labs))
-        print(class_weight)
+        # n_pos = len([l for l in tr_labs if l == 1])
+        # class_weight = 1 - (n_pos / len(tr_labs))
+        # print(class_weight)
         # self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([.85], reduction='sum', dtype=torch.float, device=self.device))
 
         self.context_naive = context_naive
