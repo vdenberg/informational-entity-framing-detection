@@ -81,7 +81,7 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SSC{EX_LEN}'
+TASK_NAME = f'WSSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
