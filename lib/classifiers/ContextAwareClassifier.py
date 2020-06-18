@@ -27,7 +27,7 @@ class ContextAwareModel(nn.Module):
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
     def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device,
-                 pos_dim=50, src_dim=50, pos_quartiles=4, nr_srcs=3):
+                 pos_dim=50, src_dim=100, pos_quartiles=4, nr_srcs=3):
         super(ContextAwareModel, self).__init__()
 
         self.input_size = input_size
@@ -52,7 +52,7 @@ class ContextAwareModel(nn.Module):
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
             #self.classifier = Linear(self.hidden_size * 2 + self.emb_size, 2) #
-            self.classifier = Linear(self.hidden_size * 2 + src_dim, 2) # + self.emb_size + src_dim, 2) #
+            self.classifier = Linear(self.hidden_size * 2 + self.hidden_size * 2 + src_dim, 2) # + self.emb_size + src_dim, 2) #
 
         self.sigm = Sigmoid()
 
@@ -109,7 +109,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_hid
 
             # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
-            context_rep = torch.cat((target_sent_reps, embedded_src), dim=-1)
+            context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
             # target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
             target_sent_reps = context_rep
 
