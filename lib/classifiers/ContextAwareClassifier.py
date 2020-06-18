@@ -47,7 +47,7 @@ class ContextAwareModel(nn.Module):
         self.context_naive = context_naive
 
         self.num_labels = 2
-        self.context_rep_dim = self.hidden_size * 2 + self.hidden_size * 2 + src_dim
+        self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
 
