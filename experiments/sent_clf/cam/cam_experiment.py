@@ -11,7 +11,7 @@ import pickle, time
 
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
-from lib.utils import get_torch_device, standardise_id
+from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
 
 
 class Processor():
@@ -300,8 +300,7 @@ logger.info(f" Split type: {SPLIT_TYPE}")
 logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
 data = pd.read_json(DATA_FP)
-# data.index = data.sentence_ids.values
-data.index = [standardise_id(el) for el in data.sentence_ids.values]
+data.index = data.sentence_ids.values
 
 '''
 pos_cases = data[data.label == 1]
@@ -429,11 +428,8 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings',
                  'unpoolbert': 'embeddings', 'crossbert': 'embeddings'})
     data_w_emb.index = [el.lower() for el in data_w_emb.index]
-    print(data.index[:10])  # not standardized
-    print(data_w_emb.index[:10])  # standardized
+    data.index = [standardise_id(el) for el in data.index]
     tmp = set(data.index) - set(data_w_emb.index)
-    print(list(tmp)[:10])
-    exit(0)
     data.loc[data_w_emb.index, 'embeddings'] = data_w_emb['embeddings']
     # transform into matrix
     wm = make_weight_matrix(data, emb_dim)
