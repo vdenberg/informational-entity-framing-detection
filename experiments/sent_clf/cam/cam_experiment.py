@@ -402,27 +402,6 @@ logger.info(f"Get embeddings")
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
-'''
-model_locs = {1: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f1_ep2', 42.449999999999996),
-          2: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f2_ep4', 37.88),
-          3: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f3_ep2', 45.97),
-          4: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f4_ep1', 37.59),
-          5: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f5_ep4', 34.410000000000004),
-          6: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f6_ep3', 26.029999999999998),
-          7: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f7_ep4', 32.629999999999995),
-          8: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f8_ep4', 26.97),
-          9: ('models/checkpoints/bert_baseline/bert_231_bs21_lr2e-05_f9_ep4', 37.169999999999995),
-          10: ('models/checkpoints/bert_baseline/bert_26354_bs16_lr2e-05_f10_ep3', 32.23)}
-all_ids, all_batches, all_labels = load_features('data/sent_clf/features_for_bert/all_features.pkl', batch_size=1)
-                        
-with open(f"data/sent_clf/features_for_bert/folds/all_features.pkl", "rb") as f:
-    all_ids, all_data, all_labels = to_tensors(pickle.load(f), device)
-    bert_all_batches = to_batches(all_data, 1)
-        # bert model
-    bert_model = BertForSequenceClassification.from_pretrained(model_locs[fold['name']],
-                                                               num_labels=2, output_hidden_states=True,
-                                                               output_attentions=True)
-'''
 
 def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
@@ -452,9 +431,6 @@ for fold in folds:
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
-
-
-
 
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
