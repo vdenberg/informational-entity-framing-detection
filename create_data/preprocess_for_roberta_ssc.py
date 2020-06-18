@@ -75,8 +75,7 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     lab_pad_len = max_sent_w_window - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
-    print(max_sent, len(flat_labels))
-    assert len(flat_labels) == max_sent
+    assert len(flat_labels) == max_sent_w_window
 
     return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
