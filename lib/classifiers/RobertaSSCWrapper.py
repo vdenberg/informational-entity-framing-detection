@@ -311,6 +311,7 @@ class Inferencer():
         model.eval()
 
         preds = []
+        labels_wo_win = []
         embeddings = []
         rep_sim = []
         for step, batch in enumerate(data):
@@ -362,9 +363,10 @@ class Inferencer():
                 #pred = np.argmax(probs, axis=1)
 
                 # pred = probs[0].argmax(axis=1).tolist()
-                pred = probs[0][1:-1].argmax(axis=1).tolist()
+                pred = probs[0].argmax(axis=1).tolist()
 
             preds.extend(pred)
+
 
         rep_sim = sum(rep_sim) / len(rep_sim)
 
@@ -372,10 +374,10 @@ class Inferencer():
         if return_embeddings:
             return embeddings
         else:
-            return preds, rep_sim
+            return preds, rep_sim, labels_wo_win
 
     def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='ssc'):
-        preds, rep_sim = self.predict(model, data, output_mode=output_mode)
+        preds, rep_sim, labels = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
