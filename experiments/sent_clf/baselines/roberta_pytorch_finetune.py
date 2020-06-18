@@ -54,8 +54,10 @@ parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
+parser.add_argument('-force_emb', '--force_embed', action='store_true', default=False) #16, 21
 args = parser.parse_args()
 
+FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_dapt', 'rob_tapt', 'rob_dapttapt']
 seeds = [args.sv] if args.sv else [34, 49, 6]
@@ -241,7 +243,7 @@ if __name__ == '__main__':
                             for EMB_TYPE in ['crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
-                                if SEED_VAL == 34 and not os.path.exists(emb_fp):
+                                if (SEED_VAL == 34 and not os.path.exists(emb_fp)) or FORCE_EMBED:
                                     logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
