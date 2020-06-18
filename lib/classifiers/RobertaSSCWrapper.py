@@ -352,6 +352,7 @@ class Inferencer():
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
+
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
             else:
@@ -359,7 +360,10 @@ class Inferencer():
                 #assert len(probs[0]) == 2
                 #pred = np.argmax(logits, axis=1)
                 #pred = np.argmax(probs, axis=1)
-                pred = probs[0].argmax(axis=1).tolist()
+
+                # pred = probs[0].argmax(axis=1).tolist()
+                pred = probs[0][1:-1].argmax(axis=1).tolist()
+
             preds.extend(pred)
 
         rep_sim = sum(rep_sim) / len(rep_sim)
