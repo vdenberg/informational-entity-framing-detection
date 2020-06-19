@@ -48,7 +48,13 @@ class ContextAwareModel(nn.Module):
 
         self.cam_type = cam_type
 
-        self.context_rep_dim = self.emb_size + self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
+        if self.cam_type == 'cam':
+            self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
+        elif self.cam_type == 'cam+':
+            self.context_rep_dim = self.emb_size + self.hidden_size * 2
+        elif self.cam_type == 'cam++':
+            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
+
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
 
@@ -79,12 +85,15 @@ class ContextAwareModel(nn.Module):
         seq_len = doc_len
 
         # init containers for outputs
-        rep_dimension = self.emb_size if self.context_naive else self.hidden_size * 2
+        rep_dimension = self.emb_size if self.cam_type == 'cnm' else self.hidden_size * 2
         sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
         #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
         #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
-        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
+        if self.cam_type == 'cam':
+            target_sent_reps = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
+        else:
+            target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
         if self.cam_type == 'cnm':
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -112,10 +121,13 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = target_hid
 
-            # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
-            context_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            # target_sent_reps = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            target_sent_reps = context_rep
+            if self.cam_type == 'cam+':
+                context_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+                target_sent_reps = context_rep
+            elif self.cam_type == 'cam++':
+                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
+                target_sent_reps = context_rep
 
         features = self.dropout(target_sent_reps)
         features = self.dense(features)
