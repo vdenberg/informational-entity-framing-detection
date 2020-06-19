@@ -240,7 +240,7 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            for EMB_TYPE in ['crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
+                            for EMB_TYPE in ['avbert', 'crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
                                 if (SEED_VAL == 34 and not os.path.exists(emb_fp)) or FORCE_EMBED:
