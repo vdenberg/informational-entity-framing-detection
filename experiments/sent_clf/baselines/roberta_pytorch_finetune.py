@@ -59,8 +59,8 @@ args = parser.parse_args()
 
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_dapt', 'rob_tapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [34, 49, 6]
+models = [args.model] if args.model else ['rob_tapt']
+seeds = [args.sv] if args.sv else [34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
