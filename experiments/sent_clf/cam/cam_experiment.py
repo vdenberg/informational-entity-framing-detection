@@ -184,7 +184,7 @@ CAM_TYPE = args.cam_type
 #if DEBUG:
 #    CN = True
 
-HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_siye * 2
+HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
 #if DEBUG:
 #    HIDDEN = 2
