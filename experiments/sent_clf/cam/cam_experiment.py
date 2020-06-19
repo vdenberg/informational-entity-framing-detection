@@ -368,7 +368,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
     data_w_emb = pd.read_csv(emb_fp, index_col=0).fillna('')
     data_w_emb = data_w_emb.rename(
         columns={'USE': 'embeddings', 'sbert_pre': 'embeddings', 'avbert': 'embeddings', 'poolbert': 'embeddings',
-                 'unpoolbert': 'embeddings', 'crossbert': 'embeddings'})
+                 'unpoolbert': 'embeddings', 'crossbert': 'embeddings', 'cross4bert': 'embeddings'})
     data_w_emb.index = [standardise_id(el) for el in data_w_emb.index]
     data.index = [standardise_id(el) for el in data.index]
     #tmp = set(data.index) - set(data_w_emb.index)
