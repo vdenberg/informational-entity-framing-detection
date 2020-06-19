@@ -126,8 +126,8 @@ parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=20)
-parser.add_argument('-pat', '--patience', type=int, default=10)
+parser.add_argument('-ep', '--epochs', type=int, default=100)  # 75
+parser.add_argument('-pat', '--patience', type=int, default=5)  # 15
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
@@ -141,7 +141,7 @@ parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
-parser.add_argument('-sv', '--seed_val', type=int, default=44)
+parser.add_argument('-sv', '--seed_val', type=int, default=34)
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
 parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
 #GRADIENT_ACCUMULATION_STEPS = 1
@@ -405,13 +405,14 @@ logger.info(f" Starting from: {START_EPOCH}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
 logger.info(f" CAM type: {CAM_TYPE}")
+logger.info(f" Emb type: {EMB_TYPE}")
 logger.info(f" Use cuda: {USE_CUDA}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
 
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE
+base_name = CAM_TYPE + "_" + EMB_TYPE
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
