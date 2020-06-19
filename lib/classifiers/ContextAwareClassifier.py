@@ -118,7 +118,10 @@ class ContextAwareModel(nn.Module):
                 target_hid = sentence_representations[item, position].view(1, -1)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
-                target_sent_reps[item] = target_roberta
+                if self.cam_type == 'cam':
+                    target_sent_reps[item] = target_hid
+                if self.cam_type == 'cam+':
+                    target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = target_hid
 
             if self.cam_type == 'cam+':
