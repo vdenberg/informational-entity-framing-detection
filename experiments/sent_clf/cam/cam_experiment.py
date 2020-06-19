@@ -177,7 +177,6 @@ PATIENCE = args.patience
 
 MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
 EMB_TYPE = args.embedding_type
-FT_EMB = args.finetune_embeddings
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
 
 CAM_TYPE = args.cam_type
