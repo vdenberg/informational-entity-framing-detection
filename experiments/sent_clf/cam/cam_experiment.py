@@ -116,17 +116,18 @@ parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of 
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
-parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use', default='crossbert')
-parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
-                    help='Whether to finetune pretrained BERT embs')
+# parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
+# help='Whether to finetune pretrained BERT embs')
+parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert', default='crossbert')
 
 # TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
+parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++', default='cam')
+
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=20)
 parser.add_argument('-pat', '--patience', type=int, default=10)
-parser.add_argument('-cn', '--context_naive', action='store_true', help='Turn off bidirectional lstm', default=False)
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
@@ -179,7 +180,7 @@ EMB_TYPE = args.embedding_type
 FT_EMB = args.finetune_embeddings
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
 
-CN = args.context_naive
+CAM_TYPE = args.cam_type
 #if DEBUG:
 #    CN = True
 
@@ -403,14 +404,14 @@ logger.info(f" Num epochs: {N_EPOCHS}")
 logger.info(f" Starting from: {START_EPOCH}")
 logger.info(f" Patience: {PATIENCE}")
 logger.info(f" Mode: {'train' if not EVAL else 'eval'}")
-logger.info(f" Context-naive: {CN}")
+logger.info(f" CAM type: {CAM_TYPE}")
 logger.info(f" Use cuda: {USE_CUDA}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
 
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = 'cnm' if CN else "cam"
+base_name = CAM_TYPE
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
@@ -462,14 +463,12 @@ for HIDDEN in hiddens:
                         else:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                            model_type = 'cnm' if CN else 'cam'
-
-                            val_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
-                            test_results = {'model': model_type, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
+                            val_results = {'model': CAM_TYPE, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
+                            test_results = {'model': CAM_TYPE, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
                             cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
-                                                         b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, context_naive=CN)
+                                                         b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
                             cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)

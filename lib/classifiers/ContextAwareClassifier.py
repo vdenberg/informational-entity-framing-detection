@@ -26,7 +26,7 @@ class ContextAwareModel(nn.Module):
     :param hidden_size: size of hidden layer
     :param weights_matrix: matrix of embeddings of size vocab_size * embedding dimension
     """
-    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, context_naive, device,
+    def __init__(self, input_size, hidden_size, bilstm_layers, weights_matrix, cam_type, device,
                  pos_dim=50, src_dim=100, pos_quartiles=4, nr_srcs=3):
         super(ContextAwareModel, self).__init__()
 
@@ -44,14 +44,15 @@ class ContextAwareModel(nn.Module):
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.dropout = Dropout(0.6)
-        self.context_naive = context_naive
-
         self.num_labels = 2
+
+        self.cam_type = cam_type
+
         self.context_rep_dim = self.emb_size + self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
 
-        if self.context_naive:
+        if self.cam_type == 'cnm':
             self.classifier = Linear(self.emb_size, self.num_labels)
         else:
             #self.classifier = Linear(self.hidden_size * 2, 2)
@@ -85,7 +86,7 @@ class ContextAwareModel(nn.Module):
         #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
         target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
-        if self.context_naive:
+        if self.cam_type == 'cnm':
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
@@ -133,7 +134,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
                  b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
-                 step=1, gamma=0.75, n_eps=10, context_naive=False):
+                 step=1, gamma=0.75, n_eps=10, cam_type='cam'):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()
@@ -150,14 +151,12 @@ class ContextAwareClassifier():
         # print(class_weight)
         # self.criterion = nn.BCEWithLogitsLoss(pos_weight=torch.tensor([.85], reduction='sum', dtype=torch.float, device=self.device))
 
-        self.context_naive = context_naive
-
         if start_epoch > 0:
             self.model = self.load_model()
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
-                                           device=self.device, context_naive=context_naive)
+                                           device=self.device, cam_type=cam_type)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
