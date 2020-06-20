@@ -37,7 +37,7 @@ class ContextAwareModel(nn.Module):
 
         self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
         self.embedding = Embedding.from_pretrained(self.weights_matrix)
-        # self.embedding_pos = Embedding(pos_quartiles, pos_dim) # 4=nr of quart
+        self.embedding_pos = Embedding(pos_quartiles, pos_dim) # 4=nr of quart
         self.embedding_src = Embedding(nr_srcs, src_dim)
 
         self.emb_size = weights_matrix.shape[1]
