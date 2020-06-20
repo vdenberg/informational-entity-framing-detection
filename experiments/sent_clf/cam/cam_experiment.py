@@ -118,7 +118,7 @@ parser.add_argument('-pp', '--preprocess', action='store_true', default=False, h
 # EMBEDDING PARAMS
 # parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
 # help='Whether to finetune pretrained BERT embs')
-parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert', default='crossbert')
+parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert', default='cross4bert')
 
 # TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
