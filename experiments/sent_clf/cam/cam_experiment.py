@@ -122,7 +122,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
 
 # TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
-parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++', default='cam')
+parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
