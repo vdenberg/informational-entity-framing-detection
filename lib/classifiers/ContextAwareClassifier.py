@@ -54,6 +54,10 @@ class ContextAwareModel(nn.Module):
             self.context_rep_dim = self.emb_size + self.hidden_size * 2
         elif self.cam_type == 'cam++':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
+        elif self.cam_type == 'cam++1':
+            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim
+        elif self.cam_type == 'cam++2':
+            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim
 
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
@@ -101,7 +105,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
 
         else:
-            #embedded_pos = self.embedding_pos(quartiles)
+            embedded_pos = self.embedding_pos(quartiles)
             embedded_src = self.embedding_src(srcs)
 
             hidden = self.init_hidden(batch_size)
@@ -131,6 +135,14 @@ class ContextAwareModel(nn.Module):
                 # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
                 target_sent_reps = context_rep
+            elif self.cam_type == 'cam++1':
+                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos), dim=-1)
+                target_sent_reps = context_rep
+            elif self.cam_type == 'cam++2':
+                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src, embedded_pos), dim=-1)
+                target_sent_reps = context_rep
 
         features = self.dropout(target_sent_reps)
         features = self.dense(features)
@@ -158,7 +170,7 @@ class ContextAwareClassifier():
         self.hidden_size = hid_size
         self.batch_size = b_size
         if cam_type == 'cam':
-            self.criterion = CrossEntropyLoss(weight=torch.tensor([.15, .85], device=self.device), reduction='sum')  # could be made to depend on classweight which should be set on input
+            self.criterion = CrossEntropyLoss(weight=torch.tensor([.20, .80], device=self.device), reduction='sum')  # could be made to depend on classweight which should be set on input
         else:
             self.criterion = CrossEntropyLoss(weight=torch.tensor([.25, .75], device=self.device), reduction='sum')  # could be made to depend on classweight which should be set on input
 

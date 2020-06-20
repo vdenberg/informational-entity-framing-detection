@@ -126,7 +126,7 @@ parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=100)  # 75
+parser.add_argument('-ep', '--epochs', type=int, default=50)  # 75
 parser.add_argument('-pat', '--patience', type=int, default=5)  # 15
 
 # OPTIMIZING PARAMS
@@ -463,8 +463,8 @@ for HIDDEN in hiddens:
                         else:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                            val_results = {'model': CAM_TYPE, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
-                            test_results = {'model': CAM_TYPE, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
+                            val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
+                            test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
                             cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
