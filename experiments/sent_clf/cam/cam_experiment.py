@@ -126,7 +126,7 @@ parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
-parser.add_argument('-ep', '--epochs', type=int, default=50)  # 75
+parser.add_argument('-ep', '--epochs', type=int, default=150)  # 75
 parser.add_argument('-pat', '--patience', type=int, default=5)  # 15
 
 # OPTIMIZING PARAMS
@@ -411,12 +411,12 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE + "_" + EMB_TYPE
+base_name = CAM_TYPE  # "_" + EMB_TYPE
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
 learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL]
+seeds = [SEED_VAL, SEED_VAL*2, SEED_VAL*3]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
