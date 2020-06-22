@@ -438,7 +438,7 @@ for HIDDEN in hiddens:
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
                 logger.info(f' Setting table in: {setting_table_fp}.')
-                FORCE = True
+                FORCE = False
                 if os.path.exists(setting_table_fp) and not FORCE:
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
@@ -456,7 +456,7 @@ for HIDDEN in hiddens:
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
-                        FORCE = True
+                        FORCE = False
                         if os.path.exists(fold_table_fp) and not FORCE:
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)

@@ -84,11 +84,11 @@ class Classifier:
             self.best_val_mets = val_mets
             self.best_val_mets['epoch'] = ep
             self.best_model_loc = ep_name
+            self.wrapper.save_model(self.model_name)
             best_log = '(HIGH SCORE)'
 
         self.logger.info(f" Ep {ep} ({self.model_name.replace('_', '')}): "
                          f"{tr_perf} | {val_perf} {best_log}")
-        self.wrapper.save_model(ep_name)
         return tr_mets, tr_perf, val_mets, val_perf
 
     def train_all_epochs(self, fold):
@@ -134,7 +134,7 @@ class Classifier:
 
         # test_model
         if self.best_model_loc:
-            self.wrapper.load_model(self.best_model_loc)
+            self.wrapper.load_model(self.model_name)
             self.logger.info(f'Loaded best model from {self.best_model_loc}')
 
             name = self.model_name + f"_TEST_{self.n_epochs}"
