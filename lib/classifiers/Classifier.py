@@ -129,8 +129,8 @@ class Classifier:
         self.train_time = train_elapsed
 
         # plot learning curve
-        loss_plt = plot_scores(losses)
-        loss_plt.savefig(self.fig_dir + f'/{self.model_name}_trainval_loss.png', bbox_inches='tight')
+        #loss_plt = plot_scores(losses)
+        #loss_plt.savefig(self.fig_dir + f'/{self.model_name}_trainval_loss.png', bbox_inches='tight')
 
         # test_model
         if self.best_model_loc:
