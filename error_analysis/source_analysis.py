@@ -322,7 +322,7 @@ for fold in folds:
     # PRODUCE PREDS
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
     test_df = fold['dev']
-    test_df['dev'] = test_preds
+    test_df['pred'] = test_preds
 
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
