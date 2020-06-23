@@ -221,7 +221,7 @@ for fold in folds:
         table_base.update({'source': n})
         table_base.update(source_mets)
 
-        inter_df.append(source_mets, ignore_index=True)
+        inter_df.append(table_base, ignore_index=True)
     print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
