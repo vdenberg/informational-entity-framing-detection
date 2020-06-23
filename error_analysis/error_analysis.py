@@ -220,8 +220,7 @@ for fold in folds:
                       'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
         result.update(source_mets)
 
-        print(result)
-        inter_df.append(result, ignore_index=True)
+        inter_df = inter_df.append(result, ignore_index=True)
 
     print(inter_df)
     source_df.append(inter_df, ignore_index=True)
@@ -230,3 +229,4 @@ for fold in folds:
     # lexical cues
 
 print(source_df)
+print(source_df.groupby('source').mean())
