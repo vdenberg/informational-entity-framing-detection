@@ -270,7 +270,7 @@ folds = spl.apply_split(features=['story', 'source', 'main_entities', 'inf_entit
 
 NR_FOLDS = len(folds)
 
-folds = folds[4:8]
+folds = folds[4:7]
 
 for fold in folds:
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
