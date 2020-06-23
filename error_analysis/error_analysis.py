@@ -199,8 +199,7 @@ for fold in folds:
                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
                                  layers=BILSTM_LAYERS, b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
-    cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], patience=PATIENCE, n_eps=0,
-                        printing=PRINT_STEP_EVERY, load_from_ep=None)
+    cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], n_eps=0, load_from_ep=None)
 
     # PRODUCE PREDS
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
