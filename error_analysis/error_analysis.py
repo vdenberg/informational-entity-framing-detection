@@ -250,9 +250,9 @@ for fold in folds:
 
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
     print(fold['test'].index)
-    # basil_w_BERT = pd.DataFrame(index=all_ids)
-    # basil_w_BERT[EMB_TYPE] = embs
-    # basil_w_BERT.to_csv(emb_fp)
+    test_w_pred = pd.DataFrame(index=fold['test'].index)
+    test_w_pred['pred'] = test_preds
+    # test_w_pred.to_csv(emb_fp)
     # logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
 
     # source
