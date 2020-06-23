@@ -325,6 +325,7 @@ for fold in folds:
     dev_df['dev'] = preds
 
     print(dev_df.main_entities.value_counts())
+    print(dev_df.inf_entities.value_counts())
     '''
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
