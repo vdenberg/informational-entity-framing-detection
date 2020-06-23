@@ -155,7 +155,7 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 
 NR_FOLDS = len(folds)
 
-folds = [folds[4], folds[5]]
+folds = folds[4:7]
 
 for fold in folds:
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
@@ -226,5 +226,4 @@ for fold in folds:
     # frequent entity
     # lexical cues
 
-print(source_df)
 print(source_df[['source', 'prec', 'rec', 'f1']].groupby('source').mean())
