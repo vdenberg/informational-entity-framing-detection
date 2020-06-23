@@ -249,8 +249,7 @@ for fold in folds:
                         printing=PRINT_STEP_EVERY, load_from_ep=None)
 
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
-    print(test_preds)
-    print(fold['test'].columns)
+    print(fold['test'].index)
     # basil_w_BERT = pd.DataFrame(index=all_ids)
     # basil_w_BERT[EMB_TYPE] = embs
     # basil_w_BERT.to_csv(emb_fp)
