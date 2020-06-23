@@ -211,9 +211,10 @@ for fold in folds:
         labels = gr.label
         preds = gr.pred
         source_mets, source_perf = my_eval(labels, preds, name=n, set_type='test')
+        source_mets.update({'source': n})
         logger.info(n, source_perf)
 
-        inter_df = pd.DataFrame([n] + source_mets, columns=['source', 'prec', 'rec', 'f1'])
+        inter_df = pd.DataFrame(source_mets, columns=['source', 'prec', 'rec', 'f1'])
         source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
