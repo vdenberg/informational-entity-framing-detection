@@ -321,13 +321,13 @@ for fold in folds:
 
     # PRODUCE PREDS
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
-    test_df = fold['test']
-    test_df['pred'] = test_preds
+    test_df = fold['dev']
+    test_df['dev'] = test_preds
 
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
     for n, gr in test_df.groupby('source'):
-        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type=n)
+        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type='dev')
 
         result.update({'source': n})
         result.update(source_mets)
@@ -335,9 +335,6 @@ for fold in folds:
         inter_df = inter_df.append(result, ignore_index=True)
 
     source_df = source_df.append(inter_df, ignore_index=True)
-
-    # frequent entity
-    # lexical cues
 
 for n, gr in source_df.groupby("source"):
     test = gr[['prec', 'rec', 'f1']] * 100
