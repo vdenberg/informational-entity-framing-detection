@@ -210,7 +210,6 @@ if PREPROCESS:
     logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
     sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
-    print(sentences.head())
     sentences.index = [el.lower() for el in sentences.index]
     sentences.source = [el.lower() for el in sentences.source]
 
@@ -221,6 +220,9 @@ if PREPROCESS:
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
+    raw_data['main_entities'] = sentences['main_entities']
+    raw_data['inf_entities'] = sentences['inf_entities']
+
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
