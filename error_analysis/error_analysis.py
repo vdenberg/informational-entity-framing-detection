@@ -224,7 +224,7 @@ for fold in folds:
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
-'''
+
 for fold in folds:
     # read embeddings file
     if EMB_TYPE not in ['use', 'sbert']:
@@ -235,7 +235,7 @@ for fold in folds:
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
-'''
+
 
 for fold in folds:
     model_name = f"cam+_68_h1200_bs32_lr0.001_f{fold['name']}"
