@@ -185,7 +185,7 @@ for fold in folds:
 
 folds = [folds[4], folds[5]]
 
-source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
+source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'], ignore_index=True)
 for fold in folds:
 
     # LOAD MODEL
