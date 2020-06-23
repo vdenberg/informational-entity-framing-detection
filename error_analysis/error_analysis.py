@@ -83,11 +83,6 @@ parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
 # set to variables for readability
-MODE = args.mode
-TRAIN = True if args.mode != 'eval' else False
-EVAL = True if args.mode == 'eval' else False
-DEBUG = True if args.mode == 'debug' else False
-
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
