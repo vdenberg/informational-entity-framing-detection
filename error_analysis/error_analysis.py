@@ -83,9 +83,6 @@ parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
 # set to variables for readability
-PRINT_STEP_EVERY = args.step_info_every  # steps
-SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
-
 MODE = args.mode
 TRAIN = True if args.mode != 'eval' else False
 EVAL = True if args.mode == 'eval' else False
