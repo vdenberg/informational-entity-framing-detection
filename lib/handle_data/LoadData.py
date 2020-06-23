@@ -49,7 +49,7 @@ class LoadBasil:
             source = file.split('_')[1][:3]
             with open(self.raw_dir + file) as f:
                 file_content = json.load(f)
-                #pprint(file_content)
+                main_entities = file_content['main-entities']
                 sentences = file_content['body']
                 for sent in sentences:
                     sentence = sent['sentence']
@@ -60,17 +60,21 @@ class LoadBasil:
                     inf_bias_present = 1 if informational_ann else 0
                     inf_start_ends = []
                     lex_start_ends = []
+                    inf_targets = []
+                    lex_targets = []
                     if inf_bias_present:
                         for ann in informational_ann:
                             inf_start_ends.append((ann['start'],ann['end']))
+                            inf_targets.append(ann['target'])
                     if lex_bias_present:
                         for ann in lexical_ann:
                             lex_start_ends.append((ann['start'], ann['end']))
-                    pre_df.append([story, source, sent_idx, lex_bias_present, inf_bias_present, sentence, lex_start_ends, inf_start_ends])
-        df = pd.DataFrame(pre_df, columns=['story', 'source', 'sent_idx', 'lex_bias', 'bias', 'sentence', 'lex_start_ends', 'inf_start_ends'])
+                            lex_targets.append(ann['target'])
+                    pre_df.append([story, source, main_entities, inf_targets, lex_targets, sent_idx, lex_bias_present, inf_bias_present, sentence, lex_start_ends, inf_start_ends])
+
+        columns = ['story', 'source', 'main_entities', 'inf_entities', 'lex_entities', 'sent_idx', 'lex_bias', 'bias', 'sentence', 'lex_start_ends', 'inf_start_ends']
+        df = pd.DataFrame(pre_df, columns=columns)
         df['uniq_idx'] = df['story'] + df['source'] + df['sent_idx']
         df = df.set_index(df['uniq_idx'])
         df.to_csv('data/basil.csv')
         return df
-
-

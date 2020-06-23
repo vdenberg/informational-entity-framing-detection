@@ -4,12 +4,71 @@ import numpy as np
 import pandas as pd
 import torch
 import random
+import pickle
 
 from lib.classifiers.ContextAwareClassifier import ContextAwareClassifier
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
 from lib.evaluate.Eval import my_eval
+
+
+class Processor():
+    def __init__(self, sentence_ids, max_doc_length):
+        self.sent_id_map = {str_i.lower(): i+1 for i, str_i in enumerate(sentence_ids)}
+        #self.id_map_reverse = {i: my_id for i, my_id in enumerate(data_ids)}
+        self.EOD_index = len(self.sent_id_map)
+        self.max_doc_length = max_doc_length + 1 # add 1 for EOD_index
+        self.max_sent_length = None # set after processing
+        self.PAD_index = 0
+
+    def to_numeric_documents(self, documents):
+        numeric_context_docs = []
+        for doc in documents:
+            doc = doc.split(' ')
+            # to indexes
+            doc = [self.sent_id_map[sent.lower()] for sent in doc]
+            # with EOS token
+            doc += [self.EOD_index]
+            # padded
+            padding = [self.PAD_index] * (self.max_doc_length - len(doc))
+            doc += padding
+            numeric_context_docs.append(doc)
+        return numeric_context_docs
+
+    def to_numeric_sentences(self, sentence_ids):
+        with open("data/features_for_bert/folds/all_features.pkl", "rb") as f:
+            features = pickle.load(f)
+        feat_dict = {f.my_id.lower(): f for f in features}
+        token_ids = [feat_dict[i].input_ids for i in sentence_ids]
+        token_mask = [feat_dict[i].input_mask for i in sentence_ids]
+        self.max_sent_length = len(token_ids[0])
+        '''
+        tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
+
+        all_tokens = [tokenizer.tokenize(sent) for sent in sentences]
+        all_tokens = [["[CLS]"] + tokens + ["[SEP]"] for tokens in all_tokens]
+        max_sent_length = max([len(t) for t in all_tokens])
+        self.max_sent_length = max_sent_length
+
+        token_ids = []
+        token_mask = []
+        tok_seg_ids = []
+
+        for tokens in all_tokens:
+            segment_ids = [0] * len(tokens)
+            input_ids = tokenizer.convert_tokens_to_ids(tokens)
+            input_mask = [1] * len(input_ids)
+            padding = [0] * (max_sent_length - len(input_ids))
+            input_ids += padding
+            input_mask += padding
+            segment_ids += padding
+
+            token_ids.append(input_ids)
+            token_mask.append(input_mask)
+            tok_seg_ids.append(segment_ids)
+        '''
+        return token_ids, token_mask
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
@@ -68,6 +127,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
                     default='cross4bert')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
+parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # MODEL PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
@@ -137,6 +197,57 @@ logger.info("============ STARTING =============")
 logger.info(args)
 logger.info(f" Log file: {LOG_NAME}")
 logger.info(f" Good luck!")
+
+
+# =====================================================================================
+#                    PREPROCESS DATA
+# =====================================================================================
+
+if PREPROCESS:
+    logger.info("============ PREPROCESS DATA =============")
+    logger.info(f" Writing to: {DATA_FP}")
+    logger.info(f" Max doc len: {MAX_DOC_LEN}")
+
+    sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
+    sentences.index = [el.lower() for el in sentences.index]
+    sentences.source = [el.lower() for el in sentences.source]
+
+    raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
+    raw_data = pd.read_csv(raw_data_fp, sep='\t',
+                           names=['sentence_ids', 'context_document', 'label', 'position'],
+                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+    raw_data = raw_data.set_index('sentence_ids', drop=False)
+
+    raw_data['source'] = sentences['source']
+    raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
+    raw_data['story'] = sentences['story']
+    raw_data['sentence'] = sentences['sentence']
+    raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
+
+    quartiles = []
+    for position, doc_len in zip(raw_data.position, raw_data.doc_len):
+        relative_pos = position / doc_len
+        if relative_pos < .25:
+            q = 0
+        elif relative_pos < .5:
+            q = 1
+        elif relative_pos < .75:
+            q = 2
+        else:
+            q = 3
+        quartiles.append(q)
+
+    raw_data['quartile'] = quartiles
+
+    processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
+    raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
+    raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
+    token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
+    raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
+
+    raw_data.to_json(DATA_FP)
+    logger.info(f" Max sent len: {processor.max_sent_length}")
+
 
 # =====================================================================================
 #                    LOAD DATA
