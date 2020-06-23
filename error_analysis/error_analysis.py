@@ -236,13 +236,12 @@ for fold in folds:
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
 
-
 for fold in folds:
     model_name = f"cam+_68_h1200_bs32_lr0.001_f{fold['name']}"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
 
     cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
-                                 weights_mat=None, emb_dim=EMB_DIM, hid_size=HIDDEN,
+                                 weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
                                  layers=BILSTM_LAYERS,
                                  b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
