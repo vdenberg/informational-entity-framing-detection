@@ -262,7 +262,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
+folds = spl.apply_split(features=['story', 'source', 'main_entities', 'inf_entities', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 
 NR_FOLDS = len(folds)
 
@@ -335,4 +335,11 @@ for fold in folds:
     # frequent entity
     # lexical cues
 
-print(source_df[['source', 'prec', 'rec', 'f1']].groupby('source').mean())
+for n, gr in source_df.groupby("source"):
+    test = gr[['prec', 'rec', 'f1']]
+    test = test.describe()
+    test_m = test.loc['mean'].round(2).astype(str)
+    test_std = test.loc['std'].round(2).astype(str)
+    result = test_m + ' \pm ' + test_std
+    print(f"\nResults of {n} on test:")
+    print(result)
