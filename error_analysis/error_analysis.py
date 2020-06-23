@@ -217,10 +217,12 @@ for fold in folds:
         logger.info(source_perf)
 
         result = {'source': n, 'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
-                      'h': HIDDEN, 'set_type': 'test'}
+                      'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
         result.update(source_mets)
 
+        print(result)
         inter_df.append(result, ignore_index=True)
+
     print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
