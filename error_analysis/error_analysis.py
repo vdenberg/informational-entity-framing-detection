@@ -249,7 +249,7 @@ for fold in folds:
                         printing=PRINT_STEP_EVERY, load_from_ep=None)
 
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
-
+    print(test_preds)
     # source
 
 
