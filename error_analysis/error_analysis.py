@@ -185,7 +185,7 @@ for fold in folds:
 
 folds = [folds[4], folds[5]]
 
-source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'], ignore_index=True)
+source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
 for fold in folds:
 
     # LOAD MODEL
@@ -215,7 +215,7 @@ for fold in folds:
 
         inter_df = pd.DataFrame(source_mets)
         inter_df['source'] = n
-        source_df.append(inter_df)
+        source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
     # lexical cues
