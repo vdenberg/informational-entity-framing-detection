@@ -210,6 +210,7 @@ if PREPROCESS:
     logger.info(f" Max doc len: {MAX_DOC_LEN}")
 
     sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
+    print(sentences.head())
     sentences.index = [el.lower() for el in sentences.index]
     sentences.source = [el.lower() for el in sentences.source]
 
