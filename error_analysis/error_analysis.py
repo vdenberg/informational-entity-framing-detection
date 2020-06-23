@@ -196,8 +196,7 @@ for fold in folds:
     result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
               'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
 
-    logger.info("============ LOADING MODEL =============")
-    logger.info(f" Model_fp: {model_fp}")
+    logger.info(f" Loading {model_fp}")
 
     cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
@@ -214,7 +213,6 @@ for fold in folds:
     inter_df = pd.DataFrame(columns=table_columns.split(','))
     for n, gr in test_df.groupby('source'):
         source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type=n)
-        logger.info(source_perf)
 
         result.update({'source': n})
         result.update(source_mets)
