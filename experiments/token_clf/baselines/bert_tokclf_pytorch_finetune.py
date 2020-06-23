@@ -94,7 +94,7 @@ if __name__ == '__main__':
                   }
     '''
 
-    for SEED in [45362]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
+    for SEED in [231, 23, 100]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
