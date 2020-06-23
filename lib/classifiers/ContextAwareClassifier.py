@@ -35,12 +35,12 @@ class ContextAwareModel(nn.Module):
         self.bilstm_layers = bilstm_layers
         self.device = device
 
-        self.weights_matrix = torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
-        self.embedding = Embedding.from_pretrained(self.weights_matrix)
+        self.weights_matrix = None #torch.tensor(weights_matrix, dtype=torch.float, device=self.device)
+        self.embedding = None #Embedding.from_pretrained(self.weights_matrix)
         self.embedding_pos = Embedding(pos_quartiles, pos_dim) # 4=nr of quart
         self.embedding_src = Embedding(nr_srcs, src_dim)
 
-        self.emb_size = weights_matrix.shape[1]
+        self.emb_size = None #weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.dropout = Dropout(0.6)
@@ -217,7 +217,7 @@ class ContextAwareClassifier():
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
-        cp = torch.load(cpfp)
+        cp = torch.load(cpfp, map_location=torch.device('cpu'))
         model = cp['model']
         model.load_state_dict(cp['state_dict'])
         self.model = model

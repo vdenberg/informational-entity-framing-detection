@@ -3,7 +3,7 @@ from lib.utils import format_runtime, plot_scores
 from lib.evaluate.Eval import my_eval
 
 from sklearn.model_selection import learning_curve
-
+import torch
 
 class Classifier:
     """
@@ -149,8 +149,10 @@ class Classifier:
 
         return self.best_val_mets, test_mets
 
-    def produce_preds(self, fold):
-        self.wrapper.load_model(self.model_name)
+    def produce_preds(self, fold, model_name):
+        if not model_name:
+            model_name = self.model_name
+        self.wrapper.load_model(model_name)
         preds, _, _ = self.wrapper.predict(fold['test_batches'])
         return preds
 
