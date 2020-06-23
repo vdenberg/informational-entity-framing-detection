@@ -209,7 +209,7 @@ for fold in folds:
     test_df['pred'] = test_preds
 
     # ANALYZE BY SOURCE
-    inter_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
+    inter_df = pd.DataFrame(columns=table_columns.split(','))
     for n, gr in test_df.groupby('source'):
         labels = gr.label
         preds = gr.pred
@@ -218,7 +218,6 @@ for fold in folds:
         logger.info(source_perf)
 
         inter_df.append(source_mets, ignore_index=True)
-        print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
