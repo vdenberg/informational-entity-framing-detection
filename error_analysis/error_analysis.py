@@ -185,7 +185,9 @@ for fold in folds:
 #                    START ANALYSIS
 # =====================================================================================
 
-source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
+table_columns = 'source,model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
+source_df = pd.DataFrame(columns=table_columns.split(','))
+
 for fold in folds:
 
     # LOAD MODEL
@@ -212,13 +214,13 @@ for fold in folds:
         labels = gr.label
         preds = gr.pred
         source_mets, source_perf = my_eval(labels, preds, name=n, set_type=n)
+        source_mets.update({'source': n})
         logger.info(source_perf)
 
-        inter_df.append([n, source_mets['prec'], source_mets['rec'], source_mets['f1']], ignore_index=True)
+        inter_df.append(source_mets, ignore_index=True)
     source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
     # lexical cues
 
 print(source_df)
-print(source_df.mean)
