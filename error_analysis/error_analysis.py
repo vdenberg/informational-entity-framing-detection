@@ -193,6 +193,8 @@ for fold in folds:
     # LOAD MODEL
     model_name = f"cam+_68_h1200_bs32_lr0.001_f{fold['name']}"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
+    result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
+              'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
 
     logger.info("============ LOADING MODEL =============")
     logger.info(f" Model_fp: {model_fp}")
@@ -211,22 +213,18 @@ for fold in folds:
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
     for n, gr in test_df.groupby('source'):
-        labels = gr.label
-        preds = gr.pred
-        source_mets, source_perf = my_eval(labels, preds, name=n, set_type=n)
+        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type=n)
         logger.info(source_perf)
 
-        result = {'source': n, 'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
-                      'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
+        result.update({'source': n})
         result.update(source_mets)
 
         inter_df = inter_df.append(result, ignore_index=True)
 
-    print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
     # lexical cues
 
 print(source_df)
-print(source_df.groupby('source').mean())
+print(source_df[['source', 'prec', 'rec', 'f1']].groupby('source').mean())
