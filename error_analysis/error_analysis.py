@@ -155,6 +155,8 @@ folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num'
 
 NR_FOLDS = len(folds)
 
+folds = [folds[4], folds[5]]
+
 for fold in folds:
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
     dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
@@ -182,8 +184,6 @@ for fold in folds:
 # =====================================================================================
 #                    START ANALYSIS
 # =====================================================================================
-
-folds = [folds[4], folds[5]]
 
 source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
 for fold in folds:
