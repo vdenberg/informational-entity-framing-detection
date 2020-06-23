@@ -1,0 +1,8 @@
+INFO:root:============ STARTING =============
+INFO:root:Namespace(batch_size=32, bert_model='bert-base-cased', bilstm_layers=2, cam_type='cam', context_type='article', embedding_type='cross4bert', epochs=150, gamma=0.95, hidden_size=600, learning_rate=0.001, mode='train', no_padding=False, patience=5, preprocess=False, sampler='sequential', save_epoch_cp_every=50, seed_val=34, split_type='berg', start_epoch=0, step_info_every=250, subset_of_data=1.0, warmup_proportion=0.1)
+INFO:root: Log file: reports/cam/cross4bert/berg/article/subset1.0/Jun-23-14h-26.log
+INFO:root: Good luck!
+INFO:root:============ LOADING DATA =============
+INFO:root: Context: article
+INFO:root: Split type: berg
+INFO:root: Max doc len: 76
