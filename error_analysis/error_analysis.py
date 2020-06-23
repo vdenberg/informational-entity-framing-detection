@@ -218,6 +218,7 @@ for fold in folds:
         logger.info(source_perf)
 
         inter_df.append(source_mets, ignore_index=True)
+        print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
