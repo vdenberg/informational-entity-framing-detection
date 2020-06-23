@@ -171,12 +171,6 @@ if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(BEST_CHECKPOINT_DIR):
     os.makedirs(BEST_CHECKPOINT_DIR)
-if not os.path.exists(REPORTS_DIR):
-    os.makedirs(REPORTS_DIR)
-if not os.path.exists(FIG_DIR):
-    os.makedirs(FIG_DIR)
-if not os.path.exists(TABLE_DIR):
-    os.makedirs(TABLE_DIR)
 
 # set device
 device, USE_CUDA = get_torch_device()
