@@ -90,7 +90,6 @@ BATCH_SIZE = args.batch_size
 WARMUP_PROPORTION = args.warmup_proportion
 LR = args.learning_rate
 GAMMA = args.gamma
-PATIENCE = args.patience
 MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
 EMB_TYPE = args.embedding_type
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
