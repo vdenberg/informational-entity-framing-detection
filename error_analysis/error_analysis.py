@@ -12,6 +12,7 @@ import pickle, time
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
+from lib.evaluate.Eval import my_eval
 
 
 def make_weight_matrix(embed_df, EMB_DIM):
@@ -249,13 +250,15 @@ for fold in folds:
                         printing=PRINT_STEP_EVERY, load_from_ep=None)
 
     test_preds = cam_cl.produce_preds(fold, model_name=model_name)
-    print(fold['test'].index)
-    test_w_pred = pd.DataFrame(index=fold['test'].index)
-    test_w_pred['pred'] = test_preds
-    # test_w_pred.to_csv(emb_fp)
-    # logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
+
+    test_df = fold['test']
+    test_df['pred'] = test_preds
 
     # source
+    for n, gr in test_df.groupby('source'):
+        labels = gr.label
+        preds = gr.pred
+        source_mets, source_perf = my_eval(labels, preds, name=n, set_type='test')
 
 
     # frequent entity
