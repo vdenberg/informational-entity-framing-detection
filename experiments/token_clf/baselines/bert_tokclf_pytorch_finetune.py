@@ -7,7 +7,7 @@ from datetime import datetime
 
 import numpy as np
 import torch
-from transformers.optimization import AdamW
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 
 from lib.classifiers.BertForEmbed import Inferencer, save_model
 from lib.classifiers.BertWrapper import load_features, BertForTokenClassification
@@ -114,9 +114,10 @@ if __name__ == '__main__':
                 for fold_name in ['fan', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10']:
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
+                    best_model_loc = os.path.join(CHECKPOINT_DIR, name)
 
                     best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
-                                    'f1': 0, 'model_loc': ''}
+                                    'f1': 0, 'model_loc': best_model_loc}
                     test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/tok_clf/features_for_bert/{fold_name}_train_features.pkl"
@@ -130,24 +131,26 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                       output_hidden_states=False, output_attentions=False)
-                    model.to(device)
-                    optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
-                    model.train()
 
-                    for ep in range(1, N_EPS + 1):
-                        epoch_name = name + f"_ep{ep}"
+                    if not os.path.exists(best_model_loc):
+                        model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
+                                                                           output_hidden_states=False, output_attentions=False)
+                        model.to(device)
+                        optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
+                        model.train()
 
-                        if os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
-                            # this epoch for this setting has been trained before already
-                            trained_model = BertForTokenClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                            num_labels=NUM_LABELS,
-                                                                                            output_hidden_states=False,
-                                                                                            output_attentions=False)
-                            dev_mets, dev_perf = inferencer.eval(trained_model, dev_batches, dev_labels,
-                                                                 set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
-                        else:
+                        n_train_batches = len(train_batches)
+                        half_train_batches = int(n_train_batches / 2)
+                        GRADIENT_ACCUMULATION_STEPS = 2
+                        WARMUP_PROPORTION = 0.06
+                        num_tr_opt_steps = n_train_batches * N_EPS / GRADIENT_ACCUMULATION_STEPS
+                        num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
+                        scheduler = get_linear_schedule_with_warmup(optimizer,
+                                                                    num_warmup_steps=num_tr_warmup_steps,
+                                                                    num_training_steps=num_tr_opt_steps)
+
+                        for ep in range(1, N_EPS + 1):
+                            epoch_name = name + f"_ep{ep}"
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
                                 batch = tuple(t.to(device) for t in batch)
@@ -165,27 +168,28 @@ if __name__ == '__main__':
                                     logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                             av_loss = tr_loss / len(train_batches)
-                            save_model(model, CHECKPOINT_DIR, epoch_name)
+                            # save_model(model, CHECKPOINT_DIR, epoch_name)
                             dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                  set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
 
+                            # check if best
+                            high_score = ''
+                            if dev_mets['f1'] > best_val_res['f1']:
+                                best_val_res.update(dev_mets)
+                                high_score = '(HIGH SCORE)'
+                                save_model(model, CHECKPOINT_DIR, name)
 
-                        # check if best
-                        high_score = ''
-                        if dev_mets['f1'] > best_val_res['f1']:
-                            best_val_res.update(dev_mets)
-                            best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
-                            high_score = '(HIGH SCORE)'
-
-                        logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                            logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     # load best model, save embeddings, print performance on test
-                    if best_val_res['model_loc'] == '':
+                    # if best_val_res['model_loc'] == '':
                         # none of the epochs performed above f1 = 0, so just use last epoch
-                        best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
-                    best_model = BertForTokenClassification.from_pretrained(best_val_res['model_loc'], num_labels=NUM_LABELS,
+                        # best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
+
+                    best_model = BertForTokenClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
                                                                             output_hidden_states=False,
                                                                             output_attentions=False)
+                    best_model.to(device)
 
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  CUDA: {USE_CUDA}, Details: {best_val_res}")
