@@ -193,7 +193,7 @@ for fold in folds:
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
 
     logger.info("============ LOADING MODEL =============")
-    logger.info(f" Model_fp: {CONTEXT_TYPE}")
+    logger.info(f" Model_fp: {model_fp}")
 
     cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
@@ -211,9 +211,9 @@ for fold in folds:
     for n, gr in test_df.groupby('source'):
         labels = gr.label
         preds = gr.pred
-        source_mets, source_perf = my_eval(labels, preds, name=n, set_type='test')
+        source_mets, source_perf = my_eval(labels, preds, name=n, set_type=n)
         source_mets.update({'source': n})
-        logger.info(n, source_perf)
+        logger.info(source_perf)
         inter_df.append(source_mets, ignore_index=True)
     source_df.append(inter_df, ignore_index=True)
 
