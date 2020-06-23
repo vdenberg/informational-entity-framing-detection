@@ -259,6 +259,7 @@ for fold in folds:
         labels = gr.label
         preds = gr.pred
         source_mets, source_perf = my_eval(labels, preds, name=n, set_type='test')
+        print(source_perf)
 
 
     # frequent entity
