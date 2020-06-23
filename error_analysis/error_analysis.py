@@ -209,7 +209,7 @@ if DEBUG:
     folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
-folds = [folds[4]]
+folds = [folds[4], folds[5]]
 
 
 for fold in folds:
