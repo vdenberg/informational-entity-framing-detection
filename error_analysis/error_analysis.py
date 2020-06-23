@@ -340,7 +340,7 @@ for fold in folds:
     # lexical cues
 
 for n, gr in source_df.groupby("source"):
-    test = gr[['prec', 'rec', 'f1']]
+    test = gr[['prec', 'rec', 'f1']] * 100
     test = test.describe()
     test_m = test.loc['mean'].round(2).astype(str)
     test_std = test.loc['std'].round(2).astype(str)
