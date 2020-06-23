@@ -221,7 +221,7 @@ for fold in folds:
 
         inter_df = inter_df.append(result, ignore_index=True)
 
-    source_df.append(inter_df, ignore_index=True)
+    source_df = source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
     # lexical cues
