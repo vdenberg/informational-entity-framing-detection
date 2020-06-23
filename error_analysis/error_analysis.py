@@ -193,8 +193,6 @@ for fold in folds:
     # LOAD MODEL
     model_name = f"cam+_68_h1200_bs32_lr0.001_f{fold['name']}"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
-    table_base = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN,
-                    'set_type': 'test'}
 
     logger.info("============ LOADING MODEL =============")
     logger.info(f" Model_fp: {model_fp}")
@@ -218,10 +216,11 @@ for fold in folds:
         source_mets, source_perf = my_eval(labels, preds, name=n, set_type=n)
         logger.info(source_perf)
 
-        table_base.update({'source': n})
-        table_base.update(source_mets)
+        result = {'source': n, 'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
+                      'h': HIDDEN, 'set_type': 'test'}
+        result.update(source_mets)
 
-        inter_df.append(table_base, ignore_index=True)
+        inter_df.append(result, ignore_index=True)
     print(inter_df)
     source_df.append(inter_df, ignore_index=True)
 
