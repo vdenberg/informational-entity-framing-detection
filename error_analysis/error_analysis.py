@@ -213,8 +213,7 @@ for fold in folds:
         source_mets, source_perf = my_eval(labels, preds, name=n, set_type='test')
         logger.info(n, source_perf)
 
-        inter_df = pd.DataFrame(source_mets)
-        inter_df['source'] = n
+        inter_df = pd.DataFrame([n] + source_mets, columns=['source', 'prec', 'rec', 'f1'])
         source_df.append(inter_df, ignore_index=True)
 
     # frequent entity
