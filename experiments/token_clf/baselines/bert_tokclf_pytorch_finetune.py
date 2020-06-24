@@ -169,7 +169,7 @@ if __name__ == '__main__':
 
                             av_loss = tr_loss / len(train_batches)
                             # save_model(model, CHECKPOINT_DIR, epoch_name)
-                            dev_mets, dev_perf = inferencer.eval(model, dev_batches, dev_labels, av_loss=av_loss,
+                            dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                  set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
 
                             # check if best
@@ -205,7 +205,7 @@ if __name__ == '__main__':
                         logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
                     '''
 
-                    test_mets, test_perf = inferencer.eval(best_model, test_batches, test_labels, set_type='test', name='best_model_loc', output_mode=OUTPUT_MODE)
+                    test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', name='best_model_loc', output_mode=OUTPUT_MODE)
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
 
