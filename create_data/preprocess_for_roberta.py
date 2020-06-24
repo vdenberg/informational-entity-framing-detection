@@ -24,7 +24,7 @@ def preprocess(rows):
 
 # choose sentence or bio labels
 task = 'tok_clf'
-DATA_DIR = f'data/{task}/ft_input'
+DATA_DIR = f'data/sent_clf/ft_input'
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
