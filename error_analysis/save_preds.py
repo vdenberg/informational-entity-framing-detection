@@ -322,9 +322,9 @@ for fold in folds:
     dev_df = fold['dev']
     dev_df['dev'] = preds
 
+    pred_fp = f"data/{fold['name']}_dev_w_pred.csv"
+    dev_df.to_csv(pred_fp)
 
-    print(dev_df.main_entities.value_counts().head(3).main_entities)
-    print(dev_df.inf_entities.value_counts().head(3).inf_entities)
     '''
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
