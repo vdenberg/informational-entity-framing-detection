@@ -148,7 +148,7 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
     #print('Word pieces:', word_pieces)
 
     print(len(original_sentence.split(' ')), len(original_labels), len(word_pieces))
-    print(original_sentence)
+    print(str(original_sentence))
     print(word_pieces)
 
     tmp_labels, lbl_ix = [], 0
