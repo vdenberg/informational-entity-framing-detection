@@ -322,7 +322,7 @@ for fold in folds:
     dev_df = fold['dev']
     dev_df['dev'] = preds
 
-    pred_fp = f"data/{fold['name']}_dev_w_pred.csv"
+    pred_fp = f"data/dev_w_preds/{fold['name']}_dev_w_pred.csv"
     dev_df.to_csv(pred_fp)
 
     '''
