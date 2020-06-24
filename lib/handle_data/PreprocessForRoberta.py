@@ -148,12 +148,13 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
     #print('Word pieces:', word_pieces)
 
     print(len(original_sentence.split(' ')), len(original_labels), len(word_pieces))
-    print(str(original_sentence))
+    print(original_sentence)
     print(word_pieces)
 
     tmp_labels, lbl_ix = [], 0
     for tok in word_pieces:
-        if "##" in tok:
+        # if "##" in tok:
+        if lbl_ix != 0 and not tok.startswith('Ġ'):
             tmp_labels.append("X")
         else:
             tmp_labels.append(original_labels[lbl_ix])
