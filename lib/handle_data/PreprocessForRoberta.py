@@ -295,8 +295,25 @@ def convert_example_to_feature(example_row):
     #print(example.my_id)
 
     # tokens
-    encoded = tokenizer.encode_plus(example.text_a, max_length=max_seq_length, pad_to_max_length=True,
+    if output_mode == 'bio_classification':
+        sp2bio = SpanToBio()
+        spacy_tokens, spacy_labels = sp2bio.span_to_bio(example.text_a, example.label)
+        assert len(spacy_tokens) == len(spacy_labels)
+
+        tokens_a = " ".join(spacy_tokens)
+        labels = spacy_labels
+        tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
+
+        if len(tokens_a) > max_seq_length - 2:
+            tokens_a = tokens_a[:(max_seq_length - 2)]
+    else:
+        tokens_a = example.text_a
+
+    encoded = tokenizer.encode_plus(tokens_a, max_length=max_seq_length, pad_to_max_length=True,
                                     add_special_tokens=True)
+
+    print(encoded)
+    exit(0)
 
     input_ids = encoded['input_ids']
     attention_mask = encoded['attention_mask']
@@ -310,6 +327,14 @@ def convert_example_to_feature(example_row):
 
     elif output_mode == "regression":
         label_id = float(example.label)
+
+    elif output_mode == 'bio_classification':
+        labels = ['O'] + labels + ['O']
+        label_id = [label_map.get(lab) for lab in labels]
+        padding = [1] * (max_seq_length - len(label_id))
+        label_id += padding  # cls=0, pad=1
+
+        assert len(label_id) == max_seq_length
 
     else:
         raise KeyError(output_mode)
