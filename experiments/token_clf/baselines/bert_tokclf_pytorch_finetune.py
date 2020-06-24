@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
                                 model.zero_grad()
                                 outputs = model(batch[0], batch[1], labels=batch[2])
-                                (loss), logits, probs, sequence_output, pooled_output = outputs
+                                (loss), logits, probs, sequence_output, pooled_output, _ = outputs
                                 # (loss), logits, probs = outputs
 
                                 loss.backward()
