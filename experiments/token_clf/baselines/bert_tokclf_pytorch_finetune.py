@@ -1,24 +1,18 @@
 from __future__ import absolute_import, division, print_function
 
-import argparse
-import logging
-import random
+import os, sys, random, argparse, logging
 from datetime import datetime
-
 import numpy as np
-import torch
-from transformers.optimization import AdamW, get_linear_schedule_with_warmup
 
-from lib.classifiers.BertForEmbed import Inferencer, save_model
-from lib.classifiers.BertWrapper import load_features, BertForTokenClassification
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
 
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+import torch
 
-#######
-# FROM:
-# https://www.depends-on-the-definition.com/named-entity-recognition-with-bert/
-#####
+from lib.classifiers.BertForEmbed import Inferencer, save_model
+from lib.classifiers.BertWrapper import load_features, BertForTokenClassification
+
 
 class InputFeatures(object):
     """A single set of features of data."""
@@ -34,6 +28,9 @@ class InputFeatures(object):
 # HYPERPARAMETERS
 ################
 
+# find GPU if present
+device, USE_CUDA = get_torch_device()
+
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
@@ -41,16 +38,6 @@ parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3
 parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
 args = parser.parse_args()
-
-# find GPU if present
-device, USE_CUDA = get_torch_device()
-BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_tokclf_baseline'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-REPORTS_DIR = f'reports/{TASK_NAME}'
-TABLE_DIR = f'{REPORTS_DIR}/tables'
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
-OUTPUT_MODE = 'bio_classification'
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
@@ -60,6 +47,18 @@ GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 4
 PRINT_EVERY = 100
+
+########################
+# WHERE ARE THE FILES
+########################
+
+BERT_MODEL = 'bert-base-cased' #bert-large-cased
+TASK_NAME = 'bert_tokclf_baseline'
+CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+REPORTS_DIR = f'reports/{TASK_NAME}'
+TABLE_DIR = f'{REPORTS_DIR}/tables'
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+OUTPUT_MODE = 'bio_classification'
 
 ################
 # TRAINING

@@ -21,7 +21,7 @@ def get_metrics(labels, preds):
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
-    assert set(labels) == {0, 1}
+    # assert set(labels) == {0, 1}
 
     #mcc = matthews_corrcoef(labels, preds)
     acc = accuracy_score(labels, preds)
@@ -29,7 +29,12 @@ def get_metrics(labels, preds):
     prec, rec, _ = [el[1] for el in prec_rec_fscore[:-1]]
 
     f1 = f1_score(labels, preds, average='binary')
-    tn, fp, fn, tp = confusion_matrix(labels, preds).ravel()
+
+    if f1 > 0:
+        tn, fp, fn, tp = confusion_matrix(labels, preds).ravel()
+    else:
+        tn, fp, fn, tp = 0, 0, 0, 0
+
     return {
         "tp": tp,
         "tn": tn,

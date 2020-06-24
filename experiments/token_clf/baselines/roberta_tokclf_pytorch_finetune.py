@@ -1,23 +1,16 @@
 from __future__ import absolute_import, division, print_function
-from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-from transformers.configuration_roberta import RobertaConfig
-import pickle
-from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
+
+import os, sys, random, argparse, logging
 from datetime import datetime
-from torch.nn import CrossEntropyLoss
-import torch
-import os, sys, random, argparse
 import numpy as np
+
+from transformers.optimization import AdamW, get_linear_schedule_with_warmup
+import torch
+
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device
-import time
-from pprint import pprint
-import logging
 
-#######
-# FROM:
-# https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
-#####
+from lib.classifiers.RobertaWrapper import RobertaForTokenClassification, Inferencer, save_model, load_features
 
 
 class InputFeatures(object):
@@ -46,7 +39,6 @@ device, USE_CUDA = get_torch_device()
 parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
-parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-model', '--model', type=str, default=None) #2,3,4
@@ -54,45 +46,30 @@ parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
-parser.add_argument('-force_emb', '--force_embed', action='store_true', default=False) #16, 21
 args = parser.parse_args()
 
-FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_base', 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [33, 22]
+models = [args.model] if args.model else ['rob_base']
+seeds = [args.sv] if args.sv else [33, 22, 6, 181, 49]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
-
-DEBUG = args.debug
-if DEBUG:
-    N_EPS = 2
-    seeds = [0]
-    bss = [32]
-    lrs = [3e-5]
-    folds = ['1']
-    samplers = ['sequential']
+NUM_LABELS = 4
 
 ########################
 # WHERE ARE THE FILES
 ########################
 
 TASK_NAME = f'rob_tokclf_baseline'
-FEAT_DIR = f'data/sent_clf/features_for_roberta'
+FEAT_DIR = f'data/tok_clf/features_for_roberta'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'roberta_ft_results.csv')
 OUTPUT_MODE = 'bio_classification'
 
-#if not os.path.exists(CHECKPOINT_DIR):
-#    os.makedirs(CHECKPOINT_DIR)
-#if not os.path.exists(CURRENT_BEST_DIR):
-#    os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -110,7 +87,7 @@ else:
 
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
-NUM_LABELS = 2
+NUM_LABELS = 4
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
@@ -135,7 +112,7 @@ if __name__ == '__main__':
                 else:
                     SEED_VAL = SEED
 
-                seed_name = f"{MODEL}_{SAMPLER}_{SEED_VAL}"
+                seed_name = f"{MODEL}_tok_{SEED_VAL}"
                 random.seed(SEED_VAL)
                 np.random.seed(SEED_VAL)
                 torch.manual_seed(SEED_VAL)
@@ -151,7 +128,7 @@ if __name__ == '__main__':
                             name = setting_name + f"_f{fold_name}"
 
                             # init results containers
-                            best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
+                            best_model_loc = os.path.join(CHECKPOINT_DIR, name)
                             best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                             'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER}
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
@@ -171,7 +148,7 @@ if __name__ == '__main__':
                             logger.info(f"  Logging to {LOG_NAME}")
 
                             if not os.path.exists(best_model_loc):
-                                model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
+                                model = RobertaForTokenClassification.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
                                                                                          num_labels=NUM_LABELS,
                                                                                          output_hidden_states=True,
@@ -221,11 +198,11 @@ if __name__ == '__main__':
                                     if dev_mets['f1'] > best_val_res['f1']:
                                         best_val_res.update(dev_mets)
                                         high_score = '(HIGH SCORE)'
-                                        save_model(model, CURRENT_BEST_DIR, name)
+                                        save_model(model, CHECKPOINT_DIR, name)
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                            best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
+                            best_model = RobertaForTokenClassification.from_pretrained(best_model_loc,
                                                                                           num_labels=NUM_LABELS,
                                                                                           output_hidden_states=True,
                                                                                           output_attentions=False)
@@ -244,7 +221,7 @@ if __name__ == '__main__':
                             for EMB_TYPE in ['avbert', 'crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
-                                if (SEED_VAL == 34 and not os.path.exists(emb_fp)) or FORCE_EMBED:
+                                if (SEED_VAL == 34 and not os.path.exists(emb_fp)):
                                     logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
