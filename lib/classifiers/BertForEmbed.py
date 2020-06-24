@@ -152,13 +152,14 @@ class Inferencer():
             with torch.no_grad():
                 #print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                #logits, probs, sequence_output, pooled_output, hidden_states = outputs
-                logits, probs = outputs
+                logits, probs, sequence_output, pooled_output, hidden_states = outputs
+                # logits, probs = outputs
                 #logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
+
 
             if emb_type == 'poolbert':
                 emb_output = pooled_output
