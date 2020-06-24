@@ -317,9 +317,6 @@ def convert_example_to_feature(example_row):
     encoded = tokenizer.encode_plus(tokens_a, max_length=max_seq_length, pad_to_max_length=True,
                                     add_special_tokens=True)
 
-    print(encoded)
-    exit(0)
-
     input_ids = encoded['input_ids']
     attention_mask = encoded['attention_mask']
 
@@ -336,7 +333,7 @@ def convert_example_to_feature(example_row):
     elif output_mode == 'bio_classification':
         labels = ['O'] + labels + ['O']
         label_id = [label_map.get(lab) for lab in labels]
-        padding = [1] * (max_seq_length - len(label_id))
+        padding = [0] * (max_seq_length - len(label_id))
         label_id += padding  # cls=0, pad=1
 
         assert len(label_id) == max_seq_length

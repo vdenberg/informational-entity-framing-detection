@@ -51,7 +51,7 @@ else:
 dataloader = BinaryClassificationProcessor()
 
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-label_map = {label: i for i, label in enumerate(label_list)}
+label_map = {label: i+1 for i, label in enumerate(label_list)}
 config = RobertaConfig.from_pretrained('roberta-base')
 config.num_labels = len(label_map)
 

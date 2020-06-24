@@ -3,6 +3,7 @@ from sklearn.metrics import precision_recall_fscore_support
 import pandas as pd
 import numpy as np
 
+
 def convert_bio_to_binary(labels):
     labels = [2 if lab == 3 else lab for lab in labels]
     labels = [1 if lab == 0 else lab for lab in labels]
