@@ -159,7 +159,7 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
                 print('Word pieces:', len(word_pieces), word_pieces)
                 print('tmp_labels:', len(tmp_labels), tmp_labels)
                 exit(0)
-        lbl_ix += 1
+            lbl_ix += 1
 
     # print("TMP ", tmp_labels)
     expanded_labels = []
