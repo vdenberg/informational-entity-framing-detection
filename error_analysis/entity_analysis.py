@@ -265,11 +265,6 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-entities = data.main_entities.value_counts()
-print(entities)
-
-exit(0)
-
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'main_entities', 'inf_entities', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 
@@ -306,7 +301,6 @@ for fold in folds:
 table_columns = 'source,model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 entity_df = pd.DataFrame(columns=table_columns.split(','))
 
-
 for fold in folds:
 
     # LOAD MODEL
@@ -328,8 +322,8 @@ for fold in folds:
     dev_df = fold['dev']
     dev_df['dev'] = preds
 
-    #print(dev_df.main_entities.value_counts().head(3))
-    #print(dev_df.inf_entities.value_counts().head(3))
+    print(dev_df.main_entities.value_counts().head(3).main_entities)
+    print(dev_df.inf_entities.value_counts().head(3).inf_entities)
     '''
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
