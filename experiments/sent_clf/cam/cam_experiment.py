@@ -123,6 +123,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
 # TRAINING PARAMS
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
+parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
@@ -180,6 +181,7 @@ EMB_TYPE = args.embedding_type
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
 
 CAM_TYPE = args.cam_type
+BASE = args.base
 #if DEBUG:
 #    CN = True
 
@@ -382,8 +384,6 @@ if EMB_TYPE in ['use', 'sbert']:
     embed_fp = f"data/sent_clf/embeddings/basil_w_{EMB_TYPE}.csv"
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-
-BASE = 'base'
 
 for fold in folds:
     # read embeddings file
