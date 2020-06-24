@@ -416,7 +416,7 @@ base_name = CAM_TYPE  # "_" + EMB_TYPE
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
 learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL, SEED_VAL*2, SEED_VAL*3]
+seeds = [SEED_VAL, SEED_VAL*2, SEED_VAL*3, SEED_VAL*4, SEED_VAL*5]
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
