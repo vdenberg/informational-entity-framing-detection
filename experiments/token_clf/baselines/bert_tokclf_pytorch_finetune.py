@@ -134,7 +134,7 @@ if __name__ == '__main__':
 
                     if not os.path.exists(best_model_loc):
                         model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                           output_hidden_states=False, output_attentions=False)
+                                                                           output_hidden_states=True, output_attentions=False)
                         model.to(device)
                         optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                         model.train()
@@ -187,7 +187,7 @@ if __name__ == '__main__':
                         # best_val_res['model_loc'] = os.path.join(CHECKPOINT_DIR, epoch_name)
 
                     best_model = BertForTokenClassification.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
-                                                                            output_hidden_states=False,
+                                                                            output_hidden_states=True,
                                                                             output_attentions=False)
                     best_model.to(device)
 
