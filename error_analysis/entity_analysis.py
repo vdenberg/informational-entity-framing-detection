@@ -302,10 +302,7 @@ table_columns = 'source,model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,
 entity_df = pd.DataFrame(columns=table_columns.split(','))
 
 
-print(entity_df.main_entities.value_counts().head(5))
-
-
-exit(0)
+print(entity_df.columns)
 
 for fold in folds:
 
@@ -328,7 +325,8 @@ for fold in folds:
     dev_df = fold['dev']
     dev_df['dev'] = preds
 
-
+    #print(dev_df.main_entities.value_counts().head(3))
+    #print(dev_df.inf_entities.value_counts().head(3))
     '''
     # ANALYZE BY SOURCE
     inter_df = pd.DataFrame(columns=table_columns.split(','))
