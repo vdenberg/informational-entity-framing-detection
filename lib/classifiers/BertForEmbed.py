@@ -152,7 +152,8 @@ class Inferencer():
             with torch.no_grad():
                 #print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, probs, sequence_output, pooled_output, hidden_states = outputs
+                #logits, probs, sequence_output, pooled_output, hidden_states = outputs
+                logits, probs = outputs
                 #logits, probs = outputs
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
@@ -172,7 +173,6 @@ class Inferencer():
                 hidden_states = hidden_states[:-1]
                 hidden_states = torch.stack(hidden_states[-4:])
                 emb_output = hidden_states[:, :, 0, :].mean(dim=0)
-            
 
             if self.use_cuda:
                 emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
