@@ -383,13 +383,15 @@ if EMB_TYPE in ['use', 'sbert']:
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
 
+BASE = 'base'
+
 for fold in folds:
     # read embeddings file
     if EMB_TYPE not in ['use', 'sbert']:
         # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
@@ -411,7 +413,7 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE  # "_" + EMB_TYPE
+base_name = CAM_TYPE + "_" + BASE
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
