@@ -152,7 +152,7 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
             try:
                 tmp_labels.append(original_labels[lbl_ix])
             except IndexError:
-                print('Index Error')
+                print('Index Error at index', lbl_ix)
                 print('Original sentence:', original_sentence)
                 print('Original label split:', len(original_sentence.split(' ')), original_sentence.split(' '))
                 print('Original label:', len(original_labels), original_labels)
