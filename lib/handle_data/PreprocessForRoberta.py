@@ -143,9 +143,11 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
 
     word_pieces = tokenizer.tokenize(original_sentence)
 
-    #print('Original sentence:', original_sentence)
-    #print('Original label:', original_labels)
-    #print('Word pieces:', word_pieces)
+    print('Original sentence:', original_sentence)
+    print('Original label split:', len(original_sentence.split(' ')), original_sentence.split(' '))
+    print('Original label:', len(original_labels), original_labels)
+    print('Word pieces:', len(word_pieces), word_pieces)
+
 
     tmp_labels, lbl_ix = [], 0
     for tok in word_pieces:
