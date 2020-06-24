@@ -143,20 +143,22 @@ def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
 
     word_pieces = tokenizer.tokenize(original_sentence)
 
-    print('Original sentence:', original_sentence)
-    print('Original label split:', len(original_sentence.split(' ')), original_sentence.split(' '))
-    print('Original label:', len(original_labels), original_labels)
-    print('Word pieces:', len(word_pieces), word_pieces)
-
-
     tmp_labels, lbl_ix = [], 0
     for tok in word_pieces:
         # if "##" in tok:
         if lbl_ix != 0 and not tok.startswith('Ġ'):
             tmp_labels.append("X")
         else:
-            tmp_labels.append(original_labels[lbl_ix])
-            lbl_ix += 1
+            try:
+                tmp_labels.append(original_labels[lbl_ix])
+            except IndexError:
+                print('Index Error')
+                print('Original sentence:', original_sentence)
+                print('Original label split:', len(original_sentence.split(' ')), original_sentence.split(' '))
+                print('Original label:', len(original_labels), original_labels)
+                print('Word pieces:', len(word_pieces), word_pieces)
+                exit(0)
+        lbl_ix += 1
 
     # print("TMP ", tmp_labels)
     expanded_labels = []
