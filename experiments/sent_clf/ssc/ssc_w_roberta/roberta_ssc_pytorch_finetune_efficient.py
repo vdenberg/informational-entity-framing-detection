@@ -61,9 +61,9 @@ args = parser.parse_args()
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base']
 EX_LEN = args.example_length
-seeds = [args.sv] if args.sv else [49, 6, 34]
-bss = [args.bs] if args.bs else [6]
-lrs = [args.lr] if args.lr else [1.5e-5]
+seeds = [args.sv] if args.sv else [49, 6, 34, 181, 265]
+bss = [args.bs] if args.bs else [6, 12]
+lrs = [args.lr] if args.lr else [1.5e-5, 3e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
