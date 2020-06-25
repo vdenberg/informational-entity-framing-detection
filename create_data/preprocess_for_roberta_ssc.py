@@ -185,7 +185,7 @@ SUBSET = 1.0 if not DEBUG else 0.1
 MAX_SEQ_LENGTH = 124
 
 if WINDOW:
-    max_lens = {5: 398, 9: 519, 10: 543, 15: 666, 20: 907}  # average nr of splits: 7, .., .., 2
+    max_lens = {4: 200, 5: 398, 8: 398, 9: 519}  # average nr of splits: 7, .., .., 2
 else:
     max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 499, 10: 499}
 
