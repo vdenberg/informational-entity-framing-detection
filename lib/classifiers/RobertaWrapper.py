@@ -427,7 +427,7 @@ class Inferencer():
                     print(logits.shape)
             preds.extend(pred)
 
-        rep_sim = sum(rep_sim) / len(rep_sim)
+        #rep_sim = sum(rep_sim) / len(rep_sim)
 
         model.train()
         if return_embeddings:
