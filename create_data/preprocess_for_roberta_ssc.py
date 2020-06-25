@@ -155,7 +155,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None, window
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-seqlen', '--sequence_length', type=int, default=1, help='Number of sentences per example#') #2,3,4
-parser.add_argument('-w', '--windowed', action='store_true', default=True)
+parser.add_argument('-w', '--windowed', action='store_true', default=False)
 args = parser.parse_args()
 
 # choose sentence or bio labels

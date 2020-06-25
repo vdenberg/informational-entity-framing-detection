@@ -56,7 +56,7 @@ parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 parser.add_argument('-exlen', '--example_length', type=int, default=8)
-parser.add_argument('-w', '--windowed', action='store_true', default=True)
+parser.add_argument('-w', '--windowed', action='store_true', default=False)
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
