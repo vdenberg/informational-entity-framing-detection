@@ -171,13 +171,14 @@ MAX_DOC_LEN = 76
 MAX_SENT_LEN = 486
 MAX_EX_LEN = args.sequence_length
 
+WINDOW = args.windowed
+
 # structure of project
 CONTEXT_TYPE = 'article'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{MAX_EX_LEN}/'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{MAX_EX_LEN}/' if WINDOW else f'data/sent_clf/features_for_roberta_ssc/ssc{MAX_EX_LEN}/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
-WINDOW = args.windowed
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
