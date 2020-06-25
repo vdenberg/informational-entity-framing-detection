@@ -54,7 +54,7 @@ def as_art_id(feat_id):
     return feat_id[:5]
 
 
-def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
+def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent_in_ex):
     flat_input_ids = []
     flat_labels = []
     #segment_ids = []
@@ -71,7 +71,7 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
 
     assert len(mask) == len(flat_input_ids)
 
-    max_sent_w_window = max_sent
+    max_sent_w_window = max_sent_in_ex
     lab_pad_len = max_sent_w_window - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
@@ -110,11 +110,13 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
         row.append(f)
 
     sequence_rows = []
+    nr_sequences_agg = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
         row = [empty_feature]*window_size + row + [empty_feature]*window_size
         sequences = enforce_max_sent_per_example(row, max_sent)
         nr_sequences = len(sequences)
+        nr_sequences_agg.append(nr_sequences)
 
         for i, s in enumerate(sequences):
             winseq = s.copy()
@@ -126,6 +128,11 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                 winseq = winseq + winend
             sequence_rows.append(winseq)
 
+    print('---')
+    print(min(nr_sequences_agg))
+    print(max(nr_sequences_agg))
+    print(sum(nr_sequences_agg) / len(article_rows))
+    print('---')
 
     # help measure what the maxlen should be
     for row in sequence_rows:
