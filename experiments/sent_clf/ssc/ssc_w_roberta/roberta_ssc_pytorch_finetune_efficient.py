@@ -56,9 +56,11 @@ parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
 parser.add_argument('-exlen', '--example_length', type=int, default=8)
+parser.add_argument('-w', '--windowed', action='store_true', default=True)
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
+WINDOW = args.windowed
 models = [args.model] if args.model else ['rob_base']
 EX_LEN = args.example_length
 seeds = [args.sv] if args.sv else [49, 6, 34, 181, 265]
@@ -81,8 +83,8 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'WSSC{EX_LEN}'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}'
+TASK_NAME = f'WSSC{EX_LEN}' if WINDOW else f'WSSC{EX_LEN}'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}' if WINDOW else f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
