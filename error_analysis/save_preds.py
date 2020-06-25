@@ -272,8 +272,8 @@ NR_FOLDS = len(folds)
 
 for fold in folds:
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=1, sampler=SAMPLER)
+    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=1, sampler=SAMPLER)
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
@@ -313,7 +313,7 @@ for fold in folds:
 
     cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
-                                 layers=BILSTM_LAYERS, b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
+                                 layers=BILSTM_LAYERS, b_size=1, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
     cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], n_eps=0, load_from_ep=None)
 
