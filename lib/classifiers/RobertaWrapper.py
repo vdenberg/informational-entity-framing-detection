@@ -310,13 +310,12 @@ class RobertaForTokenClassification(BertPreTrainedModel):
         """
         sequence_output = outputs[0]  # sequence of hidden-states at the output of the last layer of the model
         pooled_output = outputs[1]   # last layer hidden-state of the first token of the sequence
-        hidden_states = outputs[2]   # hidden-states of the model at the output of each layer plus the initial embedding outputs
 
         sequence_output = self.dropout(sequence_output)
         logits = self.classifier(sequence_output)
         probs = self.sigm(logits)
 
-        outputs = (logits, probs, pooled_output, sequence_output, hidden_states) + outputs[2:]  # add hidden states and attention if they are here
+        outputs = (logits, probs, pooled_output, sequence_output) + outputs[2:]  # add hidden states and attention if they are here
         if labels is not None:
             loss_fct = CrossEntropyLoss()
             # Only keep active parts of the loss
