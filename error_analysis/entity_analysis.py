@@ -49,10 +49,10 @@ for f in [str(el) for el in range(1,11)]:
         w_top, wo_top = top_in_df(df, e)
 
         ent_mets, ent_perf = my_eval(w_top.label, w_top.dev, name=f, set_type='w')
-        w_row = [e, c, 0, ent_mets['prec'], ent_mets['rec'], ent_mets['rec']]
+        w_row = [e, c, 0, ent_mets['prec'], ent_mets['rec'], ent_mets['f1']]
 
         ent_mets, ent_perf = my_eval(wo_top.label, wo_top.dev, name=f, set_type='wo')
-        wo_row = [e, c, 1, ent_mets['prec'], ent_mets['rec'], ent_mets['rec']]
+        wo_row = [e, c, 1, ent_mets['prec'], ent_mets['rec'], ent_mets['f1']]
 
         # rows = pd.DataFrame([w_row, wo_row], columns=['entity', 'frequency', 'w', 'prec', 'rec', 'f1'])
         rows = pd.DataFrame([w_row], columns=['entity', 'frequency', 'w', 'prec', 'rec', 'f1'])

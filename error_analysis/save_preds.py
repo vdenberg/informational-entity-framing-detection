@@ -288,7 +288,7 @@ for fold in folds:
         # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        embed_fp = f"data/rob_tapt_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
@@ -318,9 +318,10 @@ for fold in folds:
     cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], n_eps=0, load_from_ep=None)
 
     # PRODUCE PREDS
-    preds = cam_cl.produce_preds(fold, model_name=model_name)
+    preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
     dev_df = fold['dev']
     dev_df['dev'] = preds
+    dev_df['losses'] = losses
 
     pred_fp = f"data/dev_w_preds/{fold['name']}_dev_w_pred.csv"
     dev_df.to_csv(pred_fp)
