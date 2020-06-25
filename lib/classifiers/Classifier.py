@@ -73,10 +73,10 @@ class Classifier:
 
         tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
 
-        tr_preds, tr_loss, _ = self.wrapper.predict(tr_bs)
+        tr_preds, tr_loss, _, _ = self.wrapper.predict(tr_bs)
         tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
 
-        val_preds, val_loss, _ = self.wrapper.predict(dev_bs)
+        val_preds, val_loss, _, _ = self.wrapper.predict(dev_bs)
         val_mets, val_perf = my_eval(dev_lbs, val_preds, set_type='dev', av_loss=val_loss, name="")
 
         best_log = ''
@@ -119,7 +119,7 @@ class Classifier:
         return eps_elapsed, losses
 
     def test_model(self, fold, name):
-        preds, test_loss, _ = self.wrapper.predict(fold['test_batches'])
+        preds, test_loss, _, _ = self.wrapper.predict(fold['test_batches'])
         test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
         return test_mets, test_perf
 
@@ -140,7 +140,7 @@ class Classifier:
             name = self.model_name + f"_TEST_{self.n_epochs}"
             test_mets, test_perf = self.test_model(fold, name)
 
-            preds, _, _ = self.wrapper.predict(fold['test_batches'])
+            preds, _, _, _ = self.wrapper.predict(fold['test_batches'])
 
             self.logger.info(f' FINISHED training {name} (took {self.train_time})')
             self.logger.info(f" {test_mets}")
@@ -153,8 +153,8 @@ class Classifier:
         if not model_name:
             model_name = self.model_name
         self.wrapper.load_model(model_name)
-        preds, _, _ = self.wrapper.predict(fold['dev_batches'])
-        return preds
+        preds, _, _, losses = self.wrapper.predict(fold['dev_batches'])
+        return preds, losses
 
 
 

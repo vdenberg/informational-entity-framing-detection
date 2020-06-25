@@ -251,6 +251,7 @@ class ContextAwareClassifier():
         self.model.eval()
 
         y_pred = []
+        losses = []
         sum_loss = 0
         embeddings = []
         for step, batch in enumerate(batches):
@@ -269,11 +270,14 @@ class ContextAwareClassifier():
                 #loss = self.criterion(sigm_output, labels)
 
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
+            loss = loss.detach().cpu().numpy() #probs.shape: batchsize * num_classes
 
             if len(y_pred) == 0:
                 y_pred = probs
+                losses = loss
             else:
                 y_pred = np.append(y_pred, probs, axis=0)
+                losses = np.append(losses, loss, axis=0)
 
                 # convert to predictions
                 # #preds = [1 if output > 0.5 else 0 for output in sigm_output]
@@ -286,7 +290,7 @@ class ContextAwareClassifier():
         # y_pred = [0 if el < 0.5 else 1 for el in y_pred]
 
         self.model.train()
-        return y_pred, sum_loss / len(batches), embeddings
+        return y_pred, sum_loss / len(batches), embeddings, losses
 
 # _, USE_CUDA = get_torch_device()
 # LongTensor = torch.cuda.LongTensor if USE_CUDA else torch.LongTensor
