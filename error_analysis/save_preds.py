@@ -321,6 +321,7 @@ for fold in folds:
     preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
     dev_df = fold['dev']
     dev_df['dev'] = preds
+    print(len(losses))
     dev_df['losses'] = losses
 
     pred_fp = f"data/dev_w_preds/{fold['name']}_dev_w_pred.csv"
