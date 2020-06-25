@@ -71,7 +71,7 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
 
     assert len(mask) == len(flat_input_ids)
 
-    max_sent_w_window = max_sent+2
+    max_sent_w_window = max_sent
     lab_pad_len = max_sent_w_window - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
 
@@ -125,6 +125,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                 winend = sequences[i+1][0:window_size]
                 winseq = winseq + winend
             sequence_rows.append(winseq)
+
 
     # help measure what the maxlen should be
     for row in sequence_rows:
