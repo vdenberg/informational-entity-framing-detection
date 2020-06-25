@@ -7,6 +7,7 @@ import csv
 from lib.handle_data.SplitData import split_input_for_bert
 import torch
 import argparse
+import time
 
 
 def preprocess(rows):
@@ -214,6 +215,8 @@ else:
        features = pickle.load(f)
        features_dict = {feat.my_id: feat for feat in features}
        print(f"Processed fold all - {len(features)} items")
+
+time.sleep(5)
 
 # start
 for fold in folds:
