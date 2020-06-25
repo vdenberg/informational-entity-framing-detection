@@ -266,7 +266,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
-folds = spl.apply_split(features=['story', 'source', 'main_entities', 'inf_entities', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
+folds = spl.apply_split(features=['story', 'source', 'sentence', 'main_entities', 'inf_entities', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 
 NR_FOLDS = len(folds)
 
@@ -319,34 +319,10 @@ for fold in folds:
 
     # PRODUCE PREDS
     preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
+
     dev_df = fold['dev']
-    dev_df['dev'] = preds
+    dev_df['pred'] = preds
     dev_df['losses'] = losses
 
     pred_fp = f"data/dev_w_preds/{fold['name']}_dev_w_pred.csv"
     dev_df.to_csv(pred_fp)
-
-    '''
-    # ANALYZE BY SOURCE
-    inter_df = pd.DataFrame(columns=table_columns.split(','))
-    for n, gr in test_df.groupby('source'):
-        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type='dev')
-
-        result.update({'source': n})
-        result.update(source_mets)
-
-        inter_df = inter_df.append(result, ignore_index=True)
-        
-
-    entity_df = entity_df.append(inter_df, ignore_index=True)
-    '''
-
-exit(0)
-for n, gr in entity_df.groupby("source"):
-    test = gr[['prec', 'rec', 'f1']] * 100
-    test = test.describe()
-    test_m = test.loc['mean'].round(2).astype(str)
-    test_std = test.loc['std'].round(2).astype(str)
-    result = test_m + ' \pm ' + test_std
-    print(f"\nResults of {n} on test:")
-    print(result)

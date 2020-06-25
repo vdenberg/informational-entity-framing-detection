@@ -3,13 +3,15 @@ from lib.evaluate.Eval import my_eval
 
 sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
 source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
+pd.set_option('display.max_columns', 10)
+pd.set_option('display.max_colwidth', 500)
+
 for f in [str(el) for el in range(1,11)]:
-    df = pd.read_csv(f"data/dev_w_preds/{f}_dev_w_pred.csv")
+    df = pd.read_csv(f"data/dev_w_preds/{f}_dev_w_pred.csv", index_col=0)
+    df['sentence'] = sentences.loc[df.index].sentence
 
     # ANALYZE BY SOURCE
     for n, gr in df.groupby('source'):
-        gr = gr.sort(by='losses')
-        print(gr['losses', 'sentence'])
 
         source_mets, source_perf = my_eval(gr.label, gr.dev, name=n, set_type='dev')
 
