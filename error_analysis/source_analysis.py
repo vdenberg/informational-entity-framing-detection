@@ -8,12 +8,14 @@ for f in [str(el) for el in range(1,11)]:
 
     # ANALYZE BY SOURCE
     for n, gr in df.groupby('source'):
-        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n, set_type='dev')
+        gr = gr.sort(by='losses')
+        print(gr['losses', 'sentence'])
+
+        source_mets, source_perf = my_eval(gr.label, gr.dev, name=n, set_type='dev')
 
         row = [n, source_mets['prec'], source_mets['rec'], source_mets['f1']]
         rows = pd.DataFrame([row], columns=['source', 'prec', 'rec', 'f1'])
-
-    source_df = source_df.append(rows, ignore_index=True)
+        source_df = source_df.append(rows, ignore_index=True)
 
 for n, gr in source_df.groupby("source"):
     test = gr[['prec', 'rec', 'f1']] * 100
