@@ -129,11 +129,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
                 winseq = winseq + winend
             sequence_rows.append(winseq)
 
-    print('---')
-    print(min(nr_sequences_agg))
-    print(max(nr_sequences_agg))
     print(sum(nr_sequences_agg) / len(article_rows))
-    print('---')
 
     # help measure what the maxlen should be
     for row in sequence_rows:
