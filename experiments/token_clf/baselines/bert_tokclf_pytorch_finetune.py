@@ -105,7 +105,7 @@ if __name__ == '__main__':
         torch.manual_seed(SEED_VAL)
         torch.cuda.manual_seed_all(SEED_VAL)
 
-        for BATCH_SIZE in [16]:
+        for BATCH_SIZE in [16, 24]:
             bs_name = seed_name + f"_bs{BATCH_SIZE}"
             for LEARNING_RATE in [2e-5]: #2e-5, 3e-5], 5e-5]:
                 setting_name = bs_name + f"_lr{LEARNING_RATE}"
