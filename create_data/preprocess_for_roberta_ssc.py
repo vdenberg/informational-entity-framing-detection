@@ -227,7 +227,7 @@ else:
        features_dict = {feat.my_id: feat for feat in features}
        print(f"Processed fold all - {len(features)} items")
 
-time.sleep(30)
+time.sleep(10)
 
 # start
 for fold in folds:
