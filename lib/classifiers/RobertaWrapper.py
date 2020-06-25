@@ -353,8 +353,9 @@ class Inferencer():
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, pooled_output, sequence_output, hidden_states = outputs
+                logits, probs, pooled_output, sequence_output, hidden_states = outputs
 
+                '''
                 r = sequence_output[:, 0, :]
                 r = r.detach().cpu().numpy()
 
@@ -364,12 +365,14 @@ class Inferencer():
                 batch_r_sim = batch_r_sim.mean()
                 rep_sim.append(batch_r_sim)
                 # logits, probs = outputs
+                '''
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
             # take average of sequence, size (batch_size, hidden_size)
 
             if return_embeddings:
+                sequence_output, hidden_states = outputs[2], outputs[-1]
                 '''
                 **sequence_output**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, hidden_size)``
                     Sequence of hidden-states at the output of the last layer of the model.
