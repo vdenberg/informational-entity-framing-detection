@@ -353,7 +353,6 @@ class Inferencer():
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
-
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
             else:
@@ -367,7 +366,6 @@ class Inferencer():
 
             preds.extend(pred)
 
-
         rep_sim = sum(rep_sim) / len(rep_sim)
 
         model.train()
@@ -377,7 +375,7 @@ class Inferencer():
             return preds, rep_sim, labels_wo_win
 
     def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='ssc'):
-        preds, rep_sim, labels = self.predict(model, data, output_mode=output_mode)
+        preds, rep_sim, _ = self.predict(model, data, output_mode=output_mode)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
@@ -385,7 +383,6 @@ class Inferencer():
             preds = np.asarray(preds)
             preds = np.reshape(preds, labels.shape)
         elif output_mode == 'ssc':
-            print(labels)
             labels = labels.numpy().flatten()
             m = labels != -1
             labels = labels[m]
