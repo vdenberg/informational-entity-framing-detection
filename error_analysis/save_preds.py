@@ -304,7 +304,8 @@ entity_df = pd.DataFrame(columns=table_columns.split(','))
 for fold in folds:
 
     # LOAD MODEL
-    model_name = f"cam+_base_34_h1200_bs32_lr0.001_f{fold['name']}"
+    model = 'cam++'
+    model_name = f"{model}_base_34_h1200_bs32_lr0.001_f{fold['name']}"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
     result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
               'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
@@ -324,5 +325,5 @@ for fold in folds:
     dev_df['pred'] = preds
     dev_df['losses'] = losses
 
-    pred_fp = f"data/dev_w_preds/{fold['name']}_dev_w_pred.csv"
+    pred_fp = f"data/dev_w_{model}_preds/{fold['name']}_dev_w_pred.csv"
     dev_df.to_csv(pred_fp)
