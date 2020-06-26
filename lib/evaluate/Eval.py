@@ -18,11 +18,11 @@ def get_metrics(labels, preds):
     if isinstance(labels, np.ndarray):
         labels = labels.squeeze()
 
-    #labels = [el for el in labels]
+    labels = [el for el in labels]
 
     #if len(set(labels)) > 2:
-    #    preds = convert_bio_to_binary(preds)
-    #    labels = convert_bio_to_binary(labels)
+    preds = convert_bio_to_binary(preds)
+    labels = convert_bio_to_binary(labels)
 
     # assert set(labels) == {0, 1}
 
