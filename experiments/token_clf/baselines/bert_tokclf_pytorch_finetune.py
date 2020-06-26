@@ -47,6 +47,7 @@ GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 4
 PRINT_EVERY = 100
+SAMPLER = 'sequential'
 
 ########################
 # WHERE ARE THE FILES
@@ -122,9 +123,9 @@ if __name__ == '__main__':
                     train_fp = f"data/tok_clf/features_for_bert/{fold_name}_train_features.pkl"
                     dev_fp = f"data/tok_clf/features_for_bert/{fold_name}_dev_features.pkl"
                     test_fp = f"data/tok_clf/features_for_bert/{fold_name}_test_features.pkl"
-                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE)
-                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE)
-                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE)
+                    _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                    _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                    _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
