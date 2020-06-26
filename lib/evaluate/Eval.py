@@ -17,6 +17,7 @@ def get_metrics(labels, preds):
 
     if isinstance(labels, np.ndarray):
         labels = labels.squeeze()
+        labels = list(labels)
 
     if len(set(labels)) > 2:
         preds = convert_bio_to_binary(preds)
