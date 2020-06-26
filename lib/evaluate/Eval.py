@@ -12,7 +12,7 @@ def convert_bio_to_binary(labels):
     return labels
 
 
-def get_metrics(labels, preds):
+def get_metrics(labels, preds, opmode):
     assert len(preds) == len(labels)
 
     if isinstance(labels, np.ndarray):
@@ -20,9 +20,9 @@ def get_metrics(labels, preds):
 
     labels = [el for el in labels]
 
-    #if len(set(labels)) > 2:
-    preds = convert_bio_to_binary(preds)
-    labels = convert_bio_to_binary(labels)
+    if opmode == 'bio_classification':
+        preds = convert_bio_to_binary(preds)
+        labels = convert_bio_to_binary(labels)
 
     # assert set(labels) == {0, 1}
 
@@ -50,7 +50,7 @@ def get_metrics(labels, preds):
     }
 
 
-def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None):
+def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None, opmode='bio_classification'):
     """
     Compares labels to predictions, Loss can be added to also
     display the loss associated to the model that made those predictions
@@ -63,7 +63,7 @@ def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None):
     :return:
     """
     # METRICS_DICT
-    metrics_dict = get_metrics(labels, preds)
+    metrics_dict = get_metrics(labels, preds, opmode)
 
     if av_loss:
         metrics_dict['loss'] = av_loss
