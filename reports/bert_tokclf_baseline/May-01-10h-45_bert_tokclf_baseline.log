@@ -1,0 +1,1 @@
+INFO:root:Namespace(batch_size=24, learning_rate=2e-05, load_from_ep=0, n_epochs=4)
