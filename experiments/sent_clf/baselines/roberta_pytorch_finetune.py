@@ -215,14 +215,6 @@ if __name__ == '__main__':
 
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                  set_type='dev', name=epoch_name)
-                                    preds, _ = inferencer.predict(model, dev_batches)
-                                    assert len(embs) == len(all_ids)
-
-                                    basil_w_pred = pd.DataFrame(index=dev_ids)
-                                    basil_w_pred['preds'] = embs
-                                    pred_fp = f'data/dev_w_preds/{fold_name}_dev_w_rob_pred.csv'
-                                    basil_w_pred.to_csv(pred_fp)
-                                    logger.info(f'Preds in {pred_fp}.csv')
 
                                     # check if best
                                     high_score = ''
@@ -244,6 +236,15 @@ if __name__ == '__main__':
                             dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev')
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
+
+                            preds, _ = inferencer.predict(best_model, dev_batches)
+                            assert len(embs) == len(all_ids)
+
+                            basil_w_pred = pd.DataFrame(index=dev_ids)
+                            basil_w_pred['preds'] = embs
+                            pred_fp = f'data/dev_w_preds/{fold_name}_dev_w_rob_pred.csv'
+                            basil_w_pred.to_csv(pred_fp)
+                            logger.info(f'Preds in {pred_fp}.csv')
 
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
