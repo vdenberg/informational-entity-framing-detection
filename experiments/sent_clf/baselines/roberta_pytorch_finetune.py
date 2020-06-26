@@ -238,7 +238,7 @@ if __name__ == '__main__':
                             logging.info(f"{dev_perf}")
 
                             preds, _ = inferencer.predict(best_model, dev_batches)
-                            assert len(embs) == len(all_ids)
+                            assert len(preds) == len(dev_ids)
 
                             basil_w_pred = pd.DataFrame(index=dev_ids)
                             basil_w_pred['preds'] = embs
