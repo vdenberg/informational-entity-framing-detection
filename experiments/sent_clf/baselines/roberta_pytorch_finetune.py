@@ -60,10 +60,10 @@ args = parser.parse_args()
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base', 'rob_dapt', 'rob_tapt', 'rob_dapttapt']
-seeds = [args.sv] if args.sv else [33, 22]
+seeds = [args.sv] if args.sv else [33] #, 22]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
@@ -161,7 +161,7 @@ if __name__ == '__main__':
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                            _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                            dev_ids, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
                             _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                             # start training
@@ -212,8 +212,17 @@ if __name__ == '__main__':
 
                                     av_loss = tr_loss / len(train_batches)
                                     # save_model(model, CHECKPOINT_DIR, epoch_name)
+
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                  set_type='dev', name=epoch_name)
+                                    preds, _ = inferencer.predict(model, dev_batches)
+                                    assert len(embs) == len(all_ids)
+
+                                    basil_w_pred = pd.DataFrame(index=dev_ids)
+                                    basil_w_pred['preds'] = embs
+                                    pred_fp = f'data/dev_w_preds/{fold_name}_dev_w_rob_pred.csv'
+                                    basil_w_pred.to_csv(pred_fp)
+                                    logger.info(f'Preds in {pred_fp}.csv')
 
                                     # check if best
                                     high_score = ''
@@ -244,10 +253,11 @@ if __name__ == '__main__':
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
                                 if (SEED_VAL == 34 and not os.path.exists(emb_fp)) or FORCE_EMBED:
-                                    logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
+                                    logging.info(f'Generating {EMB_TYPE} ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
                                     embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+
                                     assert len(embs) == len(all_ids)
 
                                     basil_w_BERT = pd.DataFrame(index=all_ids)
