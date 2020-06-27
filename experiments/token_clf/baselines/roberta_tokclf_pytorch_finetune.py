@@ -66,7 +66,7 @@ FEAT_DIR = f'data/tok_clf/features_for_roberta'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
-CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
+CACHE_DIR = 'models/cache/'  # This is where BERT will look for  pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'roberta_ft_results.csv')
 OUTPUT_MODE = 'bio_classification'
 
@@ -177,7 +177,9 @@ if __name__ == '__main__':
                                         batch = tuple(t.to(device) for t in batch)
 
                                         model.zero_grad()
+                                        print(batch[-1], train_labels)
                                         outputs = model(batch[0], batch[1], labels=batch[-1])
+
                                         loss = outputs[0]
 
                                         loss.backward()
