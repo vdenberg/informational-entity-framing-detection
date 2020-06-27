@@ -38,7 +38,7 @@ DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'bio_classification' # 'classification' ,or 'bio-classification'
+OUTPUT_MODE = 'bio_classification'  # 'classification' ,or 'bio-classification'
 
 dataloader = BinaryClassificationProcessor()
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
@@ -62,10 +62,8 @@ if not os.path.exists(ofp) or FORCE:
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples]
     features = preprocess(examples)
 
-    l = []
     for f in features:
-        l.extend(f.label_id)
-    print(set(l))
+        print(f.label_id)
 
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
@@ -74,10 +72,8 @@ else:
     with open(ofp, "rb") as f:
         features = pickle.load(f)
 
-        l = []
         for f in features:
-           l.extend(f.label_id)
-        print(set(l))
+            print(f.label_id)
 
 print(f"Processed fold all - {len(features)} items")
 features_dict = {feat.my_id: feat for feat in features}
