@@ -14,8 +14,8 @@ csv.field_size_limit(2147483647) # Increase CSV reader's field limit incase we h
 class SpanToBio():
     """ Gives BIO tags corresponding to spans """
 
-    def __init__(self):
-        self.spacy_tokenizer = spacy.load("en_core_web_sm")
+    def __init__(self, tok):
+        self.spacy_tokenizer = tok  # spacy.load("en_core_web_sm")
 
     def tokenize(self, sent):
         if not isinstance(sent, float):
@@ -107,6 +107,7 @@ class SpanToBio():
         return toks, bio_tags
 
 
+'''
 def convert_to_bio(sentences, spans):
     """ Converts span annotations to BIO tags
     For example:
@@ -126,6 +127,7 @@ def convert_to_bio(sentences, spans):
         all_bio_tags.append(bio_tags_as_string)
 
     return all_bio_tags
+'''
 
 
 def expand_to_wordpieces(original_sentence, original_labels, tokenizer):
@@ -279,12 +281,12 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
 
 def convert_example_to_feature(example_row):
     # return example_row
-    example, label_map, max_seq_length, tokenizer, output_mode = example_row
+    example, label_map, max_seq_length, tokenizer, spacy_tokenizer, output_mode = example_row
 
     # tokens
 
     if output_mode == 'bio_classification':
-        sp2bio = SpanToBio()
+        sp2bio = SpanToBio(spacy_tokenizer)
         spacy_tokens, spacy_labels = sp2bio.span_to_bio(example.text_a, example.label)
         assert len(spacy_tokens) == len(spacy_labels)
 

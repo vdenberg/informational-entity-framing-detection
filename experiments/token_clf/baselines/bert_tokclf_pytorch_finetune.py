@@ -138,6 +138,12 @@ if __name__ == '__main__':
                             for step, batch in enumerate(train_batches):
                                 batch = tuple(t.to(device) for t in batch)
 
+                                l = []
+                                for labels in batch[-1]:
+                                    l.extend(labels)
+                                l = set(l)
+                                print(l)
+
                                 model.zero_grad()
                                 outputs = model(batch[0], batch[1], labels=batch[2])
                                 (loss), logits, probs, sequence_output, pooled_output, _ = outputs

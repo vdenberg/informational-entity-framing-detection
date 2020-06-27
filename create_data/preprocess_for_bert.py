@@ -11,9 +11,13 @@ def preprocess(rows):
     total = len(rows)
     features = []
     for row in rows:
+
         feats = convert_example_to_feature(row)
         features.append(feats)
         count += 1
+
+        l = feats.label_id
+        print(set(l))
 
         if count % 250 == 0:
             status = f'Processed {count}/{total} rows'
@@ -44,6 +48,7 @@ if OUTPUT_MODE == 'bio_classification':
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False, do_basic_tokenize=False)
     label_map = {label: i + 1 for i, label in enumerate(label_list)}
 else:
+    spacy_tokenizer = None
     tokenizer = BertTokenizer.from_pretrained('bert-base-cased', do_lower_case=False)
     label_map = {label: i for i, label in enumerate(label_list)}
 
@@ -54,19 +59,25 @@ FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
-    examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
+    examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples]
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
     print(f"Processed fold all - {len(features)} items")
 
-    with open(ofp, "wb") as f:
-        pickle.dump(features, f)
-    time.sleep(15)
+    # with open(ofp, "wb") as f:
+    #    pickle.dump(features, f)
+    # time.sleep(15)
 else:
     with open(ofp, "rb") as f:
-       features = pickle.load(f)
-       features_dict = {feat.my_id: feat for feat in features}
-       print(f"Processed fold all - {len(features)} items")
+        features = pickle.load(f)
+
+        l = []
+        for f in features:
+           l.extend(f.label_id)
+        print(set(l))
+
+        features_dict = {feat.my_id: feat for feat in features}
+        print(f"Processed fold all - {len(features)} items")
 
 # start
 for fold in folds:

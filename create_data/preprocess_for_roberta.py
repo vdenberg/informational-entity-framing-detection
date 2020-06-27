@@ -48,6 +48,7 @@ if OUTPUT_MODE == 'bio_classification':
     label_map = {label: i + 1 for i, label in enumerate(label_list)}
 
 else:
+    spacy_tokenizer = None
     tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
     tokenizer.encode_plus('test')
     label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
@@ -62,7 +63,7 @@ ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
-    examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
+    examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
 
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
@@ -93,7 +94,6 @@ for fold in folds:
         for f in features:
             l.extend(f.label_id)
         print(set(l))
-
 
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
