@@ -53,7 +53,7 @@ else:
     label_map = {label: i for i, label in enumerate(label_list)}
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
-ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
+ofp = os.path.join(FEAT_DIR, f"all_features_test.pkl")
 
 FORCE = False
 if not os.path.exists(ofp) or FORCE:
