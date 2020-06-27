@@ -36,7 +36,7 @@ SUBSET = 1.0 if not DEBUG else 0.1
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'classification' # or 'bio-classification', or 'regression'
+OUTPUT_MODE = 'bio_classification' # or 'bio-classification', or 'regression'
 NR_FOLDS = len(folds)
 
 if OUTPUT_MODE == 'bio_classification':
