@@ -29,8 +29,6 @@ DATA_DIR = f'data/{task}/ft_input'
 # structure of project
 #CONTEXT_TYPE = 'article'
 FEAT_DIR = f'data/{task}/features_for_roberta/'
-DEBUG = True
-SUBSET = 1.0 if not DEBUG else 0.2
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
@@ -61,19 +59,13 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
-    examples = [example for example in examples if example.label != '[]']
-    examples = examples[:10]
-
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
 
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
-
-    print([feat.label_id for feat in features])
-
 
     print(f"Processed fold all - {len(features)} items")
     with open(ofp, "wb") as f:
@@ -93,7 +85,11 @@ for fold in folds:
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
         examples = dataloader.get_examples(infp, set_type, sep='\t')
+        examples = [example for example in examples if example.label != '[]']
+
         features = [features_dict[example.my_id] for example in examples if example.text_a]
+        print([feat.label_id for feat in features])
+
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
