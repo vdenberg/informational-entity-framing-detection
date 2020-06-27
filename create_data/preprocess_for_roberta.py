@@ -13,11 +13,6 @@ def preprocess(rows):
     features = []
     for i, row in enumerate(rows):
         feats = convert_example_to_feature(row)
-        if i == 14:
-            print(row[0].label)
-            print(feats.label_id)
-            print(feats.my_id)
-            exit(0)
         features.append(feats)
         count += 1
 

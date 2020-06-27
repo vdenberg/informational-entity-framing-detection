@@ -138,9 +138,9 @@ if __name__ == '__main__':
                             train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
-                            _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                            _, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
-                            _, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
+                            train_ids, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                            dev_ids, dev_batches, dev_labels = load_features(dev_fp, BATCH_SIZE, SAMPLER)
+                            test_ids, test_batches, test_labels = load_features(test_fp, BATCH_SIZE, SAMPLER)
 
                             # start training
                             logger.info(f"***** Training on Fold {fold_name} *****")
@@ -174,10 +174,15 @@ if __name__ == '__main__':
                                     epoch_name = name + f"_ep{ep}"
                                     tr_loss = 0
                                     for step, batch in enumerate(train_batches):
+
+                                        labels = batch[-1]
+                                        if 3 in labels:
+                                            print(batch[-1])
+                                            print(train_ids[step])
+
                                         batch = tuple(t.to(device) for t in batch)
 
                                         model.zero_grad()
-                                        print(batch[-1], train_labels)
                                         outputs = model(batch[0], batch[1], labels=batch[-1])
 
                                         loss = outputs[0]
