@@ -14,7 +14,7 @@ def preprocess(rows):
     for i, row in enumerate(rows):
         feats = convert_example_to_feature(row)
         if i == 14:
-            print(row.label)
+            print(row.example.label)
             print(feats.label_id)
             print(feats.my_id)
             exit(0)
