@@ -159,7 +159,7 @@ if __name__ == '__main__':
                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     best_model = RobertaForTokenClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, name), num_labels=NUM_LABELS,
-                                                                            output_hidden_states=False,
+                                                                            output_hidden_states=True,
                                                                             output_attentions=False)
 
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
