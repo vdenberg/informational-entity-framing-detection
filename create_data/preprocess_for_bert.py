@@ -59,7 +59,7 @@ FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
-    examples = [ex for ex in examples if ex.label_id != '[]']
+    examples = [ex for ex in examples if ex.label != '[]']
     examples = examples[:10]
 
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples]
