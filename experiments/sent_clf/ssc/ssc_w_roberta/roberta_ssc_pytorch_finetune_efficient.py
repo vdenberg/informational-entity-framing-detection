@@ -154,7 +154,7 @@ if __name__ == '__main__':
                             name = setting_name + f"_f{fold_name}"
 
                             # init results containers
-                            best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
+                            best_model_loc = os.path.join(CHECKPOINT_DIR, name)
                             best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                             'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER}
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
@@ -224,14 +224,12 @@ if __name__ == '__main__':
                                     if dev_mets['f1'] > best_val_res['f1']:
                                         best_val_res.update(dev_mets)
                                         high_score = '(HIGH SCORE)'
-                                        save_model(model, CURRENT_BEST_DIR, name)
+                                        save_model(model, CHECKPOINT_DIR, name)
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                            best_model = RobertaSSC.from_pretrained(best_model_loc,
-                                                                                          num_labels=NUM_LABELS,
-                                                                                          output_hidden_states=True,
-                                                                                          output_attentions=False)
+                            best_model = RobertaSSC.from_pretrained(best_model_loc, num_labels=NUM_LABELS,
+                                                                    output_hidden_states=True, output_attentions=False)
                             best_model.to(device)
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
