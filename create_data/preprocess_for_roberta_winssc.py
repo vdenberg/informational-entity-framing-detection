@@ -7,6 +7,7 @@ import csv
 from lib.handle_data.SplitData import split_input_for_bert
 import torch
 import argparse
+import time
 
 
 def preprocess(rows):
@@ -54,7 +55,7 @@ def as_art_id(feat_id):
     return feat_id[:5]
 
 
-def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
+def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent_in_ex, window):
     flat_input_ids = []
     flat_labels = []
     #segment_ids = []
@@ -63,7 +64,6 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
         input_ids = remove_special(sent.input_ids, cls, pad)
         flat_input_ids.extend(input_ids)
         flat_labels.append(sent.label_id)
-        #segment_ids.extend([i+1] * len(input_ids))
 
     pad_len = max_ex_len - len(flat_input_ids)
     mask = [1] * len(flat_input_ids) + [0] * pad_len
@@ -72,8 +72,13 @@ def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
 
     assert len(mask) == len(flat_input_ids)
 
-    lab_pad_len = max_sent - len(flat_labels)
+    if window:
+        max_sent_in_ex = max_sent_in_ex + 2
+
+    lab_pad_len = max_sent_in_ex - len(flat_labels)
     flat_labels += [-1] * lab_pad_len
+
+    assert len(flat_labels) == max_sent_in_ex
 
     return InputFeatures(my_id=None,
                          input_ids=flat_input_ids,
@@ -91,20 +96,48 @@ def seps(x):
     return [el for el in x if el == 2]#x[mask]
 
 
-def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
+def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None, window=True):
     ''' Takes rows of features (each row is sentence), and converts them to rows of multiple sentences '''
 
+    empty_feature = InputFeatures(my_id=pad,
+                                     input_ids=[],
+                                     input_mask=[],
+                                     segment_ids=[],
+                                     label_id=-1)
+    window_size = 1
+
     article_rows = {}
+
     for f in features:
         row = article_rows.setdefault(f.article, [])
         row.append(f)
 
     sequence_rows = []
+    nr_sequences_agg = []
     for row in article_rows.values():
         row = sorted(row, key=lambda x: x.sent_id, reverse=False)
+
+        if window:
+            row = [empty_feature]*window_size + row + [empty_feature]*window_size
+
         sequences = enforce_max_sent_per_example(row, max_sent)
-        for s in sequences:
-            sequence_rows.append(s)
+        nr_sequences = len(sequences)
+        nr_sequences_agg.append(nr_sequences)
+
+        for i, s in enumerate(sequences):
+            if window:
+                winseq = s.copy()
+                if i != 0:
+                    winstart = sequences[i-1][-window_size:]
+                    winseq = winstart + winseq
+                if i != nr_sequences-1:
+                    winend = sequences[i+1][0:window_size]
+                    winseq = winseq + winend
+                sequence_rows.append(winseq)
+            else:
+                sequence_rows.append(s)
+
+    print(sum(nr_sequences_agg) / len(article_rows))
 
     # help measure what the maxlen should be
     for row in sequence_rows:
@@ -116,12 +149,13 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
 
     finfeats = []
     for row in sequence_rows:
-        ff = flatten_sequence(row, cls, pad, max_len, max_sent)
+        ff = flatten_sequence(row, cls, pad, max_len, max_sent, window)
         finfeats.append(ff)
     return finfeats
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-seqlen', '--sequence_length', type=int, default=1, help='Number of sentences per example#') #2,3,4
+parser.add_argument('-w', '--windowed', action='store_true', default=False)
 args = parser.parse_args()
 
 # choose sentence or bio labels
@@ -137,16 +171,24 @@ MAX_DOC_LEN = 76
 MAX_SENT_LEN = 486
 MAX_EX_LEN = args.sequence_length
 
+WINDOW = args.windowed
+
 # structure of project
 CONTEXT_TYPE = 'article'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{MAX_EX_LEN}/'
+FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{MAX_EX_LEN}/' if WINDOW else f'data/sent_clf/features_for_roberta_ssc/ssc{MAX_EX_LEN}/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
+
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 499, 10: 499}
+
+if WINDOW:
+    max_lens = {4: 326, 5: 398, 8: 455, 9: 519, 10: 543}  # average nr of splits: 7, .., .., 2
+else:
+    max_lens = {3: 204, 4: 230, 5: 305, 6: 316, 7: 355, 8: 416, 9: 499, 10: 499}
+
 MAX_SEQ_LEN_SSC = max_lens[args.sequence_length]
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
@@ -185,6 +227,8 @@ else:
        features_dict = {feat.my_id: feat for feat in features}
        print(f"Processed fold all - {len(features)} items")
 
+time.sleep(10)
+
 # start
 for fold in folds:
     fold_name = fold['name']
@@ -197,7 +241,7 @@ for fold in folds:
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
-        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_len=MAX_SEQ_LEN_SSC)
+        features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_len=MAX_SEQ_LEN_SSC, window=WINDOW)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
