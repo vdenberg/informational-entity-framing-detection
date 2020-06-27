@@ -89,7 +89,7 @@ GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1
 NUM_LABELS = 4
 PRINT_EVERY = 100
-
+OUTPUT_MODE = 'bio_classification'
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
 
 if __name__ == '__main__':
@@ -190,7 +190,7 @@ if __name__ == '__main__':
                                     av_loss = tr_loss / len(train_batches)
                                     # save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                                 set_type='dev', name=epoch_name)
+                                                                                 set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
 
                                     # check if best
                                     high_score = ''
@@ -209,11 +209,11 @@ if __name__ == '__main__':
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
-                            dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev')
+                            dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev', output_mode=OUTPUT_MODE)
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
-                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
+                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', output_mode=OUTPUT_MODE)
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
                                     logging.info(f'Generating {EMB_TYPE} embeds ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
-                                    embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+                                    embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE, output_mode=OUTPUT_MODE)
                                     assert len(embs) == len(all_ids)
 
                                     basil_w_BERT = pd.DataFrame(index=all_ids)
