@@ -3,7 +3,7 @@ from transformers import RobertaTokenizer
 from transformers.configuration_roberta import RobertaConfig
 import pickle
 from lib.handle_data.PreprocessForRoberta import *
-import csv
+import csv, time
 from lib.handle_data.SplitData import split_input_for_bert
 
 
@@ -24,7 +24,7 @@ def preprocess(rows):
 
 # choose sentence or bio labels
 task = 'tok_clf'
-DATA_DIR = f'data/sent_clf/ft_input'
+DATA_DIR = f'data/{task}/ft_input'
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
@@ -41,17 +41,20 @@ MAX_SEQ_LENGTH = 124
 OUTPUT_MODE = 'bio_classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
 
+dataloader = BinaryClassificationProcessor()
+label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
+
 if OUTPUT_MODE == 'bio_classification':
     spacy_tokenizer = spacy.load("en_core_web_sm")
     tokenizer = RobertaTokenizer.from_pretrained('roberta-base', do_lower_case=False, do_basic_tokenize=False)
+    label_map = {label: i + 1 for i, label in enumerate(label_list)}
+
 else:
     tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
     tokenizer.encode_plus('test')
+    label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
+    label_map = {label: i for i, label in enumerate(label_list)}
 
-dataloader = BinaryClassificationProcessor()
-
-label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-label_map = {label: i+1 for i, label in enumerate(label_list)}
 config = RobertaConfig.from_pretrained('roberta-base')
 config.num_labels = len(label_map)
 
@@ -68,6 +71,7 @@ if not os.path.exists(ofp) or FORCE:
 
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
+    time.sleep(15)
 else:
     with open(ofp, "rb") as f:
        features = pickle.load(f)
@@ -81,14 +85,7 @@ for fold in folds:
         infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
-        #if not os.path.exists(ofp):
         examples = dataloader.get_examples(infp, set_type, sep='\t')
-
-        label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-        label_map = {label: i for i, label in enumerate(label_list)}
-
-        #examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples]
-        #features = [convert_example_to_feature(row) for row in examples]
         features = [features_dict[example.my_id] for example in examples if example.text_a]
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
