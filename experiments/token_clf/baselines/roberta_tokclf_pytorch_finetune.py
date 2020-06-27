@@ -53,7 +53,7 @@ models = [args.model] if args.model else ['rob_base']
 seeds = [args.sv] if args.sv else [33, 22, 6, 181, 49]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else [str(el+1) for el in range(10)] + ['fan']
 samplers = [args.sampler] if args.sampler else ['sequential']
 NUM_LABELS = 4
 
