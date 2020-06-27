@@ -333,6 +333,7 @@ def convert_example_to_feature(example_row):
 
     elif output_mode == 'bio_classification':
         labels = ['O'] + labels + ['O']
+        print(labels)
         label_id = [label_map.get(lab) for lab in labels]
         padding = [0] * (max_seq_length - len(label_id))
         label_id += padding  # cls=0, pad=1

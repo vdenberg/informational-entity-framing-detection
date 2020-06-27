@@ -19,6 +19,7 @@ def preprocess(rows):
         if count % 250 == 0:
             status = f'Processed {count}/{total} rows'
             print(status)
+        exit(0)
     return features
 
 
