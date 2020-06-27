@@ -308,6 +308,8 @@ def convert_example_to_feature(example_row):
 
         tokens_a = " ".join(spacy_tokens)
         labels = spacy_labels
+        print(example.label)
+        print(labels)
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
         if len(tokens_a) > max_seq_length - 2:
@@ -333,7 +335,6 @@ def convert_example_to_feature(example_row):
 
     elif output_mode == 'bio_classification':
         labels = ['O'] + labels + ['O']
-        print(labels)
         label_id = [label_map.get(lab) for lab in labels]
         padding = [0] * (max_seq_length - len(label_id))
         label_id += padding  # cls=0, pad=1
