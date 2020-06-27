@@ -57,7 +57,7 @@ config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
@@ -87,7 +87,8 @@ for fold in folds:
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
         examples = dataloader.get_examples(infp, set_type, sep='\t')
-        examples = [example for example in examples if example.label != '[]']
+
+        #examples = [example for example in examples if example.label != '[]']
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
