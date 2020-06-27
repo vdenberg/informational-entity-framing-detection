@@ -59,15 +59,18 @@ FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
+    examples = [ex for ex in examples if ex.label_id != '[]']
+    examples = examples[:10]
+
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples]
     features = preprocess(examples)
 
     for f in features:
         print(f.label_id)
 
-    with open(ofp, "wb") as f:
-        pickle.dump(features, f)
-    time.sleep(15)
+    # with open(ofp, "wb") as f:
+    #    pickle.dump(features, f)
+    # time.sleep(15)
 else:
     with open(ofp, "rb") as f:
         features = pickle.load(f)
