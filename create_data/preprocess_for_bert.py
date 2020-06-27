@@ -61,12 +61,14 @@ if not os.path.exists(ofp) or FORCE:
 
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples]
     features = preprocess(examples)
-    features_dict = {feat.my_id: feat for feat in features}
-    print(f"Processed fold all - {len(features)} items")
 
-    # with open(ofp, "wb") as f:
-    #    pickle.dump(features, f)
-    # time.sleep(15)
+    l = []
+    for f in features:
+        l.extend(f.label_id)
+
+    with open(ofp, "wb") as f:
+        pickle.dump(features, f)
+    time.sleep(15)
 else:
     with open(ofp, "rb") as f:
         features = pickle.load(f)
@@ -76,8 +78,8 @@ else:
            l.extend(f.label_id)
         print(set(l))
 
-        features_dict = {feat.my_id: feat for feat in features}
-        print(f"Processed fold all - {len(features)} items")
+print(f"Processed fold all - {len(features)} items")
+features_dict = {feat.my_id: feat for feat in features}
 
 # start
 for fold in folds:
