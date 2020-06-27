@@ -80,20 +80,6 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    '''
-    model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
-                  '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
-                  '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
-                  '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
-                  '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
-                  '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
-                  '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
-                  '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
-                  '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                  }
-    '''
-
     for SEED in [23, 49, 45362, 132, 281]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)

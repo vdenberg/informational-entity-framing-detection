@@ -289,7 +289,7 @@ if PREPROCESS:
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
 
-    to_katja = raw_data[['sentence_ids', 'source', 'sentence', 'context_doc_num', 'label']]
+    to_katja = raw_data[['sentence_ids', 'source', 'sentence', 'context_document', 'label']]
     to_katja.to_csv('data/for_katja.csv')
 
     raw_data.to_json(DATA_FP)
