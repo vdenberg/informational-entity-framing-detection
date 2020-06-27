@@ -26,14 +26,14 @@ def preprocess(rows):
 task = 'tok_clf'
 DATA_DIR = f'data/{task}/ft_input'
 
-# load and split data
-folds = split_input_for_bert(DATA_DIR, task)
-
 # structure of project
 #CONTEXT_TYPE = 'article'
 FEAT_DIR = f'data/{task}/features_for_roberta/'
 DEBUG = True
 SUBSET = 1.0 if not DEBUG else 0.2
+
+# load and split data
+folds = split_input_for_bert(DATA_DIR, task)
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
@@ -65,6 +65,7 @@ FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [example for example in examples if example.label != '[]']
+    examples = examples[:10]
 
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
 
@@ -73,8 +74,8 @@ if not os.path.exists(ofp) or FORCE:
 
     print([feat.label_id for feat in features])
 
-    print(f"Processed fold all - {len(features)} items")
 
+    print(f"Processed fold all - {len(features)} items")
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
     time.sleep(15)
