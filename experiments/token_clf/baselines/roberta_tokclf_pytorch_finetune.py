@@ -175,9 +175,6 @@ if __name__ == '__main__':
                                     tr_loss = 0
                                     for step, batch in enumerate(train_batches):
 
-                                        three_in_batch = [3 in labels for labels in batch[-1]]
-                                        if three_in_batch.any():
-                                            print(batch[-1])
 
                                         batch = tuple(t.to(device) for t in batch)
 
