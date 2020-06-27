@@ -85,7 +85,7 @@ for fold in folds:
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
         examples = dataloader.get_examples(infp, set_type, sep='\t')
-        #examples = [example for example in examples if example.label != '[]']
+        examples = [example for example in examples if example.label != '[]']
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
         print([feat.label_id for feat in features])
