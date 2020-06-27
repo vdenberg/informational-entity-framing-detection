@@ -131,7 +131,7 @@ if __name__ == '__main__':
                     logger.info(f"  Logging to {LOG_NAME}")
 
                     model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
-                                                                       output_hidden_states=False, output_attentions=False)
+                                                                       output_hidden_states=True, output_attentions=False)
                     model.to(device)
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()

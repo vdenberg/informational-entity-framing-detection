@@ -99,7 +99,7 @@ class BertForTokenClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), probs, scores, (hidden_states), (attentions)
+        return outputs  # (loss), logits, probs, scores, (hidden_states), (attentions)
 
 
 class BertForSequenceClassification(BertPreTrainedModel):
