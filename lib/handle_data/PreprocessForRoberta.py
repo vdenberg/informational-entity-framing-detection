@@ -308,8 +308,6 @@ def convert_example_to_feature(example_row):
 
         tokens_a = " ".join(spacy_tokens)
         labels = spacy_labels
-        print(example.label)
-        print(labels)
         tokens_a, labels = expand_to_wordpieces(tokens_a, labels, tokenizer)
 
         if len(tokens_a) > max_seq_length - 2:
