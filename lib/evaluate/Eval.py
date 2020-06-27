@@ -18,7 +18,7 @@ def get_metrics(labels, preds, opmode):
     if isinstance(labels, np.ndarray):
         labels = labels.squeeze()
 
-    print(labels)
+    print(labels.shape)
 
     labels = [el for el in labels]
 
