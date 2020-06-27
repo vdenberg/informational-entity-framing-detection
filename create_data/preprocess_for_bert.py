@@ -16,8 +16,8 @@ def preprocess(rows):
         features.append(feats)
         count += 1
 
-        l = feats.label_id
-        print(set(l))
+        # l = feats.label_id
+        # print('inset(l))
 
         if count % 250 == 0:
             status = f'Processed {count}/{total} rows'
@@ -65,6 +65,7 @@ if not os.path.exists(ofp) or FORCE:
     l = []
     for f in features:
         l.extend(f.label_id)
+    print(set(l))
 
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
