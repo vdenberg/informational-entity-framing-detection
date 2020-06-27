@@ -83,10 +83,6 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             quartiles = torch.tensor(split.quartile.to_numpy(), dtype=torch.long, device=device)
             srcs = torch.tensor(split.src_num.to_numpy(), dtype=torch.long, device=device)
             labels = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
-            print(split.columns)
-            print(srcs[:10])
-            print(contexts[:10])
-            print(labels[:10])
             # return TensorDataset(token_ids, token_mask, contexts, positions, labels)
             return TensorDataset(token_ids, token_mask, contexts, positions, quartiles, srcs, labels)
 
