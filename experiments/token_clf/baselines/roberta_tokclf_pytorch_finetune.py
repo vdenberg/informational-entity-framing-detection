@@ -175,8 +175,8 @@ if __name__ == '__main__':
                                     tr_loss = 0
                                     for step, batch in enumerate(train_batches):
 
-                                        labels = batch[-1]
-                                        if 3 in labels:
+                                        three_in_batch = [3 in labels for labels in batch[-1]]
+                                        if three_in_batch.any():
                                             print(batch[-1])
                                             print(train_ids[step])
 
