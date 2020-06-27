@@ -136,41 +136,42 @@ if __name__ == '__main__':
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
 
-                    for ep in range(1, N_EPS + 1):
-                        epoch_name = name + f"_ep{ep}"
+                    if not os.path.exists(os.path.join(CHECKPOINT_DIR, name)):
+                        for ep in range(1, N_EPS + 1):
+                            epoch_name = name + f"_ep{ep}"
 
-                        tr_loss = 0
-                        for step, batch in enumerate(train_batches):
-                            batch = tuple(t.to(device) for t in batch)
+                            tr_loss = 0
+                            for step, batch in enumerate(train_batches):
+                                batch = tuple(t.to(device) for t in batch)
 
-                            model.zero_grad()
-                            outputs = model(batch[0], batch[1], labels=batch[2])
-                            #(loss), logits, probs, sequence_output, pooled_output = outputs
-                            #(loss), logits, probs = outputs
-                            loss = outputs[0]
+                                model.zero_grad()
+                                outputs = model(batch[0], batch[1], labels=batch[2])
+                                #(loss), logits, probs, sequence_output, pooled_output = outputs
+                                #(loss), logits, probs = outputs
+                                loss = outputs[0]
 
-                            loss.backward()
-                            tr_loss += loss.item()
-                            optimizer.step()
+                                loss.backward()
+                                tr_loss += loss.item()
+                                optimizer.step()
 
-                            if step % PRINT_EVERY == 0 and step != 0:
-                                logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
+                                if step % PRINT_EVERY == 0 and step != 0:
+                                    logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                        av_loss = tr_loss / len(train_batches)
+                            av_loss = tr_loss / len(train_batches)
 
-                        dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
+                            dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                              set_type='dev', name=epoch_name, output_mode=OUTPUT_MODE)
 
 
-                        # check if best
-                        high_score = ''
-                        if dev_mets['f1'] > best_val_res['f1']:
-                            best_val_res.update(dev_mets)
-                            best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
-                            high_score = '(HIGH SCORE)'
-                            save_model(model, CHECKPOINT_DIR, name)
+                            # check if best
+                            high_score = ''
+                            if dev_mets['f1'] > best_val_res['f1']:
+                                best_val_res.update(dev_mets)
+                                best_val_res.update({'model_loc': os.path.join(CHECKPOINT_DIR, epoch_name)})
+                                high_score = '(HIGH SCORE)'
+                                save_model(model, CHECKPOINT_DIR, name)
 
-                        logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                     best_model = BertForTokenClassification.from_pretrained(os.path.join(CHECKPOINT_DIR, name), num_labels=NUM_LABELS,
                                                                             output_hidden_states=True,
