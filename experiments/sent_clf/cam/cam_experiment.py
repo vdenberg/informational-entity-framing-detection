@@ -356,7 +356,6 @@ for fold in folds:
 
     fold['train_batches'] = train_batches
     print(fold['train_batches'])
-    exit(0)
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
 
