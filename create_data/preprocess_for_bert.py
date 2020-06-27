@@ -22,22 +22,19 @@ def preprocess(rows):
 
 # choose sentence or bio labels
 task = 'tok_clf'
-DATA_DIR = f'data/sent_clf/ft_input'
+DATA_DIR = f'data/'
 
 # load and split data
 folds = split_input_for_bert(DATA_DIR, task)
+NR_FOLDS = len(folds)
 
 # structure of project
-CONTEXT_TYPE = 'article'
 FEAT_DIR = f'data/{task}/features_for_bert/'
 DEBUG = False
 SUBSET = 1.0 if not DEBUG else 0.1
 
-# The maximum total input sequence length after WordPiece tokenization.
-# Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'bio_classification' # or 'bio-classification', or 'regression'
-NR_FOLDS = len(folds)
+OUTPUT_MODE = 'bio_classification' # 'classification' ,or 'bio-classification'
 
 if OUTPUT_MODE == 'bio_classification':
     spacy_tokenizer = spacy.load("en_core_web_sm")
@@ -48,7 +45,11 @@ else:
 dataloader = BinaryClassificationProcessor()
 
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
-label_map = {label: i for i, label in enumerate(label_list)}
+
+if OUTPUT_MODE == 'bio_classification':
+    label_map = {label: i+1 for i, label in enumerate(label_list)}
+else:
+    label_map = {label: i for i, label in enumerate(label_list)}
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")

@@ -304,7 +304,6 @@ def convert_example_to_feature(example_row):
     #   _truncate_seq_pair(tokens_a, tokens_b, max_seq_length - 3)
     #else:
 
-
     if len(tokens_a) > max_seq_length - 2:
         tokens_a = tokens_a[:(max_seq_length - 2)]    # Account for [CLS] and [SEP] with "- 2"
 
