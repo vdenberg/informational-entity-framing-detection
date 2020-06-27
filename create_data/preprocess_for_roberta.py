@@ -92,8 +92,8 @@ for fold in folds:
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
-        #print([e.label for e in examples])
-        print([feat.label_id for feat in features])
+        print([e.label for e in examples])
+        #print([feat.label_id for feat in features])
 
 
         with open(ofp, "wb") as f:
