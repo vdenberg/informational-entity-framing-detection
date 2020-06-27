@@ -11,15 +11,18 @@ def preprocess(rows):
     count = 0
     total = len(rows)
     features = []
-    for row in rows:
+    for i, row in enumerate(rows):
         feats = convert_example_to_feature(row)
+        if i == 14:
+            print(row.label)
+            print(feats.label_id)
+            exit(0)
         features.append(feats)
         count += 1
 
         if count % 250 == 0:
             status = f'Processed {count}/{total} rows'
             print(status)
-        exit(0)
     return features
 
 
@@ -66,7 +69,6 @@ FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     labels = [example.label for example in examples]
-    print(labels[:25])
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
     features = preprocess(examples)
     features_dict = {feat.my_id: feat for feat in features}
