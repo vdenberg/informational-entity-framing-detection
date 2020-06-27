@@ -8,6 +8,7 @@ import csv
 import spacy
 from lib.handle_data.LoadData import load_basil_spans
 from lib.utils import standardise_id
+import re
 
 logger = logging.getLogger()
 csv.field_size_limit(2147483647) # Increase CSV reader's field limit incase we have long text.
@@ -23,6 +24,7 @@ class SpanToBio():
 
     def tokenize(self, sent):
         if not isinstance(sent, float):
+            sent = re.sub('  ', ' ', sent)
             return [token.text for token in self.spacy_tokenizer(sent)]
         else:
             return []
