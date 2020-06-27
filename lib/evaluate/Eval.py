@@ -18,9 +18,6 @@ def get_metrics(labels, preds, opmode):
     if isinstance(labels, np.ndarray):
         labels = labels.squeeze()
 
-    print(labels.shape)
-    print(preds.shape)
-
     labels = [el for el in labels]
 
     if opmode == 'bio_classification':
