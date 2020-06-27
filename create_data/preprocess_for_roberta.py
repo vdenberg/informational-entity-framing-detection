@@ -50,8 +50,6 @@ if OUTPUT_MODE == 'bio_classification':
 else:
     spacy_tokenizer = None
     tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-    tokenizer.encode_plus('test')
-    label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
     label_map = {label: i for i, label in enumerate(label_list)}
 
 config = RobertaConfig.from_pretrained('roberta-base')
