@@ -37,6 +37,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
+parser.add_argument('-sv', '--sv', type=int, default=0)
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
@@ -80,7 +81,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [45362, 132, 281, 23, 49]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
+    for SEED in [281, 23, 49, 45362, 132]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
