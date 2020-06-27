@@ -101,9 +101,9 @@ if __name__ == '__main__':
                     fold_results_table = pd.DataFrame(columns=table_columns.split(','))
                     name = setting_name + f"_f{fold_name}"
 
-                    best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
+                    best_val_res = {'model': 'roberta', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                     'f1': 0, 'model_loc': ''}
-                    test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
+                    test_res = {'model': 'roberta', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/tok_clf/features_for_roberta/{fold_name}_train_features.pkl"
                     dev_fp = f"data/tok_clf/features_for_roberta/{fold_name}_dev_features.pkl"
