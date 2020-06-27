@@ -36,7 +36,7 @@ class InputFeatures(object):
 
 parser = argparse.ArgumentParser()
 # TRAINING PARAMS
-parser.add_argument('-ep', '--n_epochs', type=int, default=4) #2,3,4
+parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=24) #16, 21
 parser.add_argument('-load', '--load_from_ep', type=int, default=0)
