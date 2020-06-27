@@ -78,10 +78,11 @@ for fold in folds:
         examples = dataloader.get_examples(infp, set_type, sep='\t')
         features = [features_dict[example.my_id] for example in examples]
 
-        print([f.label_id for f in features])
         l = []
         for f in features:
             l.extend(f.label_id)
+            if 1 in set(f.label_id):
+                print(f.label_id)
         print(set(l))
 
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items - to {ofp}")
