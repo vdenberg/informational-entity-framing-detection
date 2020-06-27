@@ -16,6 +16,7 @@ def preprocess(rows):
         if i == 14:
             print(row.label)
             print(feats.label_id)
+            print(feats.my_id)
             exit(0)
         features.append(feats)
         count += 1
