@@ -178,7 +178,6 @@ if __name__ == '__main__':
                                         three_in_batch = [3 in labels for labels in batch[-1]]
                                         if three_in_batch.any():
                                             print(batch[-1])
-                                            print(train_ids[step])
 
                                         batch = tuple(t.to(device) for t in batch)
 

@@ -19,7 +19,6 @@ def standardise_id(basil_id):
 
 def to_tensor(features):
     example_ids = [f.my_id for f in features]
-    example_ids = torch.tensor([f.my_id for f in features], dtype=torch.long)
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
     input_mask = torch.tensor([f.input_mask for f in features], dtype=torch.long)
     label_ids = torch.tensor([f.label_id for f in features], dtype=torch.long)
