@@ -49,8 +49,8 @@ args = parser.parse_args()
 #ssc3: 49_bs16_lr1e-05_f3
 models = [args.model] if args.model else ['rob_base']
 EX_LEN = args.example_length
-seeds = [args.sv] if args.sv else [34, 49, 181] # 34, 49, 181
-bss = [args.bs] if args.bs else [6]  #, 8, 1
+seeds = [args.sv] if args.sv else [49, 181] # 34, 49, 181
+bss = [args.bs] if args.bs else [16]  #, 8, 1
 lrs = [args.lr] if args.lr else [1.5e-5] #, 2e-5
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
 samplers = [args.sampler] if args.sampler else ['sequential']
