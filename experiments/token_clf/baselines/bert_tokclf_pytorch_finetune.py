@@ -115,7 +115,8 @@ if __name__ == '__main__':
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
 
-                    if not os.path.exists(best_model_loc):
+                    FORCE = True
+                    if not os.path.exists(best_model_loc) or FORCE:
                         model = BertForTokenClassification.from_pretrained(BERT_MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                            output_hidden_states=True, output_attentions=False)
                         model.to(device)
@@ -137,12 +138,6 @@ if __name__ == '__main__':
                             tr_loss = 0
                             for step, batch in enumerate(train_batches):
                                 batch = tuple(t.to(device) for t in batch)
-
-                                l = []
-                                for labels in batch[-1]:
-                                    l.extend(labels)
-                                l = set(l)
-                                print(l)
 
                                 model.zero_grad()
                                 outputs = model(batch[0], batch[1], labels=batch[2])
