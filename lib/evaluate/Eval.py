@@ -24,8 +24,8 @@ def get_metrics(labels, preds, opmode):
         preds = convert_bio_to_binary(preds)
         labels = convert_bio_to_binary(labels)
 
-    print(opmode)
-    print(preds.shape, labels.shape)
+    #print(opmode)
+    #print(preds.shape, labels.shape)
 
     # assert set(labels) == {0, 1}
 
