@@ -50,7 +50,7 @@ else:
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
@@ -77,6 +77,12 @@ for fold in folds:
 
         examples = dataloader.get_examples(infp, set_type, sep='\t')
         features = [features_dict[example.my_id] for example in examples]
+
+        l = []
+        for f in features:
+            l.extend(f.label_id)
+        print(set(l))
+
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items - to {ofp}")
 
         with open(ofp, "wb") as f:

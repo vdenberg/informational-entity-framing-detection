@@ -23,6 +23,7 @@ def to_tensor(features):
     for f in features:
         l.extend(f.label_id)
     print(set(l))
+    exit(0)
 
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
