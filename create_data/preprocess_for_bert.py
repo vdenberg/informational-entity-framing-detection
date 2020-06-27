@@ -11,7 +11,7 @@ def preprocess(rows):
     total = len(rows)
     features = []
     for row in rows:
-        print(row.example.label)
+        print(row[0].label)
         feats = convert_example_to_feature(row)
         print(feats.label_id)
         print()
