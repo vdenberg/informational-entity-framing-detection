@@ -75,6 +75,10 @@ if not os.path.exists(ofp) or FORCE:
 else:
     with open(ofp, "rb") as f:
        features = pickle.load(f)
+
+       for f in features:
+           print(f.label_id)
+
        features_dict = {feat.my_id: feat for feat in features}
        print(f"Processed fold all - {len(features)} items")
 
@@ -89,12 +93,6 @@ for fold in folds:
         examples = [example for example in examples if example.label != '[]']
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
-
-        l = []
-        for f in features:
-            l.extend(f.label_id)
-        print(set(l))
-
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
