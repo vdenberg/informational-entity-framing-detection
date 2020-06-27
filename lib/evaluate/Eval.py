@@ -5,8 +5,8 @@ import numpy as np
 
 
 def convert_bio_to_binary(labels):
-    labels = [lab for lab in labels if lab != 0]
-    # labels = [1 if lab == 0 else lab for lab in labels]  # if 0 (pad) than 1 to equalise with O
+    #labels = [lab for lab in labels if lab != 0]
+    labels = [1 if lab == 0 else lab for lab in labels]  # if 0 (pad) than 1 to equalise with O
 
     labels = [2 if lab == 3 else lab for lab in labels]  # if I-BIAS than same as B-BIAS
 
