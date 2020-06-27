@@ -36,13 +36,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-lr', '--learning_rate', type=float, default=2e-5) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--batch_size', type=int, default=16) #16, 21
-parser.add_argument('-load', '--load_from_ep', type=int, default=0)
-parser.add_argument('-sv', '--sv', type=int, default=0)
 args = parser.parse_args()
 
 N_EPS = args.n_epochs
 LEARNING_RATE = args.learning_rate
-LOAD_FROM_EP = args.load_from_ep
 BATCH_SIZE = args.batch_size
 GRADIENT_ACCUMULATION_STEPS = 1
 WARMUP_PROPORTION = 0.1

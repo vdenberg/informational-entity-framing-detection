@@ -19,7 +19,7 @@ def standardise_id(basil_id):
 
 def to_tensor(features):
     print(features[0].label_id)
-    features = [feat for feat in features if 3 in feat.label_id]
+    features = [feat for feat in features if 1 in feat.label_id]
     print(features[0].label_id)
     example_ids = [f.my_id for f in features]
     input_ids = torch.tensor([f.input_ids for f in features], dtype=torch.long)
