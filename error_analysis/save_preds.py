@@ -325,5 +325,5 @@ for fold in folds:
     dev_df['pred'] = preds
     dev_df['losses'] = losses
 
-    pred_fp = f"data/dev_w_{model}_preds/{fold['name']}_dev_w_pred.csv"
+    pred_fp = f"data/dev_w_{model}_{CONTEXT_TYPE}_preds/{fold['name']}_dev_w_pred.csv"
     dev_df.to_csv(pred_fp)
