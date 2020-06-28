@@ -53,7 +53,7 @@ seeds = [args.sv] if args.sv else [49, 181] # 34, 49, 181
 bss = [args.bs] if args.bs else [16]  #, 8, 1
 lrs = [args.lr] if args.lr else [1.5e-5] #, 2e-5
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
-samplers = [args.sampler] if args.sampler else ['sequential']
+SAMPLER = 'sequential'
 N_EPS = args.n_epochs
 
 DEBUG = args.debug
@@ -89,20 +89,15 @@ PRINT_EVERY = 100
 
 TASK_NAME = f'SSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
-#CHECKPOINT_DIR = f'/scratch/vdberg/checkpoints/{TASK_NAME}/'
-#CURRENT_BEST_DIR = f'/scratch/vdberg/checkpoints/{TASK_NAME}/current_best/'
 
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'task_results_table.csv')
 
-#if not os.path.exists(CHECKPOINT_DIR):
-#    os.makedirs(CHECKPOINT_DIR)  #todo: fix error
-#if not os.path.exists(CURRENT_BEST_DIR):
-#    os.makedirs(CURRENT_BEST_DIR)
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -134,7 +129,6 @@ if __name__ == '__main__':
     # get inferencer and place to store results
 
     inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-    SAMPLER = 'sequential'
     for MODEL in models:
         ROBERTA = model_mapping[MODEL]
 
@@ -198,24 +192,12 @@ if __name__ == '__main__':
                         model.train()
 
                         # start training
+                        FORCE = False
+                        if not os.path.exists(os.path.join(CHECKPOINT_DIR, name)) or FORCE:
+                            for ep in range(1, N_EPS + 1):
+                                epoch_name = name + f"_ep{ep}"
 
-                        for ep in range(1, N_EPS + 1):
-                            epoch_name = name + f"_ep{ep}"
-
-                            # if debugging is done, allow reloading of eps that have been trained already
-
-                            LOAD_ALLOWED = args.load
-                            if LOAD_ALLOWED and os.path.exists(os.path.join(CHECKPOINT_DIR, epoch_name)):
-                                # this epoch for this setting has been trained before already
-                                trained_model = RobertaSSC.from_pretrained(os.path.join(CHECKPOINT_DIR, epoch_name),
-                                                                                                 num_labels=NUM_LABELS,
-                                                                                                 output_hidden_states=False,
-                                                                                                 output_attentions=False)
-                                dev_mets, dev_perf = inferencer.evaluate(trained_model, dev_batches, dev_labels,
-                                                                     set_type='dev', name=epoch_name)
-                            else:
-
-                                # loop through batches
+                                # if debugging is done, allow reloading of eps that have been trained already
 
                                 tr_loss = 0
                                 for step, batch in enumerate(train_batches):
@@ -227,37 +209,38 @@ if __name__ == '__main__':
                                     print(batch[2])
                                     print()
                                     outputs = model(batch[0], batch[1], labels=batch[-1], ssc=True)
-                                    (loss), logits, _, sequence_output = outputs
+                                    loss = outputs[0]
 
                                     loss.backward()
                                     tr_loss += loss.item()
                                     optimizer.step()
-                                    scheduler.step()
+                                    # scheduler.step()
 
                                     if step % PRINT_EVERY == 0 and step != 0:
                                         logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
-                                av_loss = tr_loss / len(train_batches)
 
-                                # validate & save
+                                    av_loss = tr_loss / len(train_batches)
 
-                                dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                     set_type='dev', name=epoch_name)
-                                #save_model(model, CHECKPOINT_DIR, epoch_name)
-                            # check if best
+                                    # validate
 
-                            high_score = ''
-                            if dev_mets['f1'] > best_val_res['f1']:
-                                best_val_res.update(dev_mets)
-                                best_val_res.update({'model_loc': epoch_name})
-                                high_score = '(HIGH SCORE)'
-                                save_model(model, CURRENT_BEST_DIR, name)
+                                    dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                         set_type='dev', name=epoch_name)
 
-                            logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                    # check if best
+
+                                    high_score = ''
+                                    if dev_mets['f1'] > best_val_res['f1']:
+                                        best_val_res.update(dev_mets)
+                                        best_val_res.update({'model_loc': epoch_name})
+                                        high_score = '(HIGH SCORE)'
+                                        save_model(model, CHECKPOINT_DIR, name)
+
+                                    logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                         # load best model, save embeddings, print performance on test
-                        best_model = RobertaSSC.from_pretrained(os.path.join(CURRENT_BEST_DIR, name), num_labels=NUM_LABELS,
-                                                                                   output_hidden_states=False,
-                                                                                   output_attentions=False)
+                        best_model = RobertaSSC.from_pretrained(os.path.join(CHECKPOINT_DIR, name), num_labels=NUM_LABELS,
+                                                                output_hidden_states=False,
+                                                                output_attentions=False)
                         logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                         logger.info(f"  Details: {best_val_res}")
 
@@ -301,8 +284,8 @@ if __name__ == '__main__':
 
                     # write performance to file
 
-                    setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
-                    main_results_table.to_csv(os.path.join(TABLE_DIR, f'task_results_table.csv'), index=False)
+                    setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}.csv'), index=False)
+                    main_results_table.to_csv(os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv'), index=False)
 
 '''
 n_train_batches = len(train_batches)
