@@ -56,7 +56,7 @@ def get_metrics(labels, preds, opmode):
     }
 
 
-def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None, opmode='bio_classification'):
+def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None, opmode='classification'):
     """
     Compares labels to predictions, Loss can be added to also
     display the loss associated to the model that made those predictions

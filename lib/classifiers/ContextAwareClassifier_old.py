@@ -235,7 +235,7 @@ class ContextAwareClassifier():
 
     def predict(self, data):
         test_triples = self.to_tensor(data)
-        test_sampler = RandomSampler(test_triples)
+        test_sampler = SequentialSampler(test_triples)
         test_dataloader = DataLoader(test_triples, sampler=test_sampler, batch_size=self.batch_size)
         y_true = []
         y_pred = []
@@ -254,7 +254,7 @@ class ContextAwareClassifier():
 
     def evaluate(self, data, which='f1'):
         y_true, y_pred = self.predict(data)
-        metrics, metrics_df, metrics_string = my_eval('eval', y_true, y_pred)
+        metrics, metrics_df, metrics_string = my_eval('eval', y_true, y_pred, opmode='classification')
         f1 = round(metrics['f1'] * 100, 2)
 
         if which == 'all':
