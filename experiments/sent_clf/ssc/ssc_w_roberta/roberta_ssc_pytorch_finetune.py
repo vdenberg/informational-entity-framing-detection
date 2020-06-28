@@ -222,23 +222,23 @@ if __name__ == '__main__':
                                     if step % PRINT_EVERY == 0 and step != 0:
                                         logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
-                                    av_loss = tr_loss / len(train_batches)
+                                av_loss = tr_loss / len(train_batches)
 
-                                    # validate
+                                # validate
 
-                                    dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                         set_type='dev', name=epoch_name)
+                                dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
+                                                                     set_type='dev', name=epoch_name)
 
-                                    # check if best
+                                # check if best
 
-                                    high_score = ''
-                                    if dev_mets['f1'] > best_val_res['f1']:
-                                        best_val_res.update(dev_mets)
-                                        best_val_res.update({'model_loc': epoch_name})
-                                        high_score = '(HIGH SCORE)'
-                                        save_model(model, CHECKPOINT_DIR, name)
+                                high_score = ''
+                                if dev_mets['f1'] > best_val_res['f1']:
+                                    best_val_res.update(dev_mets)
+                                    best_val_res.update({'model_loc': epoch_name})
+                                    high_score = '(HIGH SCORE)'
+                                    save_model(model, CHECKPOINT_DIR, name)
 
-                                    logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
                         # load best model, save embeddings, print performance on test
                         best_model = RobertaSSC.from_pretrained(os.path.join(CHECKPOINT_DIR, name), num_labels=NUM_LABELS,
