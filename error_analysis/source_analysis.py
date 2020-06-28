@@ -25,6 +25,7 @@ for model, context in [('cam+', 'article'), ('cam+', 'story'), ('cam++', 'story'
         general_df['label'] = sentences.loc[general_df.index].lex_bias
         general_df['source'] = sentences.loc[general_df.index].source
         general_df['pred'] = general_df.preds
+    pirnt
 
     columns = ['source', 'size', 'size_bias', 'prec', 'rec', 'f1']
 

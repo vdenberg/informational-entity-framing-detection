@@ -98,8 +98,8 @@ def my_eval(labels, preds, av_loss=None, set_type="", name="", rep_sim=None, opm
     else:
         metrics_string = f"{set_type} {conf_mat}: acc {metrics[0]} prec {metrics[1]} rec {metrics[2]} > {set_type} f1: {metrics[3]} <"
 
-    if rep_sim:
-        metrics_string += f' (rep_sim: {round(rep_sim, 3)})'
+    # if rep_sim:
+        # metrics_string += f' (rep_sim: {round(rep_sim, 3)})'
     return metrics_dict, metrics_string
 
 
