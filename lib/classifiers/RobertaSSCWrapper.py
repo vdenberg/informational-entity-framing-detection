@@ -252,6 +252,7 @@ class Inferencer():
             probs = probs.detach().cpu().numpy()
 
             pred = probs[0].argmax(axis=1).tolist()
+            print(preds)
 
             preds.extend(pred)
 
