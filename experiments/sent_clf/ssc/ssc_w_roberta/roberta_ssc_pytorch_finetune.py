@@ -199,7 +199,7 @@ if __name__ == '__main__':
                         model.train()
 
                         # start training
-                        FORCE = False
+                        FORCE = True
                         if not os.path.exists(os.path.join(CHECKPOINT_DIR, name)) or FORCE:
                             for ep in range(1, N_EPS + 1):
                                 epoch_name = name + f"_ep{ep}"
