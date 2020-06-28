@@ -115,8 +115,6 @@ if __name__ == '__main__':
                     logger.info(f"***** Training on Fold {fold_name} *****")
                     logger.info(f"  Details: {best_val_res}")
                     logger.info(f"  Logging to {LOG_NAME}")
-                    logger.info(f"  Lengths: {len(train_labels)}")
-
                     model = RobertaForTokenClassification.from_pretrained(MODEL, cache_dir=CACHE_DIR, num_labels=NUM_LABELS,
                                                                           output_hidden_states=True, output_attentions=False)
                     model.to(device)
