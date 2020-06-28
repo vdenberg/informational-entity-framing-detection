@@ -86,16 +86,13 @@ if DEBUG:
 TASK_NAME = f'WSSC{EX_LEN}' if WINDOW else f'SSC{EX_LEN}'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}' if WINDOW else f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'ssc_results.csv')
 
-#if not os.path.exists(CHECKPOINT_DIR):
-#    os.makedirs(CHECKPOINT_DIR)
-#if not os.path.exists(CURRENT_BEST_DIR):
-#    os.makedirs(CURRENT_BEST_DIR)
+if not os.path.exists(CHECKPOINT_DIR):
+    os.makedirs(CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
