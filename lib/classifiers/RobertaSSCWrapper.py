@@ -251,7 +251,10 @@ class Inferencer():
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
+            print(probs)
             pred = probs[0].argmax(axis=1).tolist()
+            print(pred)
+            print()
 
             preds.extend(pred)
 
