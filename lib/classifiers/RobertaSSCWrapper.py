@@ -162,7 +162,7 @@ class RobertaSSC(BertPreTrainedModel):
         sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
         embedded_sentences = embedded_sentences[
             sentences_mask]   # returns num_sentences_per_batch x vector_len
-        #print(embedded_sentences.shape) # torch.Size([4, 768])
+        print(embedded_sentences.shape) # torch.Size([4, 768])
         assert embedded_sentences.dim() == 2
         num_sentences = embedded_sentences.shape[0]
         # for the rest of the code in this model to work, think of the data we have as one example
