@@ -237,12 +237,13 @@ if __name__ == '__main__':
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
-                            preds, _ = inferencer.predict(best_model, dev_batches)
+                            preds, labels = inferencer.predict(best_model, dev_batches)
                             assert len(preds) == len(dev_ids)
 
                             basil_w_pred = pd.DataFrame(index=dev_ids)
-                            basil_w_pred['preds'] = preds
-                            pred_fp = f'data/dev_w_preds/{fold_name}_dev_w_rob_pred.csv'
+                            basil_w_pred['pred'] = preds
+                            basil_w_pred['label'] = labels
+                            pred_fp = f'data/dev_w_preds/dev_w_rob_none_preds/{fold_name}_dev_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}.csv')
 

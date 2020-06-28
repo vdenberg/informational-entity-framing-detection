@@ -346,9 +346,11 @@ class Inferencer():
         preds = []
         embeddings = []
         rep_sim = []
+        labels = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, label_ids = batch
+            labels.extend(label_ids)
 
             with torch.no_grad():
                 # print(input_mask)
@@ -433,7 +435,7 @@ class Inferencer():
         if return_embeddings:
             return embeddings
         else:
-            return preds, rep_sim
+            return preds, labels
 
     def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
         preds, rep_sim = self.predict(model, data, output_mode=output_mode)
