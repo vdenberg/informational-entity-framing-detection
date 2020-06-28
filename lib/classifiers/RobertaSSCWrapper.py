@@ -199,8 +199,8 @@ class RobertaSSC(BertPreTrainedModel):
             print(embedded_sentences)
             logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
             probs = torch.nn.functional.softmax(logits, dim=-1)
-            print(logits)
-            print(probs)
+            print(logits.shape)
+            print(probs.shape)
             print()
 
         outputs = (logits, probs, sequence_output) + outputs[2:]
