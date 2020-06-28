@@ -42,6 +42,7 @@ parser.add_argument('-bs', '--bs', type=int, default=None,
                     help='note that in this expertise batch size is the nr of sentence in a group')
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
 parser.add_argument('-fold', '--fold', type=str, default=None) #16, 21
+parser.add_argument('-w', '--w', action='store_true', default=False) #16, 21
 args = parser.parse_args()
 
 #ssc5: 49_bs16_lr3e-05_f2
@@ -87,8 +88,14 @@ PRINT_EVERY = 100
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SSC{EX_LEN}'
-FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
+
+WINDOW = args.w
+if WINDOW:
+    TASK_NAME = f'WSSC{EX_LEN}'
+    FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/windowed/ssc{EX_LEN}'
+else:
+    TASK_NAME = f'SSC{EX_LEN}'
+    FEAT_DIR = f'data/sent_clf/features_for_roberta_ssc/ssc{EX_LEN}'
 
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
@@ -138,7 +145,7 @@ if __name__ == '__main__':
             else:
                 SEED_VAL = SEED
 
-            seed_name = f"{MODEL}_{SAMPLER}_{SEED_VAL}"
+            seed_name = f"{TASK_NAME}_{SEED_VAL}"
             random.seed(SEED_VAL)
             np.random.seed(SEED_VAL)
             torch.manual_seed(SEED_VAL)
