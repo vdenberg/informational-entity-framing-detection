@@ -305,7 +305,7 @@ for fold in folds:
 
     # LOAD MODEL
     model = 'cam++'
-    model_name = f"{model}_base_34_h1200_bs32_lr0.001_f{fold['name']}"
+    model_name = f"{model}_base_68_h1200_bs32_lr0.001_f{fold['name']}"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
     result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
               'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
