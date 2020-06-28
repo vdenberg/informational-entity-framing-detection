@@ -202,7 +202,7 @@ if __name__ == '__main__':
                                         batch = tuple(t.to(device) for t in batch)
 
                                         model.zero_grad()
-                                        outputs = model(batch[0], batch[1], labels=batch[2])
+                                        outputs = model(batch[0], batch[1], labels=batch[2], ssc=True)
                                         #(loss), logits, probs, sequence_output = outputs
                                         loss = outputs[0]
 
@@ -217,7 +217,7 @@ if __name__ == '__main__':
                                     av_loss = tr_loss / len(train_batches)
                                     # save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
-                                                                                 set_type='dev', name=epoch_name)
+                                                                                 set_type='dev', name=epoch_name, output_mode='ssc')
 
                                     # check if best
                                     high_score = ''
@@ -234,11 +234,11 @@ if __name__ == '__main__':
 
                             logger.info(f"***** Best model on Fold {fold_name} *****")
                             logger.info(f"  Details: {best_val_res}")
-                            dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev')
+                            dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev', output_mode='ssc')
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
-                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
+                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', output_mode='ssc')
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
