@@ -117,7 +117,7 @@ class RobertaSSC(BertPreTrainedModel):
             self.labels_are_scores = True
             self.num_labels = 1
         else:
-            self.loss = torch.nn.CrossEntropyLoss(ignore_index=-1, reduction='none')
+            self.loss = torch.nn.CrossEntropyLoss(weight=torch.tensor([.20, .80]), ignore_index=-1, reduction='none')
             self.labels_are_scores = False
             self.num_labels = 2
             # define accuracy metrics
@@ -162,7 +162,7 @@ class RobertaSSC(BertPreTrainedModel):
         sentences_mask = input_ids == 2  # mask for all the SEP tokens in the batch
         embedded_sentences = embedded_sentences[
             sentences_mask]   # returns num_sentences_per_batch x vector_len
-        print(embedded_sentences.shape) # torch.Size([4, 768])
+        # print(embedded_sentences.shape) # torch.Size([4, 768])
         assert embedded_sentences.dim() == 2
         num_sentences = embedded_sentences.shape[0]
         # for the rest of the code in this model to work, think of the data we have as one example
@@ -196,11 +196,9 @@ class RobertaSSC(BertPreTrainedModel):
             logits = self.classifier(sequence_output)
             probs = self.sigm(logits)
         else:
-            print(embedded_sentences)
             logits = self.time_distributed_aggregate_feedforward(embedded_sentences)
             probs = torch.nn.functional.softmax(logits, dim=-1)
-            print(logits.shape)
-            print(probs.shape)
+            print(probs)
             print()
 
         outputs = (logits, probs, sequence_output) + outputs[2:]
