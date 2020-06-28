@@ -117,7 +117,7 @@ class RobertaSSC(BertPreTrainedModel):
             self.labels_are_scores = True
             self.num_labels = 1
         else:
-            self.loss = torch.nn.CrossEntropyLoss(ignore_index=-1, weight=torch.tensor([.20, .80]), reduction='none') #
+            self.loss = torch.nn.CrossEntropyLoss(ignore_index=-1, reduction='none') #weight=torch.tensor([.20, .80]),
             self.labels_are_scores = False
             self.num_labels = 2
             # define accuracy metrics
