@@ -117,7 +117,7 @@ class RobertaSSC(BertPreTrainedModel):
             self.labels_are_scores = True
             self.num_labels = 1
         else:
-            self.loss = torch.nn.CrossEntropyLoss(weight=torch.tensor([.20, .80]), ignore_index=-1, reduction='none')
+            self.loss = torch.nn.CrossEntropyLoss(ignore_index=-1, reduction='none') # weight=torch.tensor([.20, .80]),
             self.labels_are_scores = False
             self.num_labels = 2
             # define accuracy metrics
@@ -251,10 +251,7 @@ class Inferencer():
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
-            print(probs)
             pred = probs[0].argmax(axis=1).tolist()
-            print(pred)
-            print()
 
             preds.extend(pred)
 
@@ -266,6 +263,10 @@ class Inferencer():
 
     def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='ssc'):
         preds, rep_sim, _ = self.predict(model, data, output_mode=output_mode)
+
+        print(preds)
+        print(labels)
+        exit(0)
         # print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         # print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
         if output_mode == 'bio_classification':
