@@ -48,12 +48,6 @@ def enforce_max_sent_per_example(sentences, max_sent_per_example, labels=None):
         return [sentences]
 
 
-def as_art_id(feat_id):
-    if not feat_id[1].isdigit():
-        feat_id = '0' + feat_id
-    return feat_id[:5]
-
-
 def flatten_sequence(seq_rows, cls, pad, max_ex_len, max_sent):
     flat_input_ids = []
     flat_labels = []
@@ -120,6 +114,7 @@ def redistribute_feats(features, cls=0, pad=1, max_sent=10, max_len=None):
         finfeats.append(ff)
     return finfeats
 
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-seqlen', '--sequence_length', type=int, default=1, help='Number of sentences per example#') #2,3,4
 args = parser.parse_args()
@@ -163,6 +158,7 @@ dataloader = BinaryClassificationProcessor()
 
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
 label_map = {label: i for i, label in enumerate(label_list)}
+
 config = RobertaConfig.from_pretrained('roberta-base')
 config.num_labels = len(label_map)
 
@@ -193,12 +189,14 @@ for fold in folds:
         infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
-        #if not os.path.exists(ofp):
         examples = dataloader.get_examples(infp, set_type, sep='\t')
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
 
         features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_len=MAX_SEQ_LEN_SSC)
+
+        for f in features[:10]:
+            print(len(f.input_ids), f.input_ids, len(f.label_id), f.label_id)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")

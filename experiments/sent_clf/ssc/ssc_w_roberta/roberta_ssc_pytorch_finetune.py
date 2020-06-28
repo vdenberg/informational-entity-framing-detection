@@ -222,7 +222,11 @@ if __name__ == '__main__':
                                     batch = tuple(t.to(device) for t in batch)
 
                                     model.zero_grad()
-                                    outputs = model(batch[0], batch[1], labels=batch[2], ssc=True)
+                                    print(batch[0])
+                                    print(batch[1])
+                                    print(batch[2])
+                                    print()
+                                    outputs = model(batch[0], batch[1], labels=batch[-1], ssc=True)
                                     (loss), logits, _, sequence_output = outputs
 
                                     loss.backward()
@@ -249,11 +253,6 @@ if __name__ == '__main__':
                                 save_model(model, CURRENT_BEST_DIR, name)
 
                             logger.info(f'{epoch_name}: {dev_perf} {high_score}')
-
-                        # IMPORTANT NOTE! model_loc is just the best epoch now, there is no actual model in that location
-                        if best_val_res['model_loc'] == '':  # if none of the epochs performed above f1=0, use model of last epoch
-                            best_val_res['model_loc'] = epoch_name
-                            save_model(model, CURRENT_BEST_DIR, name)
 
                         # load best model, save embeddings, print performance on test
                         best_model = RobertaSSC.from_pretrained(os.path.join(CURRENT_BEST_DIR, name), num_labels=NUM_LABELS,

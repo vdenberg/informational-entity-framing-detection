@@ -217,85 +217,7 @@ class RobertaSSC(BertPreTrainedModel):
 
             outputs = (loss,) + outputs
 
-        return outputs  # (loss), logits, (hidden_states), (attentions)
-
-
-#@add_start_docstrings("""Roberta Model with a token classification head on top (a linear layer on top of
-#    the hidden-states output) e.g. for Named-Entity-Recognition (NER) tasks. """,
-#                      ROBERTA_START_DOCSTRING, ROBERTA_INPUTS_DOCSTRING)
-class RobertaForTokenClassification(BertPreTrainedModel):
-    r"""
-        **labels**: (`optional`) ``torch.LongTensor`` of shape ``(batch_size, sequence_length)``:
-            Labels for computing the token classification loss.
-            Indices should be in ``[0, ..., config.num_labels - 1]``.
-
-    Outputs: `Tuple` comprising various elements depending on the configuration (config) and inputs:
-        **loss**: (`optional`, returned when ``labels`` is provided) ``torch.FloatTensor`` of shape ``(1,)``:
-            Classification loss.
-        **scores**: ``torch.FloatTensor`` of shape ``(batch_size, sequence_length, config.num_labels)``
-            Classification scores (before SoftMax).
-        **hidden_states**: (`optional`, returned when ``config.output_hidden_states=True``)
-            list of ``torch.FloatTensor`` (one for the output of each layer + the output of the embeddings)
-            of shape ``(batch_size, sequence_length, hidden_size)``:
-            Hidden-states of the model at the output of each layer plus the initial embedding outputs.
-        **attentions**: (`optional`, returned when ``config.output_attentions=True``)
-            list of ``torch.FloatTensor`` (one for each layer) of shape ``(batch_size, num_heads, sequence_length, sequence_length)``:
-            Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
-
-    Examples::
-
-        tokenizer = RobertaTokenizer.from_pretrained('roberta-base')
-        model = RobertaForTokenClassification.from_pretrained('roberta-base')
-        input_ids = torch.tensor(tokenizer.encode("Hello, my dog is cute", add_special_tokens=True)).unsqueeze(0)  # Batch size 1
-        labels = torch.tensor([1] * input_ids.size(1)).unsqueeze(0)  # Batch size 1
-        outputs = model(input_ids, labels=labels)
-        loss, scores = outputs[:2]
-
-    """
-    config_class = RobertaConfig
-    pretrained_model_archive_map = ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
-    base_model_prefix = "roberta"
-
-    def __init__(self, config):
-        super(RobertaForTokenClassification, self).__init__(config)
-        self.num_labels = config.num_labels
-
-        self.roberta = RobertaModel(config)
-        self.dropout = nn.Dropout(config.hidden_dropout_prob)
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
-
-        self.init_weights()
-        self.sigm = nn.Sigmoid()
-
-    def forward(self, input_ids=None, attention_mask=None, token_type_ids=None,
-                position_ids=None, head_mask=None, inputs_embeds=None, labels=None):
-
-        outputs = self.roberta(input_ids,
-                               attention_mask=attention_mask,
-                               token_type_ids=token_type_ids,
-                               position_ids=position_ids,
-                               head_mask=head_mask,
-                               inputs_embeds=inputs_embeds)
-        sequence_output = outputs[0]
-
-        sequence_output = self.dropout(sequence_output)
-        logits = self.classifier(sequence_output)
-        probs = self.sigm(logits)
-
-        outputs = (logits, probs, sequence_output) + outputs[2:]  # add hidden states and attention if they are here
-        if labels is not None:
-            loss_fct = CrossEntropyLoss()
-            # Only keep active parts of the loss
-            if attention_mask is not None:
-                active_loss = attention_mask.view(-1) == 1
-                active_logits = logits.view(-1, self.num_labels)[active_loss]
-                active_labels = labels.view(-1)[active_loss]
-                loss = loss_fct(active_logits, active_labels)
-            else:
-                loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
-            outputs = (loss,) + outputs
-
-        return outputs  # (loss), scores, (hidden_states), (attentions)
+        return outputs  # (loss), logits, probs, sequence output, (hidden_states), (attentions)
 
 
 class Inferencer():
@@ -322,51 +244,14 @@ class Inferencer():
                 outputs = model(input_ids, input_mask, labels=None)
                 logits, probs, sequence_output = outputs[0], outputs[1], outputs[2]
 
-                r = sequence_output[:, 0, :]
-                r = r.detach().cpu().numpy()
-
-                batch_r_sim = cosine_similarity(r)
-                batch_r_sim = batch_r_sim.ravel()
-
-                batch_r_sim = batch_r_sim.mean()
-                rep_sim.append(batch_r_sim)
                 # logits, probs = outputs
 
-            # of last hidden state with size (batch_size, sequence_length, hidden_size)
-            # where batch_size=1, sequence_length=95, hidden_size=768)
-            # take average of sequence, size (batch_size, hidden_size)
-            '''
-            if emb_type == 'poolbert':
-                emb_output = pooled_output
-            elif emb_type == "avbert":
-                emb_output = sequence_output.mean(axis=1)
-
-
-            if self.use_cuda:
-                emb_output = list(emb_output[0].detach().cpu().numpy())  # .detach().cpu() necessary here on gpu
-
-            else:
-                self.logger.info("NOT USING CUDA")
-                emb_output = list(emb_output[0].numpy())
-            embeddings.append(emb_output)
-            '''
             logits = logits.detach().cpu().numpy()
             probs = probs.detach().cpu().numpy()
 
-            if output_mode == 'bio_classification':
-                pred = [list(p) for p in np.argmax(logits, axis=2)]
-            else:
-                #print(probs)
-                #assert len(probs[0]) == 2
-                #pred = np.argmax(logits, axis=1)
-                #pred = np.argmax(probs, axis=1)
-
-                # pred = probs[0].argmax(axis=1).tolist()
-                pred = probs[0].argmax(axis=1).tolist()
+            pred = probs[0].argmax(axis=1).tolist()
 
             preds.extend(pred)
-
-        rep_sim = sum(rep_sim) / len(rep_sim)
 
         model.train()
         if return_embeddings:
