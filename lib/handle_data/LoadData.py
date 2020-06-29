@@ -49,7 +49,11 @@ class LoadBasil:
             source = file.split('_')[1][:3]
             with open(self.raw_dir + file) as f:
                 file_content = json.load(f)
+
+                pprint(file_content)
                 main_entities = file_content['main-entities']
+                author_sentiment = file_content['article-level-annotations']['stance']
+
                 sentences = file_content['body']
                 for sent in sentences:
                     sentence = sent['sentence']
@@ -58,23 +62,45 @@ class LoadBasil:
                     informational_ann = [ann for ann in sent['annotations'] if ann['bias'] == 'Informational']
                     lex_bias_present = 1 if lexical_ann else 0
                     inf_bias_present = 1 if informational_ann else 0
+
                     inf_start_ends = []
                     lex_start_ends = []
+
                     inf_targets = []
                     lex_targets = []
+
+                    inf_polarities = []
+                    lex_polarities = []
+
+                    inf_directs = []
+                    lex_directs = []
+
                     if inf_bias_present:
                         for ann in informational_ann:
                             inf_start_ends.append((ann['start'],ann['end']))
                             inf_targets.append(ann['target'])
+                            inf_polarities.append(ann['polarity'])
+                            inf_directs.append(ann['aim'])
+
                     if lex_bias_present:
                         for ann in lexical_ann:
                             lex_start_ends.append((ann['start'], ann['end']))
                             lex_targets.append(ann['target'])
-                    pre_df.append([story, source, main_entities, inf_targets, lex_targets, sent_idx, lex_bias_present, inf_bias_present, sentence, lex_start_ends, inf_start_ends])
+                            lex_polarities.append(ann['polarity'])
+                            lex_directs.append(ann['aim'])
 
-        columns = ['story', 'source', 'main_entities', 'inf_entities', 'lex_entities', 'sent_idx', 'lex_bias', 'bias', 'sentence', 'lex_start_ends', 'inf_start_ends']
+                    pre_df.append([story, source, main_entities, sent_idx, lex_bias_present, inf_bias_present, sentence,
+                                   inf_targets, lex_targets, inf_polarities, lex_polarities, inf_directs, lex_directs,
+                                   lex_start_ends, inf_start_ends])
+
+        columns = ['story', 'source', 'main_entities', 'sent_idx', 'lex_bias', 'bias', 'sentence',
+                   'inf_entities', 'lex_entities',  'inf_pol', 'lex_pol', 'inf_dir', 'lex_dir',
+                   'lex_start_ends', 'inf_start_ends']
         df = pd.DataFrame(pre_df, columns=columns)
         df['uniq_idx'] = df['story'] + df['source'] + df['sent_idx']
         df = df.set_index(df['uniq_idx'])
         df.to_csv('data/basil.csv')
         return df
+
+
+df = LoadBasil().load_basil_raw()

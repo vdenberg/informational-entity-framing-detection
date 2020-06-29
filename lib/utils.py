@@ -198,22 +198,3 @@ def standardise_id(basil_id):
     if not basil_id[-2].isdigit():
         basil_id = basil_id[:-1] + '0' + basil_id[-1]
     return basil_id.lower()
-
-
-def collect_preds(model, context, sentences):
-    df = pd.DataFrame()
-    for f in [str(el) for el in range(1, 11)]:
-        subdf = pd.read_csv(f"data/dev_w_preds/dev_w_{model}_{context}_preds/{f}_dev_w_pred.csv", index_col=0)
-        df = df.append(subdf)
-
-    if model == 'rob':
-        sentences.index = [standardise_id(el) for el in sentences.index]
-        df.index = [standardise_id(el) for el in df.index]
-        df['source'] = sentences.loc[df.index].source
-        df['main_entities'] = sentences.loc[df.index].main_entities
-        df['label'] = sentences.loc[df.index].bias
-        df['sentence'] = sentences.loc[df.index].sentence
-
-    df.main_entities = df.main_entities.apply(lambda x: re.sub('Lawmakers', 'lawmakers', x))
-
-    return df

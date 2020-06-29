@@ -1,54 +1,27 @@
 import pandas as pd
 from lib.evaluate.Eval import my_eval
 from lib.utils import standardise_id
-
-sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
-print(sentences.columns)
-
+from lib.handle_data.ErrorAnalysis import ErrorAnalysis
 pd.set_option('display.max_columns', 10)
 pd.set_option('display.max_colwidth', 500)
+pd.set_option('display.width', 200)
 
-#sentences = '58fox62', '52fox18', '47nyt19', '46fox24', '48fox19'
-for model, context in [('cam+', 'article'), ('cam+', 'story'), ('cam++', 'story'), ('rob', 'none')]:
-    print()
-    print(model, context)
+ea = ErrorAnalysis(models='base_best')
 
-    df = pd.DataFrame()
-    for f in [str(el) for el in range(1,11)]:
-        subdf = pd.read_csv(f"data/dev_w_preds/dev_w_{model}_{context}_preds/{f}_dev_w_pred.csv", index_col=0)
-        df = df.append(subdf)
+source_dfs = [ea.compare_subsets(ea.w_preds, 'source', model, context) for model, context in ea.models]
+source_df = ea.concat_comparisons(source_dfs)
 
-    if model == 'rob':
-        sentences.index = [standardise_id(el) for el in sentences.index]
-        df.index = [standardise_id(el) for el in df.index]
-        df['label'] = sentences.loc[df.index].bias
-        df['source'] = [el.lower() for el in sentences.loc[df.index].source]
+ea.inf_bias_only()
 
-    columns = ['source', 'size', 'size_bias', 'prec', 'rec', 'f1']
+pol_df = ea.clean_for_pol_analysis()
+pol_dfs = [ea.compare_subsets(pol_df, 'inf_pol', model, context) for model, context in ea.models]
+pol_df = ea.concat_comparisons(pol_dfs, only_rec=True)
+print(pol_df.to_latex())
 
-    source_df = pd.DataFrame(columns=columns)
+dir_df = ea.clean_for_dir_analysis()
+dir_dfs = [ea.compare_subsets(dir_df, 'inf_dir', model, context) for model, context in ea.models]
+dir_df = ea.concat_comparisons(dir_dfs, only_rec=True)
+print(dir_df.to_latex())
 
 
-    general_mets, general_perf = my_eval(df.label, df.pred, name='all')
-    print(general_perf)
-    biased = df[df.label == 1]
 
-    row = ['&&All', len(df), len(biased), general_mets['prec'], general_mets['rec'], general_mets['f1']]
-    rows = pd.DataFrame([row], columns=columns)
-    source_df = source_df.append(rows, ignore_index=True)
-
-    # ANALYZE BY SOURCE
-    for n, gr in df.groupby('source'):
-        source_mets, source_perf = my_eval(gr.label, gr.pred, name=n)
-        biased = gr[gr.label == 1]
-
-        row = [n, len(gr), len(biased), source_mets['prec'], source_mets['rec'], source_mets['f1']]
-        rows = pd.DataFrame([row], columns=columns)
-        source_df = source_df.append(rows, ignore_index=True)
-
-    source_df[['prec', 'rec', 'f1']] = round(source_df[['prec', 'rec', 'f1']] * 100, 2)
-    source_df = source_df.set_index('source')
-    source_df[['size', 'size_bias']] = source_df[['size', 'size_bias']].astype(int)
-    source_df = source_df.rename(index={'fox': 'FOX', 'hpo': '&&HPO', 'nyt': '&&NYT'})
-
-    print(source_df.loc[['FOX', '&&NYT', '&&HPO', '&&All']].to_latex())
