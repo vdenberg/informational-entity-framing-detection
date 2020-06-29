@@ -99,7 +99,7 @@ for model, context in [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')]:
 
         nr_biased = len(in_art[in_art.label == 1])
 
-        for n, gr in [('in target', in_target_too), ('in art only', in_art_only)]:
+        for n, gr in [('in art only', in_art_only)]:
             mets, perf = my_eval(gr.label, gr.pred, name=n, set_type='w')
             w_row = [e, nr_sent, n, nr_biased, len(gr), mets['prec'], mets['rec'], mets['f1']]
             rows = pd.DataFrame([w_row], columns=['entity', '#sent', 'mention', '#sent2', '#biased_sent', 'prec', 'rec', 'f1'])
