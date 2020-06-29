@@ -245,7 +245,7 @@ if __name__ == '__main__':
                             basil_w_pred['label'] = labels
                             pred_fp = f'data/dev_w_preds/dev_w_rob_none_preds/{fold_name}_dev_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
-                            logger.info(f'Preds in {pred_fp}.csv')
+                            logger.info(f'Preds in {pred_fp}')
 
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)

@@ -5,39 +5,40 @@ from lib.utils import standardise_id
 sentences = pd.read_csv('data/basil.csv', index_col=0).fillna('')
 print(sentences.columns)
 
+pd.set_option('display.max_columns', 10)
+pd.set_option('display.max_colwidth', 500)
+
 #sentences = '58fox62', '52fox18', '47nyt19', '46fox24', '48fox19'
 for model, context in [('cam+', 'article'), ('cam+', 'story'), ('cam++', 'story'), ('rob', 'none')]:
     print()
     print(model, context)
 
-    source_df = pd.DataFrame(columns=['source', 'prec', 'rec', 'f1'])
-    pd.set_option('display.max_columns', 10)
-    pd.set_option('display.max_colwidth', 500)
-
-    general_df = pd.DataFrame()
+    df = pd.DataFrame()
     for f in [str(el) for el in range(1,11)]:
-        df = pd.read_csv(f"data/dev_w_preds/dev_w_{model}_{context}_preds/{f}_dev_w_pred.csv", index_col=0)
-        general_df = general_df.append(df)
+        subdf = pd.read_csv(f"data/dev_w_preds/dev_w_{model}_{context}_preds/{f}_dev_w_pred.csv", index_col=0)
+        df = df.append(subdf)
 
     if model == 'rob':
         sentences.index = [standardise_id(el) for el in sentences.index]
-        general_df.index = [standardise_id(el) for el in general_df.index]
-        general_df['label'] = sentences.loc[general_df.index].lex_bias
-        general_df['source'] = sentences.loc[general_df.index].source
-        general_df['pred'] = general_df.preds
-    pirnt
+        df.index = [standardise_id(el) for el in df.index]
+        df['label'] = sentences.loc[df.index].bias
+        df['source'] = [el.lower() for el in sentences.loc[df.index].source]
 
     columns = ['source', 'size', 'size_bias', 'prec', 'rec', 'f1']
 
-    general_mets, general_perf = my_eval(general_df.label, general_df.pred, name='all')
-    biased = general_df[general_df.label == 1]
+    source_df = pd.DataFrame(columns=columns)
 
-    row = ['&&All', len(general_df), len(biased), general_mets['prec'], general_mets['rec'], general_mets['f1']]
+
+    general_mets, general_perf = my_eval(df.label, df.pred, name='all')
+    print(general_perf)
+    biased = df[df.label == 1]
+
+    row = ['&&All', len(df), len(biased), general_mets['prec'], general_mets['rec'], general_mets['f1']]
     rows = pd.DataFrame([row], columns=columns)
     source_df = source_df.append(rows, ignore_index=True)
 
     # ANALYZE BY SOURCE
-    for n, gr in general_df.groupby('source'):
+    for n, gr in df.groupby('source'):
         source_mets, source_perf = my_eval(gr.label, gr.pred, name=n)
         biased = gr[gr.label == 1]
 
