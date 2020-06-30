@@ -271,6 +271,7 @@ if PREPROCESS:
 
     if LEX:
         raw_data['label'] = sentences['lex_bias']
+        print('label is lex bias')
 
     raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
 
