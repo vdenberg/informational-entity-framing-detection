@@ -4,8 +4,7 @@ from lib.handle_data.ErrorAnalysis import ErrorAnalysis
 pd.set_option('display.max_columns', 10)
 pd.set_option('display.max_colwidth', 500)
 
-models2compare = [('cam+', 'article'), ('rob', 'none')]
-ea = ErrorAnalysis(models2compare)
+ea = ErrorAnalysis('base_best')
 df = ea.w_preds
 
 for model, context in models2compare: # , ('cam+', 'story'), ('cam++', 'story'),

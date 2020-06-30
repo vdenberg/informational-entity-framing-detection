@@ -30,7 +30,7 @@ def flatten_e(top_e):
 def collect_preds(model, context):
     df = pd.DataFrame()
     for f in [str(el) for el in range(1, 11)]:
-        subdf = pd.read_csv(f"data/dev_w_preds/dev_w_{model}_{context}_preds/{f}_dev_w_pred.csv", index_col=0)
+        subdf = pd.read_csv(f"data/test_w_preds/test_w_{model}_{context}_preds/{f}_test_w_pred.csv", index_col=0)
         df = df.append(subdf)
 
     df.index = [standardise_id(el) for el in df.index]
@@ -236,6 +236,14 @@ class ErrorAnalysis:
 
         return tar_in_a, tar_in_sent
 
+    def sample_sentences(self, which='pol'):
+        df = self.w_preds
+        sample = []
+        for n, gr in df.groupby(which):
+            samp = gr.sample(5).sentence
+            for s in samp:
+                sample.append((n, s))
+        return sample
 
 
 '''

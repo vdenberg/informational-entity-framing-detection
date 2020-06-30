@@ -199,7 +199,6 @@ class Inferencer():
             return preds
 
     def evaluate(self, model, data, labels, av_loss=None, set_type='dev', name='Basil', output_mode='classification'):
-        print('evaluate', output_mode)
         preds = self.predict(model, data, output_mode=output_mode)
         #print('Evaluation these predictions:', len(preds), len(preds[0]), preds[:2])
         #print('Evaluation above predictions with these labels:', len(labels), len(labels[0]), labels[:2])
@@ -217,7 +216,7 @@ class Inferencer():
             print(len(labels), len(labels[0]))
             exit(0)
 
-        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name)
+        metrics_dict, metrics_string = my_eval(labels, preds, set_type=set_type, av_loss=av_loss, name=name, opmode=output_mode)
 
         #output_eval_file = os.path.join(self.reports_dir, f"{name}_eval_results.txt")
         #self.logger.info(f'{metrics_string}')
