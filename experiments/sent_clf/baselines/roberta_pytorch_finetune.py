@@ -161,8 +161,8 @@ if __name__ == '__main__':
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                            dev_ids, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
-                            _, test_batches, test_labels = load_features(test_fp, 1, SAMPLER)
+                            _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
+                            test_ids, test_batches, test_labels = load_features(test_fp, 1, SAMPLER)
 
                             # start training
                             logger.info(f"***** Training on Fold {fold_name} *****")
@@ -237,13 +237,13 @@ if __name__ == '__main__':
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
-                            preds, labels = inferencer.predict(best_model, dev_batches)
-                            assert len(preds) == len(dev_ids)
+                            preds, labels = inferencer.predict(best_model, test_batches)
+                            assert len(preds) == len(test_ids)
 
-                            basil_w_pred = pd.DataFrame(index=dev_ids)
+                            basil_w_pred = pd.DataFrame(index=test_ids)
                             basil_w_pred['pred'] = preds
                             basil_w_pred['label'] = labels
-                            pred_fp = f'data/dev_w_preds/dev_w_rob_none_preds/{fold_name}_dev_w_pred.csv'
+                            pred_fp = f'data/test_w_preds/test_w_rob_none_preds/{fold_name}_test_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}')
 
