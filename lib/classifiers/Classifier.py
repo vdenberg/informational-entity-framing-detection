@@ -153,7 +153,7 @@ class Classifier:
         if not model_name:
             model_name = self.model_name
         self.wrapper.load_model(model_name)
-        preds, _, _, losses = self.wrapper.predict(fold['dev_batches'])
+        preds, _, _, losses = self.wrapper.predict(fold['test_batches'])
         return preds, losses
 
 
