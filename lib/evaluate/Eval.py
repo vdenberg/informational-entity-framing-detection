@@ -16,6 +16,7 @@ def convert_bio_to_binary(labels):
 
 
 def get_metrics(labels, preds, opmode):
+    print('getmetrics', opmode)
     assert len(preds) == len(labels)
 
     if isinstance(labels, np.ndarray):
