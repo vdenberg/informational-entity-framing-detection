@@ -10,15 +10,17 @@ ea = ErrorAnalysis(models='base_best')
 
 source_dfs = [ea.compare_subsets(ea.w_preds, 'source', model, context) for model, context in ea.models]
 source_df = ea.concat_comparisons(source_dfs)
+print(source_df)
 
+source_dfs = [ea.compare_subsets(ea.w_preds, 'stance', model, context) for model, context in ea.models]
+source_df = ea.concat_comparisons(source_dfs)
 print(source_df.to_latex())
+
 ea.inf_bias_only()
+s = ea.sample_sentences(ea.w_preds, 'source')
+#print(source_df.to_latex())
 
 pol_df = ea.clean_for_pol_analysis()
-pol_sample = ea.sample_sentences(pol_df, which='inf_pol')
-for n, s in pol_sample:
-    print(n, s)
-
 pol_dfs = [ea.compare_subsets(pol_df, 'inf_pol', model, context) for model, context in ea.models]
 pol_df = ea.concat_comparisons(pol_dfs, only_rec=True)
 

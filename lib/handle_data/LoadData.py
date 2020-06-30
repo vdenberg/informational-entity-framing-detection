@@ -52,7 +52,7 @@ class LoadBasil:
 
                 pprint(file_content)
                 main_entities = file_content['main-entities']
-                author_sentiment = file_content['article-level-annotations']['stance']
+                stance = file_content['article-level-annotations']['stance']
 
                 sentences = file_content['body']
                 for sent in sentences:
@@ -91,11 +91,11 @@ class LoadBasil:
 
                     pre_df.append([story, source, main_entities, sent_idx, lex_bias_present, inf_bias_present, sentence,
                                    inf_targets, lex_targets, inf_polarities, lex_polarities, inf_directs, lex_directs,
-                                   lex_start_ends, inf_start_ends])
+                                   lex_start_ends, inf_start_ends, stance])
 
         columns = ['story', 'source', 'main_entities', 'sent_idx', 'lex_bias', 'bias', 'sentence',
                    'inf_entities', 'lex_entities',  'inf_pol', 'lex_pol', 'inf_dir', 'lex_dir',
-                   'lex_start_ends', 'inf_start_ends']
+                   'lex_start_ends', 'inf_start_ends', 'stance']
         df = pd.DataFrame(pre_df, columns=columns)
         df['uniq_idx'] = df['story'] + df['source'] + df['sent_idx']
         df = df.set_index(df['uniq_idx'])
@@ -103,4 +103,4 @@ class LoadBasil:
         return df
 
 
-#df = LoadBasil().load_basil_raw()
+df = LoadBasil().load_basil_raw()

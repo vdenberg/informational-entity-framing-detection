@@ -48,9 +48,12 @@ def got_quote(x):
 
 
 models2compare = {'all':
-                  [('cam+', 'article'), ('cam+', 'story'), ('cam++', 'article'), ('cam++', 'story'), ('rob', 'none')],
+                  [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')], # ('cam++', 'article'), ('cam++', 'story'),
                   'base_best':
-                  [('rob', 'none'), ('cam+', 'article')]}
+                  [('rob', 'none'), ('cam+', 'article')],
+                  'cimcov':
+                   [('cam+', 'story')]
+                  }
 
 class ErrorAnalysis:
     """
@@ -96,14 +99,14 @@ class ErrorAnalysis:
         if grby is not None:
             for n, gr in df.groupby(grby):
                 r = self.row4compare(n, gr, model, context)
+
                 rows = pd.DataFrame([r], columns=basic_columns)
                 out = out.append(rows, ignore_index=True)
 
         r = self.row4compare(f'{model}_{context}', df, model, context)
+
         row = pd.DataFrame([r], columns=basic_columns)
         out = out.append(row, ignore_index=True)
-
-        #out[['\#', '\#Bias']] = out[['\#', '\#Bias']].astype(int)
         return out
 
     def conf_mat(self, df, model, context):
@@ -121,13 +124,14 @@ class ErrorAnalysis:
         df['fn'] = (df.bias == 1) &(df[predn] == 0)
         return df
 
-    def concat_comparisons(self, dfs, only_rec=False):
-        basic_info = dfs[1].iloc[:,:3]
-        new_df = pd.DataFrame(basic_info, columns=dfs[1].columns[:3])
+    def concat_comparisons(self, dfs, only_rec=False, incl_lex=False):
+        info_col_n = 3
+        basic_info = dfs[1].iloc[:,:info_col_n]
+        new_df = pd.DataFrame(basic_info, columns=dfs[1].columns[:info_col_n])
 
         for df in dfs:
-            model = df.iloc[-1,0][:3]
-            df = df.iloc[:,3:]
+            model = df.iloc[-1,0]
+            df = df.iloc[:,info_col_n:]
             df.columns = [el + '_' + model for el in df.columns]
             if only_rec:
                 df = df.iloc[:,1:-1]
@@ -194,7 +198,7 @@ class ErrorAnalysis:
         return df
 
     def analyze_top_e(self, df, top_e, model, context):
-        basic_columns = ['entity', '#', '#Bias', 'Prec', 'Rec', 'F1']
+        basic_columns = ['entity', 'N', '#Bias', 'Prec', 'Rec', 'F1']
 
         out = pd.DataFrame(columns=basic_columns)
         for e, c in top_e:
@@ -202,7 +206,6 @@ class ErrorAnalysis:
             #Nbias = sum(df.inf_entities.apply(lambda x: e in x))
 
             gr = df[(df.main_entities.apply(lambda x: e in x))]
-
 
             r = self.row4compare(e, gr, model, context)
             row = pd.DataFrame([r], columns=basic_columns)
@@ -250,9 +253,10 @@ class ErrorAnalysis:
     def sample_sentences(self, df, which='pol'):
         sample = []
         for n, gr in df.groupby(which):
-            print(n, len(gr))
+            #print(n, len(gr))
+
             samp = gr.sample(5)[['sentence', 'inf_entities']]
-            print(samp)
+            #print(samp)
         return sample
 
 
