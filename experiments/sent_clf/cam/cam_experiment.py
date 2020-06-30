@@ -413,7 +413,7 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE + "_" + BASE
+base_name = CAM_TYPE # + "_" + BASE
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]

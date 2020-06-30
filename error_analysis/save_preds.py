@@ -320,7 +320,7 @@ for fold in folds:
     # PRODUCE PREDS
     preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
 
-    dev_df = fold['dev']
+    dev_df = fold['test']
     dev_df['pred'] = preds
     dev_df['losses'] = losses
 
