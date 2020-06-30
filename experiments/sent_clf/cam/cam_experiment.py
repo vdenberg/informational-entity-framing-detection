@@ -121,6 +121,7 @@ parser.add_argument('-pp', '--preprocess', action='store_true', default=False, h
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert', default='cross4bert')
 
 # TRAINING PARAMS
+parser.add_argument('-lex', '--lex', action='store_true', default=False, help='lex')
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
@@ -158,6 +159,7 @@ TRAIN = True if args.mode != 'eval' else False
 EVAL = True if args.mode == 'eval' else False
 DEBUG = True if args.mode == 'debug' else False
 
+LEX = args.lex
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
@@ -266,6 +268,10 @@ if PREPROCESS:
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
+
+    if LEX:
+        raw_data['label'] = sentences['lex_bias']
+
     raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
 
     quartiles = []
@@ -413,7 +419,9 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE # + "_" + BASE
+base_name = CAM_TYPE
+if LEX:
+    base_name += "_lex"
 
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
