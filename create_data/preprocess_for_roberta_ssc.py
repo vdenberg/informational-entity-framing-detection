@@ -194,8 +194,8 @@ for fold in folds:
 
         features = redistribute_feats(features, cls=0, pad=1, max_sent=MAX_EX_LEN, max_len=MAX_SEQ_LEN_SSC)
 
-        for f in features[:10]:
-            print(len(f.input_ids), f.input_ids, len(f.label_id), f.label_id)
+        #for f in features[:10]:
+        #    print(len(f.input_ids), f.input_ids, len(f.label_id), f.label_id)
 
         # print(features[0].input_ids)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
