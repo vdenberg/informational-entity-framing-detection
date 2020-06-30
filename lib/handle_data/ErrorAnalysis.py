@@ -166,6 +166,16 @@ class ErrorAnalysis:
         top_e = Counter(ents).most_common(n)
         return top_e
 
+    def add_top_e(self, df, top_e):
+        tope_in_main = []
+        for i, r in df.iterrows():
+            te_in_me = False
+            for e, c in top_e:
+                te_in_me = e in r.main_entities
+            tope_in_main.append(te_in_me)
+        df['tope_in_me'] = tope_in_main
+        return df
+
     def add_e(self):
         df = self.w_preds
 
@@ -192,6 +202,7 @@ class ErrorAnalysis:
             #Nbias = sum(df.inf_entities.apply(lambda x: e in x))
 
             gr = df[(df.main_entities.apply(lambda x: e in x))]
+
 
             r = self.row4compare(e, gr, model, context)
             row = pd.DataFrame([r], columns=basic_columns)
@@ -236,13 +247,12 @@ class ErrorAnalysis:
 
         return tar_in_a, tar_in_sent
 
-    def sample_sentences(self, which='pol'):
-        df = self.w_preds
+    def sample_sentences(self, df, which='pol'):
         sample = []
         for n, gr in df.groupby(which):
-            samp = gr.sample(5).sentence
-            for s in samp:
-                sample.append((n, s))
+            print(n, len(gr))
+            samp = gr.sample(5)[['sentence', 'inf_entities']]
+            print(samp)
         return sample
 
 

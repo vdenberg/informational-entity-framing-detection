@@ -15,9 +15,13 @@ print(source_df.to_latex())
 ea.inf_bias_only()
 
 pol_df = ea.clean_for_pol_analysis()
+pol_sample = ea.sample_sentences(pol_df, which='inf_pol')
+for n, s in pol_sample:
+    print(n, s)
+
 pol_dfs = [ea.compare_subsets(pol_df, 'inf_pol', model, context) for model, context in ea.models]
 pol_df = ea.concat_comparisons(pol_dfs, only_rec=True)
-po_sampl = ea.sample_sentences(which='inf_pol')
+
 print(pol_df.to_latex())
 
 dir_df = ea.clean_for_dir_analysis()
