@@ -49,7 +49,7 @@ class BahdanauAttention(nn.Module):
         scores.data.masked_fill_(mask == 0, -float('inf'))
 
         # Turn scores to probabilities.
-        alphas = F.softmax(scores, dim=-1)
+        alphas = nn.functional.softmax(scores, dim=-1)
         self.alphas = alphas
 
         # The context vector is the weighted sum of the values.
