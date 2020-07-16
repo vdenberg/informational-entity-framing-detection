@@ -3,9 +3,19 @@ from lib.evaluate.Eval import my_eval
 from lib.handle_data.ErrorAnalysis import ErrorAnalysis
 pd.set_option('display.max_columns', 10)
 pd.set_option('display.max_colwidth', 500)
+pd.set_option('display.width', 200)
 
 ea = ErrorAnalysis('base_best')
-df = ea.w_preds
+
+quote_dfs = [ea.compare_subsets(ea.w_preds, 'quote', model, context) for model, context in ea.models]
+quote_df = ea.concat_comparisons(quote_dfs)
+print(quote_df)
+
+ea.inf_bias_only()
+quote_dfs = [ea.compare_subsets(ea.w_preds, 'quote', model, context) for model, context in ea.models]
+quote_df = ea.concat_comparisons(quote_dfs, only_rec=True)
+print(quote_df)
+exit(0)
 
 for model, context in models2compare: # , ('cam+', 'story'), ('cam++', 'story'),
     print()

@@ -12,11 +12,48 @@ import numpy as np
 
 from torch.nn import CrossEntropyLoss, NLLLoss, MSELoss, Embedding, Dropout, Linear, Sigmoid, LSTM
 
-"""
-Based on: NLP From Scratch: Translation with a Sequence to Sequence Network and Attention
-*******************************************************************************
-**Author**: `Sean Robertson <https://github.com/spro/practical-pytorch>`_
-"""
+
+class BahdanauAttention(nn.Module):
+    """Implements Bahdanau (MLP) attention from: https://bastings.github.io/annotated_encoder_decoder/"""
+
+    def __init__(self, hidden_size, key_size=None, query_size=None):
+        super(BahdanauAttention, self).__init__()
+
+        # We assume a bi-directional encoder so key_size is 2*hidden_size
+        key_size = 2 * hidden_size if key_size is None else key_size
+        query_size = hidden_size if query_size is None else query_size
+
+        self.key_layer = nn.Linear(key_size, hidden_size, bias=False)
+        self.query_layer = nn.Linear(query_size, hidden_size, bias=False)
+        self.energy_layer = nn.Linear(hidden_size, 1, bias=False)
+
+        # to store attention scores
+        self.alphas = None
+
+    def forward(self, query=None, proj_key=None, value=None, mask=None):
+        assert mask is not None, "mask is required"
+
+        # We first project the query (the decoder state).
+        # The projected keys (the encoder states) were already pre-computated.
+        query = self.query_layer(query)
+
+        # Calculate scores.
+        scores = self.energy_layer(torch.tanh(query + proj_key))
+        scores = scores.squeeze(2).unsqueeze(1)
+
+        # Mask out invalid positions.
+        # The mask marks valid positions so we invert it using `mask & 0`.
+        scores.data.masked_fill_(mask == 0, -float('inf'))
+
+        # Turn scores to probabilities.
+        alphas = F.softmax(scores, dim=-1)
+        self.alphas = alphas
+
+        # The context vector is the weighted sum of the values.
+        context = torch.bmm(alphas, value)
+
+        # context shape: [B, 1, 2D], alphas shape: [B, 1, M]
+        return context, alphas
 
 
 class ContextAwareModel(nn.Module):
@@ -43,6 +80,7 @@ class ContextAwareModel(nn.Module):
         self.emb_size = weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
+        self.attention = BahdanauAttention(self.hidden_size)
         self.dropout = Dropout(0.6)
         self.num_labels = 2
 
@@ -117,6 +155,8 @@ class ContextAwareModel(nn.Module):
                 sentence_representations[:, seq_idx] = encoded
 
             final_sent_reps = sentence_representations[:, -1, :]
+            attended_sent_reps = self.attention(sentence_representations)
+            sent_reps = attented_sent_reps
 
             for item, position in enumerate(positions):
                 target_hid = sentence_representations[item, position].view(1, -1)
@@ -129,20 +169,22 @@ class ContextAwareModel(nn.Module):
                 # target_sent_reps[item] = target_hid
 
             if self.cam_type == 'cam+':
-                context_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+                context_rep = torch.cat((target_sent_reps, sent_reps), dim=-1)
                 target_sent_reps = context_rep
+            '''
             elif self.cam_type == 'cam++':
-                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
                 target_sent_reps = context_rep
             elif self.cam_type == 'cam+*':
-                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos), dim=-1)
                 target_sent_reps = context_rep
             elif self.cam_type == 'cam+#':
-                # heavy_context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos, embedded_src), dim=-1)
+                # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src, embedded_pos), dim=-1)
                 target_sent_reps = context_rep
+            '''
 
         features = self.dropout(target_sent_reps)
         features = self.dense(features)

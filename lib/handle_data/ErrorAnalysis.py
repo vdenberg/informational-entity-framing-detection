@@ -46,7 +46,6 @@ def got_quote(x):
     double_q = '"' in str(x)
     return double_q
 
-
 models2compare = {'all':
                   [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')], # ('cam++', 'article'), ('cam++', 'story'),
                   'base_best':
@@ -76,8 +75,9 @@ class ErrorAnalysis:
 
         out = out.fillna(0)
         out.main_entities = out.main_entities.apply(lambda x: re.sub('Lawmakers', 'lawmakers', x))
-        out['quote'] = out.sentence.apply(got_quote)
         out['source'] = [el.lower() for el in out.source]
+        out['article'] = out.source + out.sent_idx.astype(str)
+        out['quote'] = out.sentence.apply(got_quote)
         return out
 
     def inf_bias_only(self):
@@ -259,6 +259,11 @@ class ErrorAnalysis:
             #print(samp)
         return sample
 
+    def negative_inf_lex_bias(self):
+        df = self.w_preds
+        for n, art in df.groupby(['article']):
+            inf_bias = art[['inf_pol', 'lex_pol']]  # [art['bias'] == 1]
+            print(inf_bias)
 
 '''
 for e, c in top_e:

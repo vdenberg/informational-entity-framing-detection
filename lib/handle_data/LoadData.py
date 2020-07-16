@@ -75,12 +75,15 @@ class LoadBasil:
                     inf_directs = []
                     lex_directs = []
 
+                    inf_quote = []
+
                     if inf_bias_present:
                         for ann in informational_ann:
                             inf_start_ends.append((ann['start'],ann['end']))
                             inf_targets.append(ann['target'])
                             inf_polarities.append(ann['polarity'])
                             inf_directs.append(ann['aim'])
+                            inf_quote.append(ann['quote'])
 
                     if lex_bias_present:
                         for ann in lexical_ann:
@@ -91,11 +94,11 @@ class LoadBasil:
 
                     pre_df.append([story, source, main_entities, sent_idx, lex_bias_present, inf_bias_present, sentence,
                                    inf_targets, lex_targets, inf_polarities, lex_polarities, inf_directs, lex_directs,
-                                   lex_start_ends, inf_start_ends, stance])
+                                   lex_start_ends, inf_start_ends, stance, inf_quote])
 
         columns = ['story', 'source', 'main_entities', 'sent_idx', 'lex_bias', 'bias', 'sentence',
                    'inf_entities', 'lex_entities',  'inf_pol', 'lex_pol', 'inf_dir', 'lex_dir',
-                   'lex_start_ends', 'inf_start_ends', 'stance']
+                   'lex_start_ends', 'inf_start_ends', 'stance', 'inf_quote']
         df = pd.DataFrame(pre_df, columns=columns)
         df['uniq_idx'] = df['story'] + df['source'] + df['sent_idx']
         df = df.set_index(df['uniq_idx'])
@@ -103,4 +106,4 @@ class LoadBasil:
         return df
 
 
-# df = LoadBasil().load_basil_raw()
+df = LoadBasil().load_basil_raw()

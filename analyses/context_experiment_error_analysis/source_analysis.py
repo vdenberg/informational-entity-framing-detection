@@ -10,11 +10,11 @@ ea = ErrorAnalysis(models='base_best')
 
 source_dfs = [ea.compare_subsets(ea.w_preds, 'source', model, context) for model, context in ea.models]
 source_df = ea.concat_comparisons(source_dfs)
-print(source_df)
+#print(source_df)
 
 source_dfs = [ea.compare_subsets(ea.w_preds, 'stance', model, context) for model, context in ea.models]
 source_df = ea.concat_comparisons(source_dfs)
-print(source_df.to_latex())
+#print(source_df.to_latex())
 
 ea.inf_bias_only()
 s = ea.sample_sentences(ea.w_preds, 'source')
