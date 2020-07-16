@@ -36,6 +36,8 @@ class BahdanauAttention(nn.Module):
         # We first project the query (the decoder state).
         # The projected keys (the encoder states) were already pre-computated.
         query = self.query_layer(query)
+        print(query.shape)  # [32, 600]
+        print(proj_key.shape)  # [32, 77, 600]
 
         # Calculate scores.
         scores = self.energy_layer(torch.tanh(query + proj_key))
