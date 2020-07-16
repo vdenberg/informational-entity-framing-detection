@@ -80,7 +80,7 @@ class ContextAwareModel(nn.Module):
         self.emb_size = weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
-        self.attention = BahdanauAttention(self.hidden_size, key_size=self.hidden_size, query_size=self.emb_size)
+        self.attention = BahdanauAttention(self.hidden_size, key_size=self.hidden_size * 2, query_size=self.emb_size)
         self.dropout = Dropout(0.6)
         self.num_labels = 2
         self.pad_index = 0
