@@ -38,8 +38,6 @@ class BahdanauAttention(nn.Module):
         query = self.query_layer(query)
 
         # Calculate scores.
-        print(query.shape)
-        print(proj_key.shape)
         scores = self.energy_layer(torch.tanh(query + proj_key))
         scores = scores.squeeze(2).unsqueeze(1)
 
@@ -177,6 +175,8 @@ class ContextAwareModel(nn.Module):
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
             # context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+            print(query.shape) #[32, 600]
+            print(proj_key.shape) #[32, 77, 600]
             context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
                                                      value=sentence_representations, mask=mask)
 
