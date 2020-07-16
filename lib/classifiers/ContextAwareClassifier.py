@@ -83,6 +83,7 @@ class ContextAwareModel(nn.Module):
         self.attention = BahdanauAttention(self.hidden_size)
         self.dropout = Dropout(0.6)
         self.num_labels = 2
+        self.pad_index = 0
 
         self.cam_type = cam_type
 
@@ -155,22 +156,26 @@ class ContextAwareModel(nn.Module):
                 sentence_representations[:, seq_idx] = encoded
 
             final_sent_reps = sentence_representations[:, -1, :]
-            attended_sent_reps = self.attention(sentence_representations)
-            sent_reps = attented_sent_reps
 
             for item, position in enumerate(positions):
-                target_hid = sentence_representations[item, position].view(1, -1)
+                # target_hid = sentence_representations[item, position].view(1, -1)
                 target_roberta = self.embedding(contexts[item, position]).view(1, -1)
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
-                if self.cam_type == 'cam':
-                    target_sent_reps[item] = target_hid
-                else:
-                    target_sent_reps[item] = target_roberta
+                # if self.cam_type == 'cam':
+                #    target_sent_reps[item] = target_hid
+                #else:
+                target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = target_hid
 
-            if self.cam_type == 'cam+':
-                context_rep = torch.cat((target_sent_reps, sent_reps), dim=-1)
-                target_sent_reps = context_rep
+            #query = target_sent_reps.unsqueeze(1)
+            proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
+            mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
+
+            # context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+            context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
+                                                     value=sentence_representations, mask=mask)
+
+            # if self.cam_type == 'cam+':
             '''
             elif self.cam_type == 'cam++':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
@@ -186,7 +191,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
-        features = self.dropout(target_sent_reps)
+        features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
         features = self.dropout(features)
@@ -255,7 +260,6 @@ class ContextAwareClassifier():
 
         # self.scheduler = get_linear_schedule_with_warmup(self.optimizer, num_warmup_steps=num_train_warmup_steps,
         #                                                 num_training_steps=num_train_optimization_steps)  # PyTorch scheduler
-
 
     def load_model(self, name):
         cpfp = os.path.join(self.cp_dir, name)
