@@ -38,6 +38,8 @@ class BahdanauAttention(nn.Module):
         query = self.query_layer(query)
 
         # Calculate scores.
+        print(query.shape)
+        print(proj_key.shape)
         scores = self.energy_layer(torch.tanh(query + proj_key))
         scores = scores.squeeze(2).unsqueeze(1)
 
