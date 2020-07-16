@@ -80,7 +80,7 @@ class ContextAwareModel(nn.Module):
         self.emb_size = weights_matrix.shape[1]
 
         self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
-        self.attention = BahdanauAttention(self.hidden_size)
+        self.attention = BahdanauAttention(self.hidden_size, key_size=self.hidden_size, query_size=self.emb_size)
         self.dropout = Dropout(0.6)
         self.num_labels = 2
         self.pad_index = 0
@@ -101,7 +101,7 @@ class ContextAwareModel(nn.Module):
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
 
-        self.rob_squeezer = nn.Linear(self.emb_size, self.hidden_size)
+        # self.rob_squeezer = nn.Linear(self.emb_size, self.hidden_size)
 
         if self.cam_type == 'cnm':
             self.classifier = Linear(self.emb_size, self.num_labels)
@@ -169,7 +169,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = target_hid
 
-            target_sent_reps = self.rob_squeezer(target_sent_reps)
+            # target_sent_reps = self.rob_squeezer(target_sent_reps)
             query = target_sent_reps.unsqueeze(1)
             proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
