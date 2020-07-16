@@ -167,7 +167,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps[item] = target_roberta
                 # target_sent_reps[item] = target_hid
 
-            #query = target_sent_reps.unsqueeze(1)
+            query = target_sent_reps.unsqueeze(1)
             proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
