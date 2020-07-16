@@ -36,6 +36,7 @@ class BahdanauAttention(nn.Module):
         # We first project the query (the decoder state).
         # The projected keys (the encoder states) were already pre-computated.
         query = self.query_layer(query)
+        query = query.unsqueeze(1)
         print(query.shape)  # [32, 600]
         print(proj_key.shape)  # [32, 77, 600]
 
@@ -177,7 +178,7 @@ class ContextAwareModel(nn.Module):
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
             # context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            print(query.shape) #[32, 600]
+            print(query.shape) #[32, 1, 600]
             print(proj_key.shape) #[32, 77, 600]
             context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
                                                      value=sentence_representations, mask=mask)
