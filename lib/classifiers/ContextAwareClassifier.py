@@ -93,7 +93,7 @@ class ContextAwareModel(nn.Module):
         if self.cam_type == 'cam':
             self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
         elif self.cam_type == 'cam+':
-            self.context_rep_dim = self.emb_size + self.hidden_size * 2
+            self.context_rep_dim = self.hidden_size #self.emb_size + self.hidden_size * 2
         elif self.cam_type == 'cam++':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
         elif self.cam_type == 'cam+*':
@@ -178,8 +178,6 @@ class ContextAwareModel(nn.Module):
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
             # context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            print(query.shape) #[32, 1, 600]
-            print(proj_key.shape) #[32, 77, 600]
             context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
                                                      value=sentence_representations, mask=mask)
 
@@ -199,6 +197,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
+        print(context_and_target_rep.shape)
         features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
