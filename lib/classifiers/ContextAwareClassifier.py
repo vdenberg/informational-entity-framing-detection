@@ -93,7 +93,7 @@ class ContextAwareModel(nn.Module):
         if self.cam_type == 'cam':
             self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
         elif self.cam_type == 'cam+':
-            self.context_rep_dim = self.hidden_size #self.emb_size + self.hidden_size * 2
+            self.context_rep_dim = self.hidden_size * 2 #self.emb_size + self.hidden_size * 2
         elif self.cam_type == 'cam++':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
         elif self.cam_type == 'cam+*':
