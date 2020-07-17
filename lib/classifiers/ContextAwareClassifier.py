@@ -37,8 +37,6 @@ class BahdanauAttention(nn.Module):
         # The projected keys (the encoder states) were already pre-computated.
         query = self.query_layer(query)
         query = query.unsqueeze(1)
-        print(query.shape)  # [32, 600]
-        print(proj_key.shape)  # [32, 77, 600]
 
         # Calculate scores.
         scores = self.energy_layer(torch.tanh(query + proj_key))
@@ -197,7 +195,6 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
-        print(context_and_target_rep.shape)
         features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
