@@ -322,6 +322,8 @@ class ContextAwareClassifier():
             loss = loss.detach().cpu().numpy() #probs.shape: batchsize * num_classes
             losses.append(loss)
 
+            print(probs)
+            print(probs.shape)
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
             if len(y_pred) == 0:
                 y_pred = probs
