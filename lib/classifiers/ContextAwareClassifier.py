@@ -322,8 +322,6 @@ class ContextAwareClassifier():
             loss = loss.detach().cpu().numpy() #probs.shape: batchsize * num_classes
             losses.append(loss)
 
-            print(probs)
-            print(probs.shape)
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
             if len(y_pred) == 0:
                 y_pred = probs
@@ -336,8 +334,7 @@ class ContextAwareClassifier():
 
             sum_loss += loss.item()
 
-        #y_pred = y_pred[0]
-        print(y_pred)
+        y_pred = y_pred.squeeze()
         y_pred = np.argmax(y_pred, axis=1)
         print(y_pred)
         # y_pred = [0 if el < 0.5 else 1 for el in y_pred]
