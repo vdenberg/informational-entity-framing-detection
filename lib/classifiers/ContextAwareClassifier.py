@@ -328,7 +328,6 @@ class ContextAwareClassifier():
             else:
                 y_pred = np.append(y_pred, probs, axis=0)
 
-
                 # convert to predictions
                 # #preds = [1 if output > 0.5 else 0 for output in sigm_output]
                 #y_pred.extend(preds)
@@ -336,7 +335,9 @@ class ContextAwareClassifier():
             sum_loss += loss.item()
 
         #y_pred = y_pred[0]
+        print(y_pred)
         y_pred = np.argmax(y_pred, axis=1)
+        print(y_pred)
         # y_pred = [0 if el < 0.5 else 1 for el in y_pred]
 
         self.model.train()
