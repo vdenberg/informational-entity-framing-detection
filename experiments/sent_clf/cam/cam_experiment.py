@@ -356,9 +356,9 @@ for fold in folds:
     # test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
 
 
-    fold['train_batches'] = [to_batches(to_tensors(split=voter['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold]
-    fold['dev_batches'] = [to_batches(to_tensors(split=voter['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold]
-    fold['test_batches'] = [to_batches(to_tensors(split=voter['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold]
+    fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['train']]
+    fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['dev']]
+    fold['test_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['test']]
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
