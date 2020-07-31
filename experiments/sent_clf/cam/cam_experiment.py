@@ -112,6 +112,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
+parser.add_argument('-n_voter', '--n_voter', help='Nr voters when splitting',type=int, default=1)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
@@ -163,6 +164,7 @@ LEX = args.lex
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
+N_VOTERS = args.n_voters
 PREPROCESS = args.preprocess
 #if DEBUG:
 #    SUBSET = 0.5
@@ -311,16 +313,7 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-'''
-pos_cases = data[data.label == 1]
-pos_cases = pd.concat([pos_cases]*5)
-print(len(data))
-print(len(pos_cases))
-data = pd.concat(data, pos_cases)
-print(len(data))
-print(len(data))
-'''
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
@@ -357,13 +350,15 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    # train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    # dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    # test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+
 
     fold['train_batches'] = train_batches
     fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
+    fold['all_batches'] = all_batches
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
@@ -484,11 +479,12 @@ for HIDDEN in hiddens:
                             cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                            best_val_mets, test_mets = cam_cl.train_on_fold(fold)
-                            val_results.update(best_val_mets)
-                            val_results.update({'model_loc': cam_cl.best_model_loc})
-                            if test_mets:
-                                test_results.update(test_mets)
+                            for i in range(N_VOTERS):
+                                best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
+                                val_results.update(best_val_mets)
+                                val_results.update({'model_loc': cam_cl.best_model_loc})
+                                if test_mets:
+                                    test_results.update(test_mets)
 
                             fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                             fold_results_table = fold_results_table.append(test_results, ignore_index=True)
