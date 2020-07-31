@@ -64,8 +64,8 @@ class Classifier:
 
     def unpack_fold(self, fold, voter_i):
         self.cur_fold = fold['name']
-        tr_bs, tr_lbs = fold['train_batches'], fold['train'].label
-        dev_bs, dev_lbs = fold['dev_batches'], fold['dev'].label
+        tr_bs, tr_lbs = fold['train_batches'][voter_i], fold['train'][voter_i].label
+        dev_bs, dev_lbs = fold['dev_batches'][voter_i], fold['dev'][voter_i].label
         return tr_bs, tr_lbs, dev_bs, dev_lbs
 
     def validate_after_epoch(self, ep, elapsed, fold):
