@@ -105,5 +105,3 @@ class LoadBasil:
         df.to_csv('data/basil.csv')
         return df
 
-
-df = LoadBasil().load_basil_raw()
