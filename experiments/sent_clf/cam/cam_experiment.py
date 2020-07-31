@@ -469,14 +469,14 @@ for HIDDEN in hiddens:
                             val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
-                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                            for i in range(N_VOTERS):
+                                cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, len_tr_labs=fold['train'][i].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
-                            cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                            for i in range(N_VOTERS):
                                 best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
                                 val_results.update(best_val_mets)
                                 val_results.update({'model_loc': cam_cl.best_model_loc})
