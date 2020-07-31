@@ -112,7 +112,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
-parser.add_argument('-n_voter', '--n_voter', help='Nr voters when splitting',type=int, default=1)
+parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=1)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
