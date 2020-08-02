@@ -493,7 +493,6 @@ for HIDDEN in hiddens:
                                 print(tmp)
 
                             maj_vote = [Counter(line).most_common()[0] for line in zip(*all_preds)]
-                            print(maj_vote)
                             test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
                             test_results.update(test_mets)
 
