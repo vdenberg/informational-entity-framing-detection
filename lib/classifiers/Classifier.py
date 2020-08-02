@@ -68,10 +68,10 @@ class Classifier:
         dev_bs, dev_lbs = fold['dev_batches'][voter_i], fold['dev'][voter_i].label
         return tr_bs, tr_lbs, dev_bs, dev_lbs
 
-    def validate_after_epoch(self, ep, elapsed, fold):
+    def validate_after_epoch(self, ep, elapsed, fold, voter_i):
         ep_name = self.model_name + f"_ep{ep}"
 
-        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
+        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold, voter_i=voter_i)
 
         tr_preds, tr_loss, _, _ = self.wrapper.predict(tr_bs)
         tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
@@ -98,7 +98,7 @@ class Classifier:
 
         if self.model_name == 'BERT':
             elapsed = format_runtime(time.time() - train_start)
-            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold)
+            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold, voter_i)
             losses.append((tr_mets['loss'], val_mets['loss']))
 
         for ep in self.epochs:
