@@ -488,7 +488,7 @@ for HIDDEN in hiddens:
                                 all_preds.append(preds)
 
                             maj_vote = [Counter(line).most_common()[0] for line in zip(*all_preds)]
-                            test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name=name, set_type='test')
+                            test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
                             test_results.update(test_mets)
 
                             fold_results_table = fold_results_table.append(val_results, ignore_index=True)
