@@ -181,7 +181,7 @@ class ContextAwareModel(nn.Module):
 
             print(context_and_target_rep.shape)
             print(target_sent_reps.shape)
-            context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=1-)
+            context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
 
             # if self.cam_type == 'cam+':
             '''
