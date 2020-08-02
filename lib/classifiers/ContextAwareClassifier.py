@@ -179,7 +179,9 @@ class ContextAwareModel(nn.Module):
             context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
                                                      value=sentence_representations, mask=mask)
 
-            context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=1)
+            print(context_and_target_rep.shape)
+            print(target_sent_reps.shape)
+            context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=1-)
 
             # if self.cam_type == 'cam+':
             '''
