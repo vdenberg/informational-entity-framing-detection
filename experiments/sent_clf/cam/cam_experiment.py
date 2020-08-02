@@ -484,10 +484,9 @@ for HIDDEN in hiddens:
                                 #todo compute average val perf
                                 # val_results.update(best_val_mets)
                                 # val_results.update({'model_loc': cam_cl.best_model_loc})
-                                all_preds.append(list(preds))
+                                all_preds.append(preds)
 
-                            print(all_preds)
-                            maj_vote = [Counter(line).most_common()[0] for line in zip(*preds)]
+                            maj_vote = [Counter(line).most_common()[0] for line in zip(*all_preds)]
                             test_mets, test_perf = my_eval(fold[0]['test'].label, maj_vote, name=name, set_type='test')
                             test_results.update(test_mets)
 
