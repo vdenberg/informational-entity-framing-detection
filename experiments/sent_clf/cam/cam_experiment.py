@@ -471,6 +471,7 @@ for HIDDEN in hiddens:
 
                             all_preds = []
                             for i in range(N_VOTERS):
+                                logger.info(f"------------ VOTER {i} ------------")
                                 cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
