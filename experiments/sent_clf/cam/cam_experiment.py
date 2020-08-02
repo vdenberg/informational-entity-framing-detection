@@ -113,7 +113,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
-parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=1)
+parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=2)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
@@ -486,6 +486,7 @@ for HIDDEN in hiddens:
                                 # val_results.update({'model_loc': cam_cl.best_model_loc})
                                 all_preds.append(preds)
 
+                            print(preds)
                             maj_vote = [Counter(line).most_common()[0] for line in zip(*preds)]
                             test_mets, test_perf = my_eval(fold[0]['test'].label, maj_vote, name=name, set_type='test')
                             test_results.update(test_mets)
