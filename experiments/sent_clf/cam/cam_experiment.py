@@ -13,6 +13,7 @@ import pickle, time
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
+from lib.evaluate.Eval import my_eval
 
 
 class Processor():
