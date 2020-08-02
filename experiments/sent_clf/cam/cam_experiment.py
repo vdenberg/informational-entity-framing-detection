@@ -486,7 +486,7 @@ for HIDDEN in hiddens:
                                 # val_results.update({'model_loc': cam_cl.best_model_loc})
                                 all_preds.append(preds)
 
-                            maj_vote = [Counter(line).most_common()[0] for line zip(*preds)]
+                            maj_vote = [Counter(line).most_common()[0] for line in zip(*preds)]
                             test_mets, test_perf = my_eval(fold[0]['test'].label, maj_vote, name=name, set_type='test')
                             test_results.update(test_mets)
 
