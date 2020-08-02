@@ -349,9 +349,9 @@ class Split:
 
             train_dfs = []
             dev_dfs = []
-            for i in range(self.n_voters):
-                train_sent_ids = train_voters[i]
-                dev_sent_ids = dev_voters[i]
+            for j in range(self.n_voters):
+                train_sent_ids = train_voters[j]
+                dev_sent_ids = dev_voters[j]
 
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
                 train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
