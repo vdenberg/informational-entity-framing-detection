@@ -469,6 +469,7 @@ for HIDDEN in hiddens:
                             val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
+                            all_preds = []
                             for i in range(N_VOTERS):
                                 cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
@@ -478,10 +479,16 @@ for HIDDEN in hiddens:
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
                                 best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
-                                val_results.update(best_val_mets)
-                                val_results.update({'model_loc': cam_cl.best_model_loc})
-                                if test_mets:
-                                    test_results.update(test_mets)
+                                all_preds.append(preds)
+
+                            print(len(preds[0]))
+                            preds = zip(preds)
+                            print(len(preds[0]))
+
+                            val_results.update(best_val_mets)
+                            val_results.update({'model_loc': cam_cl.best_model_loc})
+                            if test_mets:
+                                test_results.update(test_mets)
 
                             fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                             fold_results_table = fold_results_table.append(test_results, ignore_index=True)
