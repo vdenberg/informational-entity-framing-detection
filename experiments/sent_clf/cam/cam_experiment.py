@@ -113,7 +113,6 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
-parser.add_argument('-n_voters', '--n_voters', type=int, help='n_voters', default=1)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
@@ -164,7 +163,6 @@ LEX = args.lex
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
-N_VOTERS = args.n_voters
 PREPROCESS = args.preprocess
 #if DEBUG:
 #    SUBSET = 0.5
@@ -322,11 +320,10 @@ data = pd.concat(data, pos_cases)
 print(len(data))
 print(len(data))
 '''
-
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
-    folds = [folds[0], folds[1]]
+    folds = [folds[0]] #, folds[1]
 NR_FOLDS = len(folds)
 
 # folds = [folds[4]]
@@ -354,20 +351,18 @@ for fold in folds:
 
     with open(test_fp, "rb") as f:
         test_features = pickle.load(f)
-
-    train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
-    dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
-    test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
     '''
 
-    for v in range(N_VOTERS):
-        train_batches = to_batches(to_tensors(split=fold[v]['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-        dev_batches = to_batches(to_tensors(split=fold[v]['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    #train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
+    # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-        fold[v]['train_batches'] = train_batches
-        fold[v]['dev_batches'] = dev_batches
-
+    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
     test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
     fold['test_batches'] = test_batches
 
 # =====================================================================================
@@ -432,7 +427,7 @@ if LEX:
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
 learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
+seeds = [SEED_VAL, 22, 33, 44, 55, 66] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -476,7 +471,6 @@ for HIDDEN in hiddens:
                         if os.path.exists(fold_table_fp) and not FORCE:
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)
-
                         else:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
@@ -488,7 +482,7 @@ for HIDDEN in hiddens:
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
                             cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
-                                                printing=PRINT_STEP_EVERY, load_from_ep=None, n_voters=N_VOTERS)
+                                                printing=PRINT_STEP_EVERY, load_from_ep=None)
 
                             best_val_mets, test_mets = cam_cl.train_on_fold(fold)
                             val_results.update(best_val_mets)
