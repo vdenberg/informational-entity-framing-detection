@@ -207,7 +207,9 @@ if __name__ == '__main__':
                                             batch = tuple(t.to(device) for t in batch)
 
                                             model.zero_grad()
-                                            print(batch[0])
+                                            print(batch[0].shape)
+                                            print(batch[1].shape)
+                                            print(batch[2].shape)
 
                                             outputs = model(batch[0], batch[1], labels=batch[2])
                                             #(loss), logits, probs, sequence_output = outputs
