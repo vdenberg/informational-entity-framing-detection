@@ -369,7 +369,7 @@ class Split:
                 train_dfs.append(train_df)
                 dev_dfs.append(dev_df)
 
-            test_sent_ids = test_voter
+            test_sent_ids = test_voter[0]
             test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             #train_X, train_y = train_df[features], train_df.label
