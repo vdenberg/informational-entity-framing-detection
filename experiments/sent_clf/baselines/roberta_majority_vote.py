@@ -209,7 +209,7 @@ if __name__ == '__main__':
                                             model.zero_grad()
                                             print(batch[0].shape)
                                             print(batch[1].shape)
-                                            print(batch[2].shape)
+                                            print(batch[2])
 
                                             outputs = model(batch[0], batch[1], labels=batch[2])
                                             #(loss), logits, probs, sequence_output = outputs
