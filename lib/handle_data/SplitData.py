@@ -174,8 +174,9 @@ class BergSplit:
             else:
                 dev_fold_i = traindev_fold_idxs[-1]
                 dev_stories = ten_folds[dev_fold_i]
-                train_fold_idxs = traindev_fold_idxs[:-1]
                 all_dev_stories.append(dev_stories)
+
+                train_fold_idxs = traindev_fold_idxs[:-1]
 
                 train_stories = []
                 for i in train_fold_idxs:
@@ -183,7 +184,7 @@ class BergSplit:
                     train_stories.extend(train_fold)
                 all_train_stories.append(train_stories)
 
-            stories_split_one_way = {'train': all_train_stories, 'dev': all_dev_stories, 'test': [test_stories]}
+            stories_split_one_way = {'train': all_train_stories, 'dev': all_dev_stories, 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
 
         '''
@@ -287,7 +288,7 @@ class FanSplit:
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         train_sents, dev_sents, test_sents = self.match_fan()
-        return [{'train': [train_sents], 'dev': [dev_sents], 'test': [test_sents]}]
+        return [{'train': [train_sents], 'dev': [dev_sents], 'test': test_sents}]
 
 
 class Split:
@@ -368,9 +369,8 @@ class Split:
                 train_dfs.append(train_df)
                 dev_dfs.append(dev_df)
 
-            test_sent_ids = test_voter[0]
+            test_sent_ids = test_voter
             test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
-            # test_dfs = [test_df]
 
             #train_X, train_y = train_df[features], train_df.label
             #dev_X, dev_y = dev_df[features], dev_df.label
@@ -399,7 +399,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, task):
+def split_input_for_bert(data_dir, n_voters=1, voters=False):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -412,20 +412,21 @@ def split_input_for_bert(data_dir, task):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both')
+    spl = Split(data, which='both', recreate=True, voters=voters, n_voters=n_voters)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
     for fold in folds:
-        train_ofp = os.path.join(data_dir, f"{fold['name']}_train.tsv")
-        dev_ofp = os.path.join(data_dir, f"{fold['name']}_dev.tsv")
-        test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
+        for v in range(n_voters):
+            train_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_train.tsv")
+            dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
+            test_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_test.tsv")
 
-        if not os.path.exists(train_ofp):
-            fold['train'].to_csv(train_ofp, sep='\t', index=False, header=False)
+            if not os.path.exists(train_ofp):
+                fold['train'][v].to_csv(train_ofp, sep='\t', index=False, header=False)
 
-        if not os.path.exists(dev_ofp):
-            fold['dev'].to_csv(dev_ofp, sep='\t', index=False, header=False)
+            if not os.path.exists(dev_ofp):
+                fold['dev'][v].to_csv(dev_ofp, sep='\t', index=False, header=False)
 
         if not os.path.exists(test_ofp):
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
