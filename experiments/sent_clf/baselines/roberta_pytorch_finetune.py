@@ -1,25 +1,15 @@
 from __future__ import absolute_import, division, print_function
 from transformers.optimization import AdamW, get_linear_schedule_with_warmup
-from transformers.configuration_roberta import RobertaConfig
-import pickle
 from lib.classifiers.RobertaWrapper import RobertaForSequenceClassification, Inferencer, save_model, load_features
 from datetime import datetime
-from torch.nn import CrossEntropyLoss
 import torch
-import os, sys, random, argparse
+import random, argparse
 import numpy as np
 from lib.handle_data.PreprocessForBert import *
-from lib.utils import get_torch_device
-import time
-from pprint import pprint
+from lib.utils import get_torch_device, InputFeatures
 import logging
 
-#######
-# FROM:
-# https://medium.com/swlh/how-twitter-users-turned-bullied-quaden-bayles-into-a-scammer-b14cb10e998a?source=post_recirc---------1------------------
-#####
-
-
+'''
 class InputFeatures(object):
     """A single set of features of data."""
 
@@ -29,7 +19,7 @@ class InputFeatures(object):
         self.input_mask = input_mask
         self.segment_ids = segment_ids
         self.label_id = label_id
-
+'''
 
 ########################
 # WHAT IS THE EXPERIMENT
@@ -92,6 +82,7 @@ MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'roberta_ft_results.csv')
 #    os.makedirs(CHECKPOINT_DIR)
 #if not os.path.exists(CURRENT_BEST_DIR):
 #    os.makedirs(CURRENT_BEST_DIR)
+
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
