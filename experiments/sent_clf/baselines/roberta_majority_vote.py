@@ -161,6 +161,8 @@ if __name__ == '__main__':
 
                             all_votes = []
                             for v in range(N_VOTERS):
+                                print('please')
+                                exit(0)
                                 v_f1 = 0
                                 name = setting_name + f"_f{fold_name}_{v}"
                                 best_model_loc = os.path.join(CHECKPOINT_DIR, name)
