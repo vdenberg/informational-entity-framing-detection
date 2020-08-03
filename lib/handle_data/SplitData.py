@@ -330,7 +330,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, task):
+def split_input_for_bert(data_dir, n_voters):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -343,22 +343,24 @@ def split_input_for_bert(data_dir, task):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both')
+    spl = Split(data, which='both', n_voters=n_voters)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
     for fold in folds:
-        train_ofp = os.path.join(data_dir, f"{fold['name']}_train.tsv")
-        dev_ofp = os.path.join(data_dir, f"{fold['name']}_dev.tsv")
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
-
-        if not os.path.exists(train_ofp):
-            fold['train'].to_csv(train_ofp, sep='\t', index=False, header=False)
-
-        if not os.path.exists(dev_ofp):
-            fold['dev'].to_csv(dev_ofp, sep='\t', index=False, header=False)
-
         if not os.path.exists(test_ofp):
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
+
+        for v in range(n_voters):
+            train_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_train.tsv")
+            dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
+
+            if not os.path.exists(train_ofp):
+                fold['train'][v].to_csv(train_ofp, sep='\t', index=False, header=False)
+
+            if not os.path.exists(dev_ofp):
+                fold['dev'][v].to_csv(dev_ofp, sep='\t', index=False, header=False)
+
 
     return folds
