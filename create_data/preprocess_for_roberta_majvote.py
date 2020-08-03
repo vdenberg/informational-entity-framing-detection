@@ -39,7 +39,7 @@ FEAT_DIR = f'data/{task}/features_for_roberta/'
 
 # load and split data
 N_VOTERS = 1
-folds = split_input_for_bert(DATA_DIR, N_VOTERS)
+folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
@@ -88,7 +88,7 @@ else:
 for fold in folds:
     fold_name = fold['name']
 
-    test_infp = os.path.join(DATA_DIR, f"{fold_name}_test_.tsv")
+    test_infp = os.path.join(DATA_DIR, f"{fold_name}_test.tsv")
     test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
     preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
