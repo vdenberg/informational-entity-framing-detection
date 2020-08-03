@@ -65,7 +65,7 @@ config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
-FORCE = False
+FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
