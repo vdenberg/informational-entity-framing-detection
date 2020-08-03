@@ -163,8 +163,8 @@ class BergSplit:
 
         return splits_json
 
-    def load_berg_story_split(self, recreate=False):
-        if not os.path.exists(self.split_fp):
+    def load_berg_story_split(self, recreate):
+        if not os.path.exists(self.split_fp) or recreate:
             self.create_split()
 
         with open(self.split_fp, 'r') as f:
@@ -175,12 +175,12 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split(self):
+    def return_split(self, recreate):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=True)
+        story_split = self.load_berg_story_split(recreate=recreate)
 
         sent_by_story = self.map_stories_to_sentences()
 
@@ -241,7 +241,7 @@ class FanSplit:
 
 
 class Split:
-    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0):
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False):
         """
         Splits input basil-like dataframe into folds.
 
@@ -260,13 +260,13 @@ class Split:
 
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
-            self.spl = splitter.return_split()
+            self.spl = splitter.return_split(recreate)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split()
+            berg_spl = berg_splitter.return_split(recreate)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):

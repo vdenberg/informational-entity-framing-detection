@@ -320,7 +320,7 @@ data = pd.concat(data, pos_cases)
 print(len(data))
 print(len(data))
 '''
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
