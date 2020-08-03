@@ -382,5 +382,4 @@ def split_input_for_bert(data_dir, n_voters, recreate):
             if not os.path.exists(dev_ofp):
                 fold['dev'][v].to_csv(dev_ofp, sep='\t', index=False, header=False)
 
-
     return folds
