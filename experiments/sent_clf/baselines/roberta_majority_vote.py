@@ -72,8 +72,8 @@ DEBUG = args.debug
 if DEBUG:
     N_EPS = 2
     seeds = [77]
-    bss = [32]
-    lrs = [3e-5]
+    bss = [16]
+    lrs = [1e-5]
     folds = ['1']
     samplers = ['sequential']
 
