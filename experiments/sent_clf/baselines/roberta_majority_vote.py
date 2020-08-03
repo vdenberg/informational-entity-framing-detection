@@ -180,8 +180,6 @@ if __name__ == '__main__':
 
                                 FORCE = True
                                 if (not os.path.exists(best_model_loc)) or FORCE:
-                                    print('please')
-                                    exit(0)
 
                                     model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                              cache_dir=CACHE_DIR,
@@ -205,6 +203,7 @@ if __name__ == '__main__':
                                     model.train()
 
                                     for ep in range(1, N_EPS + 1):
+
                                         epoch_name = name + f"_ep{ep}"
                                         tr_loss = 0
                                         for step, batch in enumerate(train_batches):
