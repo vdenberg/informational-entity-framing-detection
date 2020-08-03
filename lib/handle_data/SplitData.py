@@ -350,7 +350,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, n_voters):
+def split_input_for_bert(data_dir, n_voters, recreate):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -363,7 +363,7 @@ def split_input_for_bert(data_dir, n_voters):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both', n_voters=n_voters)
+    spl = Split(data, which='both', n_voters=n_voters, recreate=recreate)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
