@@ -92,7 +92,7 @@ for fold in folds:
     test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
     preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
-    for v in enumerate(N_VOTERS):
+    for v in range(N_VOTERS):
         train_infp = os.path.join(DATA_DIR, f"{fold_name}_train_{v}.tsv")
         train_ofp = os.path.join(FEAT_DIR, f"{fold_name}_train_{v}_features.pkl")
 
