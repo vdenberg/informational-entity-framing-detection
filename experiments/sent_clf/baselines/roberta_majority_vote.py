@@ -161,8 +161,6 @@ if __name__ == '__main__':
 
                             all_votes = []
                             for v in range(N_VOTERS):
-                                print('please')
-                                exit(0)
                                 v_f1 = 0
                                 name = setting_name + f"_f{fold_name}_{v}"
                                 best_model_loc = os.path.join(CHECKPOINT_DIR, name)
@@ -181,7 +179,10 @@ if __name__ == '__main__':
                                 logger.info(f"  Logging to {LOG_NAME}")
 
                                 FORCE = True
-                                if not os.path.exists(best_model_loc) or FORCE:
+                                if (not os.path.exists(best_model_loc)) or FORCE:
+                                    print('please')
+                                    exit(0)
+
                                     model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                              cache_dir=CACHE_DIR,
                                                                                              num_labels=NUM_LABELS,
