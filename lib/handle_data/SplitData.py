@@ -241,7 +241,8 @@ class FanSplit:
 
 
 class Split:
-    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False):
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False,
+                 n_voters=5):
         """
         Splits input basil-like dataframe into folds.
 
@@ -253,6 +254,7 @@ class Split:
         self.input_dataframe = input_dataframe
         self.which = which
         self.tst = tst
+        self.n_voters = n_voters
 
         if self.which == 'fan':
             splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
@@ -260,13 +262,13 @@ class Split:
 
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
-            self.spl = splitter.return_split(recreate)
+            self.spl = splitter.return_split(recreate, n_voters)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split(recreate)
+            berg_spl = berg_splitter.return_split(recreate, n_voters)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):
@@ -282,10 +284,6 @@ class Split:
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):
 
-            train_sent_ids = empty_fold['train']
-            dev_sent_ids = empty_fold['dev']
-            test_sent_ids = empty_fold['test']
-
             # if bias -> label renaming not executed in other scripts, fix it here
             if 'label' not in self.input_dataframe.columns:
                 if 'bias' in self.input_dataframe.columns:
@@ -297,14 +295,21 @@ class Split:
             #pos_cases = pd.concat([pos_cases]*5)
             #self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
 
-            train_df = self.input_dataframe.loc[train_sent_ids, :]
-            train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
-            dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
-            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
+            train_dfs = []
+            dev_dfs = []
+            for v in range(self.n_voters):
+                train_sent_ids = empty_fold['train'][v]
+                dev_sent_ids = empty_fold['train'][v]
+                train_df = self.input_dataframe.loc[train_sent_ids, :]
 
-            #train_X, train_y = train_df[features], train_df.label
-            #dev_X, dev_y = dev_df[features], dev_df.label
-            #test_X, test_y = test_df[features], test_df.label
+                train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
+                dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+
+                train_dfs.append(train_df)
+                dev_dfs.append(dev_df)
+
+            test_sent_ids = empty_fold['test']
+            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             if self.which == 'fan':
                 name = 'fan'
@@ -313,9 +318,8 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-
-            filled_fold = {'train': train_df,
-                           'dev': dev_df,
+            filled_fold = {'train': train_dfs,
+                           'dev': dev_dfs,
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
