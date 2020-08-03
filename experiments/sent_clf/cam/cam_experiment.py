@@ -1,7 +1,6 @@
 import argparse, os, sys, logging, re
 from datetime import datetime
 import random
-from collections import Counter
 
 import torch
 import numpy as np
@@ -13,7 +12,6 @@ import pickle, time
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
-from lib.evaluate.Eval import my_eval
 
 
 class Processor():
@@ -114,8 +112,8 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
-parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=5)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
+parser.add_argument('-n_voters', '--n_voters', type=int, help='n_voters', default=1)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
@@ -315,10 +313,20 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=1, voters=False)
+'''
+pos_cases = data[data.label == 1]
+pos_cases = pd.concat([pos_cases]*5)
+print(len(data))
+print(len(pos_cases))
+data = pd.concat(data, pos_cases)
+print(len(data))
+print(len(data))
+'''
+
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
-    folds = [folds[0]] #, folds[1]
+    folds = [folds[0], folds[1]]
 NR_FOLDS = len(folds)
 
 # folds = [folds[4]]
@@ -346,18 +354,21 @@ for fold in folds:
 
     with open(test_fp, "rb") as f:
         test_features = pickle.load(f)
+
+    train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
+    dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
+    test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
     '''
 
-    #train_batches = to_batches(to_tensors(features=train_features, device=device), batch_size=BATCH_SIZE)
-    # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
-    # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
+    for v in range(N_VOTERS):
+        train_batches = to_batches(to_tensors(split=fold[v]['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+        dev_batches = to_batches(to_tensors(split=fold[v]['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
 
-    # train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    # dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    # test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['train']]
-    fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['dev']]
-    fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+        fold[v]['train_batches'] = train_batches
+        fold[v]['dev_batches'] = dev_batches
+
+    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    fold['test_batches'] = test_batches
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
@@ -443,7 +454,7 @@ for HIDDEN in hiddens:
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
                 logger.info(f' Setting table in: {setting_table_fp}.')
-                FORCE = True
+                FORCE = False
                 if os.path.exists(setting_table_fp) and not FORCE:
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
@@ -461,36 +472,29 @@ for HIDDEN in hiddens:
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
-                        FORCE = True
+                        FORCE = False
                         if os.path.exists(fold_table_fp) and not FORCE:
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)
+
                         else:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
                             val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
-                            all_preds = []
-                            for i in range(N_VOTERS):
-                                logger.info(f"------------ VOTER {i} ------------")
-                                cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
+                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
-                                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
-                                                printing=PRINT_STEP_EVERY, load_from_ep=None)
+                            cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                                printing=PRINT_STEP_EVERY, load_from_ep=None, n_voters=N_VOTERS)
 
-                                best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
-                                # todo compute average val perf
-                                # val_results.update(best_val_mets)
-                                # val_results.update({'model_loc': cam_cl.best_model_loc})
-                                all_preds.append(preds)
-
-                            #maj_vote = [Counter(line).most_common()[0][0] for line in zip(*all_preds)]
-                            maj_vote = [el for el in all_preds[0]]
-                            test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
-                            test_results.update(test_mets)
+                            best_val_mets, test_mets = cam_cl.train_on_fold(fold)
+                            val_results.update(best_val_mets)
+                            val_results.update({'model_loc': cam_cl.best_model_loc})
+                            if test_mets:
+                                test_results.update(test_mets)
 
                             fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                             fold_results_table = fold_results_table.append(test_results, ignore_index=True)

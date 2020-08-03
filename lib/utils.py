@@ -30,6 +30,7 @@ def to_tensor(features):
 def to_tensors(split=None, features=None, device=None, article_wise=False):
     """ Tmp. """
 
+    '''
     # to array if needed
     if features:
         token_ids = [f.input_ids for f in features]
@@ -70,21 +71,22 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             labels = torch.tensor(labels, dtype=torch.long, device=device)
 
             return TensorDataset(token_ids, token_mask, labels)
+    '''
 
-        else:
-            contexts = np.array([list(el) for el in split.context_doc_num.values])
-            token_ids = [list(el) for el in split.token_ids.values]
-            token_mask = [list(el) for el in split.token_mask.values]
+    contexts = np.array([list(el) for el in split.context_doc_num.values])
+    token_ids = [list(el) for el in split.token_ids.values]
+    token_mask = [list(el) for el in split.token_mask.values]
 
-            contexts = torch.tensor(contexts, dtype=torch.long, device=device)
-            token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
-            token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
-            positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
-            quartiles = torch.tensor(split.quartile.to_numpy(), dtype=torch.long, device=device)
-            srcs = torch.tensor(split.src_num.to_numpy(), dtype=torch.long, device=device)
-            labels = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
-            # return TensorDataset(token_ids, token_mask, contexts, positions, labels)
-            return TensorDataset(token_ids, token_mask, contexts, positions, quartiles, srcs, labels)
+    contexts = torch.tensor(contexts, dtype=torch.long, device=device)
+    token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
+    token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
+    positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
+    quartiles = torch.tensor(split.quartile.to_numpy(), dtype=torch.long, device=device)
+    srcs = torch.tensor(split.src_num.to_numpy(), dtype=torch.long, device=device)
+    labels = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
+
+    t = TensorDataset(token_ids, token_mask, contexts, positions, quartiles, srcs, labels)
+    return t
 
 
 def to_batches(tensors, batch_size, sampler):
@@ -93,6 +95,7 @@ def to_batches(tensors, batch_size, sampler):
         sampler = RandomSampler(tensors)
     elif sampler == 'sequential':
         sampler = SequentialSampler(tensors) #RandomSampler(tensors)
+
     loader = DataLoader(tensors, sampler=sampler, batch_size=batch_size)
     return loader
 
