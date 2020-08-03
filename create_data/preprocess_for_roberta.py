@@ -23,7 +23,7 @@ def preprocess(rows):
 
 
 # choose sentence or bio labels
-task = 'sent_clf'
+task = 'tok_clf'
 DATA_DIR = f'data/{task}/ft_input'
 
 # structure of project

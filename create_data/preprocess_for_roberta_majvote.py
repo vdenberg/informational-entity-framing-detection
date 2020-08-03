@@ -22,13 +22,10 @@ def preprocess_rows(rows):
     return features
 
 
-def preprocess_voter(set_type, v):
-
+def preprocess_voter(infp, ofp, set_type, voter=''):
     examples = dataloader.get_examples(infp, set_type, sep='\t')
-
     features = [features_dict[example.my_id] for example in examples if example.text_a]
-    print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
-
+    print(f"Processed fold {fold_name} {set_type} {voter}- {len(features)} items and writing to {ofp}")
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
 
@@ -73,7 +70,7 @@ if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
 
-    features = preprocess(examples)
+    features = preprocess_rows(examples)
     features_dict = {feat.my_id: feat for feat in features}
 
     print(f"Processed fold all - {len(features)} items")
@@ -91,12 +88,18 @@ else:
 for fold in folds:
     fold_name = fold['name']
 
-    for set_type in ['train', 'dev', 'test']:
+    test_infp = os.path.join(DATA_DIR, f"{fold_name}_test_.tsv")
+    test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
+    preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
-        for v, voter in enumerate(fold[]):
-            infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}_.tsv")
-            ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
+    for v in enumerate(N_VOTERS):
+        train_infp = os.path.join(DATA_DIR, f"{fold_name}_train_{v}.tsv")
+        train_ofp = os.path.join(FEAT_DIR, f"{fold_name}_train_{v}_features.pkl")
 
-            preprocess_voter()
+        dev_infp = os.path.join(DATA_DIR, f"{fold_name}_dev_{v}.tsv")
+        dev_ofp = os.path.join(FEAT_DIR, f"{fold_name}_dev_{v}_features.pkl")
+
+        preprocess_voter(train_infp, train_ofp, 'train', voter=v)
+        preprocess_voter(dev_infp, dev_ofp, 'dev', voter=v)
 
 tokenizer.save_vocabulary(FEAT_DIR)
