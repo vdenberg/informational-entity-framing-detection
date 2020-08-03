@@ -65,7 +65,7 @@ config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
-FORCE = False
+FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
@@ -93,11 +93,12 @@ for fold in folds:
     preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
     for v in range(N_VOTERS):
-        train_infp = os.path.join(DATA_DIR, f"{fold_name}_train_{v}.tsv")
-        train_ofp = os.path.join(FEAT_DIR, f"{fold_name}_train_{v}_features.pkl")
 
-        dev_infp = os.path.join(DATA_DIR, f"{fold_name}_dev_{v}.tsv")
-        dev_ofp = os.path.join(FEAT_DIR, f"{fold_name}_dev_{v}_features.pkl")
+        train_infp = os.path.join(DATA_DIR, f"{fold_name}_{v}_train.tsv")
+        train_ofp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_train_features.pkl")
+
+        dev_infp = os.path.join(DATA_DIR, f"{fold_name}_{v}_dev.tsv")
+        dev_ofp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
 
         preprocess_voter(train_infp, train_ofp, 'train', voter=v)
         preprocess_voter(dev_infp, dev_ofp, 'dev', voter=v)
