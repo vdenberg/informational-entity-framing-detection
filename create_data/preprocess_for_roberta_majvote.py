@@ -44,7 +44,7 @@ folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
-OUTPUT_MODE = 'bio_classification' # or 'classification', or 'regression'
+OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
 NR_FOLDS = len(folds)
 
 dataloader = BinaryClassificationProcessor()
@@ -65,7 +65,7 @@ config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
@@ -93,7 +93,6 @@ for fold in folds:
     preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
     for v in range(N_VOTERS):
-
         train_infp = os.path.join(DATA_DIR, f"{fold_name}_{v}_train.tsv")
         train_ofp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_train_features.pkl")
 
