@@ -149,6 +149,7 @@ class RobertaForSequenceClassification(BertPreTrainedModel):
                 loss = loss_fct(logits.view(-1), labels.view(-1))
             else:
                 loss_fct = CrossEntropyLoss()
+                print(labels)
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
             outputs = (loss,) + outputs
 
