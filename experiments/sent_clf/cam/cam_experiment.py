@@ -315,7 +315,7 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS, voters=False)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
@@ -482,12 +482,13 @@ for HIDDEN in hiddens:
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
                                 best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
-                                #todo compute average val perf
+                                # todo compute average val perf
                                 # val_results.update(best_val_mets)
                                 # val_results.update({'model_loc': cam_cl.best_model_loc})
                                 all_preds.append(preds)
 
-                            maj_vote = [Counter(line).most_common()[0][0] for line in zip(*all_preds)]
+                            #maj_vote = [Counter(line).most_common()[0][0] for line in zip(*all_preds)]
+                            maj_vote = [el for el in all_preds[0]]
                             test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
                             test_results.update(test_mets)
 

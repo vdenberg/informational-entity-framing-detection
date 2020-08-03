@@ -117,7 +117,7 @@ class BergSplit:
         self.basil = load_basil().sample(frac=subset)
         self.n_voters = n_voters
 
-    def create_split(self):
+    def create_split(self, voters=False):
         # order stories from most to least sentences in a story
         ordered_stories = order_stories(self.basil)
 
@@ -151,17 +151,31 @@ class BergSplit:
             all_dev_stories = []
             all_train_stories = []
 
-            traindev_fold_idxs = fold_order[:9]
-            for _ in range(self.n_voters):
-                random.shuffle(traindev_fold_idxs)
+            traindev_fold_idxs = fold_order[:9]  # remove test fold from consideration
+            if voters:
+                for _ in range(self.n_voters):
+                    random.shuffle(traindev_fold_idxs)  #
 
-                # we've shuffled the order, and are going to take the last item as the index for dev
+                    # we've shuffled the order, and are going to take the last item as the index for dev
+                    dev_fold_i = traindev_fold_idxs[-1]
+                    dev_stories = ten_folds[dev_fold_i]
+                    all_dev_stories.append(dev_stories)
+
+                    # the rest as train
+                    train_fold_idxs = traindev_fold_idxs[:-1]
+
+                    train_stories = []
+                    for i in train_fold_idxs:
+                        train_fold = ten_folds[i]
+                        train_stories.extend(train_fold)
+                    all_train_stories.append(train_stories)
+
+                    #  its a bit of a headache, but there we have it
+            else:
                 dev_fold_i = traindev_fold_idxs[-1]
                 dev_stories = ten_folds[dev_fold_i]
-                all_dev_stories.append(dev_stories)
-
-                # and the rest as idxs for train
                 train_fold_idxs = traindev_fold_idxs[:-1]
+                all_dev_stories.append(dev_stories)
 
                 train_stories = []
                 for i in train_fold_idxs:
@@ -169,33 +183,27 @@ class BergSplit:
                     train_stories.extend(train_fold)
                 all_train_stories.append(train_stories)
 
-                #  its a bit of a headache, but there we have it
             stories_split_one_way = {'train': all_train_stories, 'dev': all_dev_stories, 'test': [test_stories]}
             stories_split_ten_ways.append(stories_split_one_way)
 
-        # folds_in_ten_orders = []
-        # for fold_order in fold_orders:
-        #     order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
-        #     folds_in_ten_orders.append(order_of_ten_folds)
+        '''
+        folds_in_ten_orders = []
+        for fold_order in fold_orders:
+            order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
+            folds_in_ten_orders.append(order_of_ten_folds)
 
         # now there's ten permutations of the ten folds
-        # stories_split_ten_ways = []
-        # for ordered_folds in folds_in_ten_orders:
-
-        #    for i in range(5):
-                # shuffle
-        #        dev_stories = ordered_folds[i]
-        #        train_stories = []
-        #        train_stories_list = ordered_folds[:8]
-        #        for s in train_stories_list:
-        #            train_stories.extend(s)
-
-
-            # test is fixed, always the last fold in the order:
-        #    test_stories = ordered_folds[9]
-
-        #    stories_split_one_way = {'train': train_stories, 'dev': dev_stories, 'test': test_stories}
-        #    stories_split_ten_ways.append(stories_split_one_way)
+        stories_split_ten_ways = []
+        for ordered_folds in folds_in_ten_orders:
+            train_stories = []
+            train_stories_list = ordered_folds[:8]
+            for s in train_stories_list:
+                train_stories.extend(s)
+            dev_stories = ordered_folds[8]
+            test_stories = ordered_folds[9]
+            stories_split_one_way = {'train': train_stories, 'dev': dev_stories, 'test': test_stories}
+            stories_split_ten_ways.append(stories_split_one_way)
+        '''
 
         splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
         with open(self.split_fp, 'w') as f:
@@ -204,9 +212,9 @@ class BergSplit:
 
         return splits_json
 
-    def load_berg_story_split(self, recreate=False):
+    def load_berg_story_split(self, recreate=False, voters=False):
         if not os.path.exists(self.split_fp) or recreate:
-            self.create_split()
+            self.create_split(voters)
 
         with open(self.split_fp, 'r') as f:
             return json.load(f)
@@ -216,12 +224,12 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split(self, recreate):
+    def return_split(self, recreate, voters):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=recreate)
+        story_split = self.load_berg_story_split(recreate=recreate, voters=voters)
 
         sent_by_story = self.map_stories_to_sentences()
 
@@ -283,7 +291,7 @@ class FanSplit:
 
 
 class Split:
-    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False,
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False, voters=False,
                  n_voters=5):
         """
         Splits input basil-like dataframe into folds.
@@ -305,14 +313,14 @@ class Split:
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'),
                                  n_voters=n_voters)
-            self.spl = splitter.return_split(recreate=recreate)
+            self.spl = splitter.return_split(recreate=recreate, voters=voters)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'),
                                       n_voters=n_voters)
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split(recreate=recreate)
+            berg_spl = berg_splitter.return_split(recreate=recreate, voters=voters)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):
