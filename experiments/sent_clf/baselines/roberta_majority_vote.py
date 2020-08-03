@@ -83,7 +83,7 @@ if DEBUG:
 ########################
 
 TASK_NAME = f'Rob_majvote'
-FEAT_DIR = f'data/sent_clf/features_for_roberta'
+FEAT_DIR = f'data/sent_clf/features_for_roberta/'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
