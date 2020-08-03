@@ -160,7 +160,7 @@ if __name__ == '__main__':
                             logger.info(f"  Details: {best_val_res}")
                             logger.info(f"  Logging to {LOG_NAME}")
 
-                            FORCE=True
+                            FORCE = True
                             if not os.path.exists(best_model_loc) or FORCE:
                                 model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
@@ -191,7 +191,6 @@ if __name__ == '__main__':
 
                                         model.zero_grad()
                                         outputs = model(batch[0], batch[1], labels=batch[2])
-                                        #(loss), logits, probs, sequence_output = outputs
                                         (loss), logits, pooled_output, sequence_output, hidden_states = outputs
 
                                         loss.backward()
