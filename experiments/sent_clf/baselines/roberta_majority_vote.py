@@ -171,8 +171,6 @@ if __name__ == '__main__':
                                 train_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_train_features.pkl")
                                 dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
                                 _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                                print(train_batches)
-
                                 _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
 
                                 # start training
@@ -209,6 +207,8 @@ if __name__ == '__main__':
                                             batch = tuple(t.to(device) for t in batch)
 
                                             model.zero_grad()
+                                            print(batch[0])
+
                                             outputs = model(batch[0], batch[1], labels=batch[2])
                                             #(loss), logits, probs, sequence_output = outputs
                                             (loss), logits, pooled_output, sequence_output, hidden_states = outputs
