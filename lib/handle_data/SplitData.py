@@ -184,7 +184,7 @@ class BergSplit:
                     train_stories.extend(train_fold)
                 all_train_stories.append(train_stories)
 
-            stories_split_one_way = {'train': all_train_stories, 'dev': all_dev_stories, 'test': test_stories}
+            stories_split_one_way = {'train': all_train_stories, 'dev': all_dev_stories, 'test': [test_stories]}
             stories_split_ten_ways.append(stories_split_one_way)
 
         '''
@@ -288,7 +288,7 @@ class FanSplit:
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         train_sents, dev_sents, test_sents = self.match_fan()
-        return [{'train': [train_sents], 'dev': [dev_sents], 'test': test_sents}]
+        return [{'train': [train_sents], 'dev': [dev_sents], 'test': [test_sents]}]
 
 
 class Split:
