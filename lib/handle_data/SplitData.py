@@ -163,7 +163,7 @@ class BergSplit:
                 train_stories.extend(s)
             dev_stories = ordered_folds[8]
             test_stories = ordered_folds[9]
-            stories_split_one_way = {'train': train_stories, 'dev': dev_stories, 'test': test_stories}
+            stories_split_one_way = {'train': [train_stories], 'dev': [dev_stories], 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
 
         splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
@@ -205,8 +205,8 @@ class BergSplit:
             all_train_sent_ids = []
             all_dev_sent_ids = []
             for v in range(n_voters):
-                train_stories = stories_split_one_way['train']
-                dev_stories = stories_split_one_way['dev']
+                train_stories = stories_split_one_way['train'][v]
+                dev_stories = stories_split_one_way['dev'][v]
 
                 train_sent_ids = collect_sent_ids(train_stories, sent_by_story)
                 dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
