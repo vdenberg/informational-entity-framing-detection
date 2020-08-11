@@ -137,8 +137,10 @@ if __name__ == '__main__':
                         setting_name = bs_name + f"_lr{LEARNING_RATE}"
                         setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                         for fold_name in folds:
+
+                            # v = 0
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
-                            name = setting_name + f"_f{fold_name}_0"
+                            name = setting_name + f"_f{fold_name}_0" #todo replace
 
                             # init results containers
                             best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
