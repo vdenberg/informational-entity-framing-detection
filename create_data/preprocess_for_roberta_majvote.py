@@ -93,19 +93,20 @@ for fold in folds:
     test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
     preprocess_voter(test_infp, test_ofp, 'test', voter='')
 
-    for set_type in ['train', 'dev']:
-        infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
-        ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
+    for i in range(N_VOTERS):
+        for set_type in ['train', 'dev']:
+            infp = os.path.join(DATA_DIR, f"{fold_name}_{v}_{set_type}.tsv")
+            ofp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_{set_type}_features.pkl")
 
-        examples = dataloader.get_examples(infp, set_type, sep='\t')
+            examples = dataloader.get_examples(infp, set_type, sep='\t')
 
-        #examples = [example for example in examples if example.label != '[]']
+            #examples = [example for example in examples if example.label != '[]']
 
-        features = [features_dict[example.my_id] for example in examples if example.text_a]
-        print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
+            features = [features_dict[example.my_id] for example in examples if example.text_a]
+            print(f"Processed fold {fold_name} {v} {set_type} - {len(features)} items and writing to {ofp}")
 
-        with open(ofp, "wb") as f:
-            pickle.dump(features, f)
+            with open(ofp, "wb") as f:
+                pickle.dump(features, f)
 
 tokenizer.save_vocabulary(FEAT_DIR)
 
