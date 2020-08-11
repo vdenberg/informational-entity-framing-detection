@@ -174,11 +174,8 @@ class BergSplit:
         return splits_json
 
     def load_berg_story_split(self, recreate, n_voters):
-        if not os.path.exists(self.split_fp) or recreate:
-            print('recreating')
+        if not os.path.exists(self.split_fp) or recreate:\
             self.create_split(n_voters)
-        else:
-            print('not recreating')
 
         with open(self.split_fp, 'r') as f:
             return json.load(f)
@@ -318,7 +315,7 @@ class Split:
 
             train_dfs = []
             dev_dfs = []
-            for v in range(len(empty_fold)):
+            for v in range(len(empty_fold['train'])):
                 train_sent_ids = empty_fold['train'][v]
                 dev_sent_ids = empty_fold['train'][v]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
