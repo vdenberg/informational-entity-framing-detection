@@ -175,7 +175,10 @@ class BergSplit:
 
     def load_berg_story_split(self, recreate, n_voters):
         if not os.path.exists(self.split_fp) or recreate:
+            print('recreating')
             self.create_split(n_voters)
+        else:
+            print('not recreating')
 
         with open(self.split_fp, 'r') as f:
             return json.load(f)
@@ -310,6 +313,8 @@ class Split:
             #pos_cases = self.input_dataframe[self.input_dataframe.label == 1]
             #pos_cases = pd.concat([pos_cases]*5)
             #self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
+            test_sent_ids = empty_fold['test']
+            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             train_dfs = []
             dev_dfs = []
@@ -323,9 +328,6 @@ class Split:
 
                 train_dfs.append(train_df)
                 dev_dfs.append(dev_df)
-
-            test_sent_ids = empty_fold['test']
-            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             if self.which == 'fan':
                 name = 'fan'
