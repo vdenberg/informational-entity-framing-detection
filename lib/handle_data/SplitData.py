@@ -313,7 +313,7 @@ class Split:
 
             train_dfs = []
             dev_dfs = []
-            for v in range(self.n_voters):
+            for v in range(len(empty_fold)):
                 train_sent_ids = empty_fold['train'][v]
                 dev_sent_ids = empty_fold['train'][v]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
