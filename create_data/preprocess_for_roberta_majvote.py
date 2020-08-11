@@ -88,7 +88,12 @@ folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 # start
 for fold in folds:
     fold_name = fold['name']
-    for set_type in ['train', 'dev', 'test']:
+
+    test_infp = os.path.join(DATA_DIR, f"{fold_name}_test.tsv")
+    test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
+    preprocess_voter(test_infp, test_ofp, 'test', voter='')
+
+    for set_type in ['train', 'dev']:
         infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
         ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
 
