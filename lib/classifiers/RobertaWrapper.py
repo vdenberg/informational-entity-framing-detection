@@ -427,6 +427,7 @@ class Inferencer():
                 except:
                     print(logits)
                     print(logits.shape)
+                    exit(0)
             preds.extend(pred)
 
         # rep_sim = sum(rep_sim) / len(rep_sim)
