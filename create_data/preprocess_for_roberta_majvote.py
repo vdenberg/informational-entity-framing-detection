@@ -88,6 +88,26 @@ folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 # start
 for fold in folds:
     fold_name = fold['name']
+    for set_type in ['train', 'dev', 'test']:
+        infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
+        ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
+
+        examples = dataloader.get_examples(infp, set_type, sep='\t')
+
+        #examples = [example for example in examples if example.label != '[]']
+
+        features = [features_dict[example.my_id] for example in examples if example.text_a]
+        print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
+
+        with open(ofp, "wb") as f:
+            pickle.dump(features, f)
+
+tokenizer.save_vocabulary(FEAT_DIR)
+
+'''
+# start
+for fold in folds:
+    fold_name = fold['name']
 
     test_infp = os.path.join(DATA_DIR, f"{fold_name}_test.tsv")
     test_ofp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
@@ -104,3 +124,4 @@ for fold in folds:
         preprocess_voter(dev_infp, dev_ofp, 'dev', voter=v)
 
 tokenizer.save_vocabulary(FEAT_DIR)
+'''
