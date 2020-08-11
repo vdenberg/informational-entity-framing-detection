@@ -149,6 +149,16 @@ if __name__ == '__main__':
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
                                         'sampler': SAMPLER}
 
+                            train_0_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_train_features.pkl")
+                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
+                            _, train_0_batches, train_0_labels = load_features(train_0_fp, BATCH_SIZE, SAMPLER)
+                            _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                            print(train_0_fp)
+                            print(len(train_0_labels), train_0_labels[0])
+                            print(train_fp)
+                            print(len(train_labels), train_0_labels[1])
+
+
                             # load feats
                             train_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_train_features.pkl")
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_dev_features.pkl")
