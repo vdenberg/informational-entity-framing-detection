@@ -314,8 +314,8 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-            filled_fold = {'train': [train_df],
-                           'dev': [dev_df],
+            filled_fold = {'train': [train_df, train_df],
+                           'dev': [dev_df, dev_df],
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
@@ -343,7 +343,7 @@ def split_input_for_bert(data_dir, recreate, n_voters):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both', recreate=recreate, n_voters=n_voters)
+    spl = Split(data, which='berg', recreate=recreate, n_voters=n_voters)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
