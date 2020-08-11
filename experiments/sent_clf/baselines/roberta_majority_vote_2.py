@@ -61,7 +61,7 @@ samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
 if DEBUG:
-    N_VOTERS = 2
+    N_VOTERS = 1
     N_EPS = 3
     seeds = [77]
     bss = [16]
