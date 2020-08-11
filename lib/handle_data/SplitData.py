@@ -241,7 +241,8 @@ class FanSplit:
 
 
 class Split:
-    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False):
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False,
+                 n_voters=1):
         """
         Splits input basil-like dataframe into folds.
 
@@ -330,7 +331,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, task):
+def split_input_for_bert(data_dir, recreate, n_voters):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -343,7 +344,7 @@ def split_input_for_bert(data_dir, task):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both')
+    spl = Split(data, which='both', recreate=recreate, n_voters=n_voters)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
