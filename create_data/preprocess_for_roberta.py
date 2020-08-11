@@ -31,7 +31,7 @@ DATA_DIR = f'data/{task}/ft_input'
 FEAT_DIR = f'data/{task}/features_for_roberta/'
 
 # load and split data
-folds = split_input_for_bert(DATA_DIR, 1)
+folds = split_input_for_bert(DATA_DIR, n_voters=1)
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
