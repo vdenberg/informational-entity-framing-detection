@@ -95,15 +95,15 @@ for fold in folds:
 
     #for v in range(N_VOTERS):
     for set_type in ['train', 'dev']:
-        infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
-        ofp = os.path.join(FEAT_DIR, f"{fold_name}_{set_type}_features.pkl")
+        infp = os.path.join(DATA_DIR, f"{fold_name}_0_{set_type}.tsv")
+        ofp = os.path.join(FEAT_DIR, f"{fold_name}_0_{set_type}_features.pkl")
 
         examples = dataloader.get_examples(infp, set_type, sep='\t')
 
         #examples = [example for example in examples if example.label != '[]']
 
         features = [features_dict[example.my_id] for example in examples if example.text_a]
-        print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
+        print(f"Processed fold {fold_name} fake 0 {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
             pickle.dump(features, f)

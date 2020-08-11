@@ -148,8 +148,8 @@ if __name__ == '__main__':
                                         'sampler': SAMPLER}
 
                             # load feats
-                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
-                            dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
+                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_train_features.pkl")
+                            dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_dev_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                             _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
