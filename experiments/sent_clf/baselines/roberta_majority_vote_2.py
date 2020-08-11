@@ -153,10 +153,10 @@ if __name__ == '__main__':
                             train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                             _, train_0_batches, train_0_labels = load_features(train_0_fp, BATCH_SIZE, SAMPLER)
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                            print(train_0_fp)
-                            print(len(train_0_labels), train_0_labels[0])
-                            print(train_fp)
-                            print(len(train_labels), train_0_labels[1])
+                            #print(train_0_fp)
+                            #print(len(train_0_labels), train_0_labels[0])
+                            #print(train_fp)
+                            #print(len(train_labels), train_0_labels[1])
 
 
                             # load feats
