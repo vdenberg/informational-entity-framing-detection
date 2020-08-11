@@ -354,13 +354,13 @@ def split_input_for_bert(data_dir, recreate, n_voters):
         dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
 
-        if not os.path.exists(train_ofp):
+        if not os.path.exists(train_ofp) or recreate:
             fold['train'].to_csv(train_ofp, sep='\t', index=False, header=False)
 
-        if not os.path.exists(dev_ofp):
+        if not os.path.exists(dev_ofp) or recreate:
             fold['dev'].to_csv(dev_ofp, sep='\t', index=False, header=False)
 
-        if not os.path.exists(test_ofp):
+        if not os.path.exists(test_ofp) or recreate:
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
 
     return folds
