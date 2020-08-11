@@ -109,6 +109,16 @@ def load_basil_w_tokens():
     return basil_df
 
 
+def collect_sent_ids(set_type_stories, sent_by_story):
+    set_type_sent_ids = []
+    for story in set_type_stories:
+
+        if story in sent_by_story:
+            sent_ids = sent_by_story[story]
+            set_type_sent_ids.extend(sent_ids)
+    return set_type_sent_ids
+
+
 class BergSplit:
     def __init__(self, split_input, split_dir='data/splits/berg_split', subset=1.0):
         split_fn = 'split.json'
@@ -116,7 +126,7 @@ class BergSplit:
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
 
-    def create_split(self):
+    def create_split(self, n_voters):
         # order stories from most to least sentences in a story
         ordered_stories = order_stories(self.basil)
 
@@ -153,7 +163,7 @@ class BergSplit:
                 train_stories.extend(s)
             dev_stories = ordered_folds[8]
             test_stories = ordered_folds[9]
-            stories_split_one_way = {'train': train_stories, 'dev': dev_stories, 'test': test_stories}
+            stories_split_one_way = {'train': [train_stories], 'dev': [dev_stories], 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
 
         splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
@@ -163,9 +173,9 @@ class BergSplit:
 
         return splits_json
 
-    def load_berg_story_split(self, recreate):
-        if not os.path.exists(self.split_fp) or recreate:
-            self.create_split()
+    def load_berg_story_split(self, recreate, n_voters):
+        if not os.path.exists(self.split_fp) or recreate:\
+            self.create_split(n_voters)
 
         with open(self.split_fp, 'r') as f:
             return json.load(f)
@@ -175,31 +185,37 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split(self, recreate):
+    def return_split(self, recreate, n_voters):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=recreate)
+        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters)
 
         sent_by_story = self.map_stories_to_sentences()
 
         splits_w_sent_ids = []
         for split_i, stories_split_one_way in story_split.items():
             split_sent_ids = {}
-            total = 0
-            for set_type in ['train', 'dev', 'test']:
-                set_type_stories = stories_split_one_way[set_type]
 
-                set_type_sent_ids = []
-                for story in set_type_stories:
+            test_stories = stories_split_one_way['test']
+            test_sent_ids = collect_sent_ids(test_stories, sent_by_story)
+            split_sent_ids['test'] = test_sent_ids
 
-                    if story in sent_by_story:
-                        sent_ids = sent_by_story[story]
-                        set_type_sent_ids.extend(sent_ids)
+            all_train_sent_ids = []
+            all_dev_sent_ids = []
+            for v in range(n_voters):
+                train_stories = stories_split_one_way['train'][v]
+                dev_stories = stories_split_one_way['dev'][v]
 
-                split_sent_ids[set_type] = set_type_sent_ids
-                total += len(set_type_sent_ids)
+                train_sent_ids = collect_sent_ids(train_stories, sent_by_story)
+                dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
+
+                all_train_sent_ids.append(train_sent_ids)
+                all_dev_sent_ids.append(dev_sent_ids)
+
+            split_sent_ids['train'] = all_train_sent_ids
+            split_sent_ids['train'] = all_dev_sent_ids
 
             splits_w_sent_ids.append(split_sent_ids)
 
@@ -237,11 +253,12 @@ class FanSplit:
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         train_sents, dev_sents, test_sents = self.match_fan()
-        return [{'train': train_sents, 'dev': dev_sents, 'test': test_sents}]
+        return [{'train': [train_sents], 'dev': [dev_sents], 'test': test_sents}]
 
 
 class Split:
-    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False):
+    def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False,
+                 n_voters=5):
         """
         Splits input basil-like dataframe into folds.
 
@@ -253,6 +270,7 @@ class Split:
         self.input_dataframe = input_dataframe
         self.which = which
         self.tst = tst
+        self.n_voters = n_voters
 
         if self.which == 'fan':
             splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
@@ -260,13 +278,13 @@ class Split:
 
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
-            self.spl = splitter.return_split(recreate)
+            self.spl = splitter.return_split(recreate, n_voters)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split(recreate)
+            berg_spl = berg_splitter.return_split(recreate, n_voters)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):
@@ -282,10 +300,6 @@ class Split:
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):
 
-            train_sent_ids = empty_fold['train']
-            dev_sent_ids = empty_fold['dev']
-            test_sent_ids = empty_fold['test']
-
             # if bias -> label renaming not executed in other scripts, fix it here
             if 'label' not in self.input_dataframe.columns:
                 if 'bias' in self.input_dataframe.columns:
@@ -296,15 +310,21 @@ class Split:
             #pos_cases = self.input_dataframe[self.input_dataframe.label == 1]
             #pos_cases = pd.concat([pos_cases]*5)
             #self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
-
-            train_df = self.input_dataframe.loc[train_sent_ids, :]
-            train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
-            dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+            test_sent_ids = empty_fold['test']
             test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
-            #train_X, train_y = train_df[features], train_df.label
-            #dev_X, dev_y = dev_df[features], dev_df.label
-            #test_X, test_y = test_df[features], test_df.label
+            train_dfs = []
+            dev_dfs = []
+            for v in range(len(empty_fold['train'])):
+                train_sent_ids = empty_fold['train'][v]
+                dev_sent_ids = empty_fold['train'][v]
+                train_df = self.input_dataframe.loc[train_sent_ids, :]
+
+                train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
+                dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+
+                train_dfs.append(train_df)
+                dev_dfs.append(dev_df)
 
             if self.which == 'fan':
                 name = 'fan'
@@ -313,9 +333,8 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-
-            filled_fold = {'train': [train_df],
-                           'dev': [dev_df],
+            filled_fold = {'train': train_dfs,
+                           'dev': dev_dfs,
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
@@ -330,7 +349,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, task):
+def split_input_for_bert(data_dir, n_voters, recreate):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -343,22 +362,23 @@ def split_input_for_bert(data_dir, task):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='both')
+    spl = Split(data, which='both', n_voters=n_voters, recreate=recreate)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
     for fold in folds:
-        train_ofp = os.path.join(data_dir, f"{fold['name']}_train.tsv")
-        dev_ofp = os.path.join(data_dir, f"{fold['name']}_dev.tsv")
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
-
-        if not os.path.exists(train_ofp):
-            fold['train'].to_csv(train_ofp, sep='\t', index=False, header=False)
-
-        if not os.path.exists(dev_ofp):
-            fold['dev'].to_csv(dev_ofp, sep='\t', index=False, header=False)
-
         if not os.path.exists(test_ofp):
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
+
+        for v in range(n_voters):
+            train_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_train.tsv")
+            dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
+
+            if not os.path.exists(train_ofp):
+                fold['train'][v].to_csv(train_ofp, sep='\t', index=False, header=False)
+
+            if not os.path.exists(dev_ofp):
+                fold['dev'][v].to_csv(dev_ofp, sep='\t', index=False, header=False)
 
     return folds
