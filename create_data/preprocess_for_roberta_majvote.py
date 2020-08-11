@@ -72,7 +72,7 @@ if not os.path.exists(all_ofp) or FORCE:
         pickle.dump(features, f)
 
     print(f"Processed all - {len(features)} items")
-    time.sleep(15)
+    time.sleep(20)
 
 with open(all_ofp, "rb") as f:
    features = pickle.load(f)
