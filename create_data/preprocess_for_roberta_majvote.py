@@ -25,9 +25,10 @@ def preprocess_rows(rows):
 def preprocess_voter(infp, ofp, set_type, voter=''):
     examples = dataloader.get_examples(infp, set_type, sep='\t')
     features = [features_dict[example.my_id] for example in examples if example.text_a]
-    print(f"Processed fold {fold_name} {set_type} {voter}- {len(features)} items and writing to {ofp}")
     with open(ofp, "wb") as f:
         pickle.dump(features, f)
+
+    print(f"Processed fold {fold_name} {set_type} {voter}- {len(features)} items and writing to {ofp}")
 
 # choose sentence or bio labels
 task = 'sent_clf'
@@ -35,17 +36,12 @@ DATA_DIR = f'data/{task}/ft_input'
 
 # structure of project
 #CONTEXT_TYPE = 'article'
-FEAT_DIR = f'data/{task}/features_for_roberta/'
-
-# load and split data
-N_VOTERS = 1
-folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
+FEAT_DIR = f'data/{task}/features_for_roberta_majvote/'
 
 # The maximum total input sequence length after WordPiece tokenization.
 # Sequences longer than this will be truncated, and sequences shorter than this will be padded.
 MAX_SEQ_LENGTH = 124
 OUTPUT_MODE = 'classification' # or 'classification', or 'regression'
-NR_FOLDS = len(folds)
 
 dataloader = BinaryClassificationProcessor()
 label_list = dataloader.get_labels(output_mode=OUTPUT_MODE)  # [0, 1] for binary classification
@@ -64,25 +60,30 @@ config = RobertaConfig.from_pretrained('roberta-base')
 config.num_labels = len(label_map)
 
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
-ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
+all_ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 FORCE = True
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
     examples = [(example, label_map, MAX_SEQ_LENGTH, tokenizer, spacy_tokenizer, OUTPUT_MODE) for example in examples if example.text_a]
 
     features = preprocess_rows(examples)
-    features_dict = {feat.my_id: feat for feat in features}
 
-    print(f"Processed fold all - {len(features)} items")
-    with open(ofp, "wb") as f:
+    with open(all_ofp, "wb") as f:
         pickle.dump(features, f)
-    time.sleep(15)
-else:
-    with open(ofp, "rb") as f:
-       features = pickle.load(f)
-       features_dict = {feat.my_id: feat for feat in features}
-       print(f"Processed fold all - {len(features)} items")
 
+    print(f"Processed all - {len(features)} items")
+    time.sleep(15)
+
+with open(all_ofp, "rb") as f:
+   features = pickle.load(f)
+   features_dict = {feat.my_id: feat for feat in features}
+
+   print(f"Loaded all - {len(features)} items")
+
+
+# get split
+N_VOTERS = 1
+folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 
 # start
 for fold in folds:
