@@ -138,7 +138,7 @@ if __name__ == '__main__':
                         setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                         for fold_name in folds:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
-                            name = setting_name + f"_f{fold_name}"
+                            name = setting_name + f"_f{fold_name}_0"
 
                             # init results containers
                             best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
