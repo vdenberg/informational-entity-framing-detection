@@ -95,7 +95,7 @@ for fold in folds:
 
     for v in range(N_VOTERS):
         for set_type in ['train', 'dev']:
-            infp = os.path.join(DATA_DIR, f"{fold_name}_{set_type}.tsv")
+            infp = os.path.join(DATA_DIR, f"{fold_name}_{v}_{set_type}.tsv")
             ofp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_{set_type}_features.pkl")
 
             examples = dataloader.get_examples(infp, set_type, sep='\t')

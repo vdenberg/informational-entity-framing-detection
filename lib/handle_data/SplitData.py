@@ -349,8 +349,9 @@ def split_input_for_bert(data_dir, recreate, n_voters):
 
     # write data for each fold with only BERT-relevant columns to all.tsv
     for fold in folds:
-        train_ofp = os.path.join(data_dir, f"{fold['name']}_train.tsv")
-        dev_ofp = os.path.join(data_dir, f"{fold['name']}_dev.tsv")
+        v = 0
+        train_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_train.tsv")
+        dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
 
         if not os.path.exists(train_ofp):
