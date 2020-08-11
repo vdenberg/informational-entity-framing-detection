@@ -138,9 +138,9 @@ if __name__ == '__main__':
                         setting_results_table = pd.DataFrame(columns=table_columns.split(','))
                         for fold_name in folds:
 
-                            # v = 0
+                            v = 0
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
-                            name = setting_name + f"_f{fold_name}_0" #todo replace
+                            name = setting_name + f"_f{fold_name}_{v}" #todo replace
 
                             # init results containers
                             best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
@@ -149,19 +149,9 @@ if __name__ == '__main__':
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
                                         'sampler': SAMPLER}
 
-                            train_0_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_train_features.pkl")
-                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
-                            _, train_0_batches, train_0_labels = load_features(train_0_fp, BATCH_SIZE, SAMPLER)
-                            _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
-                            #print(train_0_fp)
-                            #print(len(train_0_labels), train_0_labels[0])
-                            #print(train_fp)
-                            #print(len(train_labels), train_0_labels[1])
-
-
                             # load feats
-                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_train_features.pkl")
-                            dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_0_dev_features.pkl")
+                            train_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_train_features.pkl")
+                            dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                             _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
@@ -174,6 +164,7 @@ if __name__ == '__main__':
 
                             FORCE = True
                             if not os.path.exists(best_model_loc) or FORCE:
+                                print(best_model_loc)
                                 model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
                                                                                          num_labels=NUM_LABELS,
