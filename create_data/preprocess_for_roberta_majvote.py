@@ -82,7 +82,7 @@ with open(all_ofp, "rb") as f:
 
 
 # get split
-N_VOTERS = 1
+N_VOTERS = 2
 folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True)
 
 # start
@@ -103,7 +103,7 @@ for fold in folds:
             #examples = [example for example in examples if example.label != '[]']
 
             features = [features_dict[example.my_id] for example in examples if example.text_a]
-            print(f"Processed fold {fold_name} {v} {set_type} - {len(features)} items and writing to {ofp}")
+            print(f"Processed fold {fold_name} FAKE {v} {set_type} - {len(features)} items and writing to {ofp}")
 
             with open(ofp, "wb") as f:
                 pickle.dump(features, f)

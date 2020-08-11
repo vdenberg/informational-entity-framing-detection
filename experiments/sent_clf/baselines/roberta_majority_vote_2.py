@@ -8,6 +8,7 @@ import numpy as np
 from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device, InputFeatures
 import logging
+from lib.evaluate.Eval import my_eval
 
 '''
 class InputFeatures(object):
@@ -60,10 +61,11 @@ samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
 if DEBUG:
-    N_EPS = 2
-    seeds = [0]
-    bss = [32]
-    lrs = [3e-5]
+    N_VOTERS = 2
+    N_EPS = 3
+    seeds = [77]
+    bss = [16]
+    lrs = [1e-5]
     folds = ['1']
     samplers = ['sequential']
 
@@ -244,9 +246,21 @@ if __name__ == '__main__':
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
+                            # majvote = [Counter(el).most_common[0][0] for el in zip(*all_votes)]
+                            majvote = all_votes[0]
+
+                            # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
+                            test_mets, test_perf = my_eval(labels, majvote, set_type='test', name=name,
+                                                           opmode='classification')
+
+                            test_res.update(test_mets)
+                            logging.info(f"{test_perf}")
+
+                            '''
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
+                            '''
 
                             '''
                             for EMB_TYPE in ['avbert', 'crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
@@ -267,7 +281,6 @@ if __name__ == '__main__':
                             '''
 
                             # store performance in table
-                            fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                             fold_results_table = fold_results_table.append(test_res, ignore_index=True)
                             setting_results_table = setting_results_table.append(fold_results_table)
 
