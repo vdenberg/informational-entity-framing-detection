@@ -315,7 +315,7 @@ class Split:
                 name = 'fan' if i == 0 else i
 
             filled_fold = {'train': [train_df, train_df],
-                           'dev': [dev_df, dev_df]
+                           'dev': [dev_df, dev_df],
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
