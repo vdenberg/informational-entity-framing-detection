@@ -314,8 +314,8 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-            filled_fold = {'train': [train_df, 'test'],
-                           'dev': [dev_df, 'test'],
+            filled_fold = {'train': [train_df, train_df],
+                           'dev': [dev_df, dev_df]
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
