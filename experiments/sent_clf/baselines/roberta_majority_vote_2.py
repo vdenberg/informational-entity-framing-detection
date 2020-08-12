@@ -107,6 +107,8 @@ NUM_LABELS = 2
 PRINT_EVERY = 100
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 if __name__ == '__main__':
     # set logger
@@ -133,6 +135,7 @@ if __name__ == '__main__':
                 np.random.seed(SEED_VAL)
                 torch.manual_seed(SEED_VAL)
                 torch.cuda.manual_seed_all(SEED_VAL)
+
 
                 for BATCH_SIZE in bss:
                     bs_name = seed_name + f"_bs{BATCH_SIZE}"
