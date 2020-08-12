@@ -235,7 +235,7 @@ if __name__ == '__main__':
                                 best_model.to(device)
 
                                 logger.info(f"***** Best v{v} model on Fold {fold_name} *****")
-                                logger.info(f"  Details: {[(k, v.type()) for k, v in best_val_res.items()]}")
+                                logger.info(f"  Details: {[(k, type(v)) for k, v in best_val_res.items()]}")
                                 dev_mets, dev_perf = inferencer.evaluate(best_model, dev_batches, dev_labels, set_type='dev')
                                 best_val_res.update(dev_mets)
                                 logging.info(f"{dev_perf}")
