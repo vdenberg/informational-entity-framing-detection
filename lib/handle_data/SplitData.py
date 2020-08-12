@@ -109,6 +109,15 @@ def load_basil_w_tokens():
     return basil_df
 
 
+def collect_sent_ids(set_type_stories, sent_by_story):
+    set_type_sent_ids = []
+    for story in set_type_stories:
+        if story in sent_by_story:
+            sent_ids = sent_by_story[story]
+            set_type_sent_ids.extend(sent_ids)
+    return set_type_sent_ids
+
+
 class BergSplit:
     def __init__(self, split_input, split_dir='data/splits/berg_split', subset=1.0):
         split_fn = 'split.json'
@@ -187,7 +196,7 @@ class BergSplit:
         splits_w_sent_ids = []
         for split_i, stories_split_one_way in story_split.items():
             split_sent_ids = {}
-            total = 0
+
             for set_type in ['train', 'dev', 'test']:
                 set_type_stories = stories_split_one_way[set_type]
 
@@ -198,8 +207,12 @@ class BergSplit:
                         sent_ids = sent_by_story[story]
                         set_type_sent_ids.extend(sent_ids)
 
+                if set_type != 'test':
+                    set_type_sent_ids = [set_type_sent_ids]
+
                 split_sent_ids[set_type] = set_type_sent_ids
-                total += len(set_type_sent_ids)
+
+
 
             splits_w_sent_ids.append(split_sent_ids)
 
@@ -237,7 +250,7 @@ class FanSplit:
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         train_sents, dev_sents, test_sents = self.match_fan()
-        return [{'train': train_sents, 'dev': dev_sents, 'test': test_sents}]
+        return [{'train': [train_sents], 'dev': [dev_sents], 'test': test_sents}]
 
 
 class Split:
@@ -284,9 +297,6 @@ class Split:
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):
 
-            train_sent_ids = empty_fold['train']
-            dev_sent_ids = empty_fold['dev']
-            test_sent_ids = empty_fold['test']
 
             # if bias -> label renaming not executed in other scripts, fix it here
             if 'label' not in self.input_dataframe.columns:
@@ -295,16 +305,21 @@ class Split:
                     self.input_dataframe.rename({'bias': 'label'})
 
             # oversample
-            #pos_cases = self.input_dataframe[self.input_dataframe.label == 1]
-            #pos_cases = pd.concat([pos_cases]*5)
-            #self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
+            # pos_cases = self.input_dataframe[self.input_dataframe.label == 1]
+            # pos_cases = pd.concat([pos_cases]*5)
+            # self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
+
+            train_sent_ids = empty_fold['train']
+            dev_sent_ids = empty_fold['dev']
+            test_sent_ids = empty_fold['test']
+            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
 
             train_dfs = []
             dev_dfs = []
             # for v in range(len(empty_fold['train'])):
             for v in range(self.n_voters):
-                train_sent_ids = empty_fold['train'] #[v]
-                dev_sent_ids = empty_fold['train'] #[v]
+                train_sent_ids = empty_fold['train'][0]
+                dev_sent_ids = empty_fold['train'][0]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
 
                 train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
@@ -318,8 +333,6 @@ class Split:
             train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
             dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
             '''
-            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
-
 
             #train_X, train_y = train_df[features], train_df.label
             #dev_X, dev_y = dev_df[features], dev_df.label
