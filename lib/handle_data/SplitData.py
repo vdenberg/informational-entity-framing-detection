@@ -254,6 +254,7 @@ class Split:
         self.input_dataframe = input_dataframe
         self.which = which
         self.tst = tst
+        self.n_voters = n_voters
 
         if self.which == 'fan':
             splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
