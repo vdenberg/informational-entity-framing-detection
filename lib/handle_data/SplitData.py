@@ -314,8 +314,8 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-            filled_fold = {'train': [train_df, train_df],
-                           'dev': [dev_df, dev_df],
+            filled_fold = {'train': {0: train_df, 1: train_df},
+                           'dev': {0: dev_df, 1: dev_df},
                            'test': test_df,
                            'sizes': (len(train_df), len(dev_df), len(test_df)),
                            'name': name}
@@ -357,9 +357,9 @@ def split_input_for_bert(data_dir, recreate, n_voters):
             dev_ofp = os.path.join(data_dir, f"{fold['name']}_{v}_dev.tsv")
 
             if not os.path.exists(train_ofp) or recreate:
-                fold['train'][0].to_csv(train_ofp, sep='\t', index=False, header=False)
+                fold['train'][v].to_csv(train_ofp, sep='\t', index=False, header=False)
 
             if not os.path.exists(dev_ofp) or recreate:
-                fold['dev'][0].to_csv(dev_ofp, sep='\t', index=False, header=False)
+                fold['dev'][v].to_csv(dev_ofp, sep='\t', index=False, header=False)
 
     return folds
