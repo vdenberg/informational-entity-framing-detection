@@ -298,10 +298,27 @@ class Split:
             #pos_cases = pd.concat([pos_cases]*5)
             #self.input_dataframe = pd.concat([self.input_dataframe, pos_cases])
 
+            train_dfs = []
+            dev_dfs = []
+            # for v in range(len(empty_fold['train'])):
+            for v in range(self.n_voters):
+                train_sent_ids = empty_fold['train'] #[v]
+                dev_sent_ids = empty_fold['train'] #[v]
+                train_df = self.input_dataframe.loc[train_sent_ids, :]
+
+                train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
+                dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+
+                train_dfs.append(train_df)
+                dev_dfs.append(dev_df)
+
+            '''
             train_df = self.input_dataframe.loc[train_sent_ids, :]
             train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
             dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+            '''
             test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
+
 
             #train_X, train_y = train_df[features], train_df.label
             #dev_X, dev_y = dev_df[features], dev_df.label
