@@ -63,7 +63,7 @@ DEBUG = args.debug
 if DEBUG:
     N_VOTERS = 2
     N_EPS = 5
-    seeds = [77]
+    seeds = [args.sv]
     bss = [16]
     lrs = [1e-5]
     folds = ['1']
