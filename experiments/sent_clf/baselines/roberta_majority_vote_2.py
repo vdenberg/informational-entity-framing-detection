@@ -74,7 +74,7 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SC_rob'
+TASK_NAME = f'Rob_majvote'
 FEAT_DIR = f'data/sent_clf/features_for_roberta_majvote'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
