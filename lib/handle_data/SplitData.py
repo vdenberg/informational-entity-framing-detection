@@ -199,7 +199,7 @@ class BergSplit:
                         set_type_sent_ids.extend(sent_ids)
 
                 if set_type != 'test':
-                    set_type_sent_ids = [set_type_sent_ids]
+                    set_type_sent_ids = [set_type_sent_ids, set_type_sent_ids]
 
                 split_sent_ids[set_type] = set_type_sent_ids
 
@@ -308,8 +308,8 @@ class Split:
             dev_dfs = []
             # for v in range(len(empty_fold['train'])):
             for v in range(self.n_voters):
-                train_sent_ids = empty_fold['train'][0]
-                dev_sent_ids = empty_fold['train'][0]
+                train_sent_ids = empty_fold['train'][v]
+                dev_sent_ids = empty_fold['train'][v]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
 
                 train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
