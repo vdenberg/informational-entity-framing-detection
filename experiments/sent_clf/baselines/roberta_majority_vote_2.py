@@ -290,11 +290,11 @@ if __name__ == '__main__':
                             setting_results_table = setting_results_table.append(fold_results_table)
 
                             # print result on fold
-                            logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                            logging.info(f'Fold {fold_name} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "voter", "set_type", "f1"]]}')
 
                         # print result of setting
                         logging.info(
-                            f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+                            f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "voter", "set_type", "f1"]]}')
 
                         # store performance of setting
                         main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
