@@ -324,7 +324,6 @@ class Split:
             dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
             '''
 
-
             #train_X, train_y = train_df[features], train_df.label
             #dev_X, dev_y = dev_df[features], dev_df.label
             #test_X, test_y = test_df[features], test_df.label
