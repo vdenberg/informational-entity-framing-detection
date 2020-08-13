@@ -9,6 +9,7 @@ from lib.handle_data.PreprocessForBert import *
 from lib.utils import get_torch_device, InputFeatures
 import logging
 from lib.evaluate.Eval import my_eval
+from collections import Counter
 
 '''
 class InputFeatures(object):
@@ -249,8 +250,8 @@ if __name__ == '__main__':
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
-                            # majvote = [Counter(el).most_common[0][0] for el in zip(*all_votes)]
-                            majvote = all_votes[0]
+                            majvote = [Counter(el).most_common[0][0] for el in zip(*all_votes)]
+                            # majvote = all_votes[0]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(labels, majvote, set_type='test', name=name,
