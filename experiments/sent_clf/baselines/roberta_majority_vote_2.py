@@ -137,7 +137,6 @@ if __name__ == '__main__':
                 torch.manual_seed(SEED_VAL)
                 torch.cuda.manual_seed_all(SEED_VAL)
 
-
                 for BATCH_SIZE in bss:
                     bs_name = seed_name + f"_bs{BATCH_SIZE}"
                     for LEARNING_RATE in lrs:
@@ -158,7 +157,7 @@ if __name__ == '__main__':
                             all_votes = []
                             for v in range(N_VOTERS):
                                 v_f1 = 0
-                                name = setting_name + f"_f{fold_name}_{v}"
+                                name = setting_name + f"_f{fold_name}_v{v}"
 
                                 # init results containers
                                 best_model_loc = os.path.join(CHECKPOINT_DIR, name)
@@ -251,8 +250,6 @@ if __name__ == '__main__':
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
-
-                            # majvote = all_votes[0]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
