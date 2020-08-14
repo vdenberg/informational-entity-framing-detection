@@ -125,8 +125,10 @@ class BergSplit:
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
 
-    def create_split(self):
+    def create_split(self, n_voters, sv):
         # order stories from most to least sentences in a story
+        random.seed(sv)
+
         ordered_stories = order_stories(self.basil)
 
         # make ten cuts
@@ -172,9 +174,9 @@ class BergSplit:
 
         return splits_json
 
-    def load_berg_story_split(self, recreate, n_voters):
+    def load_berg_story_split(self, recreate, n_voters, sv):
         if not os.path.exists(self.split_fp) or recreate:
-            self.create_split()
+            self.create_split(n_voters, sv)
 
         with open(self.split_fp, 'r') as f:
             return json.load(f)
@@ -184,12 +186,12 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split(self, recreate, n_voters):
+    def return_split(self, recreate, n_voters, sv):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters)
+        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voter, sv=sv)
 
         sent_by_story = self.map_stories_to_sentences()
 
@@ -217,12 +219,12 @@ class BergSplit:
         return splits_w_sent_ids
 
 
-    def return_split_new(self, recreate, n_voters):
+    def return_split_new(self, recreate, n_voters, sv):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters)
+        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters, sv=sv)
 
         sent_by_story = self.map_stories_to_sentences()
 
@@ -291,7 +293,7 @@ class FanSplit:
 
 class Split:
     def __init__(self, input_dataframe, which='berg', split_loc='data/splits/', tst=False, subset=1.0, recreate=False,
-                 n_voters=1):
+                 n_voters=1, sv=99):
         """
         Splits input basil-like dataframe into folds.
 
@@ -311,13 +313,13 @@ class Split:
 
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
-            self.spl = splitter.return_split(recreate, n_voters=n_voters)
+            self.spl = splitter.return_split(recreate, n_voters=n_voters, sv=sv)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split(recreate, n_voters)
+            berg_spl = berg_splitter.return_split(recreate, n_voters, sv=sv)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):
@@ -397,7 +399,7 @@ class Split:
         return filled_folds
 
 
-def split_input_for_bert(data_dir, recreate, n_voters):
+def split_input_for_bert(data_dir, recreate, n_voters, sv):
     ''' This function loads basil, selects those columns which are relevant for creating input for finetuning BERT to
     our data, and saves them for each berg-fold seperately. '''
 
@@ -410,7 +412,7 @@ def split_input_for_bert(data_dir, recreate, n_voters):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='berg', recreate=recreate, n_voters=n_voters)
+    spl = Split(data, which='berg', recreate=recreate, n_voters=n_voters, sv)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
