@@ -191,7 +191,7 @@ class BergSplit:
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
         # ...
-        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voter, sv=sv)
+        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters, sv=sv)
 
         sent_by_story = self.map_stories_to_sentences()
 
