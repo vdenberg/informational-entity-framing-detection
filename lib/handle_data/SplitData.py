@@ -112,7 +112,6 @@ def load_basil_w_tokens():
 def collect_sent_ids(set_type_stories, sent_by_story):
     set_type_sent_ids = []
     for story in set_type_stories:
-
         if story in sent_by_story:
             sent_ids = sent_by_story[story]
             set_type_sent_ids.extend(sent_ids)
@@ -185,7 +184,7 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split_old(self, recreate):
+    def return_split(self, recreate):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
@@ -218,7 +217,7 @@ class BergSplit:
         return splits_w_sent_ids
 
 
-    def return_split(self, recreate, n_voters):
+    def return_split_new(self, recreate, n_voters):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
