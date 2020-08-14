@@ -412,7 +412,7 @@ def split_input_for_bert(data_dir, recreate, n_voters, sv):
     data.to_csv(data_dir + f"/all.tsv", sep='\t', index=False, header=False)
 
     # write data into folds
-    spl = Split(data, which='berg', recreate=recreate, n_voters=n_voters, sv)
+    spl = Split(data, which='berg', recreate=recreate, n_voters=n_voters, sv=sv)
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
