@@ -168,7 +168,7 @@ class BergSplit:
             dev_voters = []
             for v in range(n_voters):
                 train_stories = []
-                random.shuffle(fold_order, random=sv)
+                random.shuffle(fold_order)
                 print(fold_order)
                 ordered_folds = [ten_folds[fold_i] for fold_i in fold_order]
                 train_stories_list = ordered_folds[:8]
