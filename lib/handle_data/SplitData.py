@@ -254,6 +254,7 @@ class BergSplit:
 
         return splits_w_sent_ids
 
+
 class FanSplit:
     def __init__(self, split_input, split_dir, subset=1.0):
         self.split_input = split_input
@@ -311,13 +312,13 @@ class Split:
 
         elif self.which == 'berg':
             splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
-            self.spl = splitter.return_split(recreate)
+            self.spl = splitter.return_split(recreate, n_voters=n_voters)
 
         elif self.which == 'both':
             fan_splitter = FanSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'fan_split'))
             berg_splitter = BergSplit(input_dataframe, subset=subset, split_dir=os.path.join(split_loc, 'berg_split'))
             fan_spl = fan_splitter.return_split()
-            berg_spl = berg_splitter.return_split(recreate)
+            berg_spl = berg_splitter.return_split(recreate, n_voters)
             self.spl = fan_spl + berg_spl
 
     def apply_split(self, features):
