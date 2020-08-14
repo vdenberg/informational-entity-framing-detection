@@ -173,7 +173,7 @@ class BergSplit:
 
         return splits_json
 
-    def load_berg_story_split(self, recreate):
+    def load_berg_story_split(self, recreate, n_voters):
         if not os.path.exists(self.split_fp) or recreate:
             self.create_split()
 
@@ -238,8 +238,8 @@ class BergSplit:
             all_train_sent_ids = []
             all_dev_sent_ids = []
             for v in range(n_voters):
-                train_stories = stories_split_one_way['train'][v]
-                dev_stories = stories_split_one_way['dev'][v]
+                train_stories = stories_split_one_way['train'] #[v]
+                dev_stories = stories_split_one_way['dev'] #[v]
 
                 train_sent_ids = collect_sent_ids(train_stories, sent_by_story)
                 dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
