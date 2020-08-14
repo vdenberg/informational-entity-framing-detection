@@ -248,7 +248,7 @@ class BergSplit:
                 all_dev_sent_ids.append(dev_sent_ids)
 
             split_sent_ids['train'] = all_train_sent_ids
-            split_sent_ids['train'] = all_dev_sent_ids
+            split_sent_ids['dev'] = all_dev_sent_ids
 
             splits_w_sent_ids.append(split_sent_ids)
 
