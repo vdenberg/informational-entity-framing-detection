@@ -175,7 +175,7 @@ if __name__ == '__main__':
                                 logger.info(f"  Details: {best_val_res}")
                                 logger.info(f"  Logging to {LOG_NAME}")
 
-                                FORCE = False
+                                FORCE = True
                                 if not os.path.exists(best_model_loc) or FORCE:
                                     model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                              cache_dir=CACHE_DIR,
@@ -227,7 +227,7 @@ if __name__ == '__main__':
                                         if dev_mets['f1'] > best_val_res['f1']:
                                             best_val_res.update(dev_mets)
                                             high_score = '(HIGH SCORE)'
-                                            save_model(model, CHECKPOINT_DIR, name)
+                                            # save_model(model, CHECKPOINT_DIR, name)
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
