@@ -158,7 +158,9 @@ class BergSplit:
         # now there's ten permutations of the ten folds
 
         stories_split_ten_ways = []
-        for ordered_folds in folds_in_ten_orders:
+        #for ordered_folds in folds_in_ten_orders:
+        for fold_order in fold_orders:
+            ordered_folds = [ten_folds[fold_i] for fold_i in fold_order]
             test_stories = ordered_folds[9]
 
             train_voters = []
