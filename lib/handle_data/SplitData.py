@@ -109,6 +109,16 @@ def load_basil_w_tokens():
     return basil_df
 
 
+def collect_sent_ids(set_type_stories, sent_by_story):
+    set_type_sent_ids = []
+    for story in set_type_stories:
+
+        if story in sent_by_story:
+            sent_ids = sent_by_story[story]
+            set_type_sent_ids.extend(sent_ids)
+    return set_type_sent_ids
+
+
 class BergSplit:
     def __init__(self, split_input, split_dir='data/splits/berg_split', subset=1.0):
         split_fn = 'split.json'
@@ -175,7 +185,7 @@ class BergSplit:
         sent_by_story = {n: gr.index.to_list() for n, gr in by_st}
         return sent_by_story
 
-    def return_split(self, recreate):
+    def return_split_old(self, recreate):
         """ Returns list of folds and the sentence ids associated with their set types.
         :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
         """
@@ -207,6 +217,42 @@ class BergSplit:
 
         return splits_w_sent_ids
 
+
+    def return_split(self, recreate, n_voters):
+        """ Returns list of folds and the sentence ids associated with their set types.
+        :return: list of dicts with keys "train", "dev" & "test" and associated sentence ids.
+        """
+        # ...
+        story_split = self.load_berg_story_split(recreate=recreate, n_voters=n_voters)
+
+        sent_by_story = self.map_stories_to_sentences()
+
+        splits_w_sent_ids = []
+        for split_i, stories_split_one_way in story_split.items():
+            split_sent_ids = {}
+
+            test_stories = stories_split_one_way['test']
+            test_sent_ids = collect_sent_ids(test_stories, sent_by_story)
+            split_sent_ids['test'] = test_sent_ids
+
+            all_train_sent_ids = []
+            all_dev_sent_ids = []
+            for v in range(n_voters):
+                train_stories = stories_split_one_way['train'][v]
+                dev_stories = stories_split_one_way['dev'][v]
+
+                train_sent_ids = collect_sent_ids(train_stories, sent_by_story)
+                dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
+
+                all_train_sent_ids.append(train_sent_ids)
+                all_dev_sent_ids.append(dev_sent_ids)
+
+            split_sent_ids['train'] = all_train_sent_ids
+            split_sent_ids['train'] = all_dev_sent_ids
+
+            splits_w_sent_ids.append(split_sent_ids)
+
+        return splits_w_sent_ids
 
 class FanSplit:
     def __init__(self, split_input, split_dir, subset=1.0):
