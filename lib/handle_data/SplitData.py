@@ -160,23 +160,22 @@ class BergSplit:
         stories_split_ten_ways = []
         #for ordered_folds in folds_in_ten_orders:
         for fold_order in fold_orders:
+            # test_stories = ordered_folds[9]
             test_stories = ten_folds[fold_order[-1]]
 
             fold_order = fold_order[:-1]
             ordered_folds = [ten_folds[fold_i] for fold_i in fold_order]
 
-            # test_stories = ordered_folds[9]
-
             train_voters = []
             dev_voters = []
-            #for v in range(n_voters):
-            train_stories = []
-            train_stories_list = ordered_folds[:8]
-            for s in train_stories_list:
-                train_stories.extend(s)
-            dev_stories = ordered_folds[8]
-            train_voters = [train_stories, train_stories]
-            dev_voters = [dev_stories, dev_stories]
+            for v in range(n_voters):
+                train_stories = []
+                train_stories_list = ordered_folds[:8]
+                for s in train_stories_list:
+                    train_stories.extend(s)
+                dev_stories = ordered_folds[8]
+                train_voters.append(train_stories)
+                dev_voters.append(dev_stories)
 
             stories_split_one_way = {'train': train_voters, 'dev': dev_voters, 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
