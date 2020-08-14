@@ -156,15 +156,23 @@ class BergSplit:
             folds_in_ten_orders.append(order_of_ten_folds)
 
         # now there's ten permutations of the ten folds
+
         stories_split_ten_ways = []
         for ordered_folds in folds_in_ten_orders:
+            test_stories = ordered_folds[9]
+
+            train_voters = []
+            dev_voters = []
+            #for v in range(n_voters):
             train_stories = []
             train_stories_list = ordered_folds[:8]
             for s in train_stories_list:
                 train_stories.extend(s)
             dev_stories = ordered_folds[8]
-            test_stories = ordered_folds[9]
-            stories_split_one_way = {'train': [train_stories, train_stories], 'dev': [dev_stories, dev_stories], 'test': test_stories}
+            train_voters = [train_stories, train_stories]
+            dev_voters = [dev_stories, dev_stories]
+
+            stories_split_one_way = {'train': train_voters, 'dev': dev_voters, 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
 
         splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
