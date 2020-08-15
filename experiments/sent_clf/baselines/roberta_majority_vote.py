@@ -54,7 +54,7 @@ FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 N_VOTERS = args.n_voters
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [99, 33, 181, 34, 49, 6]
+seeds = [args.sv] if args.sv else [11, 22, 33, 44, 55, 66]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
@@ -227,7 +227,7 @@ if __name__ == '__main__':
                                         if dev_mets['f1'] > best_val_res['f1']:
                                             best_val_res.update(dev_mets)
                                             high_score = '(HIGH SCORE)'
-                                            # save_model(model, CHECKPOINT_DIR, name)
+                                            save_model(model, CHECKPOINT_DIR, name)
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
