@@ -162,16 +162,16 @@ class BergSplit:
         for fold_order in fold_orders:
             # test_stories = ordered_folds[9]
             test_stories = ten_folds[fold_order[9]]
-            fold_order = fold_order[:9]
+            td_fold_order = fold_order[:9]
 
             train_voters = []
             dev_voters = []
             for v in range(n_voters):
                 train_stories = []
-                random.shuffle(fold_order)
-                ordered_folds = [ten_folds[fold_i] for fold_i in fold_order]
-                train_stories_list = ordered_folds[:8]
-                for s in train_stories_list:
+                random.shuffle(td_fold_order)
+
+                ordered_folds = [ten_folds[fold_i] for fold_i in td_fold_order]
+                for s in ordered_folds[:8]:
                     train_stories.extend(s)
                 dev_stories = ordered_folds[8]
 
@@ -253,12 +253,11 @@ class BergSplit:
             all_dev_sent_ids = []
             for v in range(n_voters):
                 train_stories = stories_split_one_way['train'][v]
-                dev_stories = stories_split_one_way['dev'][v]
-
                 train_sent_ids = collect_sent_ids(train_stories, sent_by_story)
-                dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
-
                 all_train_sent_ids.append(train_sent_ids)
+
+                dev_stories = stories_split_one_way['dev'][v]
+                dev_sent_ids = collect_sent_ids(dev_stories, sent_by_story)
                 all_dev_sent_ids.append(dev_sent_ids)
 
             split_sent_ids['train'] = all_train_sent_ids
@@ -370,7 +369,7 @@ class Split:
             # for v in range(len(empty_fold['train'])):
             for v in range(self.n_voters):
                 train_sent_ids = empty_fold['train'][v]
-                dev_sent_ids = empty_fold['train'][v]
+                dev_sent_ids = empty_fold['dev'][v]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
 
                 train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
