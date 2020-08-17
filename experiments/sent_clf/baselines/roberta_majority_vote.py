@@ -237,8 +237,8 @@ if __name__ == '__main__':
                                             high_score = '(HIGH SCORE)'
                                             save_model(model, CHECKPOINT_DIR, name)
 
-                                        #logger.info(f'{epoch_name}: {dev_perf} {high_score}')
-                                        logger.info(f'{epoch_name}: {train_perf} {dev_perf} {test_perf}')
+                                        logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                        # logger.info(f'{epoch_name}: {train_perf} {dev_perf} {test_perf}')
 
                                 best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
                                                                                               num_labels=NUM_LABELS,
