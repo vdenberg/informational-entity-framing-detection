@@ -39,7 +39,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-load', '--load', action='store_true', default=True)
 parser.add_argument('-ep', '--n_epochs', type=int, default=5) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
-parser.add_argument('-n_voters', '--n_voters', type=int, default=5)
+parser.add_argument('-n_voters', '--n_voters', type=int, default=3)
 
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-model', '--model', type=str, default=None) #2,3,4
@@ -54,7 +54,7 @@ FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 N_VOTERS = args.n_voters
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [11, 22, 33, 44, 55]
+seeds = [args.sv] if args.sv else [11, 22, 33]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
