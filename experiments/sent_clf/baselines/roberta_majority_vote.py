@@ -254,10 +254,10 @@ if __name__ == '__main__':
                                 best_val_res.update(dev_mets)
                                 logging.info(f"{dev_perf}")
 
-                                preds, _ = inferencer.predict(best_model, test_batches)
+                                # preds, _ = inferencer.predict(best_model, test_batches)
+                                # assert len(preds) == len(test_ids)
                                 train_preds, _ = inferencer.predict(best_model, train_batches_eval)
-                                assert len(preds) == len(test_ids)
-                                all_votes.append(preds)
+                                # all_votes.append(preds)
                                 all_train_votes.append(train_preds)
                                 print(len(train_preds))
                                 exit(0)
