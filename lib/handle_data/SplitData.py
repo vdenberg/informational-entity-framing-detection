@@ -168,7 +168,6 @@ class BergSplit:
             dev_voters = []
             for v in range(n_voters):
                 train_stories = []
-                random.shuffle(td_fold_order)
 
                 ordered_folds = [ten_folds[fold_i] for fold_i in td_fold_order]
                 for s in ordered_folds[:8]:
@@ -177,6 +176,8 @@ class BergSplit:
 
                 train_voters.append(train_stories)
                 dev_voters.append(dev_stories)
+
+                random.shuffle(td_fold_order)
 
             stories_split_one_way = {'train': train_voters, 'dev': dev_voters, 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
@@ -346,7 +347,6 @@ class Split:
 
         filled_folds = []
         for i, empty_fold in enumerate(empty_folds):
-
 
             # if bias -> label renaming not executed in other scripts, fix it here
             if 'label' not in self.input_dataframe.columns:
