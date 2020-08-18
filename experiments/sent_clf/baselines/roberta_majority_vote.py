@@ -156,6 +156,7 @@ if __name__ == '__main__':
 
                             all_votes = []
                             all_train_votes = []
+                            lens = []
                             for v in range(N_VOTERS):
                                 v_f1 = 0
                                 name = setting_name + f"_f{fold_name}_v{v}"
@@ -259,17 +260,21 @@ if __name__ == '__main__':
                                 train_preds, train_labels = inferencer.predict(best_model, train_batches_eval)
                                 # all_votes.append(preds)
                                 all_train_votes.append(train_preds)
+                                lens.append((len(train_batches_eval), len(train_preds)))
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
-                            majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
+                            # majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
 
                             train_majvote = [Counter(el).most_common()[0][0] for el in zip(*all_train_votes)]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
-                            test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
-                                                           opmode='classification')
+                            # test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
+                            #                               opmode='classification')
 
+                            print(lens)
+                            print(len(train_labels_eval), len(train_majvote))
+                            exit(0)
                             train_mets, train_perf = my_eval(train_labels_eval, train_majvote, set_type='train', name=name,
                                                            opmode='classification')
 
