@@ -160,24 +160,21 @@ class BergSplit:
         stories_split_ten_ways = []
         #for ordered_folds in folds_in_ten_orders:
         for fold_order in fold_orders:
-            # test_stories = ordered_folds[9]
-            test_stories = ten_folds[fold_order[0]]
-            td_fold_order = fold_order[1:]
+            test_i = 0
+            test_stories = ten_folds[fold_order[test_i]]
 
             train_voters = []
             dev_voters = []
-            for v in range(n_voters):
-                train_stories = []
+            for dev_i in range(1, n_voters+1):
+                dev_stories = ten_folds[fold_order[dev_i]]
 
-                ordered_folds = [ten_folds[fold_i] for fold_i in td_fold_order]
-                dev_stories = ordered_folds[0]
-                for s in ordered_folds[1:]:
-                    train_stories.extend(s)
+                train_stories = []
+                for i, order_i in enumerate(fold_order):
+                    if i not in [test_i, dev_i]:
+                        train_stories.extend(ten_folds[order_i])
 
                 train_voters.append(train_stories)
                 dev_voters.append(dev_stories)
-
-                random.shuffle(td_fold_order)
 
             stories_split_one_way = {'train': train_voters, 'dev': dev_voters, 'test': test_stories}
             stories_split_ten_ways.append(stories_split_one_way)
