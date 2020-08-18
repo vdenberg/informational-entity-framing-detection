@@ -226,9 +226,9 @@ if __name__ == '__main__':
                                         dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                      set_type='dev', name=epoch_name)
 
-                                        # test_mets, test_perf = inferencer.evaluate(model, test_batches, test_labels,
-                                        #                                         av_loss=av_loss,
-                                        #                                         set_type='test', name=epoch_name)
+                                        test_mets, test_perf = inferencer.evaluate(model, test_batches, test_labels,
+                                                                                 av_loss=av_loss,
+                                                                                 set_type='test', name=epoch_name)
 
 
                                         # check if best
@@ -240,7 +240,7 @@ if __name__ == '__main__':
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
-                                        # logger.info(f'{epoch_name}: {train_perf} {dev_perf} {test_perf}')
+                                        logger.info(f'{epoch_name}: {test_perf}')
 
                                 best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
                                                                                               num_labels=NUM_LABELS,
