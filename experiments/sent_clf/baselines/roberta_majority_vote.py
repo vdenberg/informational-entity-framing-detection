@@ -155,6 +155,7 @@ if __name__ == '__main__':
                             test_ids, test_batches, test_labels = load_features(test_fp, 1, SAMPLER)
 
                             all_votes = []
+                            all_train_votes = []
                             for v in range(N_VOTERS):
                                 v_f1 = 0
                                 name = setting_name + f"_f{fold_name}_v{v}"
@@ -175,7 +176,7 @@ if __name__ == '__main__':
                                 logger.info(f"  Details: {best_val_res}")
                                 logger.info(f"  Logging to {LOG_NAME}")
 
-                                FORCE = True
+                                FORCE = False
                                 if not os.path.exists(best_model_loc) or FORCE:
                                     model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                              cache_dir=CACHE_DIR,
@@ -253,19 +254,25 @@ if __name__ == '__main__':
                                 logging.info(f"{dev_perf}")
 
                                 preds, labels = inferencer.predict(best_model, test_batches)
+                                train_preds, labels = inferencer.predict(best_model, train_batches)
                                 assert len(preds) == len(test_ids)
                                 all_votes.append(preds)
+                                all_train_votes.append(train_preds)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
+                            train_majvote = [Counter(el).most_common()[0][0] for el in zip(*all_train_votes)]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
+                            train_mets, train_perf = my_eval(train_labels, train_majvote, set_type='test', name=name,
+                                                           opmode='classification')
 
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
+                            logging.info(f"{train_perf}")
 
                             '''
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
