@@ -269,6 +269,7 @@ if __name__ == '__main__':
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
 
+                            print(len(train_labels_eval), len(train_majvote))
                             train_mets, train_perf = my_eval(train_labels_eval, train_majvote, set_type='train', name=name,
                                                            opmode='classification')
 
