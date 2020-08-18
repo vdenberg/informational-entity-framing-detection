@@ -170,6 +170,8 @@ if __name__ == '__main__':
                                 dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
                                 _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                                 _, train_batches_eval, train_labels_eval = load_features(train_fp, 1, SAMPLER)
+                                print(len(train_batches_eval), len(train_labels_eval))
+                                exit(0)
                                 _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
 
                                 # start training
@@ -256,11 +258,9 @@ if __name__ == '__main__':
 
                                 # preds, _ = inferencer.predict(best_model, test_batches)
                                 # assert len(preds) == len(test_ids)
-                                print(len(train_batches_eval))
                                 train_preds, train_labels = inferencer.predict(best_model, train_batches_eval)
                                 # all_votes.append(preds)
                                 all_train_votes.append(train_preds)
-                                exit(0)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 

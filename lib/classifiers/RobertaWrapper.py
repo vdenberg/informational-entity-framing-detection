@@ -346,27 +346,16 @@ class Inferencer():
         preds = []
         embeddings = []
         labels = []
+
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
             input_ids, input_mask, label_ids = batch
-            labels.extend(label_ids)
+            # labels.extend(label_ids)
 
             with torch.no_grad():
                 # print(input_mask)
                 outputs = model(input_ids, input_mask, labels=None)
-                logits, probs = outputs[0], outputs[1]
-
-                '''
-                r = sequence_output[:, 0, :]
-                r = r.detach().cpu().numpy()
-
-                batch_r_sim = cosine_similarity(r)
-                batch_r_sim = batch_r_sim.ravel()
-
-                batch_r_sim = batch_r_sim.mean()
-                rep_sim.append(batch_r_sim)
-                # logits, probs = outputs
-                '''
+                logits = outputs[0]
 
             # of last hidden state with size (batch_size, sequence_length, hidden_size)
             # where batch_size=1, sequence_length=95, hidden_size=768)
@@ -429,6 +418,7 @@ class Inferencer():
                     print(logits)
                     print(logits.shape)
                     exit(0)
+
             preds.extend(pred)
 
         # rep_sim = sum(rep_sim) / len(rep_sim)
