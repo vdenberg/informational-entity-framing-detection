@@ -170,8 +170,6 @@ if __name__ == '__main__':
                                 dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
                                 _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                                 _, train_batches_eval, train_labels_eval = load_features(train_fp, 1, SAMPLER)
-                                print(len(train_batches_eval), len(train_labels_eval))
-                                exit(0)
                                 _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
 
                                 # start training
