@@ -253,8 +253,8 @@ if __name__ == '__main__':
                                 best_val_res.update(dev_mets)
                                 logging.info(f"{dev_perf}")
 
-                                preds, labels = inferencer.predict(best_model, test_batches)
-                                train_preds, labels = inferencer.predict(best_model, train_batches)
+                                preds, _ = inferencer.predict(best_model, test_batches)
+                                train_preds, _ = inferencer.predict(best_model, train_batches)
                                 assert len(preds) == len(test_ids)
                                 all_votes.append(preds)
                                 all_train_votes.append(train_preds)
@@ -267,7 +267,9 @@ if __name__ == '__main__':
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
-                            train_mets, train_perf = my_eval(train_labels, train_majvote, set_type='test', name=name,
+
+                            _, _, train_labels = load_features(train_fp, 1, SAMPLER)
+                            train_mets, train_perf = my_eval(train_labels, train_majvote, set_type='train', name=name,
                                                            opmode='classification')
 
                             test_res.update(test_mets)
