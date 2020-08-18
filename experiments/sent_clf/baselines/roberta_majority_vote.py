@@ -220,9 +220,9 @@ if __name__ == '__main__':
                                         av_loss = tr_loss / len(train_batches)
                                         # save_model(model, CHECKPOINT_DIR, epoch_name)
 
-                                        #train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
-                                        #                                         av_loss=av_loss,
-                                        #                                         set_type='train', name=epoch_name)
+                                        train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
+                                                                                 av_loss=av_loss,
+                                                                                 set_type='train', name=epoch_name)
 
                                         dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                      set_type='dev', name=epoch_name)
@@ -231,14 +231,18 @@ if __name__ == '__main__':
                                                                                  av_loss=av_loss,
                                                                                  set_type='test', name=epoch_name)
 
+
                                         # check if best
                                         high_score = ''
                                         if dev_mets['f1'] > best_val_res['f1']:
                                             best_val_res.update(dev_mets)
                                             high_score = '(HIGH SCORE)'
-                                            save_model(model, CHECKPOINT_DIR, name)
+                                            # save_model(model, CHECKPOINT_DIR, name)
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
+                                        print(train_perf)
+                                        print(test_perf)
+
                                         # logger.info(f'{epoch_name}: {train_perf} {dev_perf} {test_perf}')
 
                                 best_model = RobertaForSequenceClassification.from_pretrained(best_model_loc,
@@ -258,7 +262,7 @@ if __name__ == '__main__':
                                 all_votes.append(preds)
 
                                 train_mets, train_perf = inferencer.evaluate(best_model, train_batches, train_labels,
-                                                                         set_type='dev')
+                                                                         set_type='train')
 
                                 tr_perfs.append(train_perf)
 
