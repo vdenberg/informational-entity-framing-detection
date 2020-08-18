@@ -169,6 +169,7 @@ if __name__ == '__main__':
                                 train_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_train_features.pkl")
                                 dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_{v}_dev_features.pkl")
                                 _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
+                                _, train_batches_eval, train_labels_eval = load_features(train_fp, 1, SAMPLER)
                                 _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
 
                                 # start training
@@ -220,9 +221,9 @@ if __name__ == '__main__':
                                         av_loss = tr_loss / len(train_batches)
                                         # save_model(model, CHECKPOINT_DIR, epoch_name)
 
-                                        train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
-                                                                                 av_loss=av_loss,
-                                                                                 set_type='train', name=epoch_name)
+                                        #train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
+                                        #                                         av_loss=av_loss,
+                                        #                                         set_type='train', name=epoch_name)
 
                                         dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                      set_type='dev', name=epoch_name)
@@ -254,7 +255,7 @@ if __name__ == '__main__':
                                 logging.info(f"{dev_perf}")
 
                                 preds, _ = inferencer.predict(best_model, test_batches)
-                                train_preds, _ = inferencer.predict(best_model, train_batches)
+                                train_preds, _ = inferencer.predict(best_model, train_batches_eval)
                                 assert len(preds) == len(test_ids)
                                 all_votes.append(preds)
                                 all_train_votes.append(train_preds)
@@ -268,8 +269,7 @@ if __name__ == '__main__':
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
 
-                            _, _, train_labels = load_features(train_fp, 1, SAMPLER)
-                            train_mets, train_perf = my_eval(train_labels, train_majvote, set_type='train', name=name,
+                            train_mets, train_perf = my_eval(train_labels_eval, train_majvote, set_type='train', name=name,
                                                            opmode='classification')
 
                             test_res.update(test_mets)
