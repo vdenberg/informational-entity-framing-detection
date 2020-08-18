@@ -259,18 +259,19 @@ if __name__ == '__main__':
                                 assert len(preds) == len(test_ids)
                                 all_votes.append(preds)
                                 all_train_votes.append(train_preds)
+                                print(len(train_preds))
+                                exit(0)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
+
                             train_majvote = [Counter(el).most_common()[0][0] for el in zip(*all_train_votes)]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
 
-                            print(len(train_batches_eval), len(train_labels_eval))
-                            print(len(train_labels_eval), len(train_majvote))
                             train_mets, train_perf = my_eval(train_labels_eval, train_majvote, set_type='train', name=name,
                                                            opmode='classification')
 
