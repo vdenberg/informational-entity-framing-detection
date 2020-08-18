@@ -218,18 +218,17 @@ if __name__ == '__main__':
                                                 logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                                         av_loss = tr_loss / len(train_batches)
-                                        # save_model(model, CHECKPOINT_DIR, epoch_name)
 
-                                        train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
-                                                                                 av_loss=av_loss,
-                                                                                 set_type='train', name=epoch_name)
+                                        #train_mets, train_perf = inferencer.evaluate(model, train_batches, train_labels,
+                                        #                                         av_loss=av_loss,
+                                        #                                         set_type='train', name=epoch_name)
 
                                         dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                      set_type='dev', name=epoch_name)
 
-                                        test_mets, test_perf = inferencer.evaluate(model, test_batches, test_labels,
-                                                                                 av_loss=av_loss,
-                                                                                 set_type='test', name=epoch_name)
+                                        # test_mets, test_perf = inferencer.evaluate(model, test_batches, test_labels,
+                                        #                                         av_loss=av_loss,
+                                        #                                         set_type='test', name=epoch_name)
 
 
                                         # check if best
@@ -237,11 +236,9 @@ if __name__ == '__main__':
                                         if dev_mets['f1'] > best_val_res['f1']:
                                             best_val_res.update(dev_mets)
                                             high_score = '(HIGH SCORE)'
-                                            # save_model(model, CHECKPOINT_DIR, name)
+                                            save_model(model, CHECKPOINT_DIR, name)
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
-                                        print(train_perf)
-                                        print(test_perf)
 
                                         # logger.info(f'{epoch_name}: {train_perf} {dev_perf} {test_perf}')
 
@@ -261,24 +258,24 @@ if __name__ == '__main__':
                                 assert len(preds) == len(test_ids)
                                 all_votes.append(preds)
 
-                                train_mets, train_perf = inferencer.evaluate(best_model, train_batches, train_labels,
-                                                                         set_type='train')
+                                # train_mets, train_perf = inferencer.evaluate(best_model, train_batches, train_labels,
+                                #                                         set_type='train')
 
-                                tr_perfs.append(train_perf)
+                                # tr_perfs.append(train_perf)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
 
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
 
-                            test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
+                            # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_mets, test_perf = my_eval(test_labels, majvote, set_type='test', name=name,
                                                            opmode='classification')
 
 
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
-                            logging.info(f"{tr_perfs}")
-                            exit(0)
+                            # logging.info(f"{tr_perfs}")
+
                             '''
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
