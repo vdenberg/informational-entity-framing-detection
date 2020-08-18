@@ -274,7 +274,7 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
                             logging.info(f"{tr_perfs}")
-
+                            exit(0)
                             '''
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
