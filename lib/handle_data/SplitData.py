@@ -161,8 +161,8 @@ class BergSplit:
         #for ordered_folds in folds_in_ten_orders:
         for fold_order in fold_orders:
             # test_stories = ordered_folds[9]
-            test_stories = ten_folds[fold_order[9]]
-            td_fold_order = fold_order[:9]
+            test_stories = ten_folds[fold_order[0]]
+            td_fold_order = fold_order[1:]
 
             train_voters = []
             dev_voters = []
@@ -170,9 +170,9 @@ class BergSplit:
                 train_stories = []
 
                 ordered_folds = [ten_folds[fold_i] for fold_i in td_fold_order]
-                for s in ordered_folds[:8]:
+                dev_stories = ordered_folds[0]
+                for s in ordered_folds[1:]:
                     train_stories.extend(s)
-                dev_stories = ordered_folds[8]
 
                 train_voters.append(train_stories)
                 dev_voters.append(dev_stories)
