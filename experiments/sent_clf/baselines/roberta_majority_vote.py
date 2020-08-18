@@ -256,10 +256,10 @@ if __name__ == '__main__':
 
                                 # preds, _ = inferencer.predict(best_model, test_batches)
                                 # assert len(preds) == len(test_ids)
+                                print(len(train_batches_eval))
                                 train_preds, train_labels = inferencer.predict(best_model, train_batches_eval)
                                 # all_votes.append(preds)
                                 all_train_votes.append(train_preds)
-                                print(len(train_preds), len(train_labels))
                                 exit(0)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)

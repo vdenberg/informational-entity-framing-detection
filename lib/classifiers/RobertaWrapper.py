@@ -345,7 +345,6 @@ class Inferencer():
 
         preds = []
         embeddings = []
-        rep_sim = []
         labels = []
         for step, batch in enumerate(data):
             batch = tuple(t.to(self.device) for t in batch)
@@ -419,7 +418,9 @@ class Inferencer():
 
             if output_mode == 'bio_classification':
                 pred = [list(p) for p in np.argmax(logits, axis=2)]
+
             elif output_mode == 'classification':
+
                 if len(logits.shape) == 1:
                     logits = logits.unsqueeze()
                 try:
