@@ -145,7 +145,6 @@ if __name__ == '__main__':
                         for fold_name in folds:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-
                             # load test feats
 
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
