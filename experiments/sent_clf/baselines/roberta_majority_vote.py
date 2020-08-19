@@ -267,7 +267,6 @@ if __name__ == '__main__':
                                                                          set_type='test')
                                 test_res.update(test_mets)
                                 logging.info(f"{test_perf}")
-                                exit(0)
 
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                                 fold_results_table = fold_results_table.append(test_res, ignore_index=True)
