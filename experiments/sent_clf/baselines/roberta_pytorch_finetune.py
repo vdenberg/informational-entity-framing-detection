@@ -71,7 +71,7 @@ if DEBUG:
 
 TASK_NAME = f'SC_rob'
 FEAT_DIR = f'data/sent_clf/features_for_roberta'
-FEAT_MAJVOTE_DIR = f'data/sent_clf/features_for_roberta'
+FEAT_MAJVOTE_DIR = f'data/sent_clf/features_for_roberta_majvote'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
