@@ -150,28 +150,27 @@ class BergSplit:
                        [9, 0, 1, 2, 3, 4, 5, 6, 7, 8],
                        ]
 
-        # folds_in_ten_orders = []
-        # for fold_order in fold_orders:
-        #     order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
-        #     folds_in_ten_orders.append(order_of_ten_folds)
+        folds_in_ten_orders = []
+        for fold_order in fold_orders:
+             order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
+             folds_in_ten_orders.append(order_of_ten_folds)
 
         # now there's ten permutations of the ten folds
 
         stories_split_ten_ways = []
-        #for ordered_folds in folds_in_ten_orders:
-        for fold_order in fold_orders:
-            test_i = 0
-            test_stories = ten_folds[fold_order[test_i]]
+        for ordered_folds in folds_in_ten_orders:
+            test_stories = ordered_folds[-1]
+            remaining_folds = ordered_folds[:-1]
 
             train_voters = []
             dev_voters = []
-            for dev_i in range(1, n_voters+1):
-                dev_stories = ten_folds[fold_order[dev_i]]
+            for dev_idx in range(1, n_voters+1):
+                dev_stories = remaining_folds[dev_idx]
 
                 train_stories = []
-                for i, order_i in enumerate(fold_order):
-                    if i not in [test_i, dev_i]:
-                        train_stories.extend(ten_folds[order_i])
+                for idx, fold in enumerate(remaining_folds):
+                    if idx != dev_idx:
+                        train_stories.extend(fold)
 
                 train_voters.append(train_stories)
                 dev_voters.append(dev_stories)
