@@ -71,6 +71,7 @@ if DEBUG:
 
 TASK_NAME = f'SC_rob'
 FEAT_DIR = f'data/sent_clf/features_for_roberta'
+FEAT_MAJVOTE_DIR = f'data/sent_clf/features_for_roberta_majvote'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
@@ -150,7 +151,8 @@ if __name__ == '__main__':
                             # load feats
                             train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
-                            test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
+                            # test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
+                            test_fp = os.path.join(FEAT_MAJVOTE_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                             _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
                             test_ids, test_batches, test_labels = load_features(test_fp, 1, SAMPLER)
