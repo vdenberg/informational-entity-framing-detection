@@ -236,7 +236,7 @@ if __name__ == '__main__':
                                         if dev_mets['f1'] > best_val_res['f1']:
                                             best_val_res.update(dev_mets)
                                             high_score = '(HIGH SCORE)'
-                                            # save_model(model, CHECKPOINT_DIR, name)
+                                            save_model(model, CHECKPOINT_DIR, name)
 
                                         logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 

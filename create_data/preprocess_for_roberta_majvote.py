@@ -82,7 +82,7 @@ with open(all_ofp, "rb") as f:
 
 
 # get split
-N_VOTERS = 1
+N_VOTERS = 5
 SV=99
 folds = split_input_for_bert(DATA_DIR, n_voters=N_VOTERS, recreate=True, sv=SV)
 
