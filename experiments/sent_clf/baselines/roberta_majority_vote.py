@@ -145,9 +145,6 @@ if __name__ == '__main__':
                         for fold_name in folds:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                            # init results containers
-                            test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
-                                        'sampler': SAMPLER}
 
                             # load test feats
 
@@ -162,6 +159,9 @@ if __name__ == '__main__':
 
                                 # init results containers
                                 best_model_loc = os.path.join(CHECKPOINT_DIR, name)
+                                test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE,
+                                            'lr': LEARNING_RATE, 'set_type': 'test',
+                                            'sampler': SAMPLER, 'voter': v}
                                 best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                                 'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER, 'voter': v}
 
@@ -264,7 +264,12 @@ if __name__ == '__main__':
 
                                 # tr_perfs.append(train_perf)
 
+                                test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels,
+                                                                         set_type='test')
+                                test_res.update(test_mets)
+
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
+                                fold_results_table = fold_results_table.append(test_res, ignore_index=True)
 
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
 
@@ -274,6 +279,7 @@ if __name__ == '__main__':
 
 
                             test_res.update(test_mets)
+                            test_res['voter'] = 'maj_vote'
                             logging.info(f"{test_perf}")
                             # logging.info(f"{tr_perfs}")
 
