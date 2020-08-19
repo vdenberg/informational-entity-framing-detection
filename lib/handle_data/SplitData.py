@@ -125,7 +125,54 @@ class BergSplit:
         self.split_input = split_input
         self.basil = load_basil().sample(frac=subset)
 
-    def create_split(self, n_voters, sv):
+    def create_split(self):
+        # order stories from most to least sentences in a story
+        ordered_stories = order_stories(self.basil)
+
+        # make ten cuts
+        list_of_non_random_stories = cut_in_ten(ordered_stories)
+
+        # mix them up
+        ten_folds = mix_into_ten_folds(list_of_non_random_stories)
+
+        # now there's 10 folds of each 10 stories
+        fold_orders = [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+                       [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+                       [2, 3, 4, 5, 6, 7, 8, 9, 0, 1],
+                       [3, 4, 5, 6, 7, 8, 9, 0, 1, 2],
+                       [4, 5, 6, 7, 8, 9, 0, 1, 2, 3],
+                       [5, 6, 7, 8, 9, 0, 1, 2, 3, 4],
+                       [6, 7, 8, 9, 0, 1, 2, 3, 4, 5],
+                       [7, 8, 9, 0, 1, 2, 3, 4, 5, 6],
+                       [8, 9, 0, 1, 2, 3, 4, 5, 6, 7],
+                       [9, 0, 1, 2, 3, 4, 5, 6, 7, 8],
+                       ]
+
+        folds_in_ten_orders = []
+        for fold_order in fold_orders:
+            order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
+            folds_in_ten_orders.append(order_of_ten_folds)
+
+        # now there's ten permutations of the ten folds
+        stories_split_ten_ways = []
+        for ordered_folds in folds_in_ten_orders:
+            train_stories = []
+            train_stories_list = ordered_folds[:8]
+            for s in train_stories_list:
+                train_stories.extend(s)
+            dev_stories = ordered_folds[8]
+            test_stories = ordered_folds[9]
+            stories_split_one_way = {'train': [train_stories], 'dev': [dev_stories], 'test': test_stories}
+            stories_split_ten_ways.append(stories_split_one_way)
+
+        splits_json = {str(split_i): one_split for split_i, one_split in enumerate(stories_split_ten_ways)}
+        with open(self.split_fp, 'w') as f:
+            string = json.dumps(splits_json)
+            f.write(string)
+
+        return splits_json
+
+    def create_split_buggy(self, n_voters, sv):
         # order stories from most to least sentences in a story
         random.seed(sv)
 
@@ -150,27 +197,28 @@ class BergSplit:
                        [9, 0, 1, 2, 3, 4, 5, 6, 7, 8],
                        ]
 
-        folds_in_ten_orders = []
-        for fold_order in fold_orders:
-             order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
-             folds_in_ten_orders.append(order_of_ten_folds)
+        # folds_in_ten_orders = []
+        # for fold_order in fold_orders:
+        #     order_of_ten_folds = [ten_folds[fold_i] for fold_i in fold_order]
+        #     folds_in_ten_orders.append(order_of_ten_folds)
 
         # now there's ten permutations of the ten folds
 
         stories_split_ten_ways = []
-        for ordered_folds in folds_in_ten_orders:
-            test_stories = ordered_folds[-1]
-            remaining_folds = ordered_folds[:-1]
+        #for ordered_folds in folds_in_ten_orders:
+        for fold_order in fold_orders:
+            test_i = 0
+            test_stories = ten_folds[fold_order[test_i]]
 
             train_voters = []
             dev_voters = []
-            for dev_idx in range(1, n_voters+1):
-                dev_stories = remaining_folds[dev_idx]
+            for dev_i in range(1, n_voters+1):
+                dev_stories = ten_folds[fold_order[dev_i]]
 
                 train_stories = []
-                for idx, fold in enumerate(remaining_folds):
-                    if idx != dev_idx:
-                        train_stories.extend(fold)
+                for i, order_i in enumerate(fold_order):
+                    if i not in [test_i, dev_i]:
+                        train_stories.extend(ten_folds[order_i])
 
                 train_voters.append(train_stories)
                 dev_voters.append(dev_stories)
