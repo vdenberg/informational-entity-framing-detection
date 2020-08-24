@@ -475,8 +475,8 @@ def split_input_for_bert(data_dir, recreate, n_voters, sv):
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
         if not os.path.exists(test_ofp) or recreate:
 
-            test_labels = fold['test']['label'].value_counts()
-            total = len(test_labels)
+            pos_cases = len([el for el in fold['test']['label'] if el == 1])
+            total = len(fold['test']['label'])
             print(f'Biased instances: {test_labels / total * 100}')
 
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
