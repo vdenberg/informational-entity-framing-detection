@@ -405,7 +405,7 @@ class Split:
             train_sent_ids = empty_fold['train']
             dev_sent_ids = empty_fold['dev']
             test_sent_ids = empty_fold['test']
-            test_df = self.input_dataframe.loc[test_sent_ids, features + ['label']]
+            test_df = self.input_dataframe.loc[test_sent_ids, features ] #+ ['label']
 
             train_dfs = []
             dev_dfs = []
@@ -415,8 +415,8 @@ class Split:
                 dev_sent_ids = empty_fold['dev'][v]
                 train_df = self.input_dataframe.loc[train_sent_ids, :]
 
-                train_df = self.input_dataframe.loc[train_sent_ids, features + ['label']]
-                dev_df = self.input_dataframe.loc[dev_sent_ids, features + ['label']]
+                train_df = self.input_dataframe.loc[train_sent_ids, features ] #+ ['label']
+                dev_df = self.input_dataframe.loc[dev_sent_ids, features ] #+ ['label']
 
                 train_dfs.append(train_df)
                 dev_dfs.append(dev_df)
@@ -475,9 +475,10 @@ def split_input_for_bert(data_dir, recreate, n_voters, sv):
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
         if not os.path.exists(test_ofp) or recreate:
 
-            print(fold['test'].label)
+            pos_cases = fold['test'].label.value_counts()
+            print(pos_cases)
             total = len(fold['test']['label'])
-            #print(f'Biased instances: {pos_cases / total * 100}')
+            print(f'Biased instances: {pos_cases / total * 100}')
 
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
 
