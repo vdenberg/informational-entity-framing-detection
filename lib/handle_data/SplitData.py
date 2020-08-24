@@ -471,13 +471,13 @@ def split_input_for_bert(data_dir, recreate, n_voters, sv):
     folds = spl.apply_split(features=['id', 'label', 'alpha', 'sentence'])
 
     # write data for each fold with only BERT-relevant columns to all.tsv
-    for fold in folds:
+    for i, fold in enumerate(folds):
         test_ofp = os.path.join(data_dir, f"{fold['name']}_test.tsv")
         if not os.path.exists(test_ofp) or recreate:
 
             pos_cases = fold['test'].label.value_counts().loc[1]
             total = len(fold['test']['label'])
-            print(f'Biased instances: \n {pos_cases / total * 100}')
+            print(f'Fold {i+1} Biased instances: \n {pos_cases / total * 100}')
 
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
 
