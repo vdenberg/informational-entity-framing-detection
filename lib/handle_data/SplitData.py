@@ -477,7 +477,7 @@ def split_input_for_bert(data_dir, recreate, n_voters, sv):
 
             pos_cases = len([el for el in fold['test']['label'] if el == 1])
             total = len(fold['test']['label'])
-            print(f'Biased instances: {test_labels / total * 100}')
+            print(f'Biased instances: {pos_cases / total * 100}')
 
             fold['test'].to_csv(test_ofp, sep='\t', index=False, header=False)
 
