@@ -175,13 +175,10 @@ class ContextAwareModel(nn.Module):
             proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
             mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
-            # context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
-                                                     value=sentence_representations, mask=mask)
-
-            print(context_and_target_rep.shape)
-            print(target_sent_reps.shape)
-            context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
+            context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+            # context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
+            #                                         value=sentence_representations, mask=mask)
+            # context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
 
             # if self.cam_type == 'cam+':
             '''
