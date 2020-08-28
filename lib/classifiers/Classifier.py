@@ -62,16 +62,16 @@ class Classifier:
             self.current_patience -= 1
         self.prev_val_f1 = val_f1
 
-    def unpack_fold(self, fold):
+    def unpack_fold(self, fold, voter_i):
         self.cur_fold = fold['name']
-        tr_bs, tr_lbs = fold['train_batches'], fold['train'].label
-        dev_bs, dev_lbs = fold['dev_batches'], fold['dev'].label
+        tr_bs, tr_lbs = fold['train_batches'][voter_i], fold['train'][voter_i].label
+        dev_bs, dev_lbs = fold['dev_batches'][voter_i], fold['dev'][voter_i].label
         return tr_bs, tr_lbs, dev_bs, dev_lbs
 
-    def validate_after_epoch(self, ep, elapsed, fold):
+    def validate_after_epoch(self, ep, elapsed, fold, voter_i):
         ep_name = self.model_name + f"_ep{ep}"
 
-        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
+        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold, voter_i=voter_i)
 
         tr_preds, tr_loss, _, _ = self.wrapper.predict(tr_bs)
         tr_mets, tr_perf = my_eval(tr_lbs, tr_preds, set_type='train', av_loss=tr_loss, name="")
@@ -91,14 +91,14 @@ class Classifier:
                          f"{tr_perf} | {val_perf} {best_log}")
         return tr_mets, tr_perf, val_mets, val_perf
 
-    def train_all_epochs(self, fold):
-        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold)
+    def train_all_epochs(self, fold, voter_i):
+        tr_bs, tr_lbs, dev_bs, dev_lbs = self.unpack_fold(fold, voter_i)
         train_start = time.time()
         losses = []
 
         if self.model_name == 'BERT':
             elapsed = format_runtime(time.time() - train_start)
-            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold)
+            tr_mets, tr_perf, val_mets, val_perf = self.validate_after_epoch(-1, elapsed, fold, voter_i)
             losses.append((tr_mets['loss'], val_mets['loss']))
 
         for ep in self.epochs:
@@ -123,9 +123,9 @@ class Classifier:
         test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
         return test_mets, test_perf
 
-    def train_on_fold(self, fold, save_preds=True):
+    def train_on_fold(self, fold, voter_i):
         self.cur_fold = fold['name']
-        train_elapsed, losses = self.train_all_epochs(fold)
+        train_elapsed, losses = self.train_all_epochs(fold, voter_i)
         self.train_time = train_elapsed
 
         # plot learning curve
@@ -138,16 +138,17 @@ class Classifier:
             self.logger.info(f'Loaded best model from {self.best_model_loc}')
 
             name = self.model_name + f"_TEST_{self.n_epochs}"
-            test_mets, test_perf = self.test_model(fold, name)
 
-            preds, _, _, _ = self.wrapper.predict(fold['test_batches'])
+            # test_mets, test_perf = self.test_model(fold, name)
+            preds, test_loss, _, _ = self.wrapper.predict(fold['test_batches'])
+            test_mets, test_perf = my_eval(fold['test'].label, preds, name=name, set_type='test', av_loss=test_loss)
 
             self.logger.info(f' FINISHED training {name} (took {self.train_time})')
             self.logger.info(f" {test_mets}")
         else:
             test_mets = None
 
-        return self.best_val_mets, test_mets
+        return self.best_val_mets, test_mets, preds
 
     def produce_preds(self, fold, model_name):
         if not model_name:

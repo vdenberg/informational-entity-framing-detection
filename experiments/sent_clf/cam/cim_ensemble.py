@@ -1,6 +1,7 @@
 import argparse, os, sys, logging, re
 from datetime import datetime
 import random
+from collections import Counter
 
 import torch
 import numpy as np
@@ -12,6 +13,7 @@ import pickle, time
 from lib.classifiers.Classifier import Classifier
 from lib.handle_data.SplitData import Split
 from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
+from lib.evaluate.Eval import my_eval
 
 
 class Processor():
@@ -112,6 +114,7 @@ parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
+parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=7)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
@@ -163,6 +166,7 @@ LEX = args.lex
 SPLIT_TYPE = args.split_type
 CONTEXT_TYPE = args.context_type
 SUBSET = args.subset_of_data
+N_VOTERS = args.n_voters
 PREPROCESS = args.preprocess
 #if DEBUG:
 #    SUBSET = 0.5
@@ -205,6 +209,7 @@ SAMPLER = args.sampler
 # torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
+EXP_NAME = 'cim_ensemble'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
@@ -213,6 +218,7 @@ FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
 TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{EXP_NAME}_results.csv')
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -311,16 +317,7 @@ logger.info(f" Max doc len: {MAX_DOC_LEN}")
 data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
-'''
-pos_cases = data[data.label == 1]
-pos_cases = pd.concat([pos_cases]*5)
-print(len(data))
-print(len(pos_cases))
-data = pd.concat(data, pos_cases)
-print(len(data))
-print(len(data))
-'''
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
@@ -357,13 +354,12 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
+    # train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    # dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    # test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['train']]
+    fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['dev']]
+    fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
@@ -427,7 +423,7 @@ if LEX:
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
 learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL, 22, 33, 44, 55, 66] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
+seeds = [SEED_VAL] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -449,7 +445,7 @@ for HIDDEN in hiddens:
                 setting_name = base_name + f"_{SEED_VAL}" + h_name + bs_name + lr_name
                 setting_table_fp = f'{TABLE_DIR}/{setting_name}.csv'
                 logger.info(f' Setting table in: {setting_table_fp}.')
-                FORCE = False
+                FORCE = True
                 if os.path.exists(setting_table_fp) and not FORCE:
                     logger.info(f'Setting {setting_name} done already.')
                     setting_results_table = pd.read_csv(setting_table_fp, index_col=None)
@@ -467,7 +463,7 @@ for HIDDEN in hiddens:
                         fold_name = setting_name + f"_f{fold['name']}"
                         fold_table_fp = f'{TABLE_DIR}/{fold_name}.csv'
 
-                        FORCE = False
+                        FORCE = True
                         if os.path.exists(fold_table_fp) and not FORCE:
                             logger.info(f'Fold {fold_name} done already.')
                             fold_results_table = pd.read_csv(fold_table_fp, index_col=None)
@@ -477,28 +473,37 @@ for HIDDEN in hiddens:
                             val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
-                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                            all_preds = []
+                            for i in range(N_VOTERS):
+                                logger.info(f"------------ VOTER {i} ------------")
+                                cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
-                            cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                            best_val_mets, test_mets = cam_cl.train_on_fold(fold)
-                            val_results.update(best_val_mets)
-                            val_results.update({'model_loc': cam_cl.best_model_loc})
-                            if test_mets:
-                                test_results.update(test_mets)
+                                best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
+                                # todo compute average val perf
+                                # val_results.update(best_val_mets)
+                                # val_results.update({'model_loc': cam_cl.best_model_loc})
+                                fold_results_table = fold_results_table.append(val_results, ignore_index=True)
+                                all_preds.append(preds)
 
-                            fold_results_table = fold_results_table.append(val_results, ignore_index=True)
+                            maj_vote = [Counter(line).most_common()[0][0] for line in zip(*all_preds)]
+                            test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
+                            test_results.update(test_mets)
+
                             fold_results_table = fold_results_table.append(test_results, ignore_index=True)
                             fold_results_table.to_csv(fold_table_fp, index=False)
-                            logging.info(f'Fold {fold["name"]} results: \n{fold_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
+
                         setting_results_table = setting_results_table.append(fold_results_table)
 
                     logging.info(f'Setting {setting_name} results: \n{setting_results_table[["model", "seed", "bs", "lr", "fold", "set_type", "f1"]]}')
                     setting_results_table.to_csv(setting_table_fp, index=False)
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
-            main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
-            logger.info(f"Logged to: {LOG_NAME}.")
+main_results_table_orig = pd.read_csv(MAIN_TABLE_FP)
+main_results_table = main_results_table_orig.append(main_results_table, ignore_index=True)
+main_results_table.to_csv(MAIN_TABLE_FP, index=False)
+logger.info(f"Logged to: {LOG_NAME}.")
