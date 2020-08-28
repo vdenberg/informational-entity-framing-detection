@@ -126,7 +126,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
 # TRAINING PARAMS
 parser.add_argument('-lex', '--lex', action='store_true', default=False, help='lex')
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
-parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
+parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam+')
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
