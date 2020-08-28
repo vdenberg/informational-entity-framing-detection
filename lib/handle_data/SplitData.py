@@ -405,6 +405,10 @@ class Split:
             train_sent_ids = empty_fold['train']
             dev_sent_ids = empty_fold['dev']
             test_sent_ids = empty_fold['test']
+
+            if 'label' not in features:
+                feautres += ['label']
+
             test_df = self.input_dataframe.loc[test_sent_ids, features ] #+ ['label']
 
             train_dfs = []
