@@ -91,12 +91,9 @@ if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
     os.makedirs(TABLE_DIR)
-if os.path.exists(MAIN_TABLE_FP):
-    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,loss,fn,fp,tn,tp,acc,prec,rec,f1'
-    main_results_table = pd.read_csv(MAIN_TABLE_FP)
-else:
-    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,loss,fn,fp,tn,tp,acc,prec,rec,f1'
-    main_results_table = pd.DataFrame(columns=table_columns.split(','))
+
+table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 ########################
 # MAIN
@@ -300,7 +297,9 @@ if __name__ == '__main__':
                         # write performance to file
                         setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
 
-                        main_results_table.to_csv(MAIN_TABLE_FP, index=False)
+main_results_table_orig = pd.read_csv(MAIN_TABLE_FP)
+main_results_table = main_results_table_orig.append(main_results_table, ignore_index=True)
+main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 
 '''
 n_train_batches = len(train_batches)
