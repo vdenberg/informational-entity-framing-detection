@@ -87,8 +87,11 @@ class Classifier:
             self.wrapper.save_model(self.model_name)
             best_log = '(HIGH SCORE)'
 
+        test_mets, test_perf = self.test_model(self, fold, name)
+
         self.logger.info(f" Ep {ep} ({self.model_name.replace('_', '')}): "
                          f"{tr_perf} | {val_perf} {best_log}")
+        self.logger.info(f" {test_perf}")
         return tr_mets, tr_perf, val_mets, val_perf
 
     def train_all_epochs(self, fold, voter_i):
