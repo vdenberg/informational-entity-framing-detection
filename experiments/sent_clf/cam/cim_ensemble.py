@@ -106,38 +106,30 @@ def make_weight_matrix(embed_df, EMB_DIM):
 # =====================================================================================
 
 # Read arguments from command line
-
 parser = argparse.ArgumentParser()
-# PRINT/SAVE PARAMS
-parser.add_argument('-inf', '--step_info_every', type=int, default=250)
-parser.add_argument('-cp', '--save_epoch_cp_every', type=int, default=50)
 
 # DATA PARAMS
-parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both',type=str, default='berg')
-parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting',type=int, default=7)
+parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both', type=str, default='berg')
+parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting', type=int, default=7)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # EMBEDDING PARAMS
-# parser.add_argument('-ft_emb', '--finetune_embeddings', action='store_true', default=False,
-# help='Whether to finetune pretrained BERT embs')
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert', default='cross4bert')
 
 # TRAINING PARAMS
+parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-lex', '--lex', action='store_true', default=False, help='lex')
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam+')
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
-
-parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
-parser.add_argument('-start', '--start_epoch', type=int, default=0)
 parser.add_argument('-ep', '--epochs', type=int, default=150)  # 75
 parser.add_argument('-pat', '--patience', type=int, default=5)  # 15
 
 # OPTIMIZING PARAMS
 parser.add_argument('-bs', '--batch_size', type=int, default=32)
-parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
+parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
@@ -145,85 +137,88 @@ parser.add_argument('-hid', '--hidden_size', type=int, default=600)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 
 # OTHER NN PARAMS
-parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-sv', '--seed_val', type=int, default=34)
+parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-nopad', '--no_padding', action='store_true', default=False)
-parser.add_argument('-bm', '--bert_model', type=str, default='bert-base-cased')
-#GRADIENT_ACCUMULATION_STEPS = 1
+parser.add_argument('-inf', '--step_info_every', type=int, default=250)
 
 args = parser.parse_args()
 
 # set to variables for readability
-PRINT_STEP_EVERY = args.step_info_every  # steps
-SAVE_EPOCH_EVERY = args.save_epoch_cp_every  # epochs
 
+# DATA PARAMS
+SPLIT_TYPE = args.split_type
+SUBSET = args.subset_of_data
+N_VOTERS = args.n_voters
+PREPROCESS = args.preprocess
+
+# EMBEDDING PARAMS
+EMB_TYPE = args.embedding_type
+EMB_DIM = 512 if EMB_TYPE == 'use' else 768
+
+# TRAINING PARAMS
 MODE = args.mode
 TRAIN = True if args.mode != 'eval' else False
 EVAL = True if args.mode == 'eval' else False
 DEBUG = True if args.mode == 'debug' else False
 
 LEX = args.lex
-SPLIT_TYPE = args.split_type
-CONTEXT_TYPE = args.context_type
-SUBSET = args.subset_of_data
-N_VOTERS = args.n_voters
-PREPROCESS = args.preprocess
-#if DEBUG:
-#    SUBSET = 0.5
 
-START_EPOCH = args.start_epoch
+CONTEXT_TYPE = args.context_type
+MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
+
+CAM_TYPE = args.cam_type
+
+BASE = args.base
+
+START_EPOCH = 0
 N_EPOCHS = args.epochs
 if DEBUG:
     N_EPOCHS = 5
 
-BATCH_SIZE = args.batch_size
-WARMUP_PROPORTION = args.warmup_proportion
-LR = args.learning_rate
-GAMMA = args.gamma
 PATIENCE = args.patience
 
-MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
-EMB_TYPE = args.embedding_type
-EMB_DIM = 512 if EMB_TYPE == 'use' else 768
+# OPTIMIZING PARAMS
+BATCH_SIZE = args.batch_size
+LR = args.learning_rate
+WARMUP_PROPORTION = args.warmup_proportion
+GAMMA = args.gamma
 
-CAM_TYPE = args.cam_type
-BASE = args.base
-#if DEBUG:
-#    CN = True
-
+# NEURAL NETWORK DIMS
 HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
-#if DEBUG:
-#    HIDDEN = 2
-#    BILSTM_LAYERS = 2
 
+# OTHER NN PARAMS
 SEED_VAL = args.seed_val
-BERT_MODEL = args.bert_model
-NUM_LABELS = 2
 SAMPLER = args.sampler
+PRINT_STEP_EVERY = args.step_info_every  # steps
+NUM_LABELS = 2
+#GRADIENT_ACCUMULATION_STEPS = 1
 
 # set seed
 # random.seed(SEED_VAL)
 # np.random.seed(SEED_VAL)
 # torch.manual_seed(SEED_VAL)
 # torch.cuda.manual_seed_all(SEED_VAL)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 # set directories
-EXP_NAME = 'cim_ensemble'
+TASK_NAME = 'cim_ensemble'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
-REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
-MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{EXP_NAME}_results.csv')
+CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}'
+REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}'
+FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}'
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+
+TABLE_DIR = f"reports/cam/tables/{CONTEXT_TYPE}/{TASK_NAME}"
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
+table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,voter,epoch,set_type,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
-if not os.path.exists(BEST_CHECKPOINT_DIR):
-    os.makedirs(BEST_CHECKPOINT_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(FIG_DIR):
@@ -240,16 +235,13 @@ if not USE_CUDA:
 now = datetime.now()
 now_string = now.strftime(format='%b-%d-%Hh-%-M')
 LOG_NAME = f"{REPORTS_DIR}/{now_string}.log"
-
 console_hdlr = logging.StreamHandler(sys.stdout)
 file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
 
-logger.info("============ STARTING =============")
+logger.info("============ START =============")
 logger.info(args)
-logger.info(f" Log file: {LOG_NAME}")
-logger.info(f" Good luck!")
 
 # =====================================================================================
 #                    PREPROCESS DATA
@@ -470,8 +462,8 @@ for HIDDEN in hiddens:
                         else:
                             fold_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-                            val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
+                            val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
 
                             all_preds = []
                             for i in range(N_VOTERS):

@@ -10,6 +10,7 @@ from lib.utils import get_torch_device, InputFeatures
 import logging
 from lib.evaluate.Eval import my_eval
 from collections import Counter
+import os
 
 '''
 class InputFeatures(object):
@@ -268,6 +269,24 @@ if __name__ == '__main__':
                                 fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
                                 fold_results_table = fold_results_table.append(test_res, ignore_index=True)
 
+                                FORCE_EMBED = True
+                                for EMB_TYPE in ['cross4bert']: #poolbert', 'avbert', 'unpoolbert', 'crossbert',
+                                    emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
+
+                                    if not os.path.exists(emb_fp) or FORCE_EMBED:
+                                        logging.info(f'Generating {EMB_TYPE} ({emb_fp})')
+                                        feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
+                                        all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
+                                        embs = inferencer.predict(best_model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
+
+                                        assert len(embs) == len(all_ids)
+
+                                        basil_w_BERT = pd.DataFrame(index=all_ids)
+                                        basil_w_BERT[EMB_TYPE] = embs
+                                        basil_w_BERT.to_csv(emb_fp)
+                                        logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
+
+
                             majvote = [Counter(el).most_common()[0][0] for el in zip(*all_votes)]
 
                             # test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
@@ -279,6 +298,8 @@ if __name__ == '__main__':
                             test_res['voter'] = 'maj_vote'
                             logging.info(f"{test_perf}")
                             # logging.info(f"{tr_perfs}")
+
+
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(test_res, ignore_index=True)
