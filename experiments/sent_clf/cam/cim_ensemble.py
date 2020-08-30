@@ -381,15 +381,19 @@ if EMB_TYPE in ['use', 'sbert']:
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
 
 for fold in folds:
-    # read embeddings file
-    if EMB_TYPE not in ['use', 'sbert']:
-        # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-        # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
-        logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-    fold['weights_matrix'] = weights_matrix
+    weights_matrices = []
+    for v in range(len(fold['train'])):
+        # read embeddings file
+        if EMB_TYPE not in ['use', 'sbert']:
+            # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
+            weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+            logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+            weights_matrices.append(weights_matrix)
+    fold['weights_matrices'] = weights_matrices
 
 # =====================================================================================
 #                    CONTEXT AWARE MODEL
@@ -469,7 +473,7 @@ for HIDDEN in hiddens:
                             for i in range(N_VOTERS):
                                 logger.info(f"------------ VOTER {i} ------------")
                                 cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
-                                                         weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
+                                                         weights_mat=fold['weights_matrices'][i], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
                                 cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
