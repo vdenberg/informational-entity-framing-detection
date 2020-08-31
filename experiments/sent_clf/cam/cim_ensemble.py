@@ -207,9 +207,9 @@ torch.backends.cudnn.benchmark = False
 TASK_NAME = 'cim_ensemble'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}'
-REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}'
-FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 TABLE_DIR = f"reports/cam/tables/{CONTEXT_TYPE}/{TASK_NAME}"
@@ -409,7 +409,7 @@ logger.info(f" Emb type: {EMB_TYPE}")
 logger.info(f" Use cuda: {USE_CUDA}")
 logger.info(f" Nr layers: {BILSTM_LAYERS}")
 
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
+table_columns = 'model,seed,bs,lr,model_loc,fold,voter,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 base_name = CAM_TYPE
@@ -472,23 +472,26 @@ for HIDDEN in hiddens:
                             all_preds = []
                             for i in range(N_VOTERS):
                                 logger.info(f"------------ VOTER {i} ------------")
+                                voter_name = fold_name + f"_v{i}"
                                 cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][i].label,
                                                          weights_mat=fold['weights_matrices'][i], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
-                                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
+                                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=voter_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
                                 best_val_mets, test_mets, preds = cam_cl.train_on_fold(fold, voter_i=i)
                                 # todo compute average val perf
-                                # val_results.update(best_val_mets)
-                                # val_results.update({'model_loc': cam_cl.best_model_loc})
+                                val_results.update(best_val_mets)
+                                val_results.update({'voter': i})
+                                val_results.update({'model_loc': cam_cl.best_model_loc})
                                 fold_results_table = fold_results_table.append(val_results, ignore_index=True)
                                 all_preds.append(preds)
 
                             maj_vote = [Counter(line).most_common()[0][0] for line in zip(*all_preds)]
                             test_mets, test_perf = my_eval(fold['test'].label, maj_vote, name='majority vote', set_type='test')
                             test_results.update(test_mets)
+                            test_results.update({'voter': 'maj_vote'})
 
                             fold_results_table = fold_results_table.append(test_results, ignore_index=True)
                             fold_results_table.to_csv(fold_table_fp, index=False)
