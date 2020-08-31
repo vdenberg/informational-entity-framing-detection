@@ -30,7 +30,8 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_dapt': 'experiments/adapt_dapt_tapt/pretrained_models/news_roberta_base',
                  'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
-                 }
+                 'rob_basil_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/roberta_base_tapt_basil_300',
+                }
 device, USE_CUDA = get_torch_device()
 
 parser = argparse.ArgumentParser()
@@ -39,7 +40,7 @@ parser.add_argument('-ep', '--n_epochs', type=int, default=10) #2,3,4
 parser.add_argument('-debug', '--debug', action='store_true', default=False)
 
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
-parser.add_argument('-model', '--model', type=str, default=None) #2,3,4
+parser.add_argument('-model', '--model', type=str, default='rob_base') #2,3,4
 parser.add_argument('-lr', '--lr', type=float, default=None) #5e-5, 3e-5, 2e-5
 parser.add_argument('-bs', '--bs', type=int, default=None) #16, 21
 parser.add_argument('-sv', '--sv', type=int, default=None) #16, 21
@@ -49,7 +50,7 @@ args = parser.parse_args()
 
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_base']
+models = [args.model] if args.model else ['rob_basil_tapt']
 seeds = [args.sv] if args.sv else [33, 181, 34, 49, 6]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
