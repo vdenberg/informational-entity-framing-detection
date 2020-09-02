@@ -163,7 +163,7 @@ if __name__ == '__main__':
                             logger.info(f"  Details: {best_val_res}")
                             logger.info(f"  Logging to {LOG_NAME}")
 
-                            FORCE = True
+                            FORCE = False
                             if not os.path.exists(best_model_loc) or FORCE:
                                 model = RobertaForSequenceClassification.from_pretrained(ROBERTA_MODEL,
                                                                                          cache_dir=CACHE_DIR,
@@ -242,7 +242,7 @@ if __name__ == '__main__':
                             basil_w_pred = pd.DataFrame(index=test_ids)
                             basil_w_pred['pred'] = preds
                             print(labels)
-                            basil_w_pred['label'] = labels
+                            basil_w_pred['label'] = test_labels
                             pred_fp = f'data/test_w_preds/test_w_rob_none_preds/{fold_name}_test_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}')
