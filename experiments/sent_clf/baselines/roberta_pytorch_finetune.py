@@ -241,6 +241,7 @@ if __name__ == '__main__':
 
                             basil_w_pred = pd.DataFrame(index=test_ids)
                             basil_w_pred['pred'] = preds
+                            print(labels)
                             basil_w_pred['label'] = labels
                             pred_fp = f'data/test_w_preds/test_w_rob_none_preds/{fold_name}_test_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
