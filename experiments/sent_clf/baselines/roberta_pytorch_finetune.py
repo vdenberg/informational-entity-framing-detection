@@ -31,6 +31,7 @@ model_mapping = {'rob_base': 'roberta-base',
                  'rob_tapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_tapt_hyperpartisan_news_5015',
                  'rob_dapttapt': 'experiments/adapt_dapt_tapt/pretrained_models/dsp_roberta_base_dapt_news_tapt_hyperpartisan_news_5015',
                  'rob_basil_tapt': 'experiments/adapt_dapt_tapt/dont-stop-pretraining/roberta-tapt',
+                 'rob_basil_dapttapt': 'experiments/adapt_dapt_tapt/dont-stop-pretraining/roberta-dapttapt'
                 }
 device, USE_CUDA = get_torch_device()
 
@@ -50,7 +51,7 @@ args = parser.parse_args()
 
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_basil_tapt']
+models = [args.model] if args.model else ['rob_basil_dapttapt']
 seeds = [args.sv] if args.sv else [33, 181, 34, 49, 6]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
