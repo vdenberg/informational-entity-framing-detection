@@ -51,7 +51,7 @@ args = parser.parse_args()
 
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_basil_dapttapt']
+models = [args.model] if args.model else ['rob_basil_tapt']
 seeds = [args.sv] if args.sv else [33, 181, 34, 49, 6]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
@@ -251,11 +251,11 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            '''
-                            for EMB_TYPE in ['avbert', 'crossbert', 'cross4bert']: #poolbert', 'avbert', 'unpoolbert',
+                            FORCE_EMBED = True
+                            for EMB_TYPE in ['cross4bert']: #poolbert', 'avbert', 'unpoolbert', 'crossbert'
                                 emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
 
-                                if (SEED_VAL == 34 and not os.path.exists(emb_fp)) or FORCE_EMBED:
+                                if not os.path.exists(emb_fp) or FORCE_EMBED:
                                     logging.info(f'Generating {EMB_TYPE} ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
@@ -267,7 +267,7 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
-                            '''
+
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
