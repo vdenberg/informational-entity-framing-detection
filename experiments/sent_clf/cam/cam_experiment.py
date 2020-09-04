@@ -362,10 +362,6 @@ for fold in folds:
     fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE,
                                       sampler=SAMPLER)
 
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
-
 # =====================================================================================
 #                    LOAD EMBEDDINGS
 # =====================================================================================
