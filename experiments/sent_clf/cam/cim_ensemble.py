@@ -204,7 +204,7 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 # set directories
-TASK_NAME = 'cim_ensemble'
+TASK_NAME = 'cim_ensemble_tapt'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
