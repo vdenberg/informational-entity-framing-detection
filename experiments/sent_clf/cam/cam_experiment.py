@@ -355,6 +355,8 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
+    print(type(fold['train']))
+    exit(0)
     train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
     dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
     test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
