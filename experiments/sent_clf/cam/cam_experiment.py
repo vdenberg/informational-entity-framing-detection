@@ -138,7 +138,7 @@ parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 
 # NEURAL NETWORK DIMS
-parser.add_argument('-hid', '--hidden_size', type=int, default=600)
+parser.add_argument('-hid', '--hidden_size', type=int, default=300)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 
 # OTHER NN PARAMS
