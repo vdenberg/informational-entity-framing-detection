@@ -417,7 +417,7 @@ logger.info(f" Nr layers: {BILSTM_LAYERS}")
 table_columns = 'model,seed,bs,lr,model_loc,fold,voter,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
-base_name = CAM_TYPE + '_' + base
+base_name = CAM_TYPE + '_' + BASE
 if LEX:
     base_name += "_lex"
 
