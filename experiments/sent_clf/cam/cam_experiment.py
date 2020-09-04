@@ -124,7 +124,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
 parser.add_argument('-lex', '--lex', action='store_true', default=False, help='lex')
 parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam+')
-parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
+parser.add_argument('-base', '--base', type=str, help='Options: base|tapt|basil_tapt', default='basil_tapt')
 
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-start', '--start_epoch', type=int, default=0)
@@ -206,9 +206,8 @@ SAMPLER = args.sampler
 
 # set directories
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-BEST_CHECKPOINT_DIR = os.path.join(CHECKPOINT_DIR, 'best')
-REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/'
+REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}/'
 FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
@@ -216,8 +215,7 @@ TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
-if not os.path.exists(BEST_CHECKPOINT_DIR):
-    os.makedirs(BEST_CHECKPOINT_DIR)
+
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(FIG_DIR):
@@ -398,7 +396,7 @@ for fold in folds:
         # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-        embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+        embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_33_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
         weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
         logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
     fold['weights_matrix'] = weights_matrix
