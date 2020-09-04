@@ -359,9 +359,9 @@ for fold in folds:
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
     fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-                             for voter in fold['train']][0]
+                             for voter in fold['train']]
     fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-                           for voter in fold['dev']][0]
+                           for voter in fold['dev']]
     fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE,
                                       sampler=SAMPLER)
 
