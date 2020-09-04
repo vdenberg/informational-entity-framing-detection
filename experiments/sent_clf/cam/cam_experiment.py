@@ -390,6 +390,7 @@ if EMB_TYPE in ['use', 'sbert']:
     weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
     logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
 
+
 for fold in folds:
     # read embeddings file
     if EMB_TYPE not in ['use', 'sbert']:
