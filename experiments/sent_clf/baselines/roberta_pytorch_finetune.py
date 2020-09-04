@@ -52,7 +52,7 @@ args = parser.parse_args()
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_basil_tapt']
-seeds = [args.sv] if args.sv else [33, 181, 34, 49, 6]
+seeds = [args.sv] if args.sv else [33]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
@@ -73,9 +73,7 @@ if DEBUG:
 
 TASK_NAME = f'SC_rob'
 FEAT_DIR = f'data/sent_clf/features_for_roberta'
-FEAT_MAJVOTE_DIR = f'data/sent_clf/features_for_roberta_majvote'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
@@ -144,7 +142,7 @@ if __name__ == '__main__':
                             name = setting_name + f"_f{fold_name}"
 
                             # init results containers
-                            best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
+                            best_model_loc = os.path.join(CHECKPOINT_DIR, name)
                             best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
                                             'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER}
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
@@ -153,7 +151,6 @@ if __name__ == '__main__':
                             # load feats
                             train_fp = os.path.join(FEAT_DIR, f"{fold_name}_train_features.pkl")
                             dev_fp = os.path.join(FEAT_DIR, f"{fold_name}_dev_features.pkl")
-                            # test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             test_fp = os.path.join(FEAT_DIR, f"{fold_name}_test_features.pkl")
                             _, train_batches, train_labels = load_features(train_fp, BATCH_SIZE, SAMPLER)
                             _, dev_batches, dev_labels = load_features(dev_fp, 1, SAMPLER)
@@ -220,7 +217,7 @@ if __name__ == '__main__':
                                     if dev_mets['f1'] > best_val_res['f1']:
                                         best_val_res.update(dev_mets)
                                         high_score = '(HIGH SCORE)'
-                                        save_model(model, CURRENT_BEST_DIR, name)
+                                        save_model(model, CHECKPOINT_DIR, name)
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
                                     logger.info(f'{epoch_name}: {test_perf}')
@@ -251,11 +248,10 @@ if __name__ == '__main__':
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
-                            FORCE_EMBED = True
                             for EMB_TYPE in ['cross4bert']: #poolbert', 'avbert', 'unpoolbert', 'crossbert'
                                 emb_fp = f'data/embeddings/{MODEL}/{name}_basil_w_{EMB_TYPE}'
 
-                                if not os.path.exists(emb_fp) or FORCE_EMBED:
+                                if not os.path.exists(emb_fp):
                                     logging.info(f'Generating {EMB_TYPE} ({emb_fp})')
                                     feat_fp = os.path.join(FEAT_DIR, f"all_features.pkl")
                                     all_ids, all_batches, all_labels = load_features(feat_fp, batch_size=1, sampler=SAMPLER)
@@ -267,7 +263,6 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
-
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
