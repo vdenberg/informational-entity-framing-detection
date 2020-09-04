@@ -253,7 +253,7 @@ if __name__ == '__main__':
 
                             FORCE_EMBED = True
                             for EMB_TYPE in ['cross4bert']: #poolbert', 'avbert', 'unpoolbert', 'crossbert'
-                                emb_fp = f'data/{name}_basil_w_{EMB_TYPE}'
+                                emb_fp = f'data/embeddings/{MODEL}/{name}_basil_w_{EMB_TYPE}'
 
                                 if not os.path.exists(emb_fp) or FORCE_EMBED:
                                     logging.info(f'Generating {EMB_TYPE} ({emb_fp})')
