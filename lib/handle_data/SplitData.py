@@ -442,10 +442,6 @@ class Split:
             elif self.which == 'both':
                 name = 'fan' if i == 0 else i
 
-            if self.n_voters == 1:
-                train_dfs = train_dfs[0]
-                dev_dfs = dev_dfs[0]
-
             filled_fold = {'train': train_dfs,
                            'dev': dev_dfs,
                            'test': test_df,

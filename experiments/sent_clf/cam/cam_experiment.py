@@ -355,13 +355,12 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-
-    fold['train_batches'] = train_batches
-    fold['dev_batches'] = dev_batches
-    fold['test_batches'] = test_batches
+    fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+                             for voter in fold['train']][0]
+    fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+                           for voter in fold['dev']][0]
+    fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE,
+                                      sampler=SAMPLER)
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
@@ -426,7 +425,7 @@ if LEX:
 hiddens = [HIDDEN]
 batch_sizes = [BATCH_SIZE]
 learning_rates = [LR] #, 0.001, 0.002]
-seeds = [SEED_VAL, 22, 33, 44, 55, 66] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
+seeds = [SEED_VAL] #SEED_VAL, SEED_VAL*2, SEED_VAL*3, 34 68 102 136 170
 
 for HIDDEN in hiddens:
     h_name = f"_h{HIDDEN}"
@@ -476,14 +475,14 @@ for HIDDEN in hiddens:
                             val_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'dev'}
                             test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN, 'set_type': 'test'}
 
-                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+                            cam = ContextAwareClassifier(start_epoch=START_EPOCH, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][0].label,
                                                          weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN, layers=BILSTM_LAYERS,
                                                          b_size=BATCH_SIZE, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
                             cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold_name, patience=PATIENCE, n_eps=N_EPOCHS,
                                                 printing=PRINT_STEP_EVERY, load_from_ep=None)
 
-                            best_val_mets, test_mets = cam_cl.train_on_fold(fold)
+                            best_val_mets, test_mets = cam_cl.train_on_fold(fold, voter_i=0)
                             val_results.update(best_val_mets)
                             val_results.update({'model_loc': cam_cl.best_model_loc})
                             if test_mets:
