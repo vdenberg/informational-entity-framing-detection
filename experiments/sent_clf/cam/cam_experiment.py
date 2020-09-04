@@ -318,7 +318,7 @@ data = pd.concat(data, pos_cases)
 print(len(data))
 print(len(data))
 '''
-spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=True)
+spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=False)
 folds = spl.apply_split(features=['story', 'source', 'id_num', 'context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
@@ -355,12 +355,13 @@ for fold in folds:
     # dev_batches = to_batches(to_tensors(features=dev_features, device=device), batch_size=BATCH_SIZE)
     # test_batches = to_batches(to_tensors(features=test_features, device=device), batch_size=BATCH_SIZE)
 
-    fold['train_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-                             for voter in fold['train']][0]
-    fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
-                           for voter in fold['dev']][0]
-    fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE,
-                                      sampler=SAMPLER)
+    train_batches = to_batches(to_tensors(split=fold['train'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    dev_batches = to_batches(to_tensors(split=fold['dev'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+    test_batches = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
+
+    fold['train_batches'] = train_batches
+    fold['dev_batches'] = dev_batches
+    fold['test_batches'] = test_batches
 
 # =====================================================================================
 #                    LOAD EMBEDDINGS
