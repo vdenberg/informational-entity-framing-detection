@@ -391,9 +391,9 @@ for fold in folds:
             # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
             # embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
             if BASE == 'basil_tapt':
-                s = 33
-            else:
                 s = 22
+            else:
+                s = 34
             embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_{s}_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
             weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
             logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
