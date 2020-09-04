@@ -205,13 +205,16 @@ SAMPLER = args.sampler
 # torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
+TASK_NAME = 'basil_tapt_cim'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/'
-REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}/'
-FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
 TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
+
 
 if not os.path.exists(CHECKPOINT_DIR):
     os.makedirs(CHECKPOINT_DIR)
@@ -498,5 +501,7 @@ for HIDDEN in hiddens:
                     setting_results_table.to_csv(setting_table_fp, index=False)
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
-            main_results_table.to_csv(f'{TABLE_DIR}/{base_name}_main_results_table_1.csv', index=False)
-            logger.info(f"Logged to: {LOG_NAME}.")
+main_results_table_orig = pd.read_csv(MAIN_TABLE_FP)
+main_results_table = main_results_table_orig.append(main_results_table, ignore_index=True)
+main_results_table.to_csv(MAIN_TABLE_FP, index=False)
+logger.info(f"Logged to: {LOG_NAME}.")
