@@ -109,6 +109,8 @@ def make_weight_matrix(embed_df, EMB_DIM):
 parser = argparse.ArgumentParser()
 
 # DATA PARAMS
+parser.add_argument('-name', '--task_name', help='Task name', type=str, default='')
+
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both', type=str, default='berg')
 parser.add_argument('-n_voters', '--n_voters', help='Nr voters when splitting', type=int, default=1)
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
@@ -204,7 +206,12 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 # set directories
-TASK_NAME = 'cim_ensemble_tapt'
+if args.task_name:
+    TASK_NAME = args.task_name #'cim_ensemble_tapt'
+else:
+    print("Please provide task name")
+    exit(0)
+
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
