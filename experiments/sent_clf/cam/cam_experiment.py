@@ -205,7 +205,7 @@ SAMPLER = args.sampler
 # torch.cuda.manual_seed_all(SEED_VAL)
 
 # set directories
-TASK_NAME = 'basil_tapt_cim'
+TASK_NAME = 'cim_art_204'
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{EMB_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
