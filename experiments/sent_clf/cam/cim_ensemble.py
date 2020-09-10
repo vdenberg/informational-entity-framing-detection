@@ -278,7 +278,7 @@ if PREPROCESS:
         raw_data['label'] = sentences['lex_bias']
         print('label is lex bias')
 
-    raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
+    raw_data['doc_len'] = raw_data.art_context_document.apply(lambda x: len(x.split(' ')))
 
     quartiles = []
     for position, doc_len in zip(raw_data.position, raw_data.doc_len):
