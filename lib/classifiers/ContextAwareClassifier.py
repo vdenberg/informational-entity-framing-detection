@@ -90,13 +90,13 @@ class ContextAwareModel(nn.Module):
 
         if self.cam_type == 'cam':
             self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
-        elif self.cam_type == 'cam+':
+        elif self.cam_type == 'cim':
             self.context_rep_dim = self.hidden_size * 2 + self.emb_size
-        elif self.cam_type == 'cam++':
+        elif self.cam_type == 'cim*':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
-        elif self.cam_type == 'cam+*':
+        elif self.cam_type == 'cim$':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim
-        elif self.cam_type == 'cam+#':
+        elif self.cam_type == 'cim#':
             self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim + src_dim
 
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
@@ -171,26 +171,25 @@ class ContextAwareModel(nn.Module):
                 # target_sent_reps[item] = target_hid
 
             # target_sent_reps = self.rob_squeezer(target_sent_reps)
-            query = target_sent_reps.unsqueeze(1)
-            proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
-            mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
+            # query = target_sent_reps.unsqueeze(1)
+            # proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
+            # mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
 
-            context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
-            # context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
-            #                                         value=sentence_representations, mask=mask)
-            # context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
-
-            # if self.cam_type == 'cam+':
-            '''
-            elif self.cam_type == 'cam++':
+            if self.cam_type == 'cim':
+                context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+                # context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
+                #                                         value=sentence_representations, mask=mask)
+                # context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
+            elif self.cam_type == 'cim*':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
                 target_sent_reps = context_rep
-            elif self.cam_type == 'cam+*':
+            '''
+            elif self.cam_type == 'cim$':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_pos), dim=-1)
                 target_sent_reps = context_rep
-            elif self.cam_type == 'cam+#':
+            elif self.cam_type == 'cim#':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src, embedded_pos), dim=-1)
                 target_sent_reps = context_rep
