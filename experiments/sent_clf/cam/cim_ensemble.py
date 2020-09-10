@@ -220,7 +220,7 @@ FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 TABLE_DIR = f"reports/cam/tables/{CONTEXT_TYPE}/{TASK_NAME}"
-MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}.csv')
 table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,voter,epoch,set_type,loss,fn,fp,tn,tp,acc,prec,rec,f1'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
@@ -520,7 +520,8 @@ for HIDDEN in hiddens:
                     setting_results_table.to_csv(setting_table_fp, index=False)
                     main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
-main_results_table_orig = pd.read_csv(MAIN_TABLE_FP)
+if os.path.exists(MAIN_TABLE_FP):
+    main_results_table_orig = pd.read_csv(MAIN_TABLE_FP)
 main_results_table = main_results_table_orig.append(main_results_table, ignore_index=True)
 main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 logger.info(f"Logged to: {LOG_NAME}.")
