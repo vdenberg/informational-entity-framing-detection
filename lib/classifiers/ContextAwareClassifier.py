@@ -183,7 +183,6 @@ class ContextAwareModel(nn.Module):
             elif self.cam_type == 'cim*':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
                 context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
-                target_sent_reps = context_rep
             '''
             elif self.cam_type == 'cim$':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
