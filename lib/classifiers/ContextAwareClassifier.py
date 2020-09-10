@@ -195,6 +195,7 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
+        print(self.cam_type)
         features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
