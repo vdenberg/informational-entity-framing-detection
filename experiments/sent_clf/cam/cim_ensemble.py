@@ -265,7 +265,7 @@ if PREPROCESS:
 
     raw_data_fp = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
-                           names=['sentence_ids', 'art_context_document', 'art_context_document', 'label', 'position'],
+                           names=['sentence_ids', 'art_context_document', 'cov_context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
