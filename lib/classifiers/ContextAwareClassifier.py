@@ -178,14 +178,14 @@ class ContextAwareModel(nn.Module):
             hidden = self.init_hidden(batch_size)
             for seq_idx in range(article.shape[0]):
                 embedded_sentence = self.embedding(cov1[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                encoded, hidden = self.lstm_cov1(embedded_sentence, hidden)
                 cov1_representations[:, seq_idx] = encoded
             final_cov1_reps = cov1_representations[:, -1, :]
 
             hidden = self.init_hidden(batch_size)
             for seq_idx in range(article.shape[0]):
                 embedded_sentence = self.embedding(cov2[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                encoded, hidden = self.lstm_cov2(embedded_sentence, hidden)
                 cov2_representations[:, seq_idx] = encoded
             final_cov2_reps = cov2_representations[:, -1, :]
 
