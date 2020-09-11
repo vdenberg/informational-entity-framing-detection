@@ -264,16 +264,23 @@ if PREPROCESS:
     sentences.source = [el.lower() for el in sentences.source]
 
     raw_data_fp = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
-    raw_data = pd.read_csv(raw_data_fp, sep='\t', index_col=False)
-    print(len(raw_data.columns))
-    raw_data.columns = ['sentence_ids', 'art_context_document', 'cov1_context_document', 'cov2_context_document', 'label', 'position']
-    # dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
+    raw_data = pd.read_csv(raw_data_fp, sep='\t', index_col=False,
+                           names=['sentence_ids', 'art_context_document', 'cov1_context_document',
+                                  'cov2_context_document', 'label', 'position'],
+                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
+
+    try:
+        raw_data.to_json(DATA_FP)
+        print("Managed to save")
+    except:
+        print("Failed")
+        exit(0)
 
     if LEX:
         raw_data['label'] = sentences['lex_bias']
@@ -296,6 +303,13 @@ if PREPROCESS:
 
     raw_data['quartile'] = quartiles
 
+    try:
+        raw_data.to_json(DATA_FP)
+        print("Managed to save")
+    except:
+        print("Failed")
+        exit(0)
+
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['art_context_doc_num'] = processor.to_numeric_documents(raw_data.art_context_document.values)
@@ -306,8 +320,15 @@ if PREPROCESS:
 
     #print(raw_data.columns)
     #print(raw_data.head())
+
+    try:
+        raw_data.to_json(DATA_FP)
+        print("Managed to save")
+    except:
+        print("Failed")
+        exit(0)
     #exit(0)
-    raw_data.to_json(DATA_FP)
+
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
 # =====================================================================================
