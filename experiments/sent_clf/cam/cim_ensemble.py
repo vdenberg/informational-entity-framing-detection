@@ -267,7 +267,7 @@ if PREPROCESS:
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
                            names=['sentence_ids', 'art_context_document', 'cov1_context_document', 'cov2_context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
-    raw_data = raw_data.set_index('sentence_ids', drop=False)
+    raw_data = raw_data.set_index('sentence_ids', drop=True)
 
     raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
@@ -303,9 +303,9 @@ if PREPROCESS:
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
 
-    print(raw_data.columns)
-    print(raw_data.head())
-    exit(0)
+    #print(raw_data.columns)
+    #print(raw_data.head())
+    #exit(0)
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
