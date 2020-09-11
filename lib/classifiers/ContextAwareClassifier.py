@@ -214,6 +214,8 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
+        print(context_and_target_rep.shape)
+        exit(0)
         features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
