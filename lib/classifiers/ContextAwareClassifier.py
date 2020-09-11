@@ -94,13 +94,14 @@ class ContextAwareModel(nn.Module):
         if self.cam_type == 'cam':
             self.context_rep_dim = self.hidden_size * 2 # + self.hidden_size * 2 + src_dim
         elif self.cam_type == 'cim':
-            self.context_rep_dim = self.hidden_size * 2 + self.emb_size
+            self.context_rep_dim = self.emb_size + self.hidden_size * 6
         elif self.cam_type == 'cim*':
-            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + src_dim
+            self.context_rep_dim = self.emb_size + self.hidden_size * 6 + src_dim
         elif self.cam_type == 'cim$':
-            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim
+            self.context_rep_dim = self.emb_size + self.hidden_size * 6 + pos_dim
         elif self.cam_type == 'cim#':
-            self.context_rep_dim = self.emb_size + self.hidden_size * 2 + pos_dim + src_dim
+
+            self.context_rep_dim = self.emb_size + self.hidden_size * 6 + pos_dim + src_dim
 
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
         self.dense = nn.Linear(self.context_rep_dim, self.half_context_rep_dim)
