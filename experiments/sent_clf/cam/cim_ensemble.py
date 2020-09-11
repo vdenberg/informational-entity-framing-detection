@@ -270,6 +270,13 @@ if PREPROCESS:
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
+    try:
+        raw_data.to_json(DATA_FP)
+        print("Managed to save")
+    except:
+        print("Failed")
+        exit(0)
+
     raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
@@ -303,13 +310,6 @@ if PREPROCESS:
 
     raw_data['quartile'] = quartiles
 
-    try:
-        raw_data.to_json(DATA_FP)
-        print("Managed to save")
-    except:
-        print("Failed")
-        exit(0)
-
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['art_context_doc_num'] = processor.to_numeric_documents(raw_data.art_context_document.values)
@@ -320,13 +320,7 @@ if PREPROCESS:
 
     #print(raw_data.columns)
     #print(raw_data.head())
-
-    try:
-        raw_data.to_json(DATA_FP)
-        print("Managed to save")
-    except:
-        print("Failed")
-        exit(0)
+    raw_data.to_json(DATA_FP)
     #exit(0)
 
     logger.info(f" Max sent len: {processor.max_sent_length}")
