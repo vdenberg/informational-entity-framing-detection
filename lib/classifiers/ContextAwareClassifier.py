@@ -138,6 +138,7 @@ class ContextAwareModel(nn.Module):
         rep_dimension = self.emb_size if self.cam_type == 'cnm' else self.hidden_size * 2
         art_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
+        print(self.context)
         if self.context != 'article':
             cov1_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
             cov2_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
@@ -147,7 +148,7 @@ class ContextAwareModel(nn.Module):
         if self.cam_type == 'cnm':
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
             for item, position in enumerate(positions):
-                target_sent_reps[item] = self.embedding(contexts[item, position]).view(1, -1)
+                target_sent_reps[item] = self.embedding(article[item, position]).view(1, -1)
 
         else:
             for item, position in enumerate(positions):
