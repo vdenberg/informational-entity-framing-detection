@@ -100,7 +100,6 @@ class ContextAwareModel(nn.Module):
         elif self.cam_type == 'cim$':
             self.context_rep_dim = self.emb_size + self.hidden_size * 6 + pos_dim
         elif self.cam_type == 'cim#':
-
             self.context_rep_dim = self.emb_size + self.hidden_size * 6 + pos_dim + src_dim
 
         self.half_context_rep_dim = int(self.context_rep_dim*0.5)
@@ -138,7 +137,6 @@ class ContextAwareModel(nn.Module):
         rep_dimension = self.emb_size if self.cam_type == 'cnm' else self.hidden_size * 2
         art_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
-        print(self.context)
         if self.context != 'article':
             cov1_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
             cov2_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
@@ -215,8 +213,6 @@ class ContextAwareModel(nn.Module):
                 target_sent_reps = context_rep
             '''
 
-        print(context_and_target_rep.shape)
-        exit(0)
         features = self.dropout(context_and_target_rep)
         features = self.dense(features)
         features = torch.tanh(features)
