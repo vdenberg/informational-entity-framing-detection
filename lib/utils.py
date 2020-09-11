@@ -74,7 +74,8 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
         else:
 
             art_contexts = np.array([list(el) for el in split.art_context_doc_num.values])
-            cov_contexts = np.array([list(el) for el in split.cov_context_doc_num.values])
+            cov1_contexts = np.array([list(el) for el in split.cov1_context_doc_num.values])
+            cov2_contexts = np.array([list(el) for el in split.cov2_context_doc_num.values])
             token_ids = [list(el) for el in split.token_ids.values]
             token_mask = [list(el) for el in split.token_mask.values]
 
@@ -87,7 +88,7 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             srcs = torch.tensor(split.src_num.to_numpy(), dtype=torch.long, device=device)
             labels = torch.tensor(split.label.to_numpy(), dtype=torch.long, device=device)
             # return TensorDataset(token_ids, token_mask, contexts, positions, labels)
-            return TensorDataset(token_ids, token_mask, art_contexts, cov_contexts, positions, quartiles, srcs, labels)
+            return TensorDataset(token_ids, token_mask, art_contexts, cov1_contexts, cov2_contexts, positions, quartiles, srcs, labels)
 
 
 def to_batches(tensors, batch_size, sampler):

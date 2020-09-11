@@ -80,8 +80,9 @@ class ContextAwareModel(nn.Module):
 
         self.emb_size = weights_matrix.shape[1]
 
-        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
-        self.lstm_cov = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
+        self.lstm_art = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
+        self.lstm_cov1 = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
+        self.lstm_cov2 = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.attention = BahdanauAttention(self.hidden_size, key_size=self.hidden_size * 2, query_size=self.emb_size)
         self.dropout = Dropout(0.6)
         self.num_labels = 2
@@ -114,6 +115,7 @@ class ContextAwareModel(nn.Module):
 
         self.sigm = Sigmoid()
 
+
     def forward(self, inputs):
         """
         Forward pass.
@@ -124,24 +126,23 @@ class ContextAwareModel(nn.Module):
 
         # inputs
         # token_ids, token_mask, contexts, positions = inputs
-        token_ids, token_mask, contexts, contexts_cov, positions, quartiles, srcs = inputs
+        token_ids, token_mask, article, cov1, cov2, positions, quartiles, srcs = inputs
 
         # shapes and sizes
         batch_size = inputs[0].shape[0]
         sen_len = token_ids.shape[1]
-        doc_len = contexts.shape[1]
+        doc_len = article.shape[1]
         seq_len = doc_len
 
         # init containers for outputs
         rep_dimension = self.emb_size if self.cam_type == 'cnm' else self.hidden_size * 2
-        sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+        art_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
 
-        #target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
-        #target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
-        if self.cam_type == 'cam':
-            target_sent_reps = torch.zeros(batch_size, self.hidden_size * 2, device=self.device)
-        else:
-            target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
+        if self.context != 'article':
+            cov1_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+            cov2_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+
+        target_sent_reps = torch.zeros(batch_size, self.emb_size, device=self.device)
 
         if self.cam_type == 'cnm':
             target_sent_reps = torch.zeros(batch_size, rep_dimension, device=self.device)
@@ -151,7 +152,7 @@ class ContextAwareModel(nn.Module):
         else:
             for item, position in enumerate(positions):
                 # target_hid = sentence_representations[item, position].view(1, -1)
-                target_roberta = self.embedding(contexts[item, position]).view(1, -1)
+                target_roberta = self.embedding(article[item, position]).view(1, -1)
                 # target_sent_reps[item] = torch.cat((target_hid, target_roberta), dim=1)
                 # if self.cam_type == 'cam':
                 #    target_sent_reps[item] = target_hid
@@ -162,42 +163,46 @@ class ContextAwareModel(nn.Module):
             embedded_pos = self.embedding_pos(quartiles)
             embedded_src = self.embedding_src(srcs)
 
+            # embedding article
+
             hidden = self.init_hidden(batch_size)
-
-            if self.context == 'coverage_a':
-                contexts = torch.cat((contexts, contexts_cov), dim=-1)
-
-            for seq_idx in range(contexts.shape[0]):
-                embedded_sentence = self.embedding(contexts[:, seq_idx]).view(1, batch_size, -1)
+            for seq_idx in range(article.shape[0]):
+                embedded_sentence = self.embedding(article[:, seq_idx]).view(1, batch_size, -1)
                 lstm_input = embedded_sentence # torch.cat((embedded_sentence, embedded_src), dim=-1)
-                encoded, hidden = self.lstm(lstm_input, hidden)
-                sentence_representations[:, seq_idx] = encoded
-            final_sent_reps = sentence_representations[:, -1, :]
+                encoded, hidden = self.lstm_art(lstm_input, hidden)
+                art_representations[:, seq_idx] = encoded
+            final_article_reps = art_representations[:, -1, :]
 
-            if self.context == 'coverage_b':
-                cov_sentence_representations = torch.zeros(batch_size, seq_len, rep_dimension, device=self.device)
+            # embedding first coverage piece
 
-                hidden_cov = self.init_hidden(batch_size)
-                for seq_idx in range(contexts.shape[0]):
-                    embedded_sentence = self.embedding(contexts_cov[:, seq_idx]).view(1, batch_size, -1)
-                    lstm_input = embedded_sentence  # torch.cat((embedded_sentence, embedded_src), dim=-1)
-                    encoded, hidden_cov = self.lstm_cov(lstm_input, hidden)
-                    cov_sentence_representations[:, seq_idx] = encoded
-                final_cov_reps = cov_sentence_representations[:, -1, :]
-                final_sent_reps = torch.cat((final_sent_reps, final_cov_reps), dim=-1)
+            hidden = self.init_hidden(batch_size)
+            for seq_idx in range(article.shape[0]):
+                embedded_sentence = self.embedding(cov1[:, seq_idx]).view(1, batch_size, -1)
+                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                cov1_representations[:, seq_idx] = encoded
+            final_cov1_reps = cov1_representations[:, -1, :]
+
+            hidden = self.init_hidden(batch_size)
+            for seq_idx in range(article.shape[0]):
+                embedded_sentence = self.embedding(cov2[:, seq_idx]).view(1, batch_size, -1)
+                encoded, hidden = self.lstm(embedded_sentence, hidden)
+                cov2_representations[:, seq_idx] = encoded
+            final_cov2_reps = cov2_representations[:, -1, :]
+
+            context_reps = torch.cat((final_article_reps, final_cov1_reps, final_cov2_reps), dim=-1)
 
             # target_sent_reps = self.rob_squeezer(target_sent_reps)
             # query = target_sent_reps.unsqueeze(1)
             # proj_key = self.attention.key_layer(sentence_representations) #in tutorial: encoder_hidden
             # mask = (contexts != self.pad_index).unsqueeze(-2) #in tutorial: src
             if self.cam_type == 'cim':
-                context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps), dim=-1)
+                context_and_target_rep = torch.cat((target_sent_reps, context_reps), dim=-1)
                 # context_and_target_rep, attn_probs = self.attention(query=target_sent_reps, proj_key=proj_key,
                 #                                         value=sentence_representations, mask=mask)
                 # context_and_target_rep = torch.cat((context_and_target_rep, target_sent_reps), dim=-1)
             elif self.cam_type == 'cim*':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)
-                context_and_target_rep = torch.cat((target_sent_reps, final_sent_reps, embedded_src), dim=-1)
+                context_and_target_rep = torch.cat((target_sent_reps, context_reps, embedded_src), dim=-1)
             '''
             elif self.cam_type == 'cim$':
                 # heavy_context_rep = torch.cat((target_sent_reps, sent_reps, embedded_pos, embedded_src), dim=-1)

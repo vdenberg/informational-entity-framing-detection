@@ -122,7 +122,7 @@ parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|
 # TRAINING PARAMS
 parser.add_argument('-mode', '--mode', type=str, help='Options: train|eval|debug', default='train')
 parser.add_argument('-lex', '--lex', action='store_true', default=False, help='lex')
-parser.add_argument('-context', '--context_type', type=str, help='Options: article|coverage_a|coverage_b', default='article')
+parser.add_argument('-context', '--context_type', type=str, help='Options: article|coverage', default='article')
 parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cim|cim*|cim**', default='cim')
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
 parser.add_argument('-ep', '--epochs', type=int, default=150)  # 75
@@ -167,7 +167,7 @@ DEBUG = True if args.mode == 'debug' else False
 LEX = args.lex
 
 CONTEXT_TYPE = args.context_type
-MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
+MAX_DOC_LEN = 76 # if CONTEXT_TYPE == 'article' else 158
 
 CAM_TYPE = args.cam_type
 
@@ -265,7 +265,7 @@ if PREPROCESS:
 
     raw_data_fp = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
     raw_data = pd.read_csv(raw_data_fp, sep='\t',
-                           names=['sentence_ids', 'art_context_document', 'cov_context_document', 'label', 'position'],
+                           names=['sentence_ids', 'art_context_document', 'cov1_context_document', 'cov2_context_document', 'label', 'position'],
                            dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
@@ -298,7 +298,8 @@ if PREPROCESS:
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
     raw_data['art_context_doc_num'] = processor.to_numeric_documents(raw_data.art_context_document.values)
-    raw_data['cov_context_doc_num'] = processor.to_numeric_documents(raw_data.cov_context_document.values)
+    raw_data['cov1_context_doc_num'] = processor.to_numeric_documents(raw_data.cov1_context_document.values)
+    raw_data['cov2_context_doc_num'] = processor.to_numeric_documents(raw_data.cov2_context_document.values)
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
 
@@ -318,7 +319,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=PREPROCESS, n_voters=N_VOTERS)
-folds = spl.apply_split(features=['story', 'source', 'id_num', 'art_context_doc_num', 'cov_context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
+folds = spl.apply_split(features=['story', 'source', 'id_num', 'art_context_doc_num', 'cov1_context_doc_num', 'cov2_context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 if DEBUG:
     folds = [folds[0]] #, folds[1]
 NR_FOLDS = len(folds)
