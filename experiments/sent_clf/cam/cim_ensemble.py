@@ -304,7 +304,7 @@ if PREPROCESS:
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
 
     print(raw_data.columns)
-    print(raw_data.duplicated())
+    print(raw_data.duplicated)
     exit(0)
     raw_data.to_json(DATA_FP)
     logger.info(f" Max sent len: {processor.max_sent_length}")
