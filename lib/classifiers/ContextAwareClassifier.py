@@ -115,7 +115,6 @@ class ContextAwareModel(nn.Module):
 
         self.sigm = Sigmoid()
 
-
     def forward(self, inputs):
         """
         Forward pass.
@@ -232,7 +231,7 @@ class ContextAwareModel(nn.Module):
 class ContextAwareClassifier():
     def __init__(self, emb_dim=768, hid_size=32, layers=1, weights_mat=None, tr_labs=None,
                  b_size=24, cp_dir='models/checkpoints/cam', lr=0.001, start_epoch=0, patience=3,
-                 step=1, gamma=0.75, n_eps=10, cam_type='cam'):
+                 step=1, gamma=0.75, n_eps=10, cam_type='cam', context='article'):
         self.start_epoch = start_epoch
         self.cp_dir = cp_dir
         self.device, self.use_cuda = get_torch_device()
@@ -257,7 +256,7 @@ class ContextAwareClassifier():
         else:
             self.model = ContextAwareModel(input_size=self.emb_dim, hidden_size=self.hidden_size,
                                            bilstm_layers=layers, weights_matrix=weights_mat,
-                                           device=self.device, cam_type=cam_type)
+                                           device=self.device, cam_type=cam_type, context=context)
         self.model = self.model.to(self.device)
         if self.use_cuda: self.model.cuda()
 
