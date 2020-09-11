@@ -274,20 +274,13 @@ if PREPROCESS:
         raw_data.to_json(DATA_FP)
         print("Managed to save")
     except:
-        print("Failed")
+        print("Failure")
         exit(0)
 
     raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
-
-    try:
-        raw_data.to_json(DATA_FP)
-        print("Managed to save")
-    except:
-        print("Failed")
-        exit(0)
 
     if LEX:
         raw_data['label'] = sentences['lex_bias']

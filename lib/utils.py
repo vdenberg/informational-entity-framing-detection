@@ -80,7 +80,8 @@ def to_tensors(split=None, features=None, device=None, article_wise=False):
             token_mask = [list(el) for el in split.token_mask.values]
 
             art_contexts = torch.tensor(art_contexts, dtype=torch.long, device=device)
-            cov_contexts = torch.tensor(cov_contexts, dtype=torch.long, device=device)
+            cov1_contexts = torch.tensor(cov1_contexts, dtype=torch.long, device=device)
+            cov2_contexts = torch.tensor(cov2_contexts, dtype=torch.long, device=device)
             token_ids = torch.tensor(token_ids, dtype=torch.long, device=device)
             token_mask = torch.tensor(token_mask, dtype=torch.long, device=device)
             positions = torch.tensor(split.position.to_numpy(), dtype=torch.long, device=device)
