@@ -264,10 +264,10 @@ if PREPROCESS:
     sentences.source = [el.lower() for el in sentences.source]
 
     raw_data_fp = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
-    raw_data = pd.read_csv(raw_data_fp, sep='\t',
-                           names=['sentence_ids', 'art_context_document', 'cov1_context_document', 'cov2_context_document', 'label', 'position'],
-                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
-    raw_data = raw_data.set_index('sentence_ids', drop=True)
+    raw_data = pd.read_csv(raw_data_fp, sep='\t', index_col=False)
+    raw_data.columns = ['sentence_ids', 'art_context_document', 'cov1_context_document', 'cov2_context_document', 'label', 'position']
+    # dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
+    raw_data = raw_data.set_index('sentence_ids', drop=False)
 
     raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
