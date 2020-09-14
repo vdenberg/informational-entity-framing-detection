@@ -45,7 +45,7 @@ args = parser.parse_args()
 # find GPU if present
 device, USE_CUDA = get_torch_device()
 BERT_MODEL = 'bert-base-cased' #bert-large-cased
-TASK_NAME = 'bert_tokclf_baseline'
+TASK_NAME = 'bert/tokc'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = f'{REPORTS_DIR}/tables'
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    for SEED in [11, 22, 33, 44, 55]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
+    for SEED in [23, 49]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:

@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['bert']
-seeds = [args.sv] if args.sv else [345, 20] #, 115]  # [49, 6, 34]
+seeds = [args.sv] if args.sv else [49] #, 115]  # [49, 6, 34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [2e-5]
 folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
@@ -80,19 +80,14 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'SC_bert'
+TASK_NAME = f'bert/sc'
 FEAT_DIR = f'data/sent_clf/features_for_bert'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
-CURRENT_BEST_DIR = f'models/checkpoints/{TASK_NAME}/current_best'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'bert_ft_results.csv')
 
-#if not os.path.exists(CHECKPOINT_DIR):
-#    os.makedirs(CHECKPOINT_DIR)
-#if not os.path.exists(CURRENT_BEST_DIR):
-#    os.makedirs(CURRENT_BEST_DIR)
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -151,9 +146,9 @@ if __name__ == '__main__':
                             name = setting_name + f"_f{fold_name}"
 
                             # init results containers
-                            best_model_loc = os.path.join(CURRENT_BEST_DIR, name)
+                            best_model_loc = os.path.join(CHECKPOINT_DIR, name)
                             best_val_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
-                                            'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER}
+                                            'f1': 0, 'model_loc': best_model_loc, 'sampler': SAMPLER, 'epochs': N_EPS}
                             test_res = {'model': MODEL, 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test',
                                         'sampler': SAMPLER}
 
@@ -212,7 +207,6 @@ if __name__ == '__main__':
                                             logging.info(f' Ep {ep} / {N_EPS} - {step} / {len(train_batches)} - Loss: {loss.item()}')
 
                                     av_loss = tr_loss / len(train_batches)
-                                    # save_model(model, CHECKPOINT_DIR, epoch_name)
                                     dev_mets, dev_perf = inferencer.evaluate(model, dev_batches, dev_labels, av_loss=av_loss,
                                                                                  set_type='dev', name=epoch_name)
 
@@ -221,7 +215,7 @@ if __name__ == '__main__':
                                     if dev_mets['f1'] > best_val_res['f1']:
                                         best_val_res.update(dev_mets)
                                         high_score = '(HIGH SCORE)'
-                                        save_model(model, CURRENT_BEST_DIR, name)
+                                        save_model(model, CHECKPOINT_DIR, name)
 
                                     logger.info(f'{epoch_name}: {dev_perf} {high_score}')
 
