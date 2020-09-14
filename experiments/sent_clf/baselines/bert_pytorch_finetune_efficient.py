@@ -61,7 +61,7 @@ args = parser.parse_args()
 
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['bert']
-seeds = [args.sv] if args.sv else [49] #, 115]  # [49, 6, 34]
+seeds = [args.sv] if args.sv else [11, 22] #, 115]  # [49, 6, 34]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [2e-5]
 folds = [args.fold] if args.fold else ['fan'] + [str(el+1) for el in range(10)]
@@ -93,10 +93,10 @@ if not os.path.exists(REPORTS_DIR):
 if not os.path.exists(TABLE_DIR):
     os.makedirs(TABLE_DIR)
 if os.path.exists(MAIN_TABLE_FP):
-    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epochs,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
     main_results_table = pd.read_csv(MAIN_TABLE_FP)
 else:
-    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epoch,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
+    table_columns = 'model,sampler,seed,bs,lr,model_loc,fold,epochs,set_type,rep_sim,loss,fn,fp,tn,tp,acc,prec,rec,f1'
     main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 ########################
