@@ -80,7 +80,7 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'bert_sentclf_baseline/'
+TASK_NAME = f'bert_sentclf_baseline'
 FEAT_DIR = f'data/sent_clf/features_for_bert'
 CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
