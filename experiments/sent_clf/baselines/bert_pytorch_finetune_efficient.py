@@ -80,9 +80,9 @@ if DEBUG:
 # WHERE ARE THE FILES
 ########################
 
-TASK_NAME = f'bert/sc'
+TASK_NAME = f'bert_sc'
 FEAT_DIR = f'data/sent_clf/features_for_bert'
-CHECKPOINT_DIR = f'models/checkpoints/{TASK_NAME}/'
+CHECKPOINT_DIR = f'models/checkpoints/bert/{TASK_NAME}/'
 REPORTS_DIR = f'reports/{TASK_NAME}'
 TABLE_DIR = os.path.join(REPORTS_DIR, 'tables')
 CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
