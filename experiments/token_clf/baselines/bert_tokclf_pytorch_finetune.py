@@ -66,7 +66,7 @@ PRINT_EVERY = 100
 ################
 
 inferencer = Inferencer(REPORTS_DIR, logger, device, use_cuda=USE_CUDA)
-table_columns = 'model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
+table_columns = 'model,seed,bs,lr,model_loc,fold,epochs,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp'
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 if __name__ == '__main__':
@@ -80,21 +80,7 @@ if __name__ == '__main__':
     logger = logging.getLogger()
     logger.info(args)
 
-    '''
-    model_locs = {'1': 'models/checkpoints/bert_baseline/bertforembed_263_f1_ep9',
-                  '2': 'models/checkpoints/bert_baseline/bertforembed_263_f2_ep6',
-                  '3': 'models/checkpoints/bert_baseline/bertforembed_263_f3_ep3',
-                  '4': 'models/checkpoints/bert_baseline/bertforembed_263_f4_ep4',
-                  '5': 'models/checkpoints/bert_baseline/bertforembed_263_f5_ep4',
-                  '6': 'models/checkpoints/bert_baseline/bertforembed_263_f6_ep8',
-                  '7': 'models/checkpoints/bert_baseline/bertforembed_263_f7_ep5',
-                  '8': 'models/checkpoints/bert_baseline/bertforembed_263_f8_ep9',
-                  '9': 'models/checkpoints/bert_baseline/bertforembed_263_f9_ep4',
-                  '10': 'models/checkpoints/bert_baseline/bertforembed_263_f10_ep3'
-                  }
-    '''
-
-    for SEED in [6, 34]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
+    for SEED in [11, 22, 33, 44, 55]: #132, 281,  #tok_clf: [132, 281, 45362], sent_clf: 231 (redo this one, tokclf overwrote some), 26354, 182,
         if SEED == 0:
             SEED_VAL = random.randint(0, 300)
         else:
@@ -116,7 +102,7 @@ if __name__ == '__main__':
                     name = setting_name + f"_f{fold_name}"
 
                     best_val_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'dev',
-                                    'f1': 0, 'model_loc': ''}
+                                    'f1': 0, 'model_loc': '', 'epochs': N_EPS}
                     test_res = {'model': 'bert', 'seed': SEED_VAL, 'fold': fold_name, 'bs': BATCH_SIZE, 'lr': LEARNING_RATE, 'set_type': 'test'}
 
                     train_fp = f"data/tok_clf/features_for_bert/{fold_name}_train_features.pkl"
@@ -136,7 +122,8 @@ if __name__ == '__main__':
                     optimizer = AdamW(model.parameters(), lr=LEARNING_RATE,  eps=1e-8)  # To reproduce BertAdam specific behavior set correct_bias=False
                     model.train()
 
-                    if not os.path.exists(os.path.join(CHECKPOINT_DIR, name)):
+                    FORCE = True
+                    if not os.path.exists(os.path.join(CHECKPOINT_DIR, name)) or FORCE:
                         for ep in range(1, N_EPS + 1):
                             epoch_name = name + f"_ep{ep}"
 
@@ -180,17 +167,6 @@ if __name__ == '__main__':
                     logger.info(f"***** (Embeds and) Test - Fold {fold_name} *****")
                     logger.info(f"  CUDA: {USE_CUDA}, Details: {best_val_res}")
 
-                    '''
-                    for EMB_TYPE in ['poolbert', 'avbert']:
-                        all_ids, all_batches, all_labels = load_features('data/features_for_bert/all_features.pkl', batch_size=1)
-                        embs = inferencer.predict(model, all_batches, return_embeddings=True, emb_type=EMB_TYPE)
-                        basil_w_BERT = pd.DataFrame(index=all_ids)
-                        basil_w_BERT[EMB_TYPE] = embs
-                        emb_name = f'{name}_basil_w_{EMB_TYPE}'
-                        basil_w_BERT.to_csv(f'data/{emb_name}.csv')
-                        logger.info(f'Written embs ({len(embs)},{len(embs[0])}) to data/{emb_name}.csv')
-                    '''
-
                     test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test', name='best_model_loc', output_mode=OUTPUT_MODE)
                     logging.info(f"{test_perf}")
                     test_res.update(test_mets)
@@ -204,11 +180,3 @@ if __name__ == '__main__':
                 setting_results_table.to_csv(f'{TABLE_DIR}/{setting_name}_results_table.csv', index=False)
                 main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
             main_results_table.to_csv(f'{TABLE_DIR}/bert_tok_results.csv', index=False)
-
-'''
-n_train_batches = len(train_batches)
-half_train_batches = int(n_train_batches / 2)
-num_tr_opt_steps = n_train_batches * NUM_TRAIN_EPOCHS  # / GRADIENT_ACCUMULATION_STEPS
-num_tr_warmup_steps = int(WARMUP_PROPORTION * num_tr_opt_steps)
-#scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_tr_warmup_steps, num_training_steps=num_tr_opt_steps)
-'''
