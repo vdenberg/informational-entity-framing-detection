@@ -51,11 +51,11 @@ args = parser.parse_args()
 
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
-models = [args.model] if args.model else ['rob_basil_tapt']
-seeds = [args.sv] if args.sv else [33]
+models = [args.model] if args.model else ['rob_base']
+seeds = [args.sv] if args.sv else [57, 242, 22]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
-folds = [args.fold] if args.fold else [str(el+1) for el in range(10)]
+folds = [args.fold] if args.fold else ['fan']
 samplers = [args.sampler] if args.sampler else ['sequential']
 
 DEBUG = args.debug
@@ -280,7 +280,11 @@ if __name__ == '__main__':
                         main_results_table = main_results_table.append(setting_results_table, ignore_index=True)
 
                         # write performance to file
-                        setting_results_table.to_csv(os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv'), index=False)
+                        setting_fp = os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv')
+                        orig_setting_results_table = pd.read_csv(setting_fp)
+                        setting_results_table = pd.concat(orig_setting_results_table, setting_results_table)
+                        #setting_results_table = setting_results_table.drop_duplicates(keep='first')
+                        setting_results_table.to_csv(setting_fp, index=False)
 
                         main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 
