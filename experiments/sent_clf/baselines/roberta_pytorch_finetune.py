@@ -284,7 +284,7 @@ if __name__ == '__main__':
                         # write performance to file
                         setting_fp = os.path.join(TABLE_DIR, f'{setting_name}_results_table.csv')
                         orig_setting_results_table = pd.read_csv(setting_fp)
-                        setting_results_table = pd.concat(orig_setting_results_table, setting_results_table)
+                        setting_results_table = pd.concat((orig_setting_results_table, setting_results_table))
                         #setting_results_table = setting_results_table.drop_duplicates(keep='first')
                         setting_results_table.to_csv(setting_fp, index=False)
                         logging.info(
