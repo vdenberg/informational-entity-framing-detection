@@ -234,6 +234,7 @@ if __name__ == '__main__':
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
+                            '''
                             preds, labels = inferencer.predict(best_model, test_batches)
                             assert len(preds) == len(test_ids)
 
@@ -243,6 +244,7 @@ if __name__ == '__main__':
                             pred_fp = f'data/test_w_preds/test_w_rob_none_preds/{fold_name}_test_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}')
+                            '''
 
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
@@ -285,6 +287,8 @@ if __name__ == '__main__':
                         setting_results_table = pd.concat(orig_setting_results_table, setting_results_table)
                         #setting_results_table = setting_results_table.drop_duplicates(keep='first')
                         setting_results_table.to_csv(setting_fp, index=False)
+                        logging.info(
+                            f'To {setting_fp}')
 
                         main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 
