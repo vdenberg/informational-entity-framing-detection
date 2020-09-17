@@ -127,7 +127,7 @@ if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
 # load and split data
-folds = split_input_for_bert(DATA_DIR, task)
+folds = split_input_for_bert(DATA_DIR, False, 0, 11)
 MAX_DOC_LEN = 76
 MAX_SENT_LEN = 486
 MAX_EX_LEN = args.sequence_length
@@ -164,7 +164,7 @@ config.num_labels = len(label_map)
 all_infp = os.path.join(DATA_DIR, f"all.tsv")
 ofp = os.path.join(FEAT_DIR, f"all_features.pkl")
 
-FORCE = True
+FORCE = False
 if not os.path.exists(ofp) or FORCE:
     examples = dataloader.get_examples(all_infp, 'train', sep='\t')
 
