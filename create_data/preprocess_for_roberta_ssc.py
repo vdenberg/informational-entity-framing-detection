@@ -127,7 +127,7 @@ if not os.path.exists(DATA_DIR):
     os.makedirs(DATA_DIR)
 
 # load and split data
-folds = split_input_for_bert(DATA_DIR, False, 0, 11)
+folds = split_input_for_bert(DATA_DIR, False, 0, 99)
 MAX_DOC_LEN = 76
 MAX_SENT_LEN = 486
 MAX_EX_LEN = args.sequence_length
