@@ -182,6 +182,7 @@ else:
        print(f"Processed fold all - {len(features)} items")
 
 # start
+av = 0
 for fold in folds:
     fold_name = fold['name']
     for set_type in ['train', 'dev', 'test']:
@@ -198,9 +199,11 @@ for fold in folds:
         #    print(len(f.input_ids), f.input_ids, len(f.label_id), f.label_id)
 
         # print(features[0].input_ids)
+        av += len(features)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
             pickle.dump(features, f)
 
+print(av/10)
 tokenizer.save_vocabulary(FEAT_DIR)
