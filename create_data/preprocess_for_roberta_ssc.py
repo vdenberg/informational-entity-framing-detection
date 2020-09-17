@@ -199,7 +199,8 @@ for fold in folds:
         #    print(len(f.input_ids), f.input_ids, len(f.label_id), f.label_id)
 
         # print(features[0].input_ids)
-        av += len(features)
+        if set_type == 'train':
+            av += len(features)
         print(f"Processed fold {fold_name} {set_type} - {len(features)} items and writing to {ofp}")
 
         with open(ofp, "wb") as f:
