@@ -120,13 +120,15 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('-name', '--task_name', help='Task name', type=str, default='testing_new_coverage')
+
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both', type=str, default='berg')
 parser.add_argument('-subset', '--subset_of_data', type=float, help='Section of data to experiment on', default=1.0)
 parser.add_argument('-emb', '--embedding_type', type=str, help='Options: avbert|sbert|poolbert|use|crossbert',
                     default='cross4bert')
-parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cam')
-parser.add_argument('-context', '--context_type', type=str, help='Options: article|story', default='article')
+parser.add_argument('-cam_type', '--cam_type', type=str, help='Options: cam|cam+|cam++|cam+*|cam+#', default='cim')
+parser.add_argument('-context', '--context_type', type=str, help='Options: article|coverage', default='article')
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # MODEL PARAMS
@@ -166,15 +168,22 @@ random.seed(SEED_VAL)
 np.random.seed(SEED_VAL)
 torch.manual_seed(SEED_VAL)
 torch.cuda.manual_seed_all(SEED_VAL)
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
 
 # set directories
+if args.task_name:
+    TASK_NAME = args.task_name #'cim_ensemble_tapt'
+else:
+    print("Please provide task name")
+    exit(0)
+
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
-CHECKPOINT_DIR = f'models/checkpoints/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-FIG_DIR = f'figures/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
-CACHE_DIR = 'models/cache/'  # This is where BERT will look for pre-trained models to load parameters from.
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-# TABLE_DIR = f"reports/cam/tables/{EMB_TYPE}_{CONTEXT_TYPE}"
-REPORTS_DIR = f'reports/error_analysis/cam/{EMB_TYPE}/{SPLIT_TYPE}/{CONTEXT_TYPE}/subset{SUBSET}'
+CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
@@ -308,7 +317,8 @@ if not os.path.exists(pred_dir):
 for fold in folds:
 
     # LOAD MODEL
-    model_name = f"{CAM_TYPE}_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}"
+    #model_name = f"{CAM_TYPE}_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}"
+    model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
     model_fp = os.path.join(CHECKPOINT_DIR, model_name)
     result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
               'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
