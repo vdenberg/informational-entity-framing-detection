@@ -138,6 +138,7 @@ parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
 parser.add_argument('-hid', '--hidden_size', type=int, default=600)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
+parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
@@ -157,6 +158,7 @@ MAX_DOC_LEN = 76 if CONTEXT_TYPE == 'article' else 158
 EMB_TYPE = args.embedding_type
 EMB_DIM = 512 if EMB_TYPE == 'use' else 768
 CAM_TYPE = args.cam_type
+BASE = args.base
 HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
 SEED_VAL = args.seed_val
