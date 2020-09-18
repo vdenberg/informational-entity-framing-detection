@@ -346,7 +346,6 @@ class ContextAwareClassifier():
                 y_pred = probs
             else:
                 y_pred = np.append(y_pred, probs, axis=0)
-                print(y_pred.shape, loss.shape)
 
 
                 # convert to predictions
