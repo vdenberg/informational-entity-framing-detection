@@ -338,13 +338,13 @@ class ContextAwareClassifier():
                 #loss = self.criterion(sigm_output, labels)
 
             loss = loss.detach().cpu().numpy() #probs.shape: batchsize * num_classes
-            losses.append(loss)
-
             probs = probs.detach().cpu().numpy() #probs.shape: batchsize * num_classes
             if len(y_pred) == 0:
                 y_pred = probs
+                losses = loss
             else:
                 y_pred = np.append(y_pred, probs, axis=0)
+                losses = np.append(losses, loss, axis=0)
 
                 # convert to predictions
                 # #preds = [1 if output > 0.5 else 0 for output in sigm_output]
