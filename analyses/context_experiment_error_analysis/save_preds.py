@@ -358,7 +358,7 @@ for fold in folds:
     preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
     print(preds)
     print(losses)
-    print(len(fold['train'][0].label), len(preds), len(losses))
+    print(len(fold['test'][0].label), len(preds), len(losses))
 
     dev_df = fold['test']
     dev_df['pred'] = preds
