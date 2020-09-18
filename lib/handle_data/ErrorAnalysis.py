@@ -38,8 +38,14 @@ def collect_preds(model, context):
 
 
 def lat(x):
-    x = ['$' + str(el) + '$' for el in x]
-    return x
+    out = []
+    for el in x:
+        el = str(el)
+        if '.' in el and len(el) == 4:
+            el += '0'
+        el = '$' + el + '$'
+        out.append(el)
+    return out
 
 
 def got_quote(x):
@@ -49,9 +55,9 @@ def got_quote(x):
 models2compare = {'all':
                   [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')], # ('cam++', 'article'), ('cam++', 'story'),
                   'base_best':
-                  [('rob', 'none'), ('cam+', 'article')],
+                  [('rob', 'none'), ('cim', 'article'), ('cim', 'coverage')],
                   'cimcov':
-                   [('cam+', 'story')]
+                   [('cim', 'coverage')] #[('cam+', 'story')]
                   }
 
 class ErrorAnalysis:

@@ -52,7 +52,7 @@ args = parser.parse_args()
 FORCE_EMBED = args.force_embed
 N_EPS = args.n_epochs
 models = [args.model] if args.model else ['rob_base']
-seeds = [args.sv] if args.sv else [57, 242, 22]
+seeds = [args.sv] if args.sv else [22]
 bss = [args.bs] if args.bs else [16]
 lrs = [args.lr] if args.lr else [1e-5]
 folds = [args.fold] if args.fold else ['fan']
@@ -234,17 +234,16 @@ if __name__ == '__main__':
                             best_val_res.update(dev_mets)
                             logging.info(f"{dev_perf}")
 
-                            '''
                             preds, labels = inferencer.predict(best_model, test_batches)
                             assert len(preds) == len(test_ids)
 
                             basil_w_pred = pd.DataFrame(index=test_ids)
                             basil_w_pred['pred'] = preds
                             basil_w_pred['label'] = test_labels
-                            pred_fp = f'data/test_w_preds/test_w_rob_none_preds/{fold_name}_test_w_pred.csv'
+                            pred_fp = f'data/test_w_preds/test_w_rob_{SEED_VAL}_preds/{fold_name}_test_w_pred.csv'
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}')
-                            '''
+
 
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
