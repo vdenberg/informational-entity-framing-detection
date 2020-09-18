@@ -70,7 +70,6 @@ class Processor():
         '''
         return token_ids, token_mask
 
-
 def make_weight_matrix(embed_df, EMB_DIM):
     # clean embedding string
     embed_df = embed_df.fillna(0).replace({'\n', ' '})
