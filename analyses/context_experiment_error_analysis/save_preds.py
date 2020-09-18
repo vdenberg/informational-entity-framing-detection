@@ -356,11 +356,6 @@ for fold in folds:
 
     # PRODUCE PREDS
     preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
-    print(preds)
-    print(losses)
-    print(len(fold['test']
-              .label), len(preds), len(losses))
-
     dev_df = fold['test']
     dev_df['pred'] = preds
     dev_df['losses'] = losses
