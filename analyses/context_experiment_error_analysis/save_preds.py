@@ -131,7 +131,7 @@ parser.add_argument('-context', '--context_type', type=str, help='Options: artic
 parser.add_argument('-pp', '--preprocess', action='store_true', default=False, help='Whether to proprocess again')
 
 # MODEL PARAMS
-parser.add_argument('-bs', '--batch_size', type=int, default=32)
+parser.add_argument('-bs', '--batch_size', type=int, default=1)
 parser.add_argument('-wu', '--warmup_proportion', type=float, default=0.1)
 parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
 parser.add_argument('-g', '--gamma', type=float, default=.95)
