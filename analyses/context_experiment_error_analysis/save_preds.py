@@ -348,7 +348,7 @@ for fold in folds:
 
     logger.info(f" Loading {model_fp}")
 
-    cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'].label,
+    cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][0].label,
                                  weights_mat=fold['weights_matrix'], emb_dim=EMB_DIM, hid_size=HIDDEN,
                                  layers=BILSTM_LAYERS, b_size=1, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
 
