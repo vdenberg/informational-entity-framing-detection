@@ -55,7 +55,7 @@ def got_quote(x):
 models2compare = {'all':
                   [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')], # ('cam++', 'article'), ('cam++', 'story'),
                   'base_best':
-                  [('rob', 'none'), ('cim', 'article'), ('cim', 'coverage')],
+                  [('rob', '11'), ('cim', 'article'), ('cim', 'coverage')],
                   'cimcov':
                    [('cim', 'coverage')] #[('cam+', 'story')]
                   }

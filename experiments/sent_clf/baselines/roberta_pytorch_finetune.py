@@ -244,11 +244,11 @@ if __name__ == '__main__':
                             basil_w_pred.to_csv(pred_fp)
                             logger.info(f'Preds in {pred_fp}')
 
-
                             test_mets, test_perf = inferencer.evaluate(best_model, test_batches, test_labels, set_type='test')
                             test_res.update(test_mets)
                             logging.info(f"{test_perf}")
 
+                            '''
                             for EMB_TYPE in ['cross4bert']: #poolbert', 'avbert', 'unpoolbert', 'crossbert'
                                 emb_fp = f'data/embeddings/{MODEL}/{name}_basil_w_{EMB_TYPE}'
 
@@ -264,6 +264,7 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
+                            '''
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
