@@ -214,6 +214,7 @@ logger.info(f" Good luck!")
 #                    PREPROCESS DATA
 # =====================================================================================
 
+
 if PREPROCESS:
     logger.info("============ PREPROCESS DATA =============")
     logger.info(f" Writing to: {DATA_FP}")
@@ -223,20 +224,30 @@ if PREPROCESS:
     sentences.index = [el.lower() for el in sentences.index]
     sentences.source = [el.lower() for el in sentences.source]
 
-    raw_data_fp = os.path.join(DATA_DIR, 'merged_basil.tsv')
-    raw_data = pd.read_csv(raw_data_fp, sep='\t',
-                           names=['sentence_ids', 'context_document', 'label', 'position'],
-                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int}, index_col=False)
+    raw_data_fp = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
+    raw_data = pd.read_csv(raw_data_fp, sep='\t', index_col=False,
+                           names=['sentence_ids', 'art_context_document', 'cov1_context_document',
+                                  'cov2_context_document', 'label', 'position'],
+                           dtype={'sentence_ids': str, 'tokens': str, 'label': int, 'position': int})
     raw_data = raw_data.set_index('sentence_ids', drop=False)
 
-    raw_data['source'] = sentences['source']
-    raw_data['main_entities'] = sentences['main_entities']
-    raw_data['inf_entities'] = sentences['inf_entities']
+    try:
+        raw_data.to_json(DATA_FP)
+        print("Managed to save")
+    except:
+        print("Failure")
+        exit(0)
 
+    raw_data['source'] = sentences['source']
     raw_data['src_num'] = raw_data.source.apply(lambda x: {'fox': 0, 'nyt': 1, 'hpo': 2}[x])
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
-    raw_data['doc_len'] = raw_data.context_document.apply(lambda x: len(x.split(' ')))
+
+    if LEX:
+        raw_data['label'] = sentences['lex_bias']
+        print('label is lex bias')
+
+    raw_data['doc_len'] = raw_data.art_context_document.apply(lambda x: len(x.split(' ')))
 
     quartiles = []
     for position, doc_len in zip(raw_data.position, raw_data.doc_len):
@@ -255,11 +266,17 @@ if PREPROCESS:
 
     processor = Processor(sentence_ids=raw_data.sentence_ids.values, max_doc_length=MAX_DOC_LEN)
     raw_data['id_num'] = [processor.sent_id_map[i] for i in raw_data.sentence_ids.values]
-    raw_data['context_doc_num'] = processor.to_numeric_documents(raw_data.context_document.values)
+    raw_data['art_context_doc_num'] = processor.to_numeric_documents(raw_data.art_context_document.values)
+    raw_data['cov1_context_doc_num'] = processor.to_numeric_documents(raw_data.cov1_context_document.values)
+    raw_data['cov2_context_doc_num'] = processor.to_numeric_documents(raw_data.cov2_context_document.values)
     token_ids, token_mask = processor.to_numeric_sentences(raw_data.sentence_ids)
     raw_data['token_ids'], raw_data['token_mask'] = token_ids, token_mask
 
+    #print(raw_data.columns)
+    #print(raw_data.head())
     raw_data.to_json(DATA_FP)
+    #exit(0)
+
     logger.info(f" Max sent len: {processor.max_sent_length}")
 
 
