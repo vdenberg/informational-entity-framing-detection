@@ -3,6 +3,7 @@ from lib.utils import standardise_id
 from lib.evaluate.Eval import my_eval
 import re
 from collections import Counter
+import numpy as np
 
 
 def extract_e(string):
@@ -43,7 +44,7 @@ def lat(x):
         el = str(el)
         if '.' in el and len(el) == 4:
             el += '0'
-        el = '$' + el + '$'
+        #el = '$' + el + '$'
         out.append(el)
     return out
 
@@ -52,13 +53,70 @@ def got_quote(x):
     double_q = '"' in str(x)
     return double_q
 
+
+def bin_length(len, quantiles):
+    if len <= quantiles[0]:
+        return "0-90"
+    elif len <= quantiles[1]:
+        return "91-137"
+    elif len <= quantiles[2]:
+        return "138-192"
+    elif len <= quantiles[3]:
+        return "193-647"
+
+
+def give_subj_score(x, sent_lex, subj_words):
+    tokens = x.split(' ')
+    subj_score = 0
+    for t in tokens:
+        if t in subj_words:
+            subj_score += sent_lex.loc[t, 'subj_score']
+    norm = subj_score / len(tokens)
+    return round(norm * 100, 2)
+
+
+def bin_subj_score(subj_score, quantiles):
+    if subj_score == 0:
+        return "No"
+    elif subj_score > 0 and subj_score <= quantiles[0]:
+        return "No" #"0-3.7" #"1-5.26"
+    else: # subj_score <= quantiles[1]:
+        return "Yes" #"5.37-8.57"
+    #elif subj_score <= quantiles[2]:
+    #    return "9.53-66.67" #"8.58-13.51"
+    #elif subj_score <= quantiles[3]:
+    #    return "13.52-66.67"
+
+
+def load_mpqa_lex():
+    "input looks like: type=weaksubj len=1 word1=abandoned pos1=adj stemmed1=n priorpolarity=negative"
+    fn = 'subjectivity_clues_hltemnlp05/subjclueslen1-HLTEMNLP05.tff'
+    with open(fn, 'r') as f:
+        ls = f.readlines()
+        tags = [tag.split('=')[0] for tag in ls[0].split(' ')]
+        vals = [[tag.split('=')[1].strip() for tag in l.split(' ')] for l in ls]
+    lex = pd.DataFrame(vals, columns=tags)
+    lex = lex[((lex.pos1 == 'verb') | (lex.pos1 == 'anypos')) & (lex.priorpolarity != 'both')]
+    lex.priorpolarity = lex.priorpolarity.replace({'neutral': 0, 'positive': 1, 'negative': -1})
+    lex.priorpolarity = lex.priorpolarity.replace({'neutral_eb': 0, 'positive_eb': 1, 'negative_eb': -1}).astype(float)
+    lex.priorpolarity = lex.priorpolarity.astype(float)
+    lex['subj_score'] = lex.type.apply(lambda x: 1 if x == 'weaksubj' else 2)
+    #weakmask = lex.type.str.startswith('weak')
+    #lex.loc[weakmask, 'priorpolarity'] = lex[weakmask]['priorpolarity'] / 2
+    #lex = lex[['word1', 'subj_score']]
+    lex = lex.drop_duplicates('word1')
+    lex = lex.set_index('word1')
+    return lex
+
+
 models2compare = {'all':
                   [('cam+', 'article'), ('cam+', 'story'), ('rob', 'none')], # ('cam++', 'article'), ('cam++', 'story'),
                   'base_best':
-                  [('rob', '11'), ('cim', 'article'), ('cim', 'coverage')],
+                  [('rob', '22'), ('cim', 'coverage')], # ('cim', 'article'),
                   'cimcov':
                    [('cim', 'coverage')] #[('cam+', 'story')]
                   }
+
 
 class ErrorAnalysis:
     """
@@ -67,6 +125,10 @@ class ErrorAnalysis:
 
     def __init__(self, models):
         self.models = models2compare[models]
+
+        self.sent_lex = load_mpqa_lex()
+        self.subj_words = set(self.sent_lex.index.values)
+
         self.w_preds = self.contruct_df()
         self.N = len(self.w_preds)
 
@@ -84,21 +146,31 @@ class ErrorAnalysis:
         out['source'] = [el.lower() for el in out.source]
         out['article'] = out.source + out.sent_idx.astype(str)
         out['quote'] = out.sentence.apply(got_quote)
+        out['len'] = out.sentence.apply(len)
+        len_quantiles = out.len.quantile([0.25, 0.5, 0.75, 1.0]).values
+        out['len'] = out.len.apply(lambda x: bin_length(x, len_quantiles))
+        out['subj'] = out.sentence.apply(lambda x: give_subj_score(x, self.sent_lex, self.subj_words))
+        subj_pos_quantiles = out.subj.quantile([0.5, 0.75, 1.0]).values
+        out['subj'] = out.subj.apply(lambda x: bin_subj_score(x, subj_pos_quantiles))
         return out
 
     def inf_bias_only(self):
         self.w_preds = self.w_preds[self.w_preds.bias == 1]
 
+    def no_bias_only(self):
+        self.w_preds = self.w_preds[(self.w_preds.bias == 0) & (self.w_preds.lex_bias == 0)]
+
     def row4compare(self, n, gr=None, model=None, context=None):
         N = len(gr)
         Nbias = sum(gr.bias == 1)
+        Percbias = str(round(Nbias / N * 100,2)) + '%'
         mets, _ = my_eval(gr.bias, gr[f'{model}_{context}'])
         mets = [round(el*100, 2) for el in [mets['prec'], mets['rec'], mets['f1']]]
 
-        return [n] + lat([N, Nbias] + mets)
+        return [n] + lat([N, Percbias] + mets)
 
     def compare_subsets(self, df, grby, model, context):
-        basic_columns = [grby, '#', '#Bias', 'Prec', 'Rec', 'F1']
+        basic_columns = [grby, 'N', '%Bias', 'Prec', 'Rec', 'F1']
 
         out = pd.DataFrame(columns=basic_columns)
 
