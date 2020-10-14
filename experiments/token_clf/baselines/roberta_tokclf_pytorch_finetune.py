@@ -175,7 +175,6 @@ if __name__ == '__main__':
                                     tr_loss = 0
                                     for step, batch in enumerate(train_batches):
                                         batch = tuple(t.to(device) for t in batch)
-                                        print(batch[-1])
                                         model.zero_grad()
                                         outputs = model(batch[0], batch[1], labels=batch[-1])
 
@@ -233,7 +232,6 @@ if __name__ == '__main__':
                                     basil_w_BERT[EMB_TYPE] = embs
                                     basil_w_BERT.to_csv(emb_fp)
                                     logger.info(f'{EMB_TYPE} embeddings in {emb_fp}.csv')
-
 
                             # store performance in table
                             fold_results_table = fold_results_table.append(best_val_res, ignore_index=True)
