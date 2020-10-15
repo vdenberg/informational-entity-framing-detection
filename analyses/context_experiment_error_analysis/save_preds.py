@@ -185,8 +185,10 @@ DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
 # CovCIM*: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage_cim*
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+TABLE_DIR = f"reports/cam/tables/{TASK_NAME}"
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
+MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
 
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
