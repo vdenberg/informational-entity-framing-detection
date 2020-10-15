@@ -146,8 +146,8 @@ parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
 seeds = {'article':{
-            'cim': [11, 22, 33, 44, 55],
-            'cim*': [11, 22, 33, 44, 55]},
+            'cim': [34, 68, 102, 170, 204],
+            'cim*': [34, 68, 102, 170, 204]},
          'coverage': {
             'cim': [11, 22, 33, 44, 55],
             'cim*': [11, 22, 33, 44, 55]}
