@@ -326,7 +326,7 @@ data = pd.read_json(DATA_FP)
 data.index = data.sentence_ids.values
 
 spl = Split(data, which=SPLIT_TYPE, subset=SUBSET, recreate=False, n_voters=1)
-folds = spl.apply_split(features=['story', 'source', 'id_num', 'art_context_doc_num', 'cov1_context_doc_num', 'cov2_context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
+folds = spl.apply_split(features=['', 'story', 'source', 'id_num', 'art_context_doc_num', 'cov1_context_doc_num', 'cov2_context_doc_num', 'token_ids', 'token_mask', 'position', 'quartile', 'src_num'])
 NR_FOLDS = len(folds)
 
 for fold in folds:
@@ -337,26 +337,25 @@ for fold in folds:
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
-if not os.path.exists(os.path.join(pred_dir, f'11_preds.csv')):
-    for fold in folds:
-        weights_matrices = []
-        for v in range(len(fold['train'])):
-            # read embeddings file
-            if EMB_TYPE not in ['use', 'sbert']:
-                # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-                # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-                # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-                # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-                # embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
-                if BASE == 'basil_tapt':
-                    s = 22
-                else:
-                    s = 11
-                embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_{s}_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
-                weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
-                logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-                weights_matrices.append(weights_matrix)
-        fold['weights_matrices'] = weights_matrices
+for fold in folds:
+    weights_matrices = []
+    for v in range(len(fold['train'])):
+        # read embeddings file
+        if EMB_TYPE not in ['use', 'sbert']:
+            # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+            # embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
+            if BASE == 'basil_tapt':
+                s = 22
+            else:
+                s = 11
+            embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_{s}_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
+            weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+            logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+            weights_matrices.append(weights_matrix)
+    fold['weights_matrices'] = weights_matrices
 
 
 # =====================================================================================
@@ -379,11 +378,10 @@ for SEED_VAL in seeds:
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist())
 
     # LOAD MODEL
-    test_ids = []
     FORCE = True
     if not os.path.exists(pred_fp) or FORCE:
         for fold in folds:
-            if not os.path.exists(pred_fp):
+            if not os.path.exists(pred_fp) or FORCE:
                 model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
                 model_fp = os.path.join(CHECKPOINT_DIR, model_name)
                 result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
@@ -399,18 +397,17 @@ for SEED_VAL in seeds:
         
                 # PRODUCE PREDS
                 preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
-                dev_df = fold['test']
-                dev_df['pred'] = preds
-                pred_df = pred_df.append(dev_df)
-            else:
-                print(fold['test'].columns)
-                test_ids.extend(fold['test'].index.values)
+                test_df = fold['test']
+                test_df['pred'] = preds
+                pred_df = pred_df.append(test_df)
+                print(test_df.head())
+                print(pred_df.head())
 
-        # pred_df.to_csv(pred_fp)
+        pred_df.to_csv(pred_fp)
 
     # load predictions
     basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
-    basil_w_pred.index = [standardise_id(id) for id in test_ids]
+    basil_w_pred.index = [standardise_id(id) for id in basil_w_pred.index]
     print(basil_w_pred.head())
     basil_w_pred.to_csv(pred_fp)
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
