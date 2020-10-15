@@ -394,6 +394,7 @@ for SEED_VAL in seeds:
             dev_df = fold['test']
             dev_df['pred'] = preds
             pred_df = pred_df.append(pred_df)
+    print(pred_df)
     pred_df.to_csv(pred_fp)
 
     # load predictions
