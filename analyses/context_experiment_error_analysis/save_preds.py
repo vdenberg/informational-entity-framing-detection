@@ -146,7 +146,7 @@ parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
-seeds = {'article':{
+info = {'article':{
             'cim': {'seeds': [34, 68, 102]},
             'cim*': {'seeds': [34, 68, 102, 170, 204]}
                   },
@@ -171,14 +171,11 @@ CAM_TYPE = args.cam_type
 BASE = args.base
 HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
-seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['seeds']
+seeds = [args.seed_val] if args.seed_val else info[CONTEXT_TYPE][CAM_TYPE]['seeds']
 NUM_LABELS = 2
 SAMPLER = args.sampler
 # set directories
-print(CONTEXT_TYPE)
-print(CAM_TYPE)
-print(seeds[CONTEXT_TYPE][CAM_TYPE])
-TASK_NAME = args.task_name if args.task_name else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
+TASK_NAME = args.task_name if args.task_name else info[CONTEXT_TYPE][CAM_TYPE]['task_name']
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
