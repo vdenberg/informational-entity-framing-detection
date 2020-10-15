@@ -361,7 +361,7 @@ entity_df = pd.DataFrame(columns=table_columns.split(','))
 main_results_table = pd.DataFrame(columns=table_columns.split(','))
 
 for SEED_VAL in seeds:
-    pred_dir = f"data/test_w_preds/test_w_{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}_preds"
+    pred_dir = f"data/predictions/{CONTEXT_TYPE}_{CAM_TYPE}/"
     if not os.path.exists(pred_dir):
         os.makedirs(pred_dir)
         
@@ -371,7 +371,7 @@ for SEED_VAL in seeds:
     torch.manual_seed(SEED_VAL)
     torch.cuda.manual_seed_all(SEED_VAL)
     
-    pred_fp = os.path.join(pred_dir, 'preds.csv')
+    pred_fp = os.path.join(pred_dir, f'{SEED_VAL}_preds.csv')
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist() + ['pred'])
 
     # LOAD MODEL
@@ -395,6 +395,8 @@ for SEED_VAL in seeds:
             preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
             dev_df = fold['test']
             dev_df['pred'] = preds
+            print(pred_df.shape)
+            print(dev_df.shape)
             pred_df = pred_df.append(dev_df, ignore_index=True)
     print(pred_df)
     pred_df.to_csv(pred_fp)
@@ -403,7 +405,7 @@ for SEED_VAL in seeds:
     basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                    set_type='test')
-    test_results = {'model': f'{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
+    test_results = {'model': f'{CONTEXT_TYPE}_{CAM_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
                     'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN,
                     'voter': 'maj_vote', 'set_type': 'test'}
     test_results.update(test_mets)
