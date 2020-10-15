@@ -145,6 +145,14 @@ parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
 parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
+seeds = {'article':{
+            'cim': [11, 22, 33, 44, 55],
+            'cim*': [11, 22, 33, 44, 55]},
+         'coverage': {
+            'cim': [11, 22, 33, 44, 55],
+            'cim*': [11, 22, 33, 44, 55]}
+        }
+
 # set to variables for readability
 PREPROCESS = args.preprocess
 SPLIT_TYPE = args.split_type
@@ -161,7 +169,7 @@ CAM_TYPE = args.cam_type
 BASE = args.base
 HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
-SEED_VAL = args.seed_val
+seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]
 NUM_LABELS = 2
 SAMPLER = args.sampler
 
@@ -337,7 +345,7 @@ pred_dir = f"data/test_w_preds/test_w_{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}_preds
 if not os.path.exists(pred_dir):
     os.makedirs(pred_dir)
 
-for seed in [11, 22, 33, 44, 55]:
+for seed in seeds:
     for fold in folds:
 
         # LOAD MODEL
