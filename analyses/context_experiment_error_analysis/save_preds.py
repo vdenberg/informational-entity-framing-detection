@@ -181,7 +181,7 @@ else:
     exit(0)
 
 DATA_DIR = f'data/sent_clf_backup/cam_input/{CONTEXT_TYPE}'
-DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
+DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
 DATA_FP = args.data_fp
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
