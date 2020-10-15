@@ -337,6 +337,7 @@ for fold in folds:
 logger.info("============ LOAD EMBEDDINGS =============")
 logger.info(f" Embedding type: {EMB_TYPE}")
 
+"""
 for fold in folds:
     weights_matrices = []
     for v in range(len(fold['train'])):
@@ -356,7 +357,7 @@ for fold in folds:
             logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
             weights_matrices.append(weights_matrix)
     fold['weights_matrices'] = weights_matrices
-
+"""
 
 # =====================================================================================
 #                    START ANALYSIS
