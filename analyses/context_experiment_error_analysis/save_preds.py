@@ -164,7 +164,7 @@ parser.add_argument('-sv', '--seed_val', type=int, default=None)
 args = parser.parse_args()
 
 info = {'article':{
-            'cim': {'seeds': [34, 68, 102, 204]},
+            'cim': {'seeds': [34, 68, 102, 204], 'task_name': 'article_cim'},
             'cim*': {'seeds': [34, 68, 102, 170, 204]}
                   },
          'coverage': {
@@ -210,7 +210,10 @@ TABLE_DIR = f"reports/cam/tables/{TASK_NAME}"
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 CACHE_DIR = 'models/cache/' # This is where BERT will look for pre-trained models to load parameters from.
 MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
-
+pred_dir = f"data/predictions/{TASK_NAME}/"
+if not os.path.exists(pred_dir):
+    os.makedirs(pred_dir)
+    
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
 if not os.path.exists(TABLE_DIR):
@@ -233,10 +236,6 @@ console_hdlr = logging.StreamHandler(sys.stdout)
 file_hdlr = logging.FileHandler(filename=LOG_NAME)
 logging.basicConfig(level=logging.INFO, handlers=[console_hdlr, file_hdlr])
 logger = logging.getLogger()
-
-pred_dir = f"data/predictions/{CONTEXT_TYPE}_{CAM_TYPE}/"
-if not os.path.exists(pred_dir):
-    os.makedirs(pred_dir)
 
     
 logger.info("============ STARTING =============")
