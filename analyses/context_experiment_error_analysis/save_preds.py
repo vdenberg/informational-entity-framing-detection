@@ -173,14 +173,6 @@ seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]
 NUM_LABELS = 2
 SAMPLER = args.sampler
 
-# set seed
-random.seed(SEED_VAL)
-np.random.seed(SEED_VAL)
-torch.manual_seed(SEED_VAL)
-torch.cuda.manual_seed_all(SEED_VAL)
-torch.backends.cudnn.deterministic = True
-torch.backends.cudnn.benchmark = False
-
 # set directories
 if args.task_name:
     TASK_NAME = args.task_name #'cim_ensemble_tapt'
@@ -203,6 +195,9 @@ device, USE_CUDA = get_torch_device()
 if not USE_CUDA:
     exit(0)
 
+torch.backends.cudnn.deterministic = True
+torch.backends.cudnn.benchmark = False
+    
 # set logger
 now = datetime.now()
 now_string = now.strftime(format='%b-%d-%Hh-%-M')
@@ -345,7 +340,13 @@ pred_dir = f"data/test_w_preds/test_w_{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}_preds
 if not os.path.exists(pred_dir):
     os.makedirs(pred_dir)
 
-for seed in seeds:
+for SEED_VAL in seeds:
+    # set seed
+    random.seed(SEED_VAL)
+    np.random.seed(SEED_VAL)
+    torch.manual_seed(SEED_VAL)
+    torch.cuda.manual_seed_all(SEED_VAL)
+    
     for fold in folds:
 
         # LOAD MODEL
