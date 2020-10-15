@@ -371,6 +371,7 @@ for SEED_VAL in seeds:
     torch.cuda.manual_seed_all(SEED_VAL)
     
     for fold in folds:
+        pred_fp = os.path.join(pred_dir, f"{fold['name']}_test_w_pred.csv")
 
         # LOAD MODEL
         if not os.path.exists(pred_fp):
@@ -393,7 +394,6 @@ for SEED_VAL in seeds:
             dev_df['pred'] = preds
             dev_df['losses'] = losses
     
-            pred_fp = os.path.join(pred_dir, f"{fold['name']}_test_w_pred.csv")
             dev_df.to_csv(pred_fp)
 
         # load predictions
