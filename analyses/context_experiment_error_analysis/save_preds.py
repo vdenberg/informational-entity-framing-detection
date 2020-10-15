@@ -153,8 +153,7 @@ seeds = {'article':{
          'coverage': {
             'cim': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage'},
             'cim*': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage_cim*'}
-                    }
-        }
+                    }}
 
 # set to variables for readability
 PREPROCESS = args.preprocess
@@ -175,9 +174,8 @@ BILSTM_LAYERS = args.bilstm_layers
 seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['seeds']
 NUM_LABELS = 2
 SAMPLER = args.sampler
-
 # set directories
-TASK_NAME = [args.task_name] if args.task_name else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
+TASK_NAME = args.task_name if args.task_name else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
@@ -185,7 +183,6 @@ DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
 # ArtCIM*: doesnt exist anymore
 # CovCIM: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage}
 # CovCIM*: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage_cim*
-
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
