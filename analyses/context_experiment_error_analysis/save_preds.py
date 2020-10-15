@@ -175,6 +175,9 @@ seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['see
 NUM_LABELS = 2
 SAMPLER = args.sampler
 # set directories
+print(CONTEXT_TYPE)
+print(CAM_TYPE)
+print(seeds[CONTEXT_TYPE][CAM_TYPE])
 TASK_NAME = args.task_name if args.task_name else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
