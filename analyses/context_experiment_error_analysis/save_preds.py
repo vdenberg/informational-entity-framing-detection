@@ -400,6 +400,7 @@ for SEED_VAL in seeds:
                 dev_df['pred'] = preds
                 pred_df = pred_df.append(dev_df)
             else:
+                print(fold['test'].columns)
                 test_ids.extend(fold['test'].index.values)
 
         # pred_df.to_csv(pred_fp)
