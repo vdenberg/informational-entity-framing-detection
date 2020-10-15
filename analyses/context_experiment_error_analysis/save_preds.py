@@ -374,7 +374,8 @@ for SEED_VAL in seeds:
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns + ['pred'])
 
     # LOAD MODEL
-    if not os.path.exists(pred_fp):
+    FORCE = True
+    if not os.path.exists(pred_fp) or FORCE:
         for fold in folds:
             model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
             model_fp = os.path.join(CHECKPOINT_DIR, model_name)
@@ -393,7 +394,7 @@ for SEED_VAL in seeds:
             preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
             dev_df = fold['test']
             dev_df['pred'] = preds
-            pred_df = pred_df.append(pred_df)
+            pred_df = pred_df.append(dev_df)
     print(pred_df)
     pred_df.to_csv(pred_fp)
 
