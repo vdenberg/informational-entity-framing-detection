@@ -244,9 +244,9 @@ if PREPROCESS:
     raw_data['story'] = sentences['story']
     raw_data['sentence'] = sentences['sentence']
 
-    if LEX:
-        raw_data['label'] = sentences['lex_bias']
-        print('label is lex bias')
+    #if LEX:
+    #    raw_data['label'] = sentences['lex_bias']
+    #    print('label is lex bias')
 
     raw_data['doc_len'] = raw_data.art_context_document.apply(lambda x: len(x.split(' ')))
 
