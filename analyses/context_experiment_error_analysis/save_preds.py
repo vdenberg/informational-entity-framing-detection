@@ -192,7 +192,9 @@ MAIN_TABLE_FP = os.path.join(TABLE_DIR, f'{TASK_NAME}_results.csv')
 
 if not os.path.exists(REPORTS_DIR):
     os.makedirs(REPORTS_DIR)
-
+if not os.path.exists(TABLE_DIR):
+    os.makedirs(TABLE_DIR)
+    
 # set device
 device, USE_CUDA = get_torch_device()
 if not USE_CUDA:
