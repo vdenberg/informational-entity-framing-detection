@@ -80,6 +80,7 @@ class ContextAwareModel(nn.Module):
 
         self.emb_size = weights_matrix.shape[1]
 
+        self.lstm = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.lstm_art = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.lstm_cov1 = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
         self.lstm_cov2 = LSTM(self.input_size, self.hidden_size, num_layers=self.bilstm_layers, bidirectional=True, dropout=0.2)
@@ -168,27 +169,31 @@ class ContextAwareModel(nn.Module):
             for seq_idx in range(article.shape[0]):
                 embedded_sentence = self.embedding(article[:, seq_idx]).view(1, batch_size, -1)
                 lstm_input = embedded_sentence # torch.cat((embedded_sentence, embedded_src), dim=-1)
+                #encoded, hidden = self.lstm(lstm_input, hidden)
                 encoded, hidden = self.lstm_art(lstm_input, hidden)
                 art_representations[:, seq_idx] = encoded
             final_article_reps = art_representations[:, -1, :]
 
             # embedding first coverage piece
-
-            hidden = self.init_hidden(batch_size)
-            for seq_idx in range(article.shape[0]):
-                embedded_sentence = self.embedding(cov1[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm_cov1(embedded_sentence, hidden)
-                cov1_representations[:, seq_idx] = encoded
-            final_cov1_reps = cov1_representations[:, -1, :]
-
-            hidden = self.init_hidden(batch_size)
-            for seq_idx in range(article.shape[0]):
-                embedded_sentence = self.embedding(cov2[:, seq_idx]).view(1, batch_size, -1)
-                encoded, hidden = self.lstm_cov2(embedded_sentence, hidden)
-                cov2_representations[:, seq_idx] = encoded
-            final_cov2_reps = cov2_representations[:, -1, :]
-
-            context_reps = torch.cat((final_article_reps, final_cov1_reps, final_cov2_reps), dim=-1)
+            '''
+            if self.context != 'article':
+                hidden = self.init_hidden(batch_size)
+                for seq_idx in range(article.shape[0]):
+                    embedded_sentence = self.embedding(cov1[:, seq_idx]).view(1, batch_size, -1)
+                    encoded, hidden = self.lstm_cov1(embedded_sentence, hidden)
+                    cov1_representations[:, seq_idx] = encoded
+                final_cov1_reps = cov1_representations[:, -1, :]
+    
+                hidden = self.init_hidden(batch_size)
+                for seq_idx in range(article.shape[0]):
+                    embedded_sentence = self.embedding(cov2[:, seq_idx]).view(1, batch_size, -1)
+                    encoded, hidden = self.lstm_cov2(embedded_sentence, hidden)
+                    cov2_representations[:, seq_idx] = encoded
+                final_cov2_reps = cov2_representations[:, -1, :]
+            '''
+            
+            #context_reps = torch.cat((final_article_reps, final_cov1_reps, final_cov2_reps), dim=-1)
+            context_reps = final_article_reps
 
             # target_sent_reps = self.rob_squeezer(target_sent_reps)
             # query = target_sent_reps.unsqueeze(1)
