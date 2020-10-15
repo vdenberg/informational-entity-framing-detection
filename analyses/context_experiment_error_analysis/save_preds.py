@@ -411,6 +411,7 @@ for SEED_VAL in seeds:
     # load predictions
     basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
     basil_w_pred.index = [standardise_id(id) for id in test_ids]
+    print(basil_w_pred.head())
     basil_w_pred.to_csv(pred_fp)
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                    set_type='test')
