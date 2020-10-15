@@ -355,7 +355,7 @@ for SEED_VAL in seeds:
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist())
 
     # LOAD MODEL
-    FORCE = False
+    FORCE = True
     if not os.path.exists(pred_fp) or FORCE:
         for fold in folds:
             if not os.path.exists(pred_fp) or FORCE:
@@ -401,6 +401,11 @@ for SEED_VAL in seeds:
         
                 # PRODUCE PREDS
                 preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
+
+                test_mets, test_perf = my_eval(fold['test'].label, preds, name='majority vote',
+                                               set_type='test')
+                print(test_perf)
+                
                 test_df = fold['test']
                 test_df['pred'] = preds
                 pred_df = pred_df.append(test_df)
