@@ -416,7 +416,7 @@ class Split:
             train_sent_ids = set(train_sent_ids[0])
             dev_sent_ids = set(dev_sent_ids[0])
             all = set(all)
-            diff = existing_ids - test_sent_ids
+            diff = [el for el in test_sent_ids if el not in existing_ids]
             print(len(diff), diff)
 
 
