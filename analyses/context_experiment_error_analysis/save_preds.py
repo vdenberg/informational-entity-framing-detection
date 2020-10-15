@@ -334,11 +334,11 @@ for fold in folds:
 table_columns = 'source,model,seed,bs,lr,model_loc,fold,epoch,set_type,loss,acc,prec,rec,f1,fn,fp,tn,tp,h'
 entity_df = pd.DataFrame(columns=table_columns.split(','))
 
-pred_dir = f"data/test_w_preds/test_w_{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}_preds"
-if not os.path.exists(pred_dir):
-    os.makedirs(pred_dir)
-
 for SEED_VAL in seeds:
+    pred_dir = f"data/test_w_preds/test_w_{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}_preds"
+    if not os.path.exists(pred_dir):
+        os.makedirs(pred_dir)
+        
     # set seed
     random.seed(SEED_VAL)
     np.random.seed(SEED_VAL)
