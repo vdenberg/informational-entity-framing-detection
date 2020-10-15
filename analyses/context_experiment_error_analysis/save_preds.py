@@ -160,7 +160,7 @@ parser.add_argument('-data_fp', '--data_fp', type=str, default=None)
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
-parser.add_argument('-sv', '--seed_val', type=int, default=34)
+parser.add_argument('-sv', '--seed_val', type=int, default=None)
 args = parser.parse_args()
 
 info = {'article':{
