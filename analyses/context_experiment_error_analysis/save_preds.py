@@ -180,10 +180,7 @@ else:
     exit(0)
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
-DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-
-print(DATA_FP)
-exit(0)
+DATA_FP = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
 
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
