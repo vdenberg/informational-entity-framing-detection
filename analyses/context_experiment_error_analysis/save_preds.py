@@ -13,6 +13,23 @@ from lib.utils import get_torch_device, standardise_id, to_batches, to_tensors
 from lib.evaluate.Eval import my_eval
 
 
+def clean_mean(df, grby='', set_type=''):
+    """
+    Helps with computing ML results by selecting the set type you want
+    and computing rounded mean values on the grouping that you want.
+    :param df: input dataframe with results (prec, rec, f1)
+    :param grby: groupings, e.g. 'model' or 'seed'
+    :param set_type: train, dev or test
+    :return: means in an easily readible format
+    """
+    mets = ['f1']
+    if set_type:
+        tmp_df = df[df.set_type == set_type]
+    else:
+        tmp_df = df
+    return tmp_df.groupby(grby)[mets].mean().round(2)
+
+
 class Processor():
     def __init__(self, sentence_ids, max_doc_length):
         self.sent_id_map = {str_i.lower(): i+1 for i, str_i in enumerate(sentence_ids)}
