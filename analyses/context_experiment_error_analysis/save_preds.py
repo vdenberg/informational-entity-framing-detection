@@ -384,7 +384,8 @@ for SEED_VAL in seeds:
                 #model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
                 if SEED_VAL == 204:
                     model_name = f"cam+_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
-                model_name = f"cam+_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}"
+                else:
+                    model_name = f"cam+_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}"
                 
                 model_fp = os.path.join(CHECKPOINT_DIR, model_name)
                 result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
