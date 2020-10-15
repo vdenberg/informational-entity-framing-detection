@@ -169,8 +169,8 @@ class ContextAwareModel(nn.Module):
             for seq_idx in range(article.shape[0]):
                 embedded_sentence = self.embedding(article[:, seq_idx]).view(1, batch_size, -1)
                 lstm_input = embedded_sentence # torch.cat((embedded_sentence, embedded_src), dim=-1)
-                #encoded, hidden = self.lstm(lstm_input, hidden)
-                encoded, hidden = self.lstm_art(lstm_input, hidden)
+                #encoded, hidden = self.lstm_art(lstm_input, hidden)
+                encoded, hidden = self.lstm(lstm_input, hidden)
                 art_representations[:, seq_idx] = encoded
             final_article_reps = art_representations[:, -1, :]
 
