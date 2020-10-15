@@ -411,7 +411,7 @@ class Split:
 
             existing_ids = self.input_dataframe.index.tolist()
             existing_ids = set(self.input_dataframe.index.tolist())
-            all = test_sent_ids + train_sent_ids + dev_sent_ids
+            all = test_sent_ids + train_sent_ids[0] + dev_sent_ids[0]
             test_sent_ids = set(test_sent_ids)
             train_sent_ids = set(train_sent_ids[0])
             dev_sent_ids = set(dev_sent_ids[0])
