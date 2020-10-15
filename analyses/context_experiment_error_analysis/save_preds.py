@@ -395,8 +395,8 @@ for SEED_VAL in seeds:
             preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
             dev_df = fold['test']
             dev_df['pred'] = preds
-            print(pred_df.shape)
-            print(dev_df.shape)
+            print(pred_df.columns)
+            print(dev_df.columns)
             pred_df = pred_df.append(dev_df, ignore_index=True)
     print(pred_df)
     pred_df.to_csv(pred_fp)
