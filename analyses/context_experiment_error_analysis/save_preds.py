@@ -370,11 +370,12 @@ for SEED_VAL in seeds:
     torch.manual_seed(SEED_VAL)
     torch.cuda.manual_seed_all(SEED_VAL)
     
-    for fold in folds:
-        pred_fp = os.path.join(pred_dir, f"{fold['name']}_test_w_pred.csv")
+    pred_fp = os.path.join(pred_dir, 'preds.csv')
+    pred_df = pd.DataFrame(columns=folds[0]['test'].columns + ['pred'])
 
-        # LOAD MODEL
-        if not os.path.exists(pred_fp):
+    # LOAD MODEL
+    if not os.path.exists(pred_fp):
+        for fold in folds:
             model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
             model_fp = os.path.join(CHECKPOINT_DIR, model_name)
             result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
@@ -392,21 +393,20 @@ for SEED_VAL in seeds:
             preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
             dev_df = fold['test']
             dev_df['pred'] = preds
-            dev_df['losses'] = losses
-    
-            dev_df.to_csv(pred_fp)
+            pred_df = pred_df.append(pred_df)
+    pred_df.to_csv(pred_fp)
 
-        # load predictions
-        basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
-        test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
-                                       set_type='test')
-        test_results = {'model': f'{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
-                        'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN,
-                        'voter': 'maj_vote', 'set_type': 'test'}
-        test_results.update(test_mets)
+    # load predictions
+    basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
+    test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
+                                   set_type='test')
+    test_results = {'model': f'{CAM_TYPE}_{CONTEXT_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
+                    'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN,
+                    'voter': 'maj_vote', 'set_type': 'test'}
+    test_results.update(test_mets)
 
-        # store performance of setting
-        main_results_table = main_results_table.append(test_results, ignore_index=True)
+    # store performance of setting
+    main_results_table = main_results_table.append(test_results, ignore_index=True)
 
 main_results_table.to_csv(MAIN_TABLE_FP, index=False)
 
