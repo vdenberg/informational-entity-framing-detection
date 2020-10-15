@@ -70,6 +70,7 @@ class Processor():
         '''
         return token_ids, token_mask
 
+
 def make_weight_matrix(embed_df, EMB_DIM):
     # clean embedding string
     embed_df = embed_df.fillna(0).replace({'\n', ' '})
@@ -146,12 +147,12 @@ parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
 seeds = {'article':{
-            'cim': {'seeds': [34, 68, 102, 170, 204]},
+            'cim': {'seeds': [34, 68, 102]},
             'cim*': {'seeds': [34, 68, 102, 170, 204]}
                   },
          'coverage': {
             'cim': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage'},
-            'cim*': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage'}
+            'cim*': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage_cim*'}
                     }
         }
 
@@ -180,6 +181,11 @@ TASK_NAME = [args.task_name] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
+# ArtCIM: ccam+_base_34_h1200_bs32_lr0.001_f1
+# ArtCIM*: doesnt exist anymore
+# CovCIM: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage}
+# CovCIM*: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage_cim*
+
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
