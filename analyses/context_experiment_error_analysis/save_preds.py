@@ -378,7 +378,7 @@ for SEED_VAL in seeds:
         basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
         test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                        set_type='test')
-        test_results = {'model': base_name, 'fold': fold["name"], 'seed': SEED_VAL,
+        test_results = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL,
                         'bs': BATCH_SIZE, 'lr': LR, 'h': HIDDEN,
                         'voter': 'maj_vote', 'set_type': 'test'}
         test_results.update(test_mets)
