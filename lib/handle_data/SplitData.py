@@ -420,7 +420,7 @@ class Split:
             diff = [el for el in test_sent_ids if el not in existing_ids]
             print(len(diff), diff)
             '''
-            print(features, self.input_dataframe.columns)
+            #print(features, self.input_dataframe.columns)
 
             test_df = self.input_dataframe.loc[test_sent_ids, features ] #+ ['label']
 
