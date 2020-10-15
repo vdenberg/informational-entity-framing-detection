@@ -376,32 +376,38 @@ for SEED_VAL in seeds:
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist())
 
     # LOAD MODEL
+    test_ids = []
     FORCE = True
     if not os.path.exists(pred_fp) or FORCE:
         for fold in folds:
-            model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
-            model_fp = os.path.join(CHECKPOINT_DIR, model_name)
-            result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
-                      'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
-    
-            logger.info(f" Loading {model_fp}")
-    
-            cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][0].label,
-                                         weights_mat=fold['weights_matrices'][0], emb_dim=EMB_DIM, hid_size=HIDDEN,
-                                         layers=BILSTM_LAYERS, b_size=1, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
-    
-            cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], n_eps=0, load_from_ep=None)
-    
-            # PRODUCE PREDS
-            preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
-            dev_df = fold['test']
-            dev_df['pred'] = preds
-            pred_df = pred_df.append(dev_df)
+            if not os.path.exists(pred_fp):
+                model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
+                model_fp = os.path.join(CHECKPOINT_DIR, model_name)
+                result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
+                          'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
+        
+                logger.info(f" Loading {model_fp}")
+        
+                cam = ContextAwareClassifier(start_epoch=0, cp_dir=CHECKPOINT_DIR, tr_labs=fold['train'][0].label,
+                                             weights_mat=fold['weights_matrices'][0], emb_dim=EMB_DIM, hid_size=HIDDEN,
+                                             layers=BILSTM_LAYERS, b_size=1, lr=LR, step=1, gamma=GAMMA, cam_type=CAM_TYPE)
+        
+                cam_cl = Classifier(model=cam, logger=logger, fig_dir=FIG_DIR, name=fold['name'], n_eps=0, load_from_ep=None)
+        
+                # PRODUCE PREDS
+                preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
+                dev_df = fold['test']
+                dev_df['pred'] = preds
+                pred_df = pred_df.append(dev_df)
+            else:
+                test_ids.extend(fold['test'].index.values)
 
-    pred_df.to_csv(pred_fp)
+        # pred_df.to_csv(pred_fp)
 
     # load predictions
     basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
+    basil_w_pred.index = test_ids
+    basil_w_pred.to_csv(pred_fp)
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                    set_type='test')
     test_results = {'model': f'{CONTEXT_TYPE}_{CAM_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
