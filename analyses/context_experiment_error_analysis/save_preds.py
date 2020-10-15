@@ -138,6 +138,7 @@ parser.add_argument('-g', '--gamma', type=float, default=.95)
 parser.add_argument('-hid', '--hidden_size', type=int, default=600)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
+parser.add_argument('-data_fp', '--data_fp', type=str, default='')
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
@@ -180,10 +181,8 @@ else:
     exit(0)
 
 DATA_DIR = f'data/sent_clf_backup/cam_input/{CONTEXT_TYPE}'
-DATA_FP = os.path.join(DATA_DIR, 'basil_art_and_cov.tsv')
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.tsv')
-print(DATA_FP)
-print(os.getcwd())
+DATA_FP = args.data_fp
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
