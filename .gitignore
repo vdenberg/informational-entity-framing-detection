@@ -11,4 +11,5 @@ create_data/emnlp19-BASIL/*
 models/checkpoints/bert_for_embed/
 reports/
 data/*.csv
+data/
 experiments/adapt_dapt_tapt/pretrained_models/
