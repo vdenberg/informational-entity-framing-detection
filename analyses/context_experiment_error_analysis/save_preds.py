@@ -120,7 +120,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-name', '--task_name', help='Task name', type=str, default='')
+parser.add_argument('-name', '--task_name', help='Task name', type=str, default=None)
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both', type=str, default='berg')
@@ -139,7 +139,7 @@ parser.add_argument('-g', '--gamma', type=float, default=.95)
 parser.add_argument('-hid', '--hidden_size', type=int, default=600)
 parser.add_argument('-lay', '--bilstm_layers', type=int, default=2)
 parser.add_argument('-base', '--base', type=str, help='Options: base|tapt', default='base')
-parser.add_argument('-data_fp', '--data_fp', type=str, default='')
+parser.add_argument('-data_fp', '--data_fp', type=str, default=None)
 
 # OTHER NN PARAMS
 parser.add_argument('-sampler', '--sampler', type=str, default='sequential')
