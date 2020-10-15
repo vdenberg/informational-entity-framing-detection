@@ -381,7 +381,8 @@ for SEED_VAL in seeds:
                         weights_matrices.append(weights_matrix)
                 fold['weights_matrices'] = weights_matrices
 
-                model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
+                #model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
+                model_name = f"cam+_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
                 model_fp = os.path.join(CHECKPOINT_DIR, model_name)
                 result = {'model': model_name, 'fold': fold["name"], 'seed': SEED_VAL, 'bs': BATCH_SIZE, 'lr': LR,
                           'h': HIDDEN, 'set_type': 'test', 'model_loc': ''}
