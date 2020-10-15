@@ -378,7 +378,7 @@ for SEED_VAL in seeds:
     pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist())
 
     # LOAD MODEL
-    FORCE = True
+    FORCE = False
     if not os.path.exists(pred_fp) or FORCE:
         for fold in folds:
             if not os.path.exists(pred_fp) or FORCE:
@@ -404,9 +404,9 @@ for SEED_VAL in seeds:
 
     # load predictions
     basil_w_pred = pd.read_csv(pred_fp, index_col=0)  # , dtype={'pred': np.int64})
-    basil_w_pred.index = [standardise_id(id) for id in basil_w_pred.index]
+    #basil_w_pred.index = [standardise_id(id) for id in basil_w_pred.index]
     print(basil_w_pred.head())
-    basil_w_pred.to_csv(pred_fp)
+    #basil_w_pred.to_csv(pred_fp)
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                    set_type='test')
     test_results = {'model': f'{CONTEXT_TYPE}_{CAM_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
