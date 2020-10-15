@@ -372,7 +372,7 @@ for SEED_VAL in seeds:
     torch.cuda.manual_seed_all(SEED_VAL)
     
     pred_fp = os.path.join(pred_dir, f'{SEED_VAL}_preds.csv')
-    pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist() + ['pred'])
+    pred_df = pd.DataFrame(columns=folds[0]['test'].columns.tolist())
 
     # LOAD MODEL
     FORCE = True
