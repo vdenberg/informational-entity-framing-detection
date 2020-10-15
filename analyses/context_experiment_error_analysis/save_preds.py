@@ -400,13 +400,10 @@ for SEED_VAL in seeds:
                 test_df = fold['test']
                 test_df['pred'] = preds
                 pred_df = pred_df.append(test_df)
-                print(test_df.head())
-                print(pred_df.head())
-
         pred_df.to_csv(pred_fp)
 
     # load predictions
-    basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
+    basil_w_pred = pd.read_csv(pred_fp, index_col=0)  # , dtype={'pred': np.int64})
     basil_w_pred.index = [standardise_id(id) for id in basil_w_pred.index]
     print(basil_w_pred.head())
     basil_w_pred.to_csv(pred_fp)
