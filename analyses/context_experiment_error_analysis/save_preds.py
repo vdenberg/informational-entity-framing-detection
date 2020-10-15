@@ -164,7 +164,7 @@ parser.add_argument('-sv', '--seed_val', type=int, default=None)
 args = parser.parse_args()
 
 info = {'article':{
-            'cim': {'seeds': [34, 68, 102]},
+            'cim': {'seeds': [34, 68, 102, 204]},
             'cim*': {'seeds': [34, 68, 102, 170, 204]}
                   },
          'coverage': {
@@ -408,6 +408,7 @@ for SEED_VAL in seeds:
     basil_w_pred = pd.read_csv(pred_fp)  # , dtype={'pred': np.int64})
     basil_w_pred.index = test_ids
     basil_w_pred.to_csv(pred_fp)
+    print(basil_w_pred.pred)
     test_mets, test_perf = my_eval(basil_w_pred.label, basil_w_pred.pred, name='majority vote',
                                    set_type='test')
     test_results = {'model': f'{CONTEXT_TYPE}_{CAM_TYPE}_{SEED_VAL}', 'fold': fold["name"], 'seed': SEED_VAL,
