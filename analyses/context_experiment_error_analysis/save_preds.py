@@ -177,7 +177,7 @@ NUM_LABELS = 2
 SAMPLER = args.sampler
 
 # set directories
-TASK_NAME = [args.task_name] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
+TASK_NAME = [args.task_name] if args.task_name else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
