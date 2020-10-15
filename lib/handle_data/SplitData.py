@@ -409,6 +409,7 @@ class Split:
             if 'label' not in features:
                 features += ['label']
 
+            '''
             existing_ids = self.input_dataframe.index.tolist()
             existing_ids = set(self.input_dataframe.index.tolist())
             all = test_sent_ids + train_sent_ids[0] + dev_sent_ids[0]
@@ -418,7 +419,8 @@ class Split:
             all = set(all)
             diff = [el for el in test_sent_ids if el not in existing_ids]
             print(len(diff), diff)
-
+            '''
+            print(features, self.input_dataframe.columns)
 
             test_df = self.input_dataframe.loc[test_sent_ids, features ] #+ ['label']
 
