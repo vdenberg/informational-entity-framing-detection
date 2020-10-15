@@ -119,7 +119,7 @@ def get_weights_matrix(data, emb_fp, emb_dim=None):
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument('-name', '--task_name', help='Task name', type=str, default='testing_new_coverage')
+parser.add_argument('-name', '--task_name', help='Task name', type=str, default='')
 
 # DATA PARAMS
 parser.add_argument('-spl', '--split_type', help='Options: fan|berg|both', type=str, default='berg')
@@ -146,11 +146,13 @@ parser.add_argument('-sv', '--seed_val', type=int, default=34)
 args = parser.parse_args()
 
 seeds = {'article':{
-            'cim': [34, 68, 102, 170, 204],
-            'cim*': [34, 68, 102, 170, 204]},
+            'cim': {'seeds': [34, 68, 102, 170, 204]},
+            'cim*': {'seeds': [34, 68, 102, 170, 204]}
+                  },
          'coverage': {
-            'cim': [11, 22, 33, 44, 55],
-            'cim*': [11, 22, 33, 44, 55]}
+            'cim': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage'},
+            'cim*': {'seeds': [11, 22, 33, 44, 55], 'task_name': 'testing_new_coverage'}
+                    }
         }
 
 # set to variables for readability
@@ -169,16 +171,12 @@ CAM_TYPE = args.cam_type
 BASE = args.base
 HIDDEN = args.hidden_size if CAM_TYPE == 'cam' else args.hidden_size * 2
 BILSTM_LAYERS = args.bilstm_layers
-seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]
+seeds = [args.seed_val] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['seeds']
 NUM_LABELS = 2
 SAMPLER = args.sampler
 
 # set directories
-if args.task_name:
-    TASK_NAME = args.task_name #'cim_ensemble_tapt'
-else:
-    print("Please provide task name")
-    exit(0)
+TASK_NAME = [args.task_name] if args.seed_val else seeds[CONTEXT_TYPE][CAM_TYPE]['task_name']
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
