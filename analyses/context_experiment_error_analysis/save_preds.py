@@ -335,30 +335,6 @@ for fold in folds:
     fold['dev_batches'] = [to_batches(to_tensors(split=voter, device=device), batch_size=BATCH_SIZE, sampler=SAMPLER) for voter in fold['dev']]
     fold['test_batches'] = to_batches(to_tensors(split=fold['test'], device=device), batch_size=BATCH_SIZE, sampler=SAMPLER)
 
-logger.info("============ LOAD EMBEDDINGS =============")
-logger.info(f" Embedding type: {EMB_TYPE}")
-
-"""
-for fold in folds:
-    weights_matrices = []
-    for v in range(len(fold['train'])):
-        # read embeddings file
-        if EMB_TYPE not in ['use', 'sbert']:
-            # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
-            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-            # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-            # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
-            # embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
-            if BASE == 'basil_tapt':
-                s = 22
-            else:
-                s = 11
-            embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_{s}_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
-            weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
-            logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
-            weights_matrices.append(weights_matrix)
-    fold['weights_matrices'] = weights_matrices
-"""
 
 # =====================================================================================
 #                    START ANALYSIS
@@ -382,6 +358,28 @@ for SEED_VAL in seeds:
     # LOAD MODEL
     FORCE = False
     if not os.path.exists(pred_fp) or FORCE:
+
+        logger.info("============ LOAD EMBEDDINGS =============")
+        logger.info(f" Embedding type: {EMB_TYPE}")
+        weights_matrices = []
+        for v in range(len(fold['train'])):
+            # read embeddings file
+            if EMB_TYPE not in ['use', 'sbert']:
+                # embed_fp = f"data/bert_231_bs16_lr2e-05_f{fold['name']}_basil_w_{EMB_TYPE}.csv"
+                # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+                # embed_fp = f"data/rob_base_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+                # embed_fp = f"data/rob_{BASE}_sequential_34_bs16_lr1e-05_f{fold['name']}_basil_w_{EMB_TYPE}"
+                # embed_fp = f"data/rob_{BASE}_sequential_11_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
+                if BASE == 'basil_tapt':
+                    s = 22
+                else:
+                    s = 11
+                embed_fp = f"data/embeddings/rob_{BASE}/rob_{BASE}_sequential_{s}_bs16_lr1e-05_f{fold['name']}_v{v}_basil_w_{EMB_TYPE}"
+                weights_matrix = get_weights_matrix(data, embed_fp, emb_dim=EMB_DIM)
+                logger.info(f" --> Loaded from {embed_fp}, shape: {weights_matrix.shape}")
+                weights_matrices.append(weights_matrix)
+        fold['weights_matrices'] = weights_matrices
+        
         for fold in folds:
             if not os.path.exists(pred_fp) or FORCE:
                 model_name = f"{CAM_TYPE}_base_{SEED_VAL}_h1200_bs32_lr0.001_f{fold['name']}_v0"
