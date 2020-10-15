@@ -197,7 +197,8 @@ TASK_NAME = args.task_name if args.task_name else info[CONTEXT_TYPE][CAM_TYPE]['
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
-# ArtCIM: ccam+_base_34_h1200_bs32_lr0.001_f1
+# ArtCIM: models/checkpoints/cam/article/subset1.0/cross4bert_article/cam+_base_204_h1200_bs32_lr0.001_f1_v0
+# and models/checkpoints/cam/cross4bert/berg/article/subset1.0/cam+_base_34_h1200_bs32_lr0.001_f1
 # ArtCIM*: doesnt exist anymore
 # CovCIM: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage}
 # CovCIM*: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage_cim*
@@ -395,10 +396,8 @@ for SEED_VAL in seeds:
             preds, losses = cam_cl.produce_preds(fold, model_name=model_name)
             dev_df = fold['test']
             dev_df['pred'] = preds
-            print(pred_df.columns)
-            print(dev_df.columns)
-            pred_df = pred_df.append(dev_df, ignore_index=True)
-    print(pred_df)
+            pred_df = pred_df.append(dev_df)
+
     pred_df.to_csv(pred_fp)
 
     # load predictions
