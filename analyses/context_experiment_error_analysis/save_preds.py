@@ -428,7 +428,7 @@ test = test.describe()
 test_m = test.loc['mean'].round(2).astype(str)
 test_std = test.loc['std'].round(2).astype(str)
 result = test_m + ' \pm ' + test_std
-print(f"\n{setting_name} results - {CONTEXT_TYPE}:")
+print(f"\n{TASK_NAME} results:")
 print(main_results_table.seed.unique())
 print(result)
 
