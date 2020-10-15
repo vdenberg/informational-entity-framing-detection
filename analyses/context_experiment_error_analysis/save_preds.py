@@ -180,7 +180,7 @@ else:
     print("Please provide task name")
     exit(0)
 
-DATA_DIR = f'data/sent_clf_backup/cam_input/{CONTEXT_TYPE}'
+DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
 CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
