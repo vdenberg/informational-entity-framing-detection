@@ -197,12 +197,14 @@ TASK_NAME = args.task_name if args.task_name else info[CONTEXT_TYPE][CAM_TYPE]['
 
 DATA_DIR = f'data/sent_clf/cam_input/{CONTEXT_TYPE}'
 DATA_FP = os.path.join(DATA_DIR, 'cam_basil.json')
-# ArtCIM: models/checkpoints/cam/article/subset1.0/cross4bert_article/cam+_base_204_h1200_bs32_lr0.001_f1_v0
-# and models/checkpoints/cam/cross4bert/berg/article/subset1.0/cam+_base_34_h1200_bs32_lr0.001_f1
+# ArtCIM: models/checkpoints/cam/cross4bert/berg/article/subset1.0/
 # ArtCIM*: doesnt exist anymore
 # CovCIM: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage}
 # CovCIM*: models/checkpoints/cam/coverage/subset1.0/testing_new_coverage_cim*
-CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+if CONTEXT_TYPE == 'coverage':
+    CHECKPOINT_DIR = f'models/checkpoints/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
+else:
+    CHECKPOINT_DIR = f'models/checkpoints/cam/cross4bert/berg/article/subset1.0/'
 REPORTS_DIR = f'reports/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
 TABLE_DIR = f"reports/cam/tables/{TASK_NAME}"
 FIG_DIR = f'figures/cam/{CONTEXT_TYPE}/subset{SUBSET}/{TASK_NAME}'
