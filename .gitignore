@@ -9,7 +9,6 @@ __pycache__/
 create_data/emnlp19-BASIL/*
 *.DS_Store
 models/checkpoints/bert_for_embed/
-reports/bert_baseline/results_table_before.csv
+reports/
 data/*.csv
-experiments/sent_clf/ssc/tmp_output_dir/
-experiments/sent_clf/ssc/pretrained_models/
+experiments/adapt_dapt_tapt/pretrained_models/

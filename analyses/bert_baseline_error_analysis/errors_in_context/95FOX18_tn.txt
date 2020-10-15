@@ -1,0 +1,83 @@
+--- start HPO----
+He may have a personal fondness for her, but Sen. John McCain (R-Ariz.) suggested Thursday that Hillary Clinton’s exclusive use of personal email while serving as secretary of state was hypocritical. 
+“This is the same individual that just excoriated the Bush administration for supposedly hiding communications within the administration,” McCain said on MSNBC’s “Andrea Mitchell Reports.”
+While serving as a senator from New York in 2007, Clinton criticized the Bush administration for its "secrecy," according to The Hill.
+"We know about the secret wiretaps, we know about the secret military tribunals, the secret White House email accounts," she said.
+"It’s a stunning record of secrecy and corruption, of cronyism run amok."
+Clinton, who is often described as the Democratic presidential frontrunner for 2016, has faced scrutiny since Monday when The New York Times reported that she may have violated federal records law by using a personal email account for all of her work messages as secretary of state.
+She served in that position from 2009 to 2013.
+Democrats came to her defense, and other media outlets soon pointed out that the rules against using personal email were not relayed to government officials until 2014.
+But likely GOP presidential candidate Jeb Bush suggested that the use of personal email demonstrated a lack of transparency.
+Clinton responded to the controversy on Wednesday, tweeting that she had asked the State Department to make her private emails publicly available.
+While on Mitchell's show, McCain also raised the concern that there's no way of knowing if all of Clinton's emails have been saved, since they were not originally retained by the government.
+"The question that I think's gonna rise over time is, how can we be confident that once she carries out what she tweeted -- that she wants all the emails known -- how are we gonna know that?
+How are we gonna have verification of that?" McCain said.
+"So I think this is serious. And I'm willing to give her or anyone who defends her the benefit of defending it or explaining it, but on its face, it seems to be rather serious."
+--- end HPO----
+
+--- start NYT----
+WASHINGTON — As State Department lawyers sifted last summer through a new batch of documents related to the Benghazi attacks, they repeatedly saw something that caught their attention: emails sent to and from a personal account for Hillary Rodham Clinton.
+The lawyers, according to current and former State Department officials, were working to respond to a request from a specially appointed House committee investigating the 2012 attacks in Libya.
+But they noticed that among the 15,000 documents they examined, there were no emails to or from an official departmental account for Mrs. Clinton.
+“This all raised the question to us: What else are we missing, and what do we need to comply” with the request, said one official briefed on the matter.
+Mrs. Clinton’s spokesman and the State Department have cast her decision to hand over her emails as motivated by efforts to update the department’s record management system.
+“When the department asked former secretaries last year for help ensuring their emails were in fact retained, we immediately said yes,” Nick Merrill, the Clinton spokesman, said on Sunday.
+But it was the review of Benghazi-related documents last summer that, within the State Department, set off the chain of events leading to the public disclosure this week of Mrs. Clinton’s use of a private email account, according to the current and former department officials.
+The decision to ask Mrs. Clinton for her emails went all the way to Secretary of State John Kerry’s chief of staff, who, along with officials working on the response to the Benghazi requests, signed off on it.
+Beginning in August, senior State Department officials held negotiations with Mrs. Clinton’s lawyers and advisers to gain access to her personal email records.
+At one point, her advisers met face-to-face with department officials in Washington.
+In October, the State Department sent a letter to Mrs. Clinton and all former secretaries of state back to Madeleine K. Albright, seeking emails and other documents in their possession that related to their government work.
+Finally, in December, dozens of boxes filled with 50,000 pages of printed emails from Mrs. Clinton’s personal account were delivered to the State Department.
+Those documents were then examined by department lawyers, who found roughly 900 pages pertaining to the Benghazi attacks.
+Three weeks ago, the State Department handed over the Benghazi emails to the House Select Committee on Benghazi, which is led by Representative Trey Gowdy, Republican of South Carolina.
+Mrs. Clinton’s spokesman, Mr. Merrill, did not respond to an email seeking comment.
+A senior State Department official said, “It would be oversimplified and inaccurate to draw the conclusion that the preservation of her records was done for one purpose.”
+Late Wednesday night, two days after The New York Times first reported that she had exclusively used a personal email account as secretary of state, Mrs. Clinton announced that she had asked the State Department to release those communications.
+“I want the public to see my email,” Mrs. Clinton wrote in a Twitter post shortly before midnight, addressing the issue publicly for the first time.
+“I asked State to release them.
+They said they will review them for release as soon as possible.”
+Mrs. Clinton’s decision leaves it to the State Department to determine whether parts of her correspondence should be redacted if they contain information that could be damaging to national security, or for other reasons.
+That process could take several months, officials said, because different parts of the State Department must weigh in on whether information should be redacted.
+Other government agencies, like the C.I.A. and the Defense Department, may also need to be consulted on any information related to them.
+While the State Department has said there does not appear to be any classified material in Mrs. Clinton’s emails, officials said on Thursday that they needed to go through the trove again to determine whether it contained any “sensitive” information.
+Sensitive information is different from classified information.
+It can be personal data, like Social Security numbers, or information on matters that other countries consider classified or important to their national security.
+One State Department official said that if many lawyers were dedicated to the project, it could be completed in several weeks.
+Since the disclosure that Mrs. Clinton used the private account, a spokeswoman for the State Department has described the request from Mrs. Clinton as part of the department’s larger efforts to improve its record-keeping.
+The spokeswoman, Marie Harf, was asked on Tuesday whether there was any connection between the requests from Congress and the decision to ask the former secretaries of state for emails from their personal accounts.
+“The letter actually went before we got the request from the select committee,” Ms. Harf said of the request to the former secretaries.
+“It went in October of 2014 — that was before we had gotten a request from the committee — as part of our records-maintenance upgrading and the process we go through.”
+Ms. Harf said that Mrs. Clinton was the only secretary of state who had sent back copies of emails.
+--- end NYT----
+
+--- start FOX (w error) ----
+Former Secretary of State Hillary Clinton used a personal email account to exclusively conduct official business during her time at the State Department, a move that raises questions about access to the full archive of her correspondence, as well as the possibility that she violated federal law requiring official messages to be retained for the record.
+The existence of the account was discovered by the House select committee investigating the deadly 2012 attacks on the U.S. Consulate in Benghazi, Libya, and was first reported by The New York Times.
+Clinton did not even have a government email address during her tenure as America's top diplomat, which lasted from 2009 to 2013, and The Times reports that her aides took no action to preserve her emails on department servers, as required by the Federal Records Act.
+Instead, the paper reports, Clinton's advisers selected which of her emails to turn over to the State Department for archival purposes after going through tens of thousands of pages of correspondence.
+The department said late Monday that it had received 55,000 pages of Clinton's emails as part of a request made to previous secretaries of state to turn over any official documents they may have had in their possession.
+It is not clear how many total emails from that period were in Clinton's personal account, nor is it clear how Clinton's advisers decided which emails to hand over to the State Department.
+Nick Merrill, a Clinton spokesman, said the former secretary of state expected that emails to State Department officials -- which she sent to department accounts -- would be preserved.
+"When the Department asked former Secretaries last year for help ensuring their emails were in fact retained, we immediately said yes," he said.
+"Both the letter and spirit of the rules permitted State Department officials to use non-government email, as long as appropriate records were preserved."
+The fate of emails to foreign leaders, private citizens, and non-State Department officials is unclear.
+"The State Department has long had access to a wide array of Secretary Clinton's records -- including emails between her and Department officials with state.gov accounts," State Department Deputy Spokesperson Marie Harf told Fox News late Monday.
+Harf added that the department turned over about 300 emails to the Benghazi select committee, and noted that Clinton's successor as secretary of state, John Kerry, "is the first ... to rely primarily on a state.gov email account."
+According to the Times, however, while past secretaries of state often used personal email, updated regulations required such emails to be preserved.
+Clinton and her aides reportedly did not follow that requirement at the time -- until her office turned over documents.
+Republicans seized on the developments on Tuesday.
+Rep. Darrell Issa, R-Calif., former chairman of the House oversight committee, said in a statement that Clinton "failed" to follow records law.
+"The use of a personal e-mail address to skirt public records laws, aside from failing to meet the security standards one would expect of the nation's top diplomat, enabled Clinton to shield her official communications from scrutiny by the media and the American public," he said.
+White House Press Secretary Josh Earnest was peppered with questions at Tuesday's briefing.
+(TN) He said the administration policy is that employees "should use their official email accounts when they're conducting official government business."
+He said personal emails also should be preserved and said Clinton's team responded to the request by the department seeking them.
+Earnest would not say whether the White House believes Clinton broke the law.
+Records officials interviewed by The Times expressed grave concern over Clinton's practice, saying it represents a severe ethical breach and noting that personal email accounts are far less secure than official ones.
+Jason Baron, a former director of litigation at the National Archives, told the paper he found it "very difficult to conceive of a scenario — short of nuclear winter — where an agency would be justified in allowing its cabinet-level head officer to solely use a private email communications channel for the conduct of government business."
+Baron added that the use of private e-mail accounts is meant to be reserved only for emergencies, such as when a department's server is not working or compromised.
+However, The Times reports that the imposition of penalties for not complying with federal record-keeping requirements are rare because the National Archives has so few enforcement mechanisms.
+The report has drawn heavy criticism from Republicans, including at least one potential challenger in the 2016 presidential race.
+Former Florida Gov. Jeb Bush, who released 250,000 emails from his gubernatorial tenure this past December, tweeted about the contrast between his disclosures and Clinton's secrecy.
+Clinton is widely believed to be the front-runner for the Democratic nomination in 2016.
+The Wall Street Journal reported late Sunday that she was expected to formally launch her candidacy next month.
+--- end FOX (w error) ----

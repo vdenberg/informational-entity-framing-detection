@@ -1,0 +1,103 @@
+--- start FOX----
+The Obama administration found itself defending -- and beginning to explain -- yet another surveillance effort after leaked documents revealed information about two secret National Security Agency intelligence-gathering programs.
+On top of a Guardian newspaper report that revealed how authorities were collecting phone records from millions, a Washington Post report detailed another program that scours major Internet companies including Google and Facebook for data.
+A former senior NSA official confirmed to Fox News that the program was started in 2007 by the FBI and NSA and allows them to tap into top U.S. Internet companies to pull audio, video and other data.
+While civil liberties groups cried foul over the program, Director of National Intelligence James Clapper issued a statement late Thursday decrying the leak of the materials.
+He called the disclosure of the program that allows the NSA to collect communications data from Internet companies "reprehensible" and said the phone-records monitoring leak could cause harm to the nation's intelligence gathering activities.
+At the same time, he took the rare step of moving to declassify information about the programs as he sought to defend them against criticism.
+“The article omits key information regarding how a classified intelligence collection program is used to prevent terrorist attacks and the numerous safeguards that protect privacy and civil liberties," he said of the Guardian story.
+Clapper also said the government was "prohibited from indiscriminately sifting through the telephony metadata acquired under the program.”
+All information acquired, he said, “is subject to strict, court-imposed restrictions on review and handling.
+The court only allows the data to be queried when there is a reasonable suspicion, based on specific facts, that the particular basis for the query is associated with a foreign terrorist organization.“
+Several hours earlier, a senior administration official also pushed back, saying the Guardian article and Washington Post article about the Internet mining refers to collection under a law that "does not allow the targeting of any U.S. citizen or of any person located within the United States.”
+It was not immediately clear how the official defined “targeting.”
+“The program is subject to oversight by the Foreign Intelligence Surveillance Court, the Executive Branch, and Congress,” the official said.
+“It involves extensive procedures, specifically approved by the court, to ensure that only non-U.S. persons outside the U.S. are targeted, and that minimize the acquisition, retention and dissemination of incidentally acquired information about U.S. persons.”
+A former NSA official told Fox News the FBI and National Security Agency (NSA) have been tapping into leading U.S. Internet companies to pull audio, video and photographs.
+According to the official, the program began in 2007 and is in the second phase.
+Metadata from the companies is used to identify suspicious individuals and the secondary search goes into content.
+The official told Fox News that the Utah Data Center is likely a repository for this material.
+The classified program is code-named PRISM, the Washington Post reported, and has not been disclosed publicly before.
+Members of Congress who are aware of the program were reportedly bound by oath to keep it confidential.
+According to slides from an internal presentation intended for NSA senior analysts and obtained by the Washington Post, the program accounts for nearly one in seven intelligence reports.
+The companies that participate knowingly in the program are Microsoft, Yahoo, Google, Facebook, PalTalk, AOL, Skype, YouTube and Apple, the Washington Post reports.
+A number of the Internet companies issued statements Thursday night saying they only complied when legally bound to do so.
+"Even when the system works just as advertised, with no American singled out for targeting, the NSA routinely collects a great deal of American content," the Washington Post report said.
+"That is described as "incidental," and it is inherent in contact chaining, one of the basic tools of the trade."
+To be immune from lawsuits, companies like Yahoo and AOL are reportedly obliged to accept a directive from the attorney general and national intelligence director to open their service to the FBI's Data Intercept Technology Unit, which acts as a liaison between the companies and the NSA.
+According to the slides, there has been “continued exponential growth in tasking to Facebook and Skype."
+"With a few clicks and an affirmation that the subject is believed to be engaged in terrorism, espionage or nuclear proliferation, an analyst obtains full access to Facebook’s 'extensive search and surveillance capabilities against the variety of online social networking services,'" the Washington Post reports.
+Skype can reportedly be monitored for audio when one end of a call is a conventional telephone and also can be monitored for video, chat and file transfers when users connect just by a computer.
+Google services that can be monitored include Gmail, voice and video chat, Google Drive files, and search terms.
+A spokesperson for Google says the company "cares deeply" about the security of users' data.
+"We disclose user data to government in accordance with the law, and we review all such requests carefully," the spokesperson said.
+"From time to time, people allege that we have created a government 'back door' into our systems, but Google does not have a 'back door' for the government to access private user data."
+"Protecting the privacy of our users and their data is a top priority for Facebook," the company's chief security officer Joe Sullivan said in a statement.
+"We do not provide any government organization with direct access to Facebook servers.
+When Facebook is asked for data or information about specific individuals, we carefully scrutinize any such request for compliance with all applicable laws, and provide information only to the extent required by law."
+A Microsoft spokesperson said that the company only provides customer data after receiving a legally binding order or subpoena.
+"In addition we only ever comply with orders for requests about specific accounts or identifiers," the spokesperson said.
+"If the government has a broader voluntary national security program to gather customer data we don't participate in it."
+--- end FOX----
+
+--- start HPO----
+WASHINGTON -- President Barack Obama on Friday forcefully defended revelations that the National Security Agency is collecting phone records and electronic communications, saying that Congress was fully briefed and the programs are limited in scope.
+"The programs are secret in the sense that they are classified.
+They are not secret, in that every member of Congress has been briefed," he said during a speech in San Jose, Calif.
+"These are programs that have been authored by large bipartisan majorities repeatedly since 2006."
+"Your duly elected representatives have consistently been informed," he said.
+News outlets revealed this week that vast spying programs began under President George W. Bush and have continued under Obama.
+The Guardian reported Wednesday that the National Security Agency had obtained a court order to collect phone records from Verizon Wireless customers, while The Washington Post reported Thursday of the existence of a program launched in 2007 called PRISM, which tracks information from nine leading U.S. Internet companies: Microsoft, Yahoo, Google, Facebook, AOL, YouTube, Apple, PalTalk and Skype.
+In response to a question after his speech, Obama defended the programs as essential to combating terrorist threats.
+"They may identify potential leads with respect to folks who might engage in terrorism," he said.
+He also argued that some have overstated the impact of the programs.
+"Some of the hype we've been hearing over the past day or so -- nobody has listened to the content of people's phone calls," he said.
+"I welcome this debate and I think it's healthy for our democracy," he continued.
+"I think it's a sign of maturity, because probably five years ago, six years ago, we might not have been having this debate."
+Obama portrayed the programs as a trade-off between security and civil liberties.
+"I think it's important to recognize that you can't have 100 percent security, and also then have 100 percent privacy and zero inconvenience.
+We're going to have to make some choices as a society," he said.
+He also expressed his displeasure that the domestic spying programs' existence was leaked to the press.
+"I don't welcome leaks," he said.
+"There's a reason these programs are classified."
+The president's full-throated defense of the programs, albeit with the qualification that he welcomes debate, is unlikely to quell the outrage over the revelations.
+Obama ran as an antidote to Bush's policies in 2008, but the reports reveal that he has continued many of them, leading to concerns over the reach of the national security state.
+Obama went on to defend those who operated the programs as "professionals."
+"In the abstract, you can complain about 'Big Brother' and how this is a potential program run amok.
+But when you actually look at the details, then I think we've struck the right balance," he said.
+--- end HPO----
+
+--- start NYT (w error) ----
+WASHINGTON — The Obama administration tried Saturday to marshal new evidence in defense of its collection of private Internet and telephone data, arguing that a secret program called Prism is simply an “internal government computer system” designed to sort through court-supervised collection of data, and that Congress has been briefed 13 times on the programs since 2009.
+(TN) After rushing to declassify some carefully selected descriptions of the programs, James R. Clapper Jr., the director of national intelligence, conceded for the first time that the Prism program existed.
+But in a statement, after denouncing the leak of the data to The Guardian and The Washington Post, Mr. Clapper insisted it was “not an undisclosed collection or data mining program.”
+Instead, he said it was a computer system to “facilitate” the collection of foreign intelligence that had been authorized by Congress.
+Mr. Clapper also insisted that the government “does not unilaterally obtain information from the servers” of telephone and Internet providers, saying that information is turned over only under court order, when there is a “documented, foreign intelligence purpose for acquisition” of the data.
+He appeared to be attempting to push back against early reports that the government had direct access to the huge computer servers at Google, Microsoft, Facebook and similar companies.
+Those firms have denied they give the government a “back door” to their systems.
+But they acknowledge handing over material when ordered to do so by the Foreign Intelligence Surveillance Court, though they have not described the mechanism for complying with those orders.
+It appears the companies use some kind of electronic drop box, in which they place the material, so that the government can then harvest the information.
+The national intelligence director’s rare Saturday statement was notable for what it omitted: any description of other means the government may use to intercept Internet information directly from fiber optic cables or satellite systems even before or after it reaches those Internet companies.
+A new report in The Guardian, published online on Saturday, cited another document that showed that in March 2013 there were 97 billion pieces of data collected from networks worldwide; about 14 percent of it was from Iran, much was from Pakistan and about 3 percent came from inside the United States, though some of that may have been foreign data traffic routed through American-based servers.
+Meanwhile, senior Obama administration officials, including the directors of the Federal Bureau of Investigation and of national intelligence, have held 13 classified hearings and briefings for members of Congress since 2009 to explain the broad authority they say they have to sweep up electronic records for national security purposes, a senior administration official said Saturday.
+The administration, by disclosing the briefings, sought to push back on claims by Democrats and Republicans in Congress that they were either not aware of programs to mine vast amounts of Internet data and business telephone records or were insufficiently briefed on the details.
+Lawmakers said that what they knew was vague and broad — and that strict rules of classification prevented them from truly debating the programs or conducting proper oversight.
+In separate but identical letters sent on Oct. 19, 2011, Assistant Attorney General Ronald Weich told two of Congress’s most outspoken critics of the efforts, Senators Ron Wyden of Oregon and Mark Udall of Colorado, both Democrats, that in December 2009 and February 2011 the Justice Department and intelligence agencies provided a classified document to Congress describing the surveillance efforts in detail.
+The letter said the House and Senate Intelligence Committees had been briefed “on these operations multiple times and have had access to copies of the classified” orders and opinions of the secret Foreign Intelligence Surveillance Court.
+Members of the committee were invited to share the information with other lawmakers.
+Broader briefings were held in 2011 before the reauthorization of the Patriot Act, the post-Sept. 11 law that authorized much of the surveillance.
+“Against this backdrop, we do not believe the executive branch is operating pursuant to ‘secret law’ or ‘secret opinions of the Department of Justice,’ ” Mr. Weich wrote.
+“Rather, the intelligence community is conducting court-authorized intelligence activities pursuant to a public statute, with the knowledge and oversight of Congress and the Intelligence Committees of both houses.”
+On Friday, Mr. Udall and Mr. Wyden released a joint statement repeating that they had “long been concerned about the degree to which this collection has relied on ‘secret law.’ ”
+“Senior administration officials have stated on multiple occasions that the Patriot Act’s ‘business records’ authority is ‘analogous to a grand jury subpoena,’ ” they said.
+They added that “multiple senior officials have stated that U.S. intelligence agencies do not collect information or dossiers on ‘millions of Americans,’ ” assertions that they believe have been contradicted by revelations of Internet data mining and a court order asking a Verizon subsidiary to turn over logs of telephone calls.
+“Now that the fact of bulk collection has been declassified, we believe that more information about the scale of the collection, and specifically whether it involves the records of ‘millions of Americans,’ should be declassified as well,” they said.
+The list of briefings begins on May 12, 2009, with a classified hearing of the Senate Intelligence Committee involving Gen. Keith B. Alexander, the head of the United States Cyber Command, and David S. Kris, assistant attorney general for national security.
+On Feb. 14, 2011, all senators were offered the opportunity to discuss the broad authority under the Patriot Act with the director of national intelligence, Mr. Clapper; the F.B.I. director, Robert S. Mueller III; and General Alexander.
+Mr. Mueller spoke to the House Republican Conference on May 13, 2011, and to the House Democratic Caucus on May 24, 2011.
+On Feb. 8, 2011, Senators Dianne Feinstein of California, the chairwoman of the Intelligence Committee, and Saxby Chambliss of Georgia, the ranking Republican on the panel, invited every senator to a briefing with Mr. Clapper and Attorney General Eric H. Holder Jr. to discuss expiring provisions of the Foreign Intelligence Surveillance Act of 1978.
+The provisions — “one on roving authority for electronic surveillance and the other on the acquisition of business records that are relevant to investigations to protect against international terrorism or espionage” — were added to the 1978 law by the Patriot Act.
+But Senator Richard J. Durbin of Illinois, the Senate’s No. 2 Democrat, draws a distinction between the holding of such briefings and the informed consent of Congress.
+Very few lawmakers avail themselves of such briefings, he suggested, and only the most senior leaders are kept fully abreast of intelligence activities.
+“You can count on two hands the number of people in Congress who really know,” he said in an interview on Friday.
+--- end NYT (w error) ----

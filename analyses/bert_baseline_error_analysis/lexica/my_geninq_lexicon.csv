@@ -1,0 +1,2318 @@
+Entry,verb,stemlem,Positiv,Negativ,Strong,Weak,Active,Passive,Defined,commonness
+ABANDON,abandon,abandon,,Negativ,,Weak,,,|,
+ABATE,abate,abat,,Negativ,,,,Passive,|,
+ABDICATE,abdicate,abdic,,Negativ,,Weak,,Passive,|,
+ABHOR,abhor,abhor,,Negativ,,,,Passive,|,
+ABIDE,abide,abid,Positiv,,,,Active,,|,
+ABOLISH,abolish,abolish,,Negativ,Strong,,Active,,|,
+ABOUND,abound,abound,Positiv,,,,,Passive,|,
+ABSCOND,abscond,abscond,,Negativ,,Weak,Active,,|,
+ABSENT#2,absent,absent,,,,,,Passive,,
+ABSOLVE,absolve,absolv,Positiv,,,,Active,,|,
+ABSORB#2,absorb,absorb,,,,,,,,
+ABSTAIN,abstain,abstain,,,,,,,,
+ABUSE#2,abuse,abus,,Negativ,Strong,,Active,,|,
+ACCEDE,accede,acced,Positiv,,,,Active,,|,
+ACCELERATE,accelerate,acceler,,,Strong,,Active,,|,
+ACCENTUATE,accentuate,accentu,Positiv,,,,Active,,|,
+ACCEPT,accept,accept,Positiv,,,,,Passive,"| verb: To take, receive or accede to something",
+ACCOMMODATE,accommodate,accommod,Positiv,,,,Active,,|,
+ACCOMPANY#1,accompany,accompani,,,,,Active,,"| 59% verb-adj: To go along in company with, to escort; ""accompanying""--  attendant (no adjective occurrences this sample)",59.0
+ACCOMPLISH,accomplish,accomplish,Positiv,,Strong,,Active,,| verb: To bring to its goal or conclusion,
+ACCOST,accost,accost,,Negativ,,,Active,,|,
+ACCOUNT#5,account,account,,,,,Active,,"| 11% verb: To explain, dispose of (usually with ""for"")",11.0
+ACCRUE,accrue,accru,Positiv,,,,Active,,|,
+ACCUMULATE,accumulate,accumul,,,,,Active,,|,
+ACCUSE#2,accuse,accus,,Negativ,,,,,|,
+ACCUSTOM#2,accustom,accustom,,,,,,Passive,|,
+ACHE,ache,ach,,Negativ,,,,Passive,|,
+ACHIEVE,achieve,achiev,Positiv,,Strong,,Active,,| verb: To accomplish or carry through,
+ACKNOWLEDGE,acknowledge,acknowledg,,,,,,,|,
+ACQUAINT,acquaint,acquaint,Positiv,,,,,,|,
+ACQUIRE#2,acquire,acquir,,,Strong,,Active,,|,
+ACQUIT,acquit,acquit,Positiv,,,,,,|,
+ACROSS#3,across,across,,,,,,,"| 8% idiom-verb: ""Come across""--discover, encounter",8.0
+ACT#1,act,act,,,Strong,,Active,,"| 52% verb: To do something, to operate, perform a function; to feign (2),  to perform in the theatre (0)",52.0
+ADAPT,adapt,adapt,,,Strong,,Active,,|,
+ADD#2,add,add,,,,,,,"| 87% verb: To combine with so as to increase number, size, importance, completeness",87.0
+ADDRESS#1,address,address,,,,,Active,,| 41% verb: To direct spoken or written communication to,41.0
+ADHERE,adhere,adher,,,,,,Passive,|,
+ADJUST#1,adjust,adjust,,,Strong,,,,| 77% verb: To adapt,77.0
+ADMINISTER,administer,administ,,,Strong,,Active,,|,
+ADMIRE,admire,admir,Positiv,,,,,Passive,|,
+ADMIT#1,admit,admit,Positiv,,,Weak,,Passive,"| 63% verb: To acknowledge, confess, agree",63.0
+ADMIT#2,admit,admit,Positiv,,,,,Passive,"| 33% verb: To grant entry, membership or access to something",33.0
+ADMONISH,admonish,admonish,,Negativ,Strong,,Active,,|,
+ADOPT#2,adopt,adopt,,,,,Active,,"| 96% verb: To choose or accept, take as one's own child (2)",96.0
+ADORE,adore,ador,Positiv,,,,Active,,|,
+ADORN,adorn,adorn,Positiv,,Strong,,Active,,|,
+ADULTERATE,adulterate,adulter,,Negativ,,,,,|,
+ADVANCE#1,advance,advanc,Positiv,,Strong,,Active,,"| 47% verb: To move or bring forward, improve, promote",47.0
+ADVISE,advise,advis,,,,,,,|,
+ADVOCATE#2,advocate,advoc,,,Strong,,Active,,|,
+AFFECT,affect,affect,,,,,Active,,| verb: To produce a change in,
+AFFILIATE,affiliate,affili,Positiv,,,,Active,,|,
+AFFIRM,affirm,affirm,Positiv,,Strong,,,,|,
+AFFIX,affix,affix,Positiv,,,,Active,,|,
+AFFLICT,afflict,afflict,,Negativ,Strong,,Active,,|,
+AFFORD#1,afford,afford,,,Strong,,,,| 74% verb: To bear or meet the expense of,74.0
+AGE#3,age,age,,,,,,,| 0% verb: To grow old,0.0
+AGGRAVATE,aggravate,aggrav,,Negativ,Strong,,Active,,|,
+AGGRIEVE,aggrieve,aggriev,,Negativ,,,Active,,|,
+AGITATE,agitate,agit,,Negativ,Strong,,Active,,|,
+AGONIZE,agonize,agon,,Negativ,,,,Passive,|,
+AGREE#1,agree,agre,,,,,,,"| 96% verb: To be of one mind, harmonize in opinion or feeling, give consent, assent",96.0
+AID#1,aid,aid,Positiv,,Strong,,Active,,| 16% verb: To give help,16.0
+AIL,ail,ail,,Negativ,,,,Passive,|,
+AIM#2,aim,aim,,,,,Active,,"| 24% verb: To direct at or to, to try for, to direct one's efforts towards;  rarely in sense of weapons (3)",24.0
+AIN'T,ain't,be,,,,,,,|,
+AIR#4,air,air,,,Strong,,,,"| 1% verb: To expose to air (0), to make known, publicize (1)",1.0
+ALARM#2,alarm,alarm,,Negativ,,,Active,,|,
+ALIENATE,alienate,alien,,Negativ,,,,,|,
+ALIGN#2,align,align,,,,,,,,
+ALLEDGE,alledge,alledg,,,,,,,,
+ALLEGE,allege,alleg,,Negativ,,Weak,,,|,
+ALLEVIATE,alleviate,allevi,Positiv,,,,Active,,|,
+ALLIED,allied,alli,Positiv,,Strong,,,,|,
+ALLOT,allot,allot,,,,,,,|,
+ALLOW#1,allow,allow,Positiv,,,,,Passive,| 97% verb: Permit,97.0
+ALLY#2,ally,alli,,,,,,,|,
+ALTER,alter,alter,,,Strong,,Active,,|,
+ALTERNATE#2,alternate,altern,,,,,Active,,|,
+AMAZE#2,amaze,amaz,,,,,,,|,
+AMBUSH#2,ambush,ambush,,Negativ,Strong,,Active,,|,
+AMELIORATE,ameliorate,amelior,Positiv,,,,Active,,|,
+AMEND#2,amend,amend,,,,,Active,,|,
+AMOUNT#2,amount,amount,,,,,,,"| 8% verb: Add up (to)--""he won't amount to much""",8.0
+AMPLIFY,amplify,amplifi,Positiv,,Strong,,Active,,|,
+AMPUTATE,amputate,amput,,Negativ,,,Active,,|,
+AMUSE,amuse,amus,Positiv,,,,Active,,|,
+ANALYZE,analyze,analyz,,,,,Active,,|,
+ANCHOR#2,anchor,anchor,,,Strong,,,,|,
+ANGER#2,anger,anger,,Negativ,,,,,| 14% verb: To make angry.,14.0
+ANIMATE,animate,anim,,,,,,,,
+ANNIHILATE,annihilate,annihil,,Negativ,,,Active,,|,
+ANNOUNCE#2,announce,announc,,,,,,,|,
+ANNOY,annoy,annoy,,Negativ,,,Active,,|,
+ANOINT,anoint,anoint,Positiv,,,,Active,,|,
+ANSWER#1,answer,answer,,,,,Active,,"| 57% verb: To respond to a question, challenge, or statement",57.0
+ANTAGONIZE,antagonize,antagon,,Negativ,Strong,,Active,,|,
+ANTICIPATE,anticipate,anticip,,,,,,Passive,|,
+APOLOGIZE,apologize,apolog,,,,Weak,,,|,
+APPALL#2,appall,appal,,Negativ,,,,,|,
+APPEAL#2,appeal,appeal,,,,,,Passive,"| 59% verb: To request a decision, help, sympathy, etc. (10), to arouse  a favorable response (9)",59.0
+APPEAR#1,appear,appear,,,,,,Passive,| 64% verb: To seem,64.0
+APPEASE,appease,appeas,Positiv,,,,Active,,|,
+APPEND,append,append,Positiv,,,,Active,,|,
+APPERTAIN,appertain,appertain,,,,,,,,
+APPLAUD,applaud,applaud,Positiv,,,,Active,,|,
+APPLY#1,apply,appli,,,,,Active,,"| 79% verb: To have relevance to, put to use on, use or consider in regard  to, to bring to bear (only 2 physical--i.e. ""she applied the paint"")",79.0
+APPOINT#2,appoint,appoint,Positiv,,,,Active,,|,
+APPRAISE,appraise,apprais,,,,,,,,
+APPRECIATE,appreciate,appreci,Positiv,,,,,Passive,"| verb: To be aware of, to be grateful",
+APPREHEND,apprehend,apprehend,Positiv,,,,Active,,|,
+APPROACH#1,approach,approach,Positiv,,,,Active,,"| 66% verb: To come near or nearer to, or to set about a task",66.0
+APPROPRIATE#2,appropriate,appropri,,,Strong,,,,|,
+APPROVE#2,approve,approv,Positiv,,Strong,,,,|,
+ARBITRATE,arbitrate,arbitr,Positiv,,,,Active,,|,
+ARCH#2,arch,arch,,,,,,,|,
+ARGUE#1,argue,argu,,Negativ,,,Active,,"| 44% verb: To dispute, to contend in argument--'they argue a lot' (sense  of animosity)",44.0
+ARGUE#2,argue,argu,,,,,Active,,"| 56% verb: To present reasons for, to maintain in reasoning--'to argue  that,' or 'to argue for'--(sense of reasoning)",56.0
+ARISE,arise,aris,,,Strong,,Active,,|,
+ARM#3,arm,arm,,,Strong,,Active,,| 1% verb: To equip with weapons,1.0
+ARMED#2,armed,arm,,,Strong,,Active,,| 0% verb: To equip with weapons (past tense),0.0
+AROSE,arose,aris,,,Strong,,Active,,|,
+ARRANGE#1,arrange,arrang,,,,,Active,,"| 59% verb: To come to an agreement concerning, to prepare or plan--'we  arranged to meet them.'",59.0
+ARREST#2,arrest,arrest,,Negativ,Strong,,Active,,"| 81% verb: To halt, stop, seize by legal authority",81.0
+ARRIVE,arrive,arriv,,,,,Active,,"| verb: To reach one's destination, to reach a conclusion, goal, etc. (5);  to come to pass (""the time has arrived"") (3)",
+ART#3,art,art,,,,,,,| 7% verb: Archaic for are 'thou art',7.0
+ASCEND,ascend,ascend,,,Strong,,Active,,|,
+ASCERTAIN,ascertain,ascertain,,,,,Active,,|,
+ASCRIBE,ascribe,ascrib,Positiv,,,,Active,,|,
+ASK#1,ask,ask,,,,,Active,,| 65% verb: To inquire about,65.0
+ASPIRE,aspire,aspir,Positiv,,,,Active,,|,
+ASSAIL,assail,assail,,Negativ,Strong,,Active,,|,
+ASSASSINATE,assassinate,assassin,,Negativ,,,Active,,|,
+ASSAULT#2,assault,assault,,Negativ,Strong,,Active,,|,
+ASSEMBLE,assemble,assembl,,,,,Active,,|,
+ASSERT,assert,assert,,,Strong,,Active,,|,
+ASSESS,assess,assess,,,,,,,,
+ASSIGN#2,assign,assign,,,,,Active,,|,
+ASSIMILATE,assimilate,assimil,,,,,,Passive,|,
+ASSIST#2,assist,assist,Positiv,,Strong,,Active,,|,
+ASSOCIATE#2,associate,associ,Positiv,,,,Active,,"| 59% verb: To make a connection between things, to mix with socially",59.0
+ASSUME#2,assume,assum,,,,,,Passive,"| 56% verb: To take for granted, suppose, postulate",56.0
+ASSURE#1,assure,assur,Positiv,,Strong,,,,"| 50% verb: To guarantee, by virtue of some action, that something will come about",50.0
+ASTONISH#2,astonish,astonish,,,,,,,|,
+ASTOUND,astound,astound,Positiv,,Strong,,Active,,|,
+ATE,ate,eat,,,,,Active,,"| verb: Past tense of eat, consumed.",
+ATROPHY,atrophy,atrophi,,Negativ,,Weak,,Passive,|,
+ATTACH,attach,attach,,,,,Active,,|,
+ATTACK#2,attack,attack,,Negativ,Strong,,Active,,| 34% verb: To assault (physically or figuratively),34.0
+ATTAIN,attain,attain,Positiv,,Strong,,Active,,|,
+ATTEMPT#1,attempt,attempt,,,,,Active,,"| 38% verb: To try, make an effort",38.0
+ATTEND#1,attend,attend,Positiv,,,,,,| 83% verb: To be present at.,83.0
+ATTEST,attest,attest,,,,,,Passive,|,
+ATTRACT,attract,attract,Positiv,,Strong,,,,|,
+ATTRIBUTE#2,attribute,attribut,,,,,,,|,
+AUGMENT,augment,augment,Positiv,,,,Active,,|,
+AUTHORIZE#2,authorize,author,,,Strong,,Active,,|,
+AVAIL,avail,avail,,,Strong,,,Passive,|,
+AVERAGE#3,average,averag,,,,,,,| 3% verb: To reduce to or result in a mean,3.0
+AVERT,avert,avert,,Negativ,,Weak,,Passive,|,
+AVOID,avoid,avoid,,Negativ,,Weak,,Passive,"| verb: To keep away from, keep clear of",
+AWAIT,await,await,,,,,,Passive,|,
+AWAKE,awake,awak,,,,,,,|,
+AWAKEN,awaken,awaken,,,,,,,,
+AWARD#2,award,award,Positiv,,Strong,,Active,,|,
+AWAY#2,away,away,,,,,,,"| 9% idiom-verb: 'get away'--avoid, escape",9.0
+AX,ax,ax,,Negativ,,,Active,,|,
+BABBLE,babble,babbl,,Negativ,,,Active,,|,
+BAFFLE,baffle,baffl,,Negativ,,,,,|,
+BAG#2,bag,bag,,,,,,,"| 3% verb-adj: To sag (1), sagging (0); load, put in a sack (0)",3.0
+BAIL,bail,bail,,Negativ,,Weak,Active,,|,
+BAIT,bait,bait,,Negativ,,,Active,,|,
+BAKE,bake,bake,,,,,,,|,
+BALANCE#2,balance,balanc,,,Strong,,,,|,
+BALK,balk,balk,,Negativ,,Weak,,Passive,|,
+BAND#2,band,band,,,Strong,,,,| 3% verb: To group together,3.0
+BANISH#2,banish,banish,,Negativ,Strong,,Active,,|,
+BANTER#2,banter,banter,,,,Weak,,,|,
+BAPTIZE,baptize,baptiz,Positiv,,,,Active,,|,
+BAR#4,bar,bar,,Negativ,Strong,,Active,,| 19% verb: To obstruct or exclude,19.0
+BARGAIN,bargain,bargain,Positiv,,,,Active,,|,
+BARK#2,bark,bark,,,,,,,|,
+BASE#2,base,base,,,Strong,,,,"| 78% verb: To establish, ground, provide with a foundation or rationale,  to have as foundation - ""based on"".",78.0
+BAT#2,bat,bat,,,,,,,|,
+BATHE,bathe,bath,,,,,,,|,
+BATHROOM#2,bathroom,bathroom,,,,,,,"| 32% verb: ""To go to the bathroom""",32.0
+BATTLE#2,battle,battl,,Negativ,Strong,,Active,,| 14% verb: To engage in a fight,14.0
+BEAM#2,beam,beam,,,,,,,|,
+BEAR#2,bear,bear,,,Strong,,,,"| 21% verb: To carry, show, wear, conduct oneself, render, afford, support,  sustain, endure",21.0
+BEAT#2,beat,beat,,Negativ,Strong,,Active,,"| 88% verb: To strike repeatedly, defeat or outperform (6)",88.0
+BEAUTIFY,beautify,beautifi,Positiv,,Strong,,Active,,|,
+BECAME,became,becom,,,,,,Passive,"| verb: Came, changed or grew to be.",
+BECKON,beckon,beckon,,,,,Active,,|,
+BECOME,become,becom,,,,,,Passive,| verb: To come or grow to be,
+BED#3,bed,bed,,,,,,,"| 18% verb: To go or put ""to bed""--to retire, go to sleep, get someone ready  for sleep (3)",18.0
+BEEN#1,been,be,,,,,,Passive,"| 47% verb: Past participle of be, used as copula",47.0
+BEFIT,befit,befit,Positiv,,,,,Passive,|,
+BEFRIEND,befriend,befriend,Positiv,,,,Active,,|,
+BEG,beg,beg,,Negativ,,Weak,Active,,|,
+BEGAN,began,begin,,,,,Active,,"| verb: Started, commenced, took the first step.",
+BEGIN#1,begin,begin,,,,,Active,,"| 73% verb: To start, commence, embark upon, initiate",73.0
+BEGUN,begun,begin,,,,,Active,,"| verb: Past participle of begin--commenced, started",
+BEHAVE,behave,behav,,,,,Active,,|,
+BEING#1,being,be,,,,,,Passive,| 88% verb: Present participle of 'be',88.0
+BELIE,belie,beli,,Negativ,,,Active,,|,
+BELIEVE#1,believe,believ,,,,,,Passive,| 68% verb: To be of the opinion that--to think or consider,68.0
+BELITTLE,belittle,belittl,,Negativ,,,,,|,
+BELONG#1,belong,belong,,,,Weak,,Passive,| 98% verb: To be in relation to something as owned or as a member or inhabitant,98.0
+BELT#2,belt,belt,,Negativ,Strong,,Active,,|,
+BEND#2,bend,bend,,,,Weak,,Passive,|,
+BENEFIT#2,benefit,benefit,Positiv,,Strong,,,,"| 21% verb: Gain, do good for, to",21.0
+BEQUEATH,bequeath,bequeath,Positiv,,,,Active,,|,
+BERATE,berate,berat,,,,,,,,
+BEREAVE,bereave,bereav,,Negativ,,,,,|,
+BESEECH,beseech,beseech,,Negativ,,Weak,Active,,|,
+BESIEGE,besiege,besieg,,Negativ,,,Active,,|,
+BESTOW,bestow,bestow,Positiv,,Strong,,Active,,|,
+BET#2,bet,bet,,,,,Active,,| 71% verb: To wager or risk,71.0
+BETRAY,betray,betray,,Negativ,,,,,|,
+BETROTH,betroth,betroth,Positiv,,,,Active,,|,
+BETTER#2,better,better,Positiv,,,,Active,,| 2% verb: To improve,2.0
+BEWARE,beware,bewar,,Negativ,Strong,,,,|,
+BEWILDER,bewilder,bewild,,Negativ,,,,,|,
+BID#2,bid,bid,,,,,Active,,|,
+BIRTH#2,birth,birth,,,,,,,"| 33% verb-idiom: ""Give birth""--to bear, or to create, bring about",33.0
+BIT#2,bit,bit,,Negativ,,,Active,,"| 7% verb: Past tense of ""bite""",7.0
+BITE#2,bite,bite,,Negativ,,,Active,,"| 74% verb: To grip, injure or cut off with or as with teeth",74.0
+BLACK#3,black,black,,,,,,,"| 0% verb-idiom: ""Black out""--to lose consciousness",0.0
+BLACKMAIL,blackmail,blackmail,,Negativ,,,Active,,|,
+BLAME#2,blame,blame,,Negativ,,,,,"| 75% verb: To hold responsible for failure, to censure",75.0
+BLAST#2,blast,blast,,Negativ,Strong,,Active,,|,
+BLEED#2,bleed,blee,,,,Weak,,Passive,|,
+BLESS#1,bless,bless,Positiv,,,,,Passive,"| 32% verb: To consecrate, favor or endow, make happy or prosperous",32.0
+BLIND#2,blind,blind,,Negativ,,,,,| 10% verb: To deprive of sight,10.0
+BLINK#2,blink,blink,,,,,,Passive,|,
+BLOCK#2,block,block,,Negativ,Strong,,Active,,| 28% verb: To thwart or barricade,28.0
+BLOOM,bloom,bloom,Positiv,,,,Active,,|,
+BLOSSOM,blossom,blossom,Positiv,,,,Active,,|,
+BLOW#2,blow,blow,,,Strong,,Active,,"| 60% verb: To propel as with wind, to set air in motion; fellation",60.0
+BLOW#3,blow,blow,,Negativ,Strong,,Active,,"| 17% verb: ""Blow up,"" ""blow out""--to explode physically or Emotionally",17.0
+BLUR,blur,blur,,Negativ,,Weak,Active,,|,
+BLURT,blurt,blurt,,Negativ,,,Active,,|,
+BOARD#4,board,board,,,,,,,| 13% verb-adj: Into or on a ship or other carrier,13.0
+BOAST,boast,boast,,Negativ,,,Active,,|,
+BOIL#2,boil,boil,,,,,Active,,|,
+BOLSTER,bolster,bolster,Positiv,,Strong,,Active,,|,
+BOLT,bolt,bolt,,Negativ,,,Active,,|,
+BOMB#2,bomb,bomb,,Negativ,Strong,,Active,,|,
+BOMBARD,bombard,bombard,,Negativ,,,Active,,|,
+BOOST#2,boost,boost,Positiv,,Strong,,Active,,|,
+BOOT,boot,boot,,Negativ,,,Active,,|,
+BORDER#2,border,border,,,,,,,|,
+BORE#3,bore,bear,,,Strong,,Active,,"| 28% verb: Carried, endured; manifested (3); drilled a hole (0); caused  loss of interest (2); exerted pressure or effort (1); approached (0)",28.0
+BORNE,borne,bear,,,,,,,,
+BORROW#2,borrow,borrow,,,,Weak,,,|,
+BOTHER#1,bother,bother,,Negativ,,,Active,,"| 91% verb: To give trouble to, annoy, worry--to bewilder, confuse--to be  troubled, etc.",91.0
+BOUGHT,bought,buy,,,,,Active,,"| verb: Past tense of ""buy"" - purchased",
+BOUNCE,bounce,bounc,,,,,Active,,|,
+BOUND#2,bound,bind,,,Strong,,,,"| 10% verb: Past tense of ""bind""",10.0
+BOW#2,bow,bow,,,,Weak,,,"| 6% verb: To bend forward, usually in formal acknowledgement, submission or greeting",6.0
+BOWL#2,bowl,bowl,,,,,,,|,
+BOYCOTT#2,boycott,boycott,,,,,Active,,|,
+BRACE#2,brace,brace,,,Strong,,,,|,
+BRAG,brag,brag,,Negativ,,,Active,,|,
+BRANCH#3,branch,branch,,,,,Active,,"| 0% verb: To put forth or spread in branches, expand, extend",0.0
+BRAND#2,brand,brand,,,,,,,|,
+BRANDISH,brandish,brandish,,Negativ,Strong,,Active,,|,
+BRAWL,brawl,brawl,,Negativ,,,Active,,|,
+BREACH,breach,breach,,Negativ,Strong,,Active,,|,
+BREAK#1,break,break,,Negativ,Strong,,Active,,"| 75% verb: To fracture, split, stop or cause to stop functioning, cause  a division or change, enter forcibly, escape, begin suddenly, interrupt, etc.",75.0
+BREAKDOWN,breakdown,breakdown,,Negativ,,Weak,,Passive,|,
+BREATH#2,breath,breath,,,,,,,|,
+BREED#2,breed,breed,,,,,Active,,|,
+BRIBE,bribe,bribe,,Negativ,,,,,|,
+BRIDGE#3,bridge,bridg,,,Strong,,,,| 6% verb: To span or connect any two separated things or points,6.0
+BRING#1,bring,bring,,,,,Active,,"| 69% verb: To transport, conduct, carry; to cause to come into being or  into a particular condition (much less frequent)",69.0
+BRISTLE,bristle,bristl,,Negativ,,,,Passive,|,
+BROADCAST#2,broadcast,broadcast,,,,,,,|,
+BROADEN,broaden,broaden,,,Strong,,,,|,
+BROKE#1,broke,break,,,Strong,,Active,,"| 72% verb: Past tense of ""break""--fractured, split, stopped functioning,  caused a division or change; entered forcibly (1); escaped (3); interrupted  (1), etc.",72.0
+BROOD,brood,brood,,Negativ,,,,,|,
+BRUSH#2,brush,brush,,,,,,,|,
+BUBBLE#2,bubble,bubbl,,,,,,,|,
+BUCKLE,buckle,buckl,,Negativ,,Weak,,Passive,|,
+BUG#2,bug,bug,,Negativ,,,,,|,
+BUILD#1,build,build,,,,,Active,,"| 53% verb: To construct, frame, or raise a structure by fitting together  separate parts",53.0
+BUILD#4,build,build,,,Strong,,Active,,"| 14% idiom-verb: ""Build up""--to strengthen, or increase, either quantitatively  or qualitatively",14.0
+BUNGLE,bungle,bungl,,Negativ,,Weak,,,|,
+BURDEN#2,burden,burden,,Negativ,,Weak,,,|,
+BURN#2,burn,burn,,Negativ,,,Active,,| 89% verb: To consume or injure with fire,89.0
+BURST#2,burst,burst,,,Strong,,Active,,|,
+BURY,bury,buri,,Negativ,,,Active,,"| verb: To inter, immerse, conceal",
+BUSINESS#3,business,busi,,,,,,,"| 2% verb-idiom: 'mean business,' 'get down to business'--to be serious,  intend serious effort",2.0
+BUY#1,buy,buy,,,,,Active,,| verb: To purchase,
+CALCULATE#2,calculate,calcul,,,,,Active,,|,
+CALM#2,calm,calm,Positiv,,,,,Passive,"| 38% verb: To quiet, become subdued",38.0
+CAMP#2,camp,camp,,,,,Active,,"| 17% verb: To establish temporary lodging or shelter, to go into the woods",17.0
+CAMPAIGN#2,campaign,campaign,,,,,Active,,| 5% verb: To strive for a goal,5.0
+CAN'T,can't,can,,,,Weak,,,"| verb: Contraction of ""cannot""",
+CANCEL,cancel,cancel,,Negativ,,,,,|,
+CANNOT,cannot,can,,,,Weak,,,| verb: A form of can not.,
+CANVAS#2,canvas,canva,,,,,Active,,|,
+CAPITALIZE,capitalize,capit,Positiv,,Strong,,Active,,|,
+CAPITULATE,capitulate,capitul,,Negativ,,Weak,,Passive,|,
+CAPSIZE,capsize,capsiz,,Negativ,,,,,|,
+CAPTURE#2,capture,captur,,Negativ,Strong,,Active,,|,
+CARE#2,care,care,Positiv,,,,Active,,"| 41% verb: To be concerned with, to mind about, prefer, be solicitous of;  to provide for (much less frequen",41.0
+CAREEN,careen,careen,,Negativ,,Weak,,Passive,|,
+CARESS#2,caress,caress,Positiv,,,,,,|,
+CARRY#1,carry,carri,,,Strong,,Active,,"| 75% verb: To transport, transmit, convey, bear; influence, get a majority  or plurality (much less frequent)",75.0
+CARRY#3,carry,carri,,,,,Active,,| 10% idiom-verb: 'carry on'--to manage or continue to manage; to behave  extravagantly (2),10.0
+CASE#2,case,case,,,,,,,| 0% verb: To examine or survey in planning a crime,0.0
+CASH#2,cash,cash,,,,,,,|,
+CAST#1,cast,cast,,,,,Active,,"| 64% verb: To throw, project; to aim (of eyes) (2)",64.0
+CASTRATE,castrate,castrat,,,,,,,,
+CATCH#1,catch,catch,,,Strong,,Active,,"| 88% verb: To capture, ensnare, get hold of; attract (1); contract (disease)  (1); to absorb as to hear and understand (0)",88.0
+CAUGHT#1,caught,catch,,,Strong,,Active,,"| 96% verb: Past tense of ""catch""--to have captured, ensnared, attracted  (0); contracted (0); to have absorbed, as to hear and understand (0)",96.0
+CAUSE#1,cause,caus,,,Strong,,Active,,| 44% verb: To produce as an effect,44.0
+CAUTION#2,caution,caution,,,,,,,|,
+CAVE#2,cave,cave,,Negativ,,Weak,,Passive,"| 5% idiom-verb: ""Cave in""--collapse",5.0
+CEASE,cease,ceas,,,,Weak,,Passive,|,
+CELEBRATE,celebrate,celebr,Positiv,,,,Active,,|,
+CEMENT#2,cement,cement,,,Strong,,,,|,
+CENSOR,censor,censor,,Negativ,,,Active,,|,
+CENSURE,censure,censur,,Negativ,,,Active,,|,
+CENTER#2,center,center,,,Strong,,,,| 22% verb: To focus on or at ('attention centers around him'),22.0
+CERTIFY,certify,certifi,,,,,,,|,
+CHAIN#2,chain,chain,,,,,,,|,
+CHALLENGE#2,challenge,challeng,,Negativ,Strong,,Active,,| 19% verb: To confront with a contest or problem,19.0
+CHANCE#3,chance,chanc,,,,,,Passive,| 4% verb: To happen or occur without plan or intent,4.0
+CHANGE#1,change,chang,,,,,Active,,"| 59% verb: To alter, modify, convert, transform",59.0
+CHANNEL#2,channel,channel,,,,,,,|,
+CHARACTERIZE,characterize,character,,,,,,,|,
+CHARGE#5,charge,charg,,,,,Active,,"| 13% verb: To ask payment, to buy with deferred payment",13.0
+CHARM#2,charm,charm,Positiv,,,,,,|,
+CHART#2,chart,chart,,,,,Active,,|,
+CHARTER#2,charter,charter,,,,,,,|,
+CHASE#2,chase,chase,,Negativ,,,Active,,"| 97% verb: To pursue, to hunt",97.0
+CHASTISE,chastise,chastis,,Negativ,,,Active,,|,
+CHATTER#2,chatter,chatter,,,,,,,|,
+CHEAPEN,cheapen,cheapen,,Negativ,,Weak,Active,,|,
+CHEAT#2,cheat,cheat,,,,,,,|,
+CHECK#2,check,check,,,,,Active,,"| 45% verb: To investigate, verify, restrain",45.0
+CHEER,cheer,cheer,Positiv,,,,Active,,|,
+CHERISH#2,cherish,cherish,Positiv,,,,,Passive,|,
+CHIDE,chide,chide,,Negativ,,,Active,,|,
+CHILL#2,chill,chill,,,,,,,|,
+CHIP#2,chip,chip,,,,,,,|,
+CHOKE#2,choke,choke,,Negativ,,Weak,,,|,
+CHOOSE,choose,choos,,,,,,Passive,| verb: To make a choice,
+CHOSE,chose,choos,,,,,,Passive,|,
+CHOSEN#1,chosen,choos,,,,,,Passive,| 88% verb: Past tense of 'choose'--selected,88.0
+CHUCKLE#2,chuckle,chuckl,,,,,,Passive,|,
+CIRCLE#2,circle,circl,,,Strong,,Active,,"| 14% verb: To encircle, to move in a circle",14.0
+CIRCULATE,circulate,circul,,,,,,,,
+CITE#2,cite,cite,,,,,,,|,
+CIVILIZE#2,civilize,civil,Positiv,,,,,,|,
+CLAIM#2,claim,claim,,,,,,,|,
+CLARIFY,clarify,clarifi,Positiv,,,,Active,,|,
+CLASH,clash,clash,,Negativ,,,Active,,|,
+CLASSIFY#2,classify,classifi,,,,,Active,,|,
+CLEAN#3,clean,clean,Positiv,,,,Active,,"| 33% verb: To cleanse, wash, clear away",33.0
+CLEANSE,cleanse,cleans,Positiv,,,,Active,,|,
+CLEAR#5,clear,clear,Positiv,,,,,,"| 13% verb: To make or become free of obstructions, blemishes or obscurity;  to pass by, over, through or away from (0)",13.0
+CLICK#2,click,click,,,,,,,|,
+CLIMB,climb,climb,,,Strong,,Active,,"| verb: To move upward, to ascend.",
+CLING,cling,cling,,,,Weak,Active,,|,
+CLOCK#2,clock,clock,,,,,,,| 0% verb: To measure speed,0.0
+CLOG,clog,clog,,Negativ,,,,Passive,|,
+CLOSE#2,close,close,,Negativ,,,Active,,"| 17% verb: To stop or obstruct, make imperceptible, inaccessible--to shut,  to come or bring t",17.0
+CLOTHE#2,clothe,cloth,,,,,,,| 5% verb: To provide with clothing--to dress,5.0
+CLUB#3,club,club,,Negativ,Strong,,Active,,"| 5% verb: To beat with, or as with, a club",5.0
+CLUNG,clung,clung,,,,Weak,Active,,|,
+CLUSTER#2,cluster,cluster,,,Strong,,,,|,
+CO-ORDINATE,co-ordinate,co,,,,,,,,
+COACH#2,coach,coach,,,,,Active,,|,
+COAST#2,coast,coast,,,,,,Passive,|,
+COAT#2,coat,coat,,,,,,,|,
+COAX,coax,coax,Positiv,,,,Active,,|,
+CODDLE,coddle,coddl,Positiv,,,,Active,,|,
+CODE#2,code,code,,,,,,,|,
+COERCE,coerce,coerc,,Negativ,,,Active,,|,
+COINCIDE,coincide,coincid,,,,,,Passive,|,
+COLLABORATE,collaborate,collabor,Positiv,,,,Active,,|,
+COLLAPSE#2,collapse,collaps,,Negativ,,Weak,,Passive,|,
+COLLAR#2,collar,collar,,,Strong,,Active,,|,
+COLLECT#1,collect,collect,,,Strong,,Active,,"| 87% verb: To accumulate, acquire",87.0
+COLLIDE,collide,collid,,Negativ,,,Active,,|,
+COLLUSION,collusion,collus,,Negativ,,,Active,,|,
+COLOR#3,color,color,,,,,,,"| 1% verb: To give character or distinguishing quality to, to impart hue,  shade, or tint to something",1.0
+COMBAT#2,combat,combat,,Negativ,Strong,,Active,,|,
+COMBINE#2,combine,combin,,,Strong,,Active,,|,
+COMFORT#2,comfort,comfort,Positiv,,Strong,,,,| 29% verb: To solace,29.0
+COMMAND#2,command,command,,,Strong,,Active,,|,
+COMMEMORATE,commemorate,commemor,Positiv,,,,Active,,|,
+COMMENCE,commence,commenc,,,,,Active,,|,
+COMMEND,commend,commend,Positiv,,,,Active,,|,
+COMMENT#2,comment,comment,,,,,,,| 16% verb: To make a remark,16.0
+COMMIT#1,commit,commit,,Negativ,,,Active,,| 71% verb: To do or perpetrate,71.0
+COMMIT#2,commit,commit,,,,,Active,,"| 15% verb: To bind, to consign",15.0
+COMMUNICATE#1,communicate,communic,Positiv,,,,,,"| 96% verb: To make known, to impart to someone else",96.0
+COMPARE,compare,compar,,,,,Active,,|,
+COMPEL#2,compel,compel,,Negativ,Strong,,Active,,|,
+COMPENSATE,compensate,compens,Positiv,,Strong,,Active,,|,
+COMPETE,compete,compet,,Negativ,Strong,,Active,,|,
+COMPILE,compile,compil,,,,,Active,,|,
+COMPLAIN,complain,complain,,Negativ,,,Active,,| verb: To express dissatisfaction or pain,
+COMPLEMENT#2,complement,complement,Positiv,,,,,,|,
+COMPLETE#2,complete,complet,Positiv,,Strong,,,,"| 23% verb: To finish, to bring to a conclusion or consummation, to fulfill  or make whole or entire",23.0
+COMPLICATE#2,complicate,complic,,Negativ,,,,,|,
+COMPLIMENT,compliment,compliment,Positiv,,,,Active,,|,
+COMPLY,comply,compli,,,,,,Passive,|,
+COMPOSE,compose,compos,,,,,,,,
+COMPOUND#2,compound,compound,,,Strong,,,,|,
+COMPREHEND,comprehend,comprehend,Positiv,,,,Active,,|,
+COMPRESS#2,compress,compress,,,Strong,,Active,,|,
+COMPRISE,comprise,compris,,,,,,Passive,|,
+COMPROMISE#2,compromise,compromis,Positiv,,,,,Passive,|,
+COMPUTE,compute,comput,,,,,Active,,|,
+CONCEAL,conceal,conceal,,Negativ,,,,,|,
+CONCEDE,concede,conced,,,,Weak,,Passive,|,
+CONCEIVE,conceive,conceiv,,,,,,Passive,|,
+CONCENTRATE#2,concentrate,concentr,,,Strong,,Active,,|,
+CONCERN#1,concern,concern,,Negativ,,,,Passive,"| 58% verb-adj: To be of interest or importance to--to trouble, worry, or  disquiet, to be interested in, relevant to, or worried about",58.0
+CONCLUDE,conclude,conclud,,,,,Active,,|,
+CONCUR,concur,concur,Positiv,,,,Active,,|,
+CONDEMN#2,condemn,condemn,,Negativ,Strong,,,,|,
+CONDENSE,condense,condens,,,,,,,|,
+CONDITION#4,condition,condit,,,,,Active,,"| 3% verb: To subject to certain circumstances, thereby rendering in a (specific)  condition (cf. b.f. skinner)",3.0
+CONDONE,condone,condon,Positiv,,,,Active,,|,
+CONDUCT#3,conduct,conduct,,,,,Active,,"| 32% verb: To perform, carry out, manage",32.0
+CONFER,confer,confer,Positiv,,,,Active,,|,
+CONFESS,confess,confess,,Negativ,,Weak,,Passive,|,
+CONFIDE,confide,confid,Positiv,,,,,Passive,|,
+CONFINE#2,confine,confin,,Negativ,Strong,,Active,,|,
+CONFIRM#2,confirm,confirm,,,Strong,,,,|,
+CONFISCATE,confiscate,confisc,,Negativ,,,Active,,|,
+CONFLICT#3,conflict,conflict,,Negativ,,,Active,,| 0% verb: To disagree or struggle,0.0
+CONFORM,conform,conform,,,,Weak,,Passive,|,
+CONFOUND,confound,confound,,Negativ,,,,,|,
+CONFRONT,confront,confront,,Negativ,Strong,,Active,,"| verb: To challenge, face",
+CONGRATULATE,congratulate,congratul,Positiv,,,,Active,,|,
+CONGREGATE,congregate,congreg,Positiv,,,,Active,,|,
+CONJURE,conjure,conjur,Positiv,,Strong,,Active,,|,
+CONNECT,connect,connect,Positiv,,,,Active,,|,
+CONQUER,conquer,conquer,Positiv,,Strong,,Active,,|,
+CONSECRATE,consecrate,consecr,,,,,,,,
+CONSENT#2,consent,consent,Positiv,,Strong,,,Passive,|,
+CONSERVE,conserve,conserv,Positiv,,,,Active,,|,
+CONSIDER#1,consider,consid,Positiv,,,,,,"| verb: To think about or bear in mind--to regard or deem to be; to regard  with respect, thoughtfulness, etc. (2)",
+CONSIGN,consign,consign,Positiv,,,,Active,,|,
+CONSIST,consist,consist,,,,,,Passive,|,
+CONSOLE,console,consol,Positiv,,,,Active,,|,
+CONSOLIDATE,consolidate,consolid,Positiv,,Strong,,,,|,
+CONSPIRE,conspire,conspir,,Negativ,,,Active,,|,
+CONSTITUTE,constitute,constitut,,,Strong,,,Passive,|,
+CONSTRAIN,constrain,constrain,,Negativ,Strong,,,,|,
+CONSTRUCT,construct,construct,,,Strong,,Active,,|,
+CONSTRUE,construe,constru,,,,,,,|,
+CONSULT,consult,consult,Positiv,,,,,,|,
+CONSUME,consume,consum,,,,,Active,,|,
+CONSUMMATE,consummate,consumm,Positiv,,,,Active,,|,
+CONTACT#2,contact,contact,Positiv,,,,Active,,"| 1% verb: To communicate with, meet",1.0
+CONTAIN,contain,contain,,,Strong,,Active,,|,
+CONTAMINATE,contaminate,contamin,,Negativ,,,Active,,|,
+CONTEMPLATE,contemplate,contempl,,,,,,Passive,|,
+CONTEND,contend,contend,,Negativ,Strong,,Active,,|,
+CONTENT#5,content,content,Positiv,,,,,Passive,| 0% verb: To satisfy,0.0
+CONTEST#2,contest,contest,,,Strong,,Active,,|,
+CONTINUE#1,continue,continu,,,Strong,,Active,,"| 95% verb: To go on, keep on, extend",95.0
+CONTRADICT,contradict,contradict,,Negativ,,,,,|,
+CONTRAST#2,contrast,contrast,,,,,,,|,
+CONTRIBUTE#1,contribute,contribut,Positiv,,Strong,,Active,,| 97% verb: To give or add,97.0
+CONTRIVE,contrive,contriv,,,,,,,,
+CONTROL#2,control,control,,,Strong,,Active,,"| 26% verb: To restrain, direct, regulate",26.0
+CONVENE,convene,conven,Positiv,,,,Active,,|,
+CONVERSE,converse,convers,,,,,,,|,
+CONVERT#2,convert,convert,,,Strong,,Active,,|,
+CONVEY,convey,convey,,,,,Active,,|,
+CONVICT#2,convict,convict,,Negativ,Strong,,Active,,|,
+CONVINCE#1,convince,convinc,Positiv,,Strong,,Active,,"| 83% verb: To persuade by argument or proof, cause to believe",83.0
+CONVINCED#2,convinced,convinc,,,,,,Passive,| 15% verb: Caused to believe,15.0
+CONVULSE,convulse,convuls,,,,,,,|,
+COOK#1,cook,cook,,,,,,,| 74% verb: To prepare food or subject anything to the action of heat,74.0
+COOL,cool,cool,,Negativ,,,,Passive,|,
+COOPERATE,cooperate,cooper,Positiv,,Strong,,Active,,|,
+COORDINATE,coordinate,coordin,Positiv,,Strong,,Active,,|,
+COPE,cope,cope,,,,,,Passive,|,
+COPY#2,copy,copi,,,,,Active,,|,
+CORRECT#2,correct,correct,Positiv,,Strong,,,,"| 54% verb: To make right, improve; to point out error (0)",54.0
+CORRELATE#2,correlate,correl,,,,,,,|,
+CORRESPOND,correspond,correspond,,,,,,,|,
+CORRODE,corrode,corrod,,Negativ,,,,Passive,|,
+COST#2,cost,cost,,Negativ,,,,,| 33% verb: To require or result in an expenditure,33.0
+COULD,could,could,,,,,,,| verb: Past form of 'can'; auxiliary used with present and future verbs  to express lesser degree of possibility,
+COUNSEL#2,counsel,counsel,Positiv,,,,,,|,
+COUNT#2,count,count,,,,,,,|,
+COUNTERACT,counteract,counteract,,Negativ,Strong,,Active,,|,
+COUNTERBALANCE,counterbalance,counterbal,,,,,,,,
+COUPLE#3,couple,coupl,,,,,,,| 1% verb: To join or link,1.0
+COURT#2,court,court,,,,,Active,,"| 9% verb: To woo or try to get, seek",9.0
+COVER#2,cover,cover,,,,,Active,,"| 87% verb: To conceal, protect; to coat, be smeared or buried (25); to  encompass, deal with, range over (11); meet an expense (6)",87.0
+COVET,covet,covet,,Negativ,,Weak,,Passive,|,
+CRACK#2,crack,crack,,,,Weak,Active,,|,
+CRAM,cram,cram,,Negativ,,,Active,,|,
+CRAMP,cramp,cramp,,Negativ,,,Active,,|,
+CRASH#2,crash,crash,,,,,,,|,
+CRAVE,crave,crave,,Negativ,,Weak,,Passive,|,
+CRAWL#1,crawl,crawl,,,,Weak,Active,,"| 92% verb: To move laboriously, close to the ground",92.0
+CREAM#2,cream,cream,,,Strong,,Active,,|,
+CREATE,create,creat,Positiv,,Strong,,Active,,"| verb: To cause to come into being, to happen, to bring about.",
+CREEP#2,creep,creep,,,,Weak,Active,,|,
+CREPT,crept,creep,,,,Weak,Active,,|,
+CRINGE,cringe,cring,,Negativ,,,,Passive,|,
+CRIPPLE,cripple,crippl,,Negativ,,,Active,,|,
+CRITICIZE,criticize,critic,,Negativ,,,,,|,
+CROAK,croak,croak,,Negativ,,,,Passive,|,
+CROP#2,crop,crop,,,,,,,| 4% verb: To cut off the tops or ends of,4.0
+CROUCH#2,crouch,crouch,,,,,,,|,
+CROWD#3,crowd,crowd,,,Strong,,Active,,| 21% verb: To throng,21.0
+CROWN#2,crown,crown,,,,,,,|,
+CRUMBLE,crumble,crumbl,,Negativ,,Weak,,Passive,|,
+CRUMPLE,crumple,crumpl,,Negativ,,Weak,,Passive,|,
+CRUSH#2,crush,crush,,Negativ,Strong,,Active,,|,
+CRY#1,cry,cri,,,,,,Passive,"| 95% verb: To utter inarticulate or loud sounds, especially of lamentation,  grief, suffering or fright--usually with tears",95.0
+CUDDLE,cuddle,cuddl,Positiv,,,,Active,,|,
+CULMINATE,culminate,culmin,Positiv,,,,Active,,|,
+CULTIVATE#2,cultivate,cultiv,Positiv,,,,Active,,|,
+CURB#2,curb,curb,,,Strong,,Active,,|,
+CURE#2,cure,cure,Positiv,,,,,,| 89% verb: To restore to health,89.0
+CURL#2,curl,curl,,,,,,,|,
+CURSE#2,curse,curs,,Negativ,,,,,|,
+CURTAIL,curtail,curtail,,Negativ,,,Active,,|,
+CURTSEY,curtsey,curtsey,Positiv,,,,Active,,|,
+CUT#1,cut,cut,,Negativ,Strong,,Active,,"| 88% verb-adj-noun: To penetrate or divide with or as with a sharp-edged  instrument; the resulting penetration or division (3); to isolate, snub,  or",88.0
+DAMAGE#2,damage,damag,,Negativ,Strong,,Active,,|,
+DANCE#2,dance,danc,Positiv,,,,Active,,| 49% verb: To move rhythmically,49.0
+DARE,dare,dare,Positiv,,,,,,|,
+DARKEN,darken,darken,,Negativ,,,,,|,
+DASH,dash,dash,,,,,Active,,|,
+DAWDLE,dawdle,dawdl,,Negativ,,,Active,,|,
+DAWN#2,dawn,dawn,Positiv,,,,,,"| 18% verb: To begin to grow light, to begin to develop",18.0
+DAZZLE,dazzle,dazzl,Positiv,,Strong,,Active,,|,
+DEAL#2,deal,deal,,,,,Active,,"| 34% verb: To take action with respect to something or someone, to handle",34.0
+DEBATE#2,debate,debat,,,,,Active,,| 38% verb: To carry on a debate,38.0
+DECAY#2,decay,decay,,Negativ,,Weak,,Passive,|,
+DECEASE,decease,deceas,,Negativ,,,Active,,|,
+DECEIVE#2,deceive,deceiv,,Negativ,,,Active,,|,
+DECENTRALIZE,decentralize,decentr,,,,,,,,
+DECIDE#1,decide,decid,,,Strong,,Active,,"| 98% verb: To settle something in dispute or in doubt, conclusion",98.0
+DECIPHER,decipher,deciph,Positiv,,,,Active,,|,
+DECLARE,declare,declar,,,Strong,,,,| verb: Proclaim or manifest,
+DECLINE#2,decline,declin,,Negativ,,Weak,,Passive,|,
+DECOMPOSE,decompose,decompos,,Negativ,,,,Passive,|,
+DECORATE,decorate,decor,Positiv,,,,Active,,|,
+DECREASE#2,decrease,decreas,,Negativ,,Weak,,Passive,|,
+DEDICATE#2,dedicate,dedic,Positiv,,Strong,,,,|,
+DEDUCE,deduce,deduc,Positiv,,,,Active,,|,
+DEDUCT,deduct,deduct,,,,,Active,,|,
+DEEM,deem,deem,,,,,,Passive,|,
+DEEPEN,deepen,deepen,,,Strong,,Active,,|,
+DEFAME,defame,defam,,Negativ,,,Active,,|,
+DEFAULT,default,default,,Negativ,,,Active,,|,
+DEFEAT#2,defeat,defeat,,Negativ,Strong,,Active,,| 55% verb: To overthrow or overcome,55.0
+DEFECATE,defecate,defec,,,,,,,,
+DEFEND,defend,defend,Positiv,,Strong,,Active,,"| verb: To ward off or repulse attacks, to uphold",
+DEFER,defer,defer,,,,,,Passive,|,
+DEFILE,defile,defil,,Negativ,,,Active,,|,
+DEFINE,define,defin,,,,,,,|,
+DEFRAY,defray,defray,,,,,,,,
+DEFY,defy,defi,,Negativ,Strong,,Active,,|,
+DEGRADE,degrade,degrad,,Negativ,,,Active,,|,
+DEJECT,deject,deject,,,,,,,,
+DELAY#2,delay,delay,,Negativ,,Weak,,Passive,|,
+DELIBERATE#2,deliberate,deliber,,,Strong,,Active,,|,
+DELIGHT#2,delight,delight,Positiv,,,,,,|,
+DELIVER,deliver,deliv,,,Strong,,Active,,|,
+DELUDE#2,delude,delud,,,,,,,,
+DEMAND#2,demand,demand,,,Strong,,Active,,"| 52% verb: To ask for or about boldly or urgently, to need, require",52.0
+DEMEAN,demean,demean,,Negativ,,,Active,,|,
+DEMOBILIZE,demobilize,demobil,,,,,,,,
+DEMOLISH,demolish,demolish,,Negativ,Strong,,Active,,|,
+DEMONSTRATE,demonstrate,demonstr,,,Strong,,Active,,|,
+DEMORALIZE,demoralize,demor,,Negativ,Strong,,,,|,
+DENOTE,denote,denot,,,,,,,|,
+DENOUNCE,denounce,denounc,,Negativ,,,Active,,|,
+DENT,dent,dent,,Negativ,,,Active,,|,
+DENY,deny,deni,,Negativ,,,,,"| verb: To maintain that something is not true, negate; refuse to grant, withhold",
+DEPART,depart,depart,,,,,Active,,|,
+DEPEND#1,depend,depend,,,,Weak,,Passive,| 73% verb: Be contingent,73.0
+DEPICT,depict,depict,,,,,,,|,
+DEPLETE,deplete,deplet,,Negativ,,,,,|,
+DEPLORE,deplore,deplor,,Negativ,,,,Passive,|,
+DEPLOY,deploy,deploy,,,Strong,,Active,,|,
+DEPOSE,depose,depos,,Negativ,,,Active,,|,
+DEPRECIATE,depreciate,depreci,,Negativ,,Weak,,Passive,|,
+DEPRESS#3,depress,depress,,Negativ,,,,,"| 13% verb: To discourage, sadden; to lower, reduce, press down on (2)",13.0
+DEPRIVE,deprive,depriv,,Negativ,Strong,,Active,,|,
+DERIDE,deride,derid,,Negativ,,,Active,,|,
+DERIVE,derive,deriv,,,,,Active,,|,
+DESCEND,descend,descend,,,,Weak,,,| verb: To come down,
+DESCRIBE,describe,describ,,,,,,,| verb: To depict in words,
+DESCRY,descry,descri,Positiv,,,,Active,,|,
+DESERT#2,desert,desert,,Negativ,,,,,"| 14% verb: To abandon, forsake",14.0
+DESERVE,deserve,deserv,Positiv,,,,,,|,
+DESIGN#2,design,design,,,,,Active,,"| 52% verb: To prepare plans for, plan, outline; to contrive (0)",52.0
+DESIGNATE#2,designate,design,,,Strong,,Active,,|,
+DESIRE#2,desire,desir,,,,,,Passive,"| 32% verb: To long or yearn, earnestly wish",32.0
+DESPAIR#2,despair,despair,,Negativ,,Weak,,Passive,|,
+DESPISE#2,despise,despis,,Negativ,Strong,,,,|,
+DESTINE,destine,destin,,,,,,,,
+DESTROY,destroy,destroy,,Negativ,Strong,,Active,,| verb: To put an end to or reduce to useless form,
+DESTRUCT,destruct,destruct,,,,,,,,
+DETACH,detach,detach,,,,,,,,
+DETAIN,detain,detain,,Negativ,,,Active,,|,
+DETECT#2,detect,detect,,,,,Active,,|,
+DETER,deter,deter,,Negativ,Strong,,Active,,|,
+DETERMINE#1,determine,determin,,,Strong,,Active,,"| 56% verb: To ascertain, decide or settle, authoritatively or resolutely",56.0
+DETERRED,deterred,deter,,,,,,,,
+DETEST,detest,det,,Negativ,,,Active,,|,
+DETRACT,detract,detract,,Negativ,,,Active,,|,
+DEVASTATE,devastate,devast,,Negativ,Strong,,Active,,|,
+DEVELOP,develop,develop,,,Strong,,Active,,"| verb: To evolve, strengthen, or elaborate.",
+DEVIATE,deviate,deviat,,Negativ,,,Active,,|,
+DEVISE,devise,devis,,,,,,,|,
+DEVOLVE,devolve,devolv,,,,,,,,
+DEVOTE#1,devote,devot,Positiv,,,,Active,,"| 75% verb: To give up to or concentrate on a particular pursuit, occupation,  purpose, cause, to set apart or dedicate",75.0
+DICTATE,dictate,dictat,,Negativ,,,Active,,|,
+DID#1,did,do,,,,,,,|,
+DIE,die,die,,,,,,,"| verb: To cease to live, exist or function",
+DIET#2,diet,diet,,,,,,,|,
+DIFFER,differ,differ,,Negativ,,,Active,,|,
+DIFFERENTIATE,differentiate,differenti,,,,,,,,
+DIG#1,dig,dig,Positiv,,,,,,"| 93% verb: To excavate, to bore into; slang--to understand or appreciate (2)",93.0
+DIGNIFY,dignify,dignifi,Positiv,,,,Active,,|,
+DIM#2,dim,dim,,Negativ,,,,,|,
+DIMINISH,diminish,diminish,,,,Weak,,Passive,|,
+DING,ding,ding,,,,,,,,
+DIP,dip,dip,,,,,Active,,|,
+DIRECT#1,direct,direct,,,Strong,,Active,,"| 44% verb: To manage, control, instruct, guide, aim",44.0
+DISABLE,disable,disabl,,Negativ,,,Active,,|,
+DISAGREE,disagree,disagre,,,,,,,| verb: To differ,
+DISAPPEAR,disappear,disappear,,,,,,Passive,| verb: To pass out of sight,
+DISAPPOINT#3,disappoint,disappoint,,Negativ,,,,,| 12% verb: To displease,12.0
+DISAPPROVE,disapprove,disapprov,,Negativ,,,,,|,
+DISARM,disarm,disarm,,Negativ,,,Active,,|,
+DISAVOW,disavow,disavow,,Negativ,,,,,|,
+DISCARD#2,discard,discard,,,,,Active,,|,
+DISCERN,discern,discern,Positiv,,,,Active,,|,
+DISCHARGE#2,discharge,discharg,,Negativ,Strong,,Active,,|,
+DISCIPLINE#2,discipline,disciplin,,,Strong,,Active,,"| 25% verb-adj: To train, drill--especially in a punitive sense",25.0
+DISCLAIM,disclaim,disclaim,,Negativ,,,,,|,
+DISCLOSE#2,disclose,disclos,,,,,,,|,
+DISCONTINUE#2,discontinue,discontinu,,,,,,,|,
+DISCOUNT#2,discount,discount,,,,,,Passive,|,
+DISCOURAGE#2,discourage,discourag,,Negativ,,,Active,,|,
+DISCOVER,discover,discov,,,,,,,| verb: To find or find out,
+DISCREDIT,discredit,discredit,,Negativ,,,Active,,|,
+DISCRIMINATE,discriminate,discrimin,,Negativ,,,Active,,|,
+DISCUSS,discuss,discuss,Positiv,,,,,,"| verb: To talk over, negotiate, inquire into, explore verbally",
+DISGUST#2,disgust,disgust,,Negativ,,,,,| 6% verb: To be revolting or abhorrent to someone,6.0
+DISH#2,dish,dish,,,,,,,|,
+DISHONOR,dishonor,dishonor,,Negativ,,Weak,Active,,|,
+DISLIKE#1,dislike,dislik,,Negativ,,,,Passive,| 71% verb: To have an aversion toward,71.0
+DISMISS#2,dismiss,dismiss,,Negativ,,,Active,,|,
+DISPEL,dispel,dispel,,Negativ,,,Active,,|,
+DISPENSE,dispense,dispens,,Negativ,,,Active,,|,
+DISPERSE,disperse,dispers,,,,,Active,,|,
+DISPLACE,displace,displac,,Negativ,,,Active,,|,
+DISPLAY#2,display,display,,,,,,,|,
+DISPLEASE,displease,displeas,,Negativ,,Weak,,Passive,|,
+DISPOSE#2,dispose,dispos,,Negativ,Strong,,Active,,|,
+DISPROVE,disprove,disprov,,Negativ,,,Active,,|,
+DISPUTE#2,dispute,disput,,Negativ,,,Active,,|,
+DISREGARD,disregard,disregard,,Negativ,,,Active,,|,
+DISRUPT,disrupt,disrupt,,Negativ,,,Active,,|,
+DISSATISFY,dissatisfy,dissatisfi,,Negativ,,Weak,,,|,
+DISSOLVE#2,dissolve,dissolv,,,Strong,,Active,,|,
+DISTINGIUSH#2,distingiush,distingiush,,,,,,,,
+DISTINGUISH#2,distinguish,distinguish,Positiv,,,,,,|,
+DISTORT,distort,distort,,Negativ,,,,,|,
+DISTRACT,distract,distract,,Negativ,,,Active,,|,
+DISTRESS#2,distress,distress,,Negativ,,Weak,,Passive,|,
+DISTRIBUTE,distribute,distribut,,,,,Active,,|,
+DISTURB#1,disturb,disturb,,Negativ,,,Active,,"| 44% verb: To disquiet, to interrupt",44.0
+DITCH#2,ditch,ditch,,,,,,,|,
+DIVE,dive,dive,,,,,Active,,|,
+DIVERT,divert,divert,,Negativ,,,Active,,|,
+DIVIDE#1,divide,divid,,Negativ,Strong,,Active,,"| 83% verb: Separate, classify, parcel out",83.0
+DIVINE#2,divine,divin,Positiv,,Strong,,,,|,
+DIVORCE#2,divorce,divorc,,Negativ,,,Active,,"| 14% verb: To separate, usually to dissolve a marriage",14.0
+DO#1,do,do,,,Strong,,Active,,"| 29% verb: To perform, execute, accomplish, deal with as required",29.0
+DOCTOR#2,doctor,doctor,,,,,,,"| 0% verb: To act as a doctor, to fix",0.0
+DOMINATE#1,dominate,domin,,Negativ,Strong,,Active,,| 92% verb: To control,92.0
+DON'T,don't,do,,,,,,,|,
+DONATE,donate,donat,Positiv,,,,Active,,|,
+DONE,done,do,,,Strong,,,,"| verb-adj: Completed, finished, performed, executed, dealt with, tried,  accomplished, committed, arranged, fixed.",
+DOOM#2,doom,doom,,Negativ,,Weak,,Passive,|,
+DOTE,dote,dote,Positiv,,,,Active,,|,
+DOUBLE#2,double,doubl,,,Strong,,Active,,"| 10% verb: To render or become twofold in form, size, amount or number;  serve a dual function (0)",10.0
+DOUBT#2,doubt,doubt,,Negativ,,,,Passive,"| 41% verb: To question, be uncertain about",41.0
+DRAFT#2,draft,draft,,,,,,,|,
+DRAG,drag,drag,,Negativ,,,Active,,|,
+DRAIN#2,drain,drain,,,,,,,|,
+DRANK,drank,drink,,,,,Active,,"| verb: Past tense of ""drink""--imbibed",
+DRAW#1,draw,draw,,,,,Active,,"| 70% verb: To pull, move, pull back, extract, attract",70.0
+DREAD,dread,dread,,Negativ,,,,Passive,|,
+DREAM#2,dream,dream,,,,,,Passive,"| 56% verb: To create fantasies, to create or recreate by conscious or subconscious  imagination",56.0
+DREAMT,dreamt,dream,,,,,,Passive,| verb: Past tense of dream.,
+DRESS#2,dress,dress,,,,,Active,,"| 18% verb: To put on clothing, give a finish to",18.0
+DREW#1,drew,draw,,,,,,,|,
+DRIFT#2,drift,drift,,,,,,Passive,|,
+DRILL#2,drill,drill,,,,,Active,,|,
+DRINK#2,drink,drink,,,,,Active,,| 68% verb: To imbibe,68.0
+DRIP#2,drip,drip,,,,,,,|,
+DRIVE#1,drive,drive,,,,,Active,,"| 55% verb: To direct or steer, usually a car; to mean--""what is he driving at?"" (0)",55.0
+DRIVE#2,drive,drive,,Negativ,Strong,,Active,,"| 20% verb: To force, impel or push into some psychological or other state,  generally negative--""he is driving me crazy""",20.0
+DRIVEN#1,driven,drive,,,,,,,|,
+DRIZZLE#2,drizzle,drizzl,,,,,,,|,
+DROOP,droop,droop,,Negativ,,Weak,,Passive,|,
+DROP#3,drop,drop,,Negativ,,Weak,,Passive,| 32% verb: To fall--intransitive,32.0
+DROP#4,drop,drop,,Negativ,,Weak,Active,,"| 56% verb: To let fall, give up--transitive",56.0
+DROVE#1,drove,drive,,,,,Active,,"| 88% verb: Past tense of ""drive"" (sense 1)",88.0
+DROWN#2,drown,drown,,Negativ,,Weak,,Passive,"| verb: To die by suffocation in water, generally by accident",
+DRUNK#3,drunk,drunk,,,,,,,"| 7% verb: Imbibed (past tense of ""drink"")",7.0
+DRY#2,dry,dri,,,,,,,| 35% verb: To make free from moisture,35.0
+DUMP#2,dump,dump,,Negativ,,,Active,,|,
+DWELL,dwell,dwell,,,,,,Passive,|,
+DWINDLE,dwindle,dwindl,,Negativ,,,,,|,
+DYING#1,dying,die,,Negativ,,Weak,,Passive,"| 87% verb: Ceasing to live or exist; eager (with ""to"") (1)",87.0
+EAR#3,ear,ear,,,,,,,"| 2% idiom: ""Play (it) by ear""--handled by ""play""",2.0
+EARN#1,earn,earn,,,Strong,,Active,,| 72% verb: To gain by dint of work,72.0
+EASE#2,ease,eas,Positiv,,,,,,| 20% verb: To make less strained,20.0
+EAT#1,eat,eat,,,,,Active,,| 98% verb: To devour,98.0
+ECHO#2,echo,echo,,,,,,,|,
+ECONOMIZE,economize,econom,Positiv,,,,Active,,|,
+EDGE#2,edge,edg,,,,,,,"| 0% verb: To advance by small steps, to win by a small margin",0.0
+EDUCATE,educate,educ,,,Strong,,Active,,| verb: To instruct.,
+EDUCATED#2,educated,educ,,,,,,,"| 0% verb: Taught, instructed",0.0
+EFFECT#2,effect,effect,,,Strong,,Active,,"| 6% verb: To produce some result, to cause or make something happen",6.0
+ELABORATE,elaborate,elabor,Positiv,,,,Active,,|,
+ELAPSE#2,elapse,elaps,,,,,,Passive,|,
+ELECT#1,elect,elect,,,,,Active,,"| verb: To choose, usually by vote",
+ELEVATE#2,elevate,elev,,,Strong,,Active,,|,
+ELIMINATE,eliminate,elimin,,Negativ,Strong,,Active,,|,
+EMASCULATE,emasculate,emascul,,,,,,,,
+EMBARK,embark,embark,,,,,,,,
+EMBARRASS,embarrass,embarrass,,Negativ,,,Active,,|,
+EMBELLISH,embellish,embellish,Positiv,,,,Active,,|,
+EMBITTER,embitter,embitt,,,,,,,,
+EMBODY,embody,embodi,,,,,,,,
+EMBRACE#2,embrace,embrac,Positiv,,,,Active,,|,
+EMERGE#2,emerge,emerg,,,,,Active,,|,
+EMPHASIZE,emphasize,emphas,,,Strong,,,,|,
+EMPLOY,employ,employ,,,Strong,,,,|,
+EMPOWER,empower,empow,Positiv,,Strong,,Active,,|,
+EMPTY#2,empty,empti,,Negativ,,,Active,,| 4% verb: To void,4.0
+ENABLE,enable,enabl,Positiv,,Strong,,,,|,
+ENACT,enact,enact,,,Strong,,Active,,|,
+ENCHANT#2,enchant,enchant,Positiv,,,,,,|,
+ENCLOSE#2,enclose,enclos,,,Strong,,Active,,|,
+ENCOMPASS,encompass,encompass,,,Strong,,,,|,
+ENCOUNTER#2,encounter,encount,,,,,,,|,
+ENCOURAGE#1,encourage,encourag,Positiv,,,,Active,,"| 98% verb: To inspire with confidence, hearten, urge",98.0
+ENCROACH,encroach,encroach,,Negativ,,,,,|,
+END#2,end,end,,,,,Active,,"| 29% verb: To finish, terminate",29.0
+ENDANGER,endanger,endang,,Negativ,,,,,|,
+ENDEAR,endear,endear,Positiv,,,,Active,,|,
+ENDEAVOR,endeavor,endeavor,,,,,Active,,|,
+ENDORSE,endorse,endors,Positiv,,Strong,,,,|,
+ENDOW,endow,endow,Positiv,,,,Active,,|,
+ENDURE#2,endure,endur,,,Strong,,,Passive,|,
+ENERGIZE,energize,energ,Positiv,,Strong,,Active,,|,
+ENFORCE,enforce,enforc,,Negativ,Strong,,Active,,|,
+ENGAGE#3,engage,engag,,,,,Active,,| 29% verb: To take part in,29.0
+ENGULF,engulf,engulf,,Negativ,Strong,,Active,,|,
+ENHANCE,enhance,enhanc,Positiv,,Strong,,,,|,
+ENJOY,enjoy,enjoy,Positiv,,,,,Passive,"| verb: To take pleasure in; to have as one's priviledge, advantage, fortune,  or lot (5)",
+ENLARGE#2,enlarge,enlarg,,,,,,,,
+ENLIGHTEN#2,enlighten,enlighten,Positiv,,,,,,|,
+ENLIST#1,enlist,enlist,,,,,,,,
+ENRAGE,enrage,enrag,,Negativ,,,,,|,
+ENRICH,enrich,enrich,Positiv,,Strong,,Active,,|,
+ENROLL,enroll,enrol,,,,,Active,,|,
+ENSLAVE,enslave,enslav,,Negativ,,,,,|,
+ENSURE,ensure,ensur,Positiv,,Strong,,,,|,
+ENTAIL,entail,entail,,,,,,,,
+ENTANGLE,entangle,entangl,,Negativ,,,,,|,
+ENTER,enter,enter,,,,,Active,,"| verb: To make entry, literally -'enter the house'- or figuratively -'enter  college'; to begin, become involved in- 'enter into a contract', 'enter  upon a new phase'",
+ENTERTAIN#2,entertain,entertain,Positiv,,,,Active,,|,
+ENTITLE,entitle,entitl,,,Strong,,,,|,
+ENTREAT,entreat,entreat,,Negativ,,Weak,,,|,
+ENTRUST,entrust,entrust,Positiv,,,,Active,,|,
+ENUNCIATE,enunciate,enunci,,,,,,,,
+ENVISAGE,envisage,envisag,,,,,,,,
+ENVISION,envision,envis,Positiv,,,,Active,,|,
+EQUAL#3,equal,equal,,,Strong,,,,| 0% verb: To be or become equal,0.0
+EQUATE,equate,equat,,,,,,,,
+EQUIP,equip,equip,,,Strong,,Active,,|,
+ERADICATE,eradicate,erad,,Negativ,,,Active,,|,
+ERASE,erase,eras,,Negativ,,,Active,,|,
+ERECT#2,erect,erect,,,Strong,,Active,,|,
+ERODE,erode,erod,,Negativ,,,,Passive,|,
+ERR,err,err,,Negativ,,Weak,Active,,|,
+ESCAPE#1,escape,escap,,,Strong,,Active,,"| 89% verb: To slip or get away, as from confinement or restraint, gain  or regain liberty--avoid capture, punishment or any threatened evil",89.0
+ESCORT,escort,escort,,,,,,,,
+ESTABLISH#1,establish,establish,Positiv,,Strong,,Active,,"| 94% verb: To set up, institute, prove or demonstrate",94.0
+ESTIMATE#2,estimate,estim,,,,,,,|,
+ESTRANGE,estrange,estrang,,,,,,,,
+ETRANS#3,etrans,etran,,,,,,,,
+EVACUATE,evacuate,evacu,,,,,,,,
+EVADE,evade,evad,,Negativ,,,Active,,|,
+EVALUATE,evaluate,evalu,,,,,Active,,|,
+EVEN#3,even,even,,Negativ,,,,,"| 2% idiom-verb: ""Get even""--to have one's revenge, square accounts",2.0
+EVICT,evict,evict,,Negativ,,,,,|,
+EVIDENCE#2,evidence,evid,,,Strong,,Active,,"| 17% verb: To show, make evident",17.0
+EVOKE,evoke,evok,,,,,,,,
+EVOLVE,evolve,evolv,,,,,,Passive,|,
+EXACT#3,exact,exact,,,Strong,,Active,,"| 2% verb: To force from, obtain",2.0
+EXAGGERATE,exaggerate,exagger,,,,,,,|,
+EXALT,exalt,exalt,Positiv,,,,,Passive,|,
+EXAMINE,examine,examin,,,,,Active,,| verb: To scrutinize or test,
+EXASPERATE,exasperate,exasper,,Negativ,,,,,|,
+EXCEED,exceed,exceed,,,Strong,,Active,,|,
+EXCEL,excel,excel,Positiv,,Strong,,Active,,|,
+EXCEPTION#2,exception,except,,Negativ,,,,,| 9% idiom-verb: Make an objection- 'take exception',9.0
+EXCHANGE#2,exchange,exchang,,,,,Active,,"| 6% verb: To give like for like, to trade",6.0
+EXCITE#1,excite,excit,Positiv,,,,Active,,| 0% verb: To thrill or stimulate,0.0
+EXCITED#2,excited,excit,Positiv,,,,,Passive,"| 4% verb: Past tense of ""excite""",4.0
+EXCLAIM,exclaim,exclaim,,,,,,,,
+EXCLUDE,exclude,exclud,,Negativ,Strong,,Active,,|,
+EXCUSE#2,excuse,excus,,,Strong,,,,|,
+EXECUTE,execute,execut,,Negativ,,,,,|,
+EXERCISE#2,exercise,exercis,,,Strong,,Active,,|,
+EXERT,exert,exert,,,Strong,,Active,,|,
+EXHAUST,exhaust,exhaust,,Negativ,,,,,|,
+EXHIBIT#2,exhibit,exhibit,,,,,Active,,|,
+EXILE,exile,exil,,Negativ,,,Active,,|,
+EXIST#1,exist,exist,,,,,,,"| 77% verb: To live, to be",77.0
+EXIT,exit,exit,,Negativ,,,,,|,
+EXPAND#2,expand,expand,,,Strong,,Active,,|,
+EXPECT#1,expect,expect,,,,,,Passive,| 98% verb: To regard as likely to happen,98.0
+EXPEDITE,expedite,expedit,,,,,,,,
+EXPEL,expel,expel,,Negativ,,,Active,,|,
+EXPELL,expell,expel,,,,,,,,
+EXPEND,expend,expend,,,,,Active,,|,
+EXPERIENCE#2,experience,experi,,,,,,Passive,| 14% verb: To encounter or undergo,14.0
+EXPERIMENT#2,experiment,experi,,,,,Active,,|,
+EXPIRE,expire,expir,,,,Weak,,Passive,|,
+EXPLAIN,explain,explain,,,,,Active,,"| verb: To make plain or clear, render intelligible, make clear the cause  or reason of.",
+EXPLODE,explode,explod,,Negativ,,,,Passive,|,
+EXPLOIT#2,exploit,exploit,,Negativ,Strong,,Active,,|,
+EXPLORE,explore,explor,,,,,Active,,|,
+EXPOSE,expose,expos,,Negativ,,,Active,,|,
+EXPRESS,express,express,,,,,Active,,"| verb: To render in communicable form ideas, opinions, or feelings-- to  manifest, show or reveal",
+EXTEND#1,extend,extend,,,Strong,,Active,,"| 87% verb: To expand, stretch or lengthen in space, time or degree",87.0
+EXTEND#2,extend,extend,,,,,Active,,"| 13% verb: To hold out to, offer",13.0
+EXTERMINATE,exterminate,extermin,,Negativ,,,Active,,|,
+EXTINGUISH,extinguish,extinguish,,Negativ,Strong,,Active,,|,
+EXTOL,extol,extol,Positiv,,,,,Passive,|,
+EXTRAPOLATE,extrapolate,extrapol,,,,,Active,,|,
+EXULT,exult,exult,Positiv,,,,,Passive,|,
+FABRICATE,fabricate,fabric,,Negativ,,,Active,,|,
+FACE#2,face,face,,,Strong,,Active,,"| 30% verb: Confront, direct attention to",30.0
+FACILITATE,facilitate,facilit,Positiv,,Strong,,,,|,
+FADE#2,fade,fade,,,,,,Passive,|,
+FAIL#1,fail,fail,,Negativ,,Weak,,Passive,| 56% verb: To be unsuccessful or lose strength,56.0
+FALL#1,fall,fall,,,,Weak,,Passive,"| 74% verb: General verb sense--drop, descend, collapse, sink, decline",74.0
+FALTER,falter,falter,,Negativ,,Weak,,,|,
+FAMILIARIZE,familiarize,familiar,Positiv,,,,Active,,|,
+FAN#2,fan,fan,,,,,Active,,"| 19% verb: To stir up, cause air to blow on",19.0
+FARE#2,fare,fare,,,,,,,|,
+FARM#2,farm,farm,,,,,,,| 12% verb: To operate such a facility,12.0
+FASCINATE#2,fascinate,fascin,,,,,,,|,
+FAST#2,fast,fast,,,Strong,,Active,,| 4% verb: To abstain from eating,4.0
+FASTEN,fasten,fasten,,,,,,,|,
+FATHOM#2,fathom,fathom,,,Strong,,Active,,|,
+FAVOR#2,favor,favor,Positiv,,,,,,| 26% verb: To prefer,26.0
+FEAR#2,fear,fear,,Negativ,,Weak,,Passive,| 33% verb: To be afraid of,33.0
+FEAST#2,feast,feast,Positiv,,,,Active,,"| 17% verb: To celebrate, usually by gorging oneself",17.0
+FEATHER#2,feather,feather,,,,,,,| 16% verb: To provide or cover with feathers,16.0
+FEATURE#2,feature,featur,,,,,,,|,
+FED#1,fed,feed,,,,,,,| 72% verb-adj: Provided something necessary for growth,72.0
+FEDERATE,federate,feder,,,,,,,,
+FEED#1,feed,feed,,,Strong,,,,"| 78% verb: To supply a necessary input, usually nutritional",78.0
+FEEL#1,feel,feel,,,,,,Passive,"| 46% verb: To have an impression, experience an idea or Emotion, to touch",46.0
+FEIGN,feign,feign,,Negativ,,,Active,,|,
+FEINT,feint,feint,,Negativ,,,Active,,|,
+FENCE#2,fence,fenc,,,Strong,,Active,,| 3% verb: To enclose,3.0
+FETCH,fetch,fetch,,,,,Active,,"| verb: Bring, bring back, summon",
+FIDGET,fidget,fidget,,Negativ,,Weak,Active,,|,
+FIELD#2,field,field,,,,,,,"| 1% verb: To handle or answer, to catch in baseball, to put on a field",1.0
+FIGHT#2,fight,fight,,Negativ,Strong,,Active,,| 67% verb: To engage in conflict,67.0
+FIGURE#3,figure,figur,,,,,Active,,"| 31% verb: To solve, calculate, or reason out",31.0
+FILE#2,file,file,,,,,,,|,
+FILL#1,fill,fill,,,Strong,,,,"| 78% verb: To make or be full of, to pervade",78.0
+FILL#2,fill,fill,,,Strong,,Active,,"| 14% idiom-verb: 'fill in'--to satisfy (a requirement or need), to supply  with satisfactorily",14.0
+FILM#2,film,film,,,,,Active,,"| 0% verb: To make a film of, to photograph in film",0.0
+FINANCE#2,finance,financ,,,Strong,,,,|,
+FIND#1,find,find,,,,,Active,,"| verb: Locate, discover, learn, adjudge, encounter",
+FINE#7,fine,fine,,Negativ,Strong,,Active,,| 0% verb: To levy a fee in punishment,0.0
+FINGER#2,finger,finger,,,,,,,|,
+FINISH#1,finish,finish,,,,,Active,,"| verb: To complete, end, draw to a close, put the final touches on",
+FISH#1,fish,fish,,,,,,,| 22% verb: To try to catch fish,22.0
+FIX#1,fix,fix,,,Strong,,Active,,"| 65% verb: To repair, mend, prepare, arrange; influence a result or action  to one's advantage (0); get even with (0)",65.0
+FIX#2,fix,fix,,,,,Active,,"| 14% idiom-verb: ""Fixing to""--planning or preparing to do something",14.0
+FIXATE,fixate,fixat,,,,,,,,
+FLASH#2,flash,flash,,,,,Active,,|,
+FLATTER,flatter,flat,Positiv,,,Weak,,Passive,|,
+FLAUNT,flaunt,flaunt,Positiv,,,,Active,,|,
+FLAVOR#2,flavor,flavor,,,,,,Passive,|,
+FLED,fled,flee,,Negativ,,Weak,Active,,| verb: To have run or passed away quickly,
+FLEE,flee,flee,,Negativ,,Weak,Active,,|,
+FLEW,flew,fli,,,Strong,,Active,,"| verb: Moved swiftly, usually through the air (past tense of fly)",
+FLIRT,flirt,flirt,Positiv,,,,Active,,|,
+FLOAT,float,float,,,,,,Passive,|,
+FLOOD#2,flood,flood,,,Strong,,,,|,
+FLOOR#5,floor,floor,,Negativ,Strong,,Active,,| 2% verb: To provide with a floor; to knock to the floor (0),2.0
+FLOUNDER,flounder,flounder,,Negativ,,Weak,,Passive,|,
+FLOW#2,flow,flow,,,,,Active,,| 47% verb: To move as a liquid,47.0
+FLOWER#2,flower,flower,,,,,,,| 0% verb: To bloom,0.0
+FLOWN,flown,fli,,,,,Active,,|,
+FLUCTUATE,fluctuate,fluctuat,,,,,,,,
+FLUNG,flung,fling,,,,,Active,,|,
+FLY#2,fly,fli,,,Strong,,Active,,"| 62% verb: To move swiftly, usually through the air",62.0
+FOAM#2,foam,foam,,,,,,,|,
+FOCUS#2,focus,focus,,,,,,,|,
+FOLD,fold,fold,,,,,,,|,
+FOLLOW#1,follow,follow,,,,Weak,,Passive,"| 42% verb: To give allegiance to, obey, act in accordance with, ""i wish  he would follow my advice,"" infrequently, understand--""i didn't follow  your argument""",42.0
+FOLLOW#7,follow,follow,,,,,Active,,"| 21% verb: To move behind in the same direction--""i followed him to the  station""; to pursue, trail, track (infrequent)",21.0
+FOOL#2,fool,fool,,Negativ,,,,,| 37% verb: To deceive or joke with,37.0
+FOOL#3,fool,fool,,,,,Active,,"| 15% verb: 'fool around,' 'fool with'--to trifle, to have fun",15.0
+FORCE#3,force,forc,,Negativ,Strong,,Active,,"| 39% verb: To compel, impose, overcome the resistance of",39.0
+FORECAST#2,forecast,forecast,,,,,,,|,
+FORESEE,foresee,forese,,,,,,Passive,|,
+FORFEIT,forfeit,forfeit,,Negativ,,Weak,,Passive,|,
+FORGAVE,forgave,forgav,Positiv,,,,,,|,
+FORGET,forget,forget,,,,Weak,,Passive,"| verb: To fail to remember, lose memory of",
+FORGIVE,forgive,forgiv,Positiv,,,,,,|,
+FORGOT,forgot,forget,,,,Weak,,Passive,|,
+FORGOTTEN#2,forgotten,forget,,,,Weak,,Passive,|,
+FORM#2,form,form,,,,,Active,,| 31% verb: To constitute or bring into existence,31.0
+FORMULATE#2,formulate,formul,,,,,Active,,|,
+FORSAKE,forsake,forsak,,Negativ,,Weak,,Passive,|,
+FORTIFY,fortify,fortifi,Positiv,,Strong,,Active,,|,
+FOSSILIZE,fossilize,fossil,,,,,,Passive,|,
+FOSTER,foster,foster,Positiv,,,,Active,,|,
+FOUGHT,fought,fight,,Negativ,Strong,,Active,,"| verb: Past tense of ""fight""--engaged in conflict",
+FOUNDER#2,founder,founder,,Negativ,,Weak,,Passive,|,
+FRACTURE,fracture,fractur,,Negativ,,Weak,,Passive,|,
+FRAME#2,frame,frame,,,Strong,,Active,,|,
+FREE#2,free,free,Positiv,,Strong,,Active,,"| 5% verb: To make free, set at liberty, release from bondage, restraint",5.0
+FREEZE,freeze,freez,,,,,,,,
+FREQUENT#3,frequent,frequent,,,,,,,| 0% verb: To go to habitually,0.0
+FRET,fret,fret,,Negativ,,Weak,Active,,|,
+FRIGHTEN#1,frighten,frighten,,Negativ,,,Active,,| 19% verb: To scare,19.0
+FROLIC,frolic,frolic,Positiv,,,,Active,,|,
+FROWN#2,frown,frown,,Negativ,,,,Passive,|,
+FRUSTRATE#1,frustrate,frustrat,,Negativ,Strong,,,,| 20% verb: To thwart,20.0
+FRY#2,fry,fri,,,,,,,|,
+FUCK,fuck,fuck,,,Strong,,Active,,|,
+FULFILL,fulfill,fulfil,Positiv,,Strong,,,,|,
+FUMBLE,fumble,fumbl,,Negativ,,Weak,Active,,|,
+FUME#2,fume,fume,,,,,,,|,
+FUN#2,fun,fun,,Negativ,,,,,"| 3% idiom-verb: ""Make fun (of)""--to tease, parody",3.0
+FUNCTION#1,function,function,,,Strong,,Active,,"| 48% verb: To perform, act, serve, operate",48.0
+FURNISH,furnish,furnish,,,,,Active,,|,
+FURTHER#3,further,further,,,Strong,,,,"| 12% verb: To extend, increase, promote",12.0
+FUSS,fuss,fuss,,Negativ,,Weak,Active,,|,
+GAIN#1,gain,gain,Positiv,,Strong,,Active,,"| 83% verb: To get, obtain, win",83.0
+GAMBLE#2,gamble,gambl,,Negativ,,,Active,,|,
+GAPE,gape,gape,,,,,,,,
+GARNISH,garnish,garnish,Positiv,,,,Active,,|,
+GAS#2,gas,gas,,,,,,,|,
+GASP#2,gasp,gasp,,,,,,,|,
+GATHER#1,gather,gather,,,,,Active,,| 89% verb: To collect into a group.,89.0
+GAUGE#2,gauge,gaug,,,,,Active,,|,
+GAZE#2,gaze,gaze,,,,,,Passive,|,
+GENERALIZE,generalize,general,,,,,Active,,|,
+GENERATE,generate,generat,Positiv,,,,Active,,|,
+GESTURE#2,gesture,gestur,,,,,Active,,|,
+GET#1,get,get,,,,,Active,,"| 29% verb: To have or gain possession or control of something--to obtain,  fetch, receive, acquire--includes use in past tense meaning ""have""--""she's  got brown hair""; understand ",29.0
+GIVE#1,give,give,Positiv,,,,Active,,"| 90% verb: To donate, provide (with), present, hand over, emit or issue,  cause to have; prone, wont--""he is given to drink"" (2)",90.0
+GLADDEN,gladden,gladden,Positiv,,,,,,|,
+GLANCE#2,glance,glanc,,,,,,Passive,|,
+GLEAM#2,gleam,gleam,Positiv,,,,,,|,
+GLEAN,glean,glean,Positiv,,,,Active,,|,
+GLIMMER,glimmer,glimmer,Positiv,,Strong,,,Passive,|,
+GLIMPSE#2,glimpse,glimps,,,,,,Passive,|,
+GLISTEN#2,glisten,glisten,Positiv,,,,,,|,
+GLITTER#2,glitter,glitter,Positiv,,,,,,|,
+GLOAT,gloat,gloat,,Negativ,Strong,,Active,,|,
+GLORIFY,glorify,glorifi,Positiv,,Strong,,Active,,|,
+GLOW#1,glow,glow,Positiv,,,,,,|,
+GO#1,go,go,,,,,Active,,"| 88% verb: Indicates motion, action, change of state",88.0
+GONE#1,gone,go,,,,,Active,,"| 77% verb: Indicates past motion, action, change of state",77.0
+GONE#2,gone,go,,,Strong,,Active,,"| 10% verb: 'gone on'--continued, proceeded, taken place",10.0
+GONNA,gonna,go,,,,,,,|,
+GOSSIP#2,gossip,gossip,,,,,,,|,
+GOVERN#2,govern,govern,,,Strong,,,,|,
+GRAB,grab,grab,,Negativ,,,Active,,| verb: To seize or clutch.,
+GRADE#3,grade,grade,,,,,,,"| 6% verb: To arrange or classify by stages, to rate or rank",6.0
+GRADUATE#2,graduate,graduat,,,,,,,| 32% verb: To graduate from,32.0
+GRANT#2,grant,grant,,,Strong,,,,"| 42% verb: To confer or give in promise, to allow, acknowledge",42.0
+GRAPPLE,grapple,grappl,,Negativ,Strong,,Active,,|,
+GRASP#2,grasp,grasp,,,Strong,,Active,,|,
+GRATIFY,gratify,gratifi,Positiv,,,,Active,,|,
+GRAVITATE,gravitate,gravit,,,,,,,,
+GREASE#2,grease,greas,,,,,,,|,
+GREET#2,greet,greet,Positiv,,,,,,|,
+GRIEVE,grieve,griev,,Negativ,,,Active,,|,
+GRIN#2,grin,grin,,,,,,,|,
+GRIND#2,grind,grind,,,Strong,,Active,,|,
+GRIP#2,grip,grip,,,Strong,,Active,,|,
+GROOM,groom,groom,Positiv,,,,Active,,|,
+GROSS#2,gross,gross,,,,,,,|,
+GROUND#4,ground,ground,,,Strong,,Active,,| 3% verb: Past tense and participle of 'grind',3.0
+GROUP#3,group,group,,,,,Active,,| 0% verb: To form groups,0.0
+GROW#1,grow,grow,,,Strong,,Active,Passive,"| 34% verb: To increase in size, intensity, etc.--especially of living things",34.0
+GROW#2,grow,grow,,,Strong,,,,"| 29% idiom-verb: 'grow up'--to mature, attain maturity",29.0
+GROWL,growl,growl,,Negativ,,,Active,,|,
+GROWN#1,grown,grow,,,Strong,,,Passive,"| 8% verb: To have increased in size, intensity, etc.",8.0
+GRUMBLE,grumble,grumbl,,Negativ,,,,,|,
+GUARANTEE#2,guarantee,guarante,Positiv,,Strong,,,,|,
+GUARD#1,guard,guard,,,Strong,,Active,,| 55% verb: To protect or watch out for,55.0
+GUESS#1,guess,guess,,,,,,,"| verb: To form an opinion from uncertain evidence, to estimate or conjecture,  or to think or suppose (as interjection)",
+GUIDE#1,guide,guid,Positiv,,Strong,,Active,,| 50% verb: To direct,50.0
+HAD#1,had,have,,,,,,,|,
+HAGGLE,haggle,haggl,,,,,,,,
+HAIR#2,hair,hair,,,,,,,| 2% noun: 'let one's hair down'-habitual demeanor,2.0
+HALT,halt,halt,,,Strong,,Active,,|,
+HAMPER,hamper,hamper,,Negativ,Strong,,Active,,|,
+HANDLE#1,handle,handl,,,Strong,,Active,,"| 83% verb: To manage, guide, have under one's jurisdiction or control",83.0
+HANG#1,hang,hang,,,,,,Passive,| 59% verb: To be suspended or to remain (intransitive),59.0
+HANG#2,hang,hang,,,,Weak,Active,,"| 18% verb: 'hang on to'--cling to, retain",18.0
+HANKER,hanker,hanker,,,,,,,,
+HAPPEN#1,happen,happen,,,,,,Passive,| 92% verb: To take place or occur,92.0
+HARASS,harass,harass,,Negativ,,,Active,,|,
+HARBOR#2,harbor,harbor,,,Strong,,,,|,
+HARDEN,harden,harden,,,,,,,,
+HARM#2,harm,harm,,Negativ,Strong,,Active,,"| 67% verb: To injure, damage, or hurt",67.0
+HARMONIZE,harmonize,harmon,Positiv,,,,Active,,|,
+HARNESS,harness,har,Positiv,,,,Active,,|,
+HARVEST#2,harvest,harvest,,,,,Active,,|,
+HAS#1,has,have,,,,,,,|,
+HASTEN,hasten,hasten,,,,,Active,,|,
+HATE#1,hate,hate,,Negativ,,,,Passive,"| 80% verb: To dislike passionately, to detest",80.0
+HAUNT,haunt,haunt,,Negativ,,,Active,,|,
+HAVE#1,have,have,,,,,Active,,"| 36% verb: Possess, experience, engage in, cause to happen",36.0
+HAZARD#2,hazard,hazard,,Negativ,,,Active,,|,
+HEAL,heal,heal,Positiv,,Strong,,,,|,
+HEAP#2,heap,heap,,,,,Active,,|,
+HEAR#1,hear,hear,,,,,,Passive,"| 64% verb: To perceive sound, to listen; to pay attention (infrequent)",64.0
+HEAT#2,heat,heat,,,Strong,,Active,,| 23% verb: To make hot,23.0
+HEDGE,hedge,hedg,,Negativ,,Weak,,,|,
+HEED,heed,heed,,,,,,Passive,|,
+HEIGHTEN,heighten,heighten,,,Strong,,,,|,
+HELP#2,help,help,Positiv,,,,Active,,"| 75% verb: To aid, assist",75.0
+HERD#2,herd,herd,,,Strong,,Active,,| 35% verb: To form and maintain such groups,35.0
+HESITATE,hesitate,hesit,,,,Weak,,Passive,|,
+HIDDEN#2,hidden,hide,,,,,,,"| 38% verb: Past tense of ""hide""--concealed",38.0
+HIDE#1,hide,hide,,,,Weak,Active,,| 57% verb: To conceal oneself,57.0
+HIGHLIGHT,highlight,highlight,Positiv,,,,Active,,|,
+HINDER,hinder,hinder,,Negativ,Strong,,,,|,
+HINGE#2,hinge,hing,,,,,,,|,
+HIRE,hire,hire,,,Strong,,Active,,|,
+HIT#1,hit,hit,,Negativ,Strong,,Active,,"| 90% verb: To strike or collide against, present and past tense",90.0
+HOARD,hoard,hoard,,Negativ,,,,,|,
+HOBBLE,hobble,hobbl,,Negativ,,Weak,Active,,|,
+HOLD#1,hold,hold,,,,,Active,,"| 67% verb: Verb denoting possession, control, or maintenance in a given  position or state, thus contain , retain; to conduct, carry on, engage  in--""hold a meeting"" (11); to fill ",67.0
+HOLD#2,hold,hold,,,,,,Passive,"| 12% verb: Believe, feel, profess, say--""we hold these truths to be . . .""",12.0
+HONOR#1,honor,honor,Positiv,,,,,Passive,"| 35% verb: To esteem, exalt, respect",35.0
+HOP#2,hop,hop,,,,,Active,,|,
+HOPE#1,hope,hope,Positiv,,,,,Passive,"| 74% verb: To look forward with desire and trust to something happening,  to feel that something desired may happe",74.0
+HORRIFIES,horrifies,horrifi,,,,,,,,
+HORRIFY,horrify,horrifi,,Negativ,,,Active,,|,
+HOUSE#5,house,hous,,,,,,,"| 0% verb: To shelter, lodge, accommodate",0.0
+HUDDLE#2,huddle,huddl,,,,Weak,,Passive,|,
+HUG,hug,hug,Positiv,,,,Active,,|,
+HUMILIATE,humiliate,humili,,Negativ,,,Active,,|,
+HUNG#1,hung,hang,,,,,,Passive,| 43% verb: To have suspended or attached (transitive),43.0
+HUNT#2,hunt,hunt,,Negativ,,,Active,,| 94% verb: To chase and kill animals; to search out (14),94.0
+HURL,hurl,hurl,,,,,,,,
+HURRY#2,hurry,hurri,,,,,Active,,| 48% verb: To rush or cause to rush,48.0
+HURT#1,hurt,hurt,,Negativ,Strong,,Active,,"| 89% verb: To injure or harm, to cause or experience pain or distress",89.0
+HURTLE,hurtle,hurtl,,,,,Active,,|,
+HUSTLE,hustle,hustl,,Negativ,,,Active,,|,
+IDENTIFY,identify,identifi,,,,,,Passive,|,
+IDLE#2,idle,idl,,,,,,Passive,|,
+IDOLIZE,idolize,idol,Positiv,,,,Active,,|,
+IGNORE,ignore,ignor,,,,,Active,,|,
+ILLUMINATE,illuminate,illumin,Positiv,,,,Active,,|,
+ILLUSTRATE,illustrate,illustr,,,,,Active,,|,
+IMAGINE,imagine,imagin,,,,,,Passive,"| verb: To form a mental image, to speculate, conjecture, suppose, or fantasize",
+IMITATE,imitate,imit,,,,,,,,
+IMMIGRATE,immigrate,immigr,,,,,,,,
+IMPAIR,impair,impair,,Negativ,Strong,,Active,,|,
+IMPEDE,impede,imped,,Negativ,Strong,,Active,,|,
+IMPEL,impel,impel,,,Strong,,Active,,|,
+IMPLEMENT,implement,implement,,,Strong,,Active,,|,
+IMPLICATE,implicate,implic,,Negativ,,,Active,,|,
+IMPLORE,implore,implor,,Negativ,,Weak,Active,,|,
+IMPLY,imply,impli,,,,,,Passive,|,
+IMPORT,import,import,,,,,Active,,|,
+IMPOSE,impose,impos,,Negativ,Strong,,Active,,|,
+IMPRESS#1,impress,impress,Positiv,,Strong,,Active,,"| 97% verb: To have a strong, usually pleasing, effect on the mind or Emotions",97.0
+IMPRISON,imprison,imprison,,Negativ,,,Active,,|,
+IMPROVE#1,improve,improv,Positiv,,Strong,,Active,,| 76% verb: To make better in quality or condition,76.0
+IMPUTE,impute,imput,,,,,,,,
+INAUGURATE,inaugurate,inaugur,Positiv,,,,Active,,|,
+INCLINE#2,incline,inclin,,,,,,Passive,|,
+INCLUDE,include,includ,,,Strong,,,,| verb: To contain or embrace,
+INCORPORATE#2,incorporate,incorpor,,,,,,,|,
+INCREASE#1,increase,increas,,,Strong,,Active,,"| 39% verb: To make greater in any respect, augment",39.0
+INCUR,incur,incur,,,,,Active,,|,
+INDICATE,indicate,indic,,,,,,,"| verb: To point out, signify, or intimate",
+INDUCE,induce,induc,,,Strong,,Active,,|,
+INDULGE,indulge,indulg,,Negativ,,,Active,,|,
+INDUSTRIALIZE,industrialize,industri,,,Strong,,,,|,
+INFECT,infect,infect,,Negativ,,,Active,,|,
+INFER,infer,infer,Positiv,,,,Active,,|,
+INFEST,infest,inf,,Negativ,,,Active,,|,
+INFLAME,inflame,inflam,,Negativ,,,Active,,|,
+INFLATE,inflate,inflat,,,,,,,,
+INFLICT,inflict,inflict,,Negativ,,,Active,,|,
+INFLUENCE#2,influence,influenc,,,Strong,,Active,,| 48% verb: To exercise such power,48.0
+INFORM#1,inform,inform,Positiv,,,,Active,,"| 64% verb: To notify, to give information to",64.0
+INFURIATE,infuriate,infuri,,Negativ,,,Active,,|,
+INHABIT,inhabit,inhabit,,,,,,,|,
+INHERIT,inherit,inherit,Positiv,,,,,Passive,|,
+INHIBIT,inhibit,inhibit,,Negativ,Strong,,Active,,|,
+INITIATE,initiate,initi,,,Strong,,Active,,|,
+INJECT,inject,inject,,,,,,,,
+INJURE,injure,injur,,Negativ,,,,Passive,|,
+INNOVATE,innovate,innov,Positiv,,,,Active,,|,
+INQUIRE,inquire,inquir,,,,,Active,,|,
+INSERT#2,insert,insert,,,,,Active,,|,
+INSINUATE,insinuate,insinu,,Negativ,,,Active,,|,
+INSIST,insist,insist,,,Strong,,Active,,| verb: To be emphatic or persistent in asserting or demanding,
+INSPECT,inspect,inspect,,,,,Active,,|,
+INSPIRE#2,inspire,inspir,Positiv,,Strong,,Active,,|,
+INSTALL,install,instal,,,,,Active,,|,
+INSTIGATE,instigate,instig,,,,,,,,
+INSTITUTE#2,institute,institut,,,,,Active,,| 9% verb: To establish or initiate,9.0
+INSTRUCT,instruct,instruct,,,Strong,,Active,,|,
+INSULT,insult,insult,,Negativ,,,Active,,|,
+INSURE,insure,insur,,,,,,,|,
+INTEGRATE,integrate,integr,,,,,,,,
+INTEND#1,intend,intend,,,,,Active,,| 95% verb: To have as plan or purpose,95.0
+INTENSIFY,intensify,intensifi,,,Strong,,Active,,|,
+INTERACT,interact,interact,,,,,,,,
+INTERCEDE,intercede,interced,Positiv,,,,Active,,|,
+INTERCOURSE,intercourse,intercours,Positiv,,,,Active,,|,
+INTEREST#3,interest,interest,Positiv,,,,,,| 5% verb: To arouse interest,5.0
+INTERESTED#1,interested,interest,Positiv,,,,,,| 2% verb: To arouse interest,2.0
+INTERFERE,interfere,interfer,,Negativ,Strong,,Active,,|,
+INTERPOSE,interpose,interpos,Positiv,,,,Active,,|,
+INTERPRET,interpret,interpret,,,,,Active,,|,
+INTERRUPT,interrupt,interrupt,,Negativ,,,Active,,|,
+INTERTWINE,intertwine,intertwin,,,,,,,|,
+INTERVENE,intervene,interven,,,,,Active,,|,
+INTERVIEW#2,interview,interview,,,,,Active,,|,
+INTIMIDATE,intimidate,intimid,,Negativ,Strong,,Active,,|,
+INTOXICATE,intoxicate,intox,,Negativ,,,Active,,|,
+INTRIGUE,intrigue,intrigu,Positiv,,,,,Passive,|,
+INTRODUCE,introduce,introduc,,,,,Active,,|,
+INTRUDE,intrude,intrud,,Negativ,,,Active,,|,
+INTRUST,intrust,intrust,,,,,,,,
+INUNDATE,inundate,inund,,Negativ,Strong,,Active,,|,
+INVADE,invade,invad,,Negativ,,,,,|,
+INVENT,invent,invent,,,,,Active,,|,
+INVEST,invest,invest,,,,,Active,,|,
+INVESTIGATE,investigate,investig,,,,,Active,,|,
+INVITE#1,invite,invit,Positiv,,,,Active,,"| verb: To ask to a dinner, party, or for a visit or other social event;  more generally, to ask, request, call for (9)",
+IRK,irk,irk,,Negativ,,,,Passive,|,
+IRON#2,iron,iron,,,,,Active,,| 23% verb: To press one's clothes,23.0
+IRRIGATE,irrigate,irrig,,,,,,,,
+ISOLATE#2,isolate,isol,,Negativ,Strong,,Active,,|,
+ISSUE#3,issue,issu,,,Strong,,Active,,"| 4% verb: To go, pass, or flow out, come forth, discharge, emit",4.0
+JAIL#2,jail,jail,,Negativ,Strong,,Active,,| 4% verb: To imprison,4.0
+JAR#2,jar,jar,,Negativ,Strong,,Active,,|,
+JEER,jeer,jeer,,Negativ,,,Active,,|,
+JEOPARDIZE,jeopardize,jeopard,,Negativ,,,,,|,
+JERK#2,jerk,jerk,,Negativ,Strong,,Active,,|,
+JEST,jest,j,Positiv,,,,Active,,|,
+JOIN#1,join,join,,,,,Active,,| 59% verb: To become a member of a group or organization,59.0
+JOIN#2,join,join,Positiv,,Strong,,Active,,"| 33% verb: To unite with, agree with, come together--""let us join together,""  ""i join you in praising him""; to get or come together in an informal way--'i'll",33.0
+JOKE#2,joke,joke,Positiv,,,,,,"| 10% verb: To jest, be funny",10.0
+JOURNEY#2,journey,journey,,,,,Active,,| 4% verb: To travel,4.0
+JUDGE#1,judge,judg,,,Strong,,Active,,"| 49% verb: To form an opinion, estimate, generally moral or evaluative,  usually about human matters; to pass sentence in a court of law (2)",49.0
+JUMP#1,jump,jump,,,,,Active,,| 95% verb: To leap; to rise or increase suddenly (1),95.0
+JUSTIFY,justify,justifi,Positiv,,,,,,|,
+KEEP#1,keep,keep,,,,,Active,,"| 79% verb: Cause to remain, continue, persist in some state or activity--  ""keep alert,"" ""keep your eyes open""; hold, possess, retain, maintain,  manage, ""keep the peace,"" ""don'",79.0
+KICK#1,kick,kick,,Negativ,Strong,,Active,,| 75% verb: To strike with one's foot,75.0
+KICK#2,kick,kick,,,Strong,,Active,,"| 13% idiom-verb: 'kick off'--eject, expel, commence",13.0
+KID#2,kid,kid,Positiv,,,,,,| 3% verb: To jest,3.0
+KIDNAP,kidnap,kidnap,,Negativ,,,Active,,|,
+KILL#1,kill,kill,,Negativ,Strong,,Active,,| 98% verb: To deprive of life; figuratively,98.0
+KINDLE,kindle,kindl,,,,,,,,
+KISS#2,kiss,kiss,Positiv,,,,Active,,|,
+KNEEL,kneel,kneel,,,,Weak,,Passive,|,
+KNELT,knelt,knelt,,,,Weak,,Passive,|,
+KNEW,knew,know,,,,,,Passive,| verb: Past tense of 'know',
+KNIFE#2,knife,knife,,Negativ,Strong,,,,| 3% verb: To stab,3.0
+KNIT,knit,knit,,,,,,,,
+KNOCK#3,knock,knock,,Negativ,Strong,,Active,,"| 39% verb: To knock down, over or out--to topple, dislodge, defeat, make unconscious",39.0
+KNOW#1,know,know,,,,,,Passive,"| 92% verb: To perceive, understand, be acquainted with, to have fixed in  the mind, to be cognizant or aware of",92.0
+KNOWN#1,known,know,,,,,,,| 82% verb: Past participle of 'know' sense 1,82.0
+LABEL#2,label,label,,,,,,,|,
+LABOR#3,labor,labor,,,Strong,,Active,,| 2% verb: To do hard work,2.0
+LACK#2,lack,lack,,Negativ,,Weak,,Passive,"| 11% verb: To need, be deficient in",11.0
+LAG,lag,lag,,Negativ,,Weak,,Passive,|,
+LAID#2,laid,lay,,Negativ,,,,,"| 28% idiom-verb: ""Laid off""--discharged employees",28.0
+LAIN,lain,lie,,,,,,,,
+LAMENT,lament,lament,,Negativ,,,Active,,|,
+LAND#2,land,land,,,,,Active,,"| 13% verb: To arrive, debark, deliver",13.0
+LANGUISH,languish,languish,,Negativ,,Weak,,Passive,|,
+LAST#4,last,last,,,Strong,,,,"| 6% verb: Endure, remain",6.0
+LAUGH#2,laugh,laugh,Positiv,,,,,Passive,| 40% verb: To express mirth or amusement by laughter,40.0
+LAUGH#3,laugh,laugh,,Negativ,,,Active,,"| 10% verb-idiom: ""Laugh at"" - ridicule, deride",10.0
+LAUNCH,launch,launch,,,Strong,,Active,,|,
+LAY#1,lay,lie,,,,,,Passive,"| 85% verb: Past tense of ""lie""--reclined, was or remained at a horizontal  position; was or remained in a specified place or condition (4); had intercourse  with (0)",85.0
+LAY#2,lay,lie,,,,,Active,Passive,| 10% verb: To place or put; to have intercourse with (4); to produce eggs  (0); to knock or press down (0),10.0
+LEAD#1,lead,lead,,,Strong,,Active,,"| 42% verb: To supply direction, orientation, guidance, to be in the vanguard",42.0
+LEAD#2,lead,lead,,,,,Active,,"| 33% verb: To produce some effect, to result in, induce--""oppression leads  to violence""; to go towards (concrete)--""all roads lead to rome"" (6)",33.0
+LEAGUE#2,league,leagu,,,Strong,,,,"| 5% idiom: ""In league with"", allied with",5.0
+LEAK,leak,leak,,Negativ,,,,Passive,|,
+LEAN#1,lean,lean,,,,Weak,,,"| 57% verb: To incline or bend from a vertical position, often resting on  something for support (mostly physical)",57.0
+LEAP#2,leap,leap,,,,,Active,,|,
+LEARN#1,learn,learn,,,,,Active,,"| 90% verb: To acquire knowledge of or skill in by study, instruction, or experience",90.0
+LEAVE#1,leave,leav,,,,,Active,,"| 89% verb: Depart, quit, abandon, bequeath, cause to remain",89.0
+LECTURE#2,lecture,lectur,,,,,Active,,|,
+LEFT#3,left,leav,,,,,Active,,"| 75% verb: Departed, quit, abandoned, bequeathed, caused to remain",75.0
+LEND,lend,lend,,,,,Active,,|,
+LENT,lent,lend,,,,,Active,,|,
+LESSEN,lessen,lessen,,,,,,,,
+LETTER#4,letter,letter,,,,,Active,,| 1% verb: To mark with letters,1.0
+LEVEL#2,level,level,,,Strong,,Active,,"| 1% verb: To make flat or horizontal, to aim",1.0
+LIBERALIZE,liberalize,liber,,,,,,,,
+LIBERATE,liberate,liber,Positiv,,,,Active,,|,
+LICK,lick,lick,,,,,Active,,|,
+LIE#1,lie,lie,,,,,,Passive,"| 64% verb: To recline, remain at a horizontal, be located",64.0
+LIE#2,lie,lie,,Negativ,,,,,| 20% verb: To tell falsehoods,20.0
+LIFT,lift,lift,,,Strong,,Active,,|,
+LIGHT#2,light,light,,,,,Active,,"| 10% verb: To ignite, turn on",10.0
+LIGHTEN,lighten,lighten,,,,,,,|,
+LIKE#2,like,like,Positiv,,,,,Passive,"| 47% verb: To derive pleasure from, to find agreeable or congenial, to  feel attracted to someone or som",47.0
+LIMIT#2,limit,limit,,Negativ,Strong,,Active,,| 19% verb: To restrict by or confine within limits,19.0
+LINE#2,line,line,,,,,,,| 9% verb: All verb senses,9.0
+LINK#2,link,link,,,,,Active,,|,
+LIQUIDATE,liquidate,liquid,,Negativ,Strong,,Active,,|,
+LIST#2,list,list,,,,,,,|,
+LISTEN,listen,listen,,,,,,Passive,| verb: Attend closely for the purpose of hearing,
+LIT,lit,light,,,,,Active,,|,
+LIVE#1,live,live,,,Strong,,,,"| 79% verb: Exist, be alive, reside",79.0
+LOAD#2,load,load,,,Strong,,Active,,"| 12% verb: To put on, fill, burden; bias (0)",12.0
+LOAN#2,loan,loan,,,,,Active,,"| 10% verb: The act of lending, a grant of the temporary use of something",10.0
+LOCATE,locate,locat,,,,,Active,,|,
+LOCK#2,lock,lock,,,,,Active,,|,
+LONG#3,long,long,,,,Weak,,Passive,| 2% verb: To yearn,2.0
+LOOK#6,look,look,,,,,Active,,"| 11% verb-idiom: ""Look for""--to seek or search for, be on watch or expecting",11.0
+LOOM,loom,loom,,Negativ,,,,Passive,|,
+LOSE#1,lose,lose,,Negativ,,Weak,,Passive,| 77% verb: To come to be without,77.0
+LOSE#2,lose,lose,,Negativ,,Weak,,,"| 20% verb: To be defeated, to fail",20.0
+LOST#1,lost,lose,,Negativ,,Weak,,Passive,"| 59% verb-adj: Past tense of ""lose""--came to be without, no longer owned  by-- ""we lost our jobs,"" ""we are lost""",59.0
+LOVE#1,love,love,Positiv,,,,,Passive,"| 48% verb: To have affection or strong liking for, especially for one of  opposite sex",48.0
+LOWER#2,lower,low,,,Strong,,Active,,"| 36% verb: To reduce, let down",36.0
+LURE,lure,lure,,Negativ,,,Active,,|,
+LURK,lurk,lurk,,Negativ,,,Active,,|,
+LYING#1,lying,lie,,,,,,Passive,"| 88% verb: To maintain a prostrate position (of people), to be located (of things)",88.0
+MADE#1,made,make,,,,,,,|,
+MAGNIFY,magnify,magnifi,,,Strong,,,,|,
+MAIL#2,mail,mail,,,,,,,|,
+MAINTAIN#1,maintain,maintain,,,Strong,,Active,,"| 86% verb: To preserve, continue, retain, keep in good condition",86.0
+MAJOR#3,major,major,,,,,,,| 16% verb: To take a certain area as one's major,16.0
+MAKE#1,make,make,,,Strong,,Active,,"| 77% verb: Create, produce, execute, construct; cause to be--""make him  happy,"" ""make sure"" (112); earn, acquire, attain--""make money"" (72); become,  comprise--""he will make ",77.0
+MAKE#2,make,make,,Negativ,Strong,,Active,,"| 12% verb: Coerce, force to, cause to--""make him go""",12.0
+MAN#2,man,man,,,,,,,| 0% verb: To furnish with men,0.0
+MANAGE#2,manage,manag,,,Strong,,Active,,"| 69% verb-idiom: ""Manage to""--to succeed in accomplishing, contrive",69.0
+MANGLE,mangle,mangl,,Negativ,,,Active,,|,
+MANIFEST#2,manifest,manifest,,,,,,,,
+MANIPULATE,manipulate,manipul,,Negativ,Strong,,Active,,|,
+MANUFACTURE,manufacture,manufactur,,,Strong,,Active,,|,
+MAR#2,mar,mar,,Negativ,Strong,,Active,,|,
+MARCH#2,march,march,,,Strong,,Active,,| 29% verb: To walk with measured tread,29.0
+MARK#3,mark,mark,,,,,Active,,"| 34% verb: To label, indicate, make a sign, to characterize",34.0
+MARRY#1,marry,marri,Positiv,,,,,,| 83% verb: To take a husband or wife,83.0
+MARVEL,marvel,marvel,Positiv,,,,Active,,|,
+MASS#3,mass,mass,,,Strong,,,,| 3% verb: To form or collect into a mass,3.0
+MASSACRE,massacre,massacr,,Negativ,,,Active,,|,
+MASTER#2,master,master,,,Strong,,Active,,| 21% verb: To gain control of someone or something,21.0
+MATCH#2,match,match,,,Strong,,Active,,|,
+MATE#2,mate,mate,Positiv,,,,,,|,
+MATRICULATE,matriculate,matricul,,,,,Active,,|,
+MATTER#4,matter,matter,Positiv,,Strong,,,,| 12% verb: To be significant,12.0
+MATURE#2,mature,matur,Positiv,,Strong,,,,"| 31% verb: To develop, become mature, come to fruition",31.0
+MAXIMIZE,maximize,maxim,Positiv,,,,Active,,|,
+MAY#1,may,may,,,,,,,"| 97% verb: Used to express possibility, opportunity, permission, or wish",97.0
+MEAN#1,mean,mean,,,,,Active,,"| 71% verb: To intend, indicate, signify, imply--occurs 170 times in the  phrase ""i mean,"" used conversationally to connote precision or emphasis",71.0
+MEANT,meant,mean,,,,,Active,,"| verb: Past tense of mean--to have signified, indicated, implied, intended",
+MEASURE#2,measure,measur,,,,,Active,,"| 16% verb: To quantify, guage, to be of a specified dimension",16.0
+MEDDLE,meddle,meddl,,Negativ,,,Active,,|,
+MEDIATE,mediate,mediat,Positiv,,,,Active,,|,
+MEET#1,meet,meet,,,,,Active,,"| 43% verb: Having to do with persons--to encounter, to be in the physical  presence of, to group with (of people)",43.0
+MELT,melt,melt,,,,Weak,,,|,
+MEND,mend,mend,Positiv,,,,Active,,|,
+MENTION#1,mention,mention,,,,,,Passive,"| 97% verb: To speak of casually, to refer to, include passingly.",97.0
+MERGE,merge,merg,,,,,,,,
+MERIT#2,merit,merit,Positiv,,Strong,,,,|,
+MESH,mesh,mesh,Positiv,,,,Active,,|,
+MESS#2,mess,mess,,Negativ,,,,,| 10% verb: Make a mess of,10.0
+MIGHT#1,might,may,,,,,,,"| 98% verb: Auxiliary verb, past tense of 'may'",98.0
+MILL#2,mill,mill,,,,,,Passive,"| 0% verb: ""Mill around,"" ""mill about"" - move aimlessly",0.0
+MINGLE,mingle,mingl,,,,,,,|,
+MINIMIZE,minimize,minim,,,Strong,,Active,,|,
+MINISTER#4,minister,minist,Positiv,,,,Active,,"| 3% verb: To care for, aid, service",3.0
+MISBEHAVE,misbehave,misbehav,,Negativ,,,Active,,|,
+MISGUIDE#2,misguide,misguid,,,,,,,,
+MISHANDLE,mishandle,mishandl,,Negativ,,,Active,,|,
+MISINFORM,misinform,misinform,,Negativ,,,Active,,|,
+MISLEAD,mislead,mislead,,Negativ,,,Active,,|,
+MISREPRESENT,misrepresent,misrepres,,Negativ,,,Active,,|,
+MISS#1,miss,miss,,Negativ,,Weak,,,"| 80% verb: To fail to do or take advantage of, to escape, to notice or  regret the absence of",80.0
+MISTAKE#3,mistake,mistak,,Negativ,,,,Passive,| 3% verb: To 'mistake' one thing for another --to confuse,3.0
+MISTAKEN,mistaken,mistak,,Negativ,,,Active,,|,
+MISTOOK,mistook,mistak,,,,,,,,
+MISTREAT,mistreat,mistreat,,,,,,,,
+MISTRUST,mistrust,mistrust,,Negativ,,,Active,,|,
+MISUNDERSTAND,misunderstand,misunderstand,,Negativ,,,,Passive,|,
+MISUNDERSTOOD,misunderstood,misunderstood,,Negativ,,,,Passive,|,
+MITIGATE,mitigate,mitig,,,,,,,|,
+MIX#1,mix,mix,,,,,Active,,"| 53% verb: To combine, mingle",53.0
+MOAN,moan,moan,,Negativ,,,Active,,|,
+MOBILIZE,mobilize,mobil,Positiv,,,,Active,,|,
+MOCK,mock,mock,,Negativ,,,Active,,|,
+MODIFY,modify,modifi,,,Strong,,Active,,|,
+MOLD#2,mold,mold,,,Strong,,Active,,|,
+MOLEST,molest,mol,,Negativ,,,Active,,|,
+MONITOR,monitor,monitor,,,Strong,,,,|,
+MORTGAGE#2,mortgage,mortgag,,,,,,,|,
+MORTIFY,mortify,mortifi,,Negativ,,,,Passive,|,
+MOTIVATE,motivate,motiv,Positiv,,,,Active,,|,
+MOUNT#2,mount,mount,,,,,Active,,|,
+MOURN#2,mourn,mourn,,Negativ,,Weak,,Passive,|,
+MOUTH#3,mouth,mouth,,,,,,,"| 0% verb: To move the lips or speak, usually excessively or loudly",0.0
+MOVE#1,move,move,,,Strong,,Active,,"| 82% verb: To change or cause to change place or position, to set in motion",82.0
+MUDDLE,muddle,muddl,,Negativ,,,Active,,|,
+MUFFLE#2,muffle,muffl,,,Strong,,Active,,|,
+MULTIPLY,multiply,multipli,,,Strong,,Active,,|,
+MUMBLE,mumble,mumbl,,Negativ,,,,,|,
+MURDER#2,murder,murder,,Negativ,Strong,,Active,,|,
+MURMUR#2,murmur,murmur,,,,Weak,,,|,
+MUSTER,muster,muster,,,Strong,,Active,,|,
+MUTTER,mutter,mutter,,Negativ,,Weak,,,|,
+NAG#2,nag,nag,,Negativ,,,Active,,|,
+NAIL#2,nail,nail,,,,,Active,,|,
+NAME#2,name,name,,,,,,,"| 12% verb: To identify, call, designate",12.0
+NATURALIZATION,naturalization,natur,,,,,,,,
+NEAR#7,near,near,,,,,Active,,| 2% verb: To approach,2.0
+NECESSITATE,necessitate,necessit,,,Strong,,,,|,
+NEED#1,need,nee,,Negativ,,Weak,,Passive,"| 67% verb: To want, lack, require, have (to)",67.0
+NEEDLE#2,needle,needl,,Negativ,,,Active,,|,
+NEGATE,negate,negat,,Negativ,,,,,|,
+NEGLECT#2,neglect,neglect,,Negativ,,,,,|,
+NEGOTIATE,negotiate,negoti,Positiv,,,,Active,,|,
+NEUTRALIZE,neutralize,neutral,,Negativ,Strong,,Active,,|,
+NIX,nix,nix,,Negativ,,,,,|,
+NOD#2,nod,nod,,,,,,,|,
+NOMINATE,nominate,nomin,Positiv,,,,Active,,|,
+NOTE#2,note,note,,,,,,Passive,"| 44% verb: To notice, recognize",44.0
+NOTICE#1,notice,notic,,,,,,Passive,"| 86% verb: To perceive, to recognize, to note",86.0
+NOURISH,nourish,nourish,Positiv,,,,Active,,|,
+NULLIFY,nullify,nullifi,,Negativ,,,,,|,
+NUMBER#4,number,number,,,,,,,"| 1% verb: To assign numbers to, to count, to comprise",1.0
+NURSE#2,nurse,nurs,Positiv,,,,Active,,"| 5% verb: To care for, foster, cherish, nurture",5.0
+NURTURE,nurture,nurtur,Positiv,,,,Active,,|,
+OBEY,obey,obey,Positiv,,,Weak,,Passive,| verb: To comply,
+OBJECT#3,object,object,,Negativ,,,Active,,| 19% verb: To voice aversion,19.0
+OBLIGE,oblige,oblig,Positiv,,,Weak,,,|,
+OBLITERATE,obliterate,obliter,,Negativ,,,,,|,
+OBSERVE,observe,observ,,,,,,Passive,"| verb: To perceive or regard with attention, to remark, to notice",
+OBSTRUCT,obstruct,obstruct,,Negativ,Strong,,Active,,|,
+OBTAIN,obtain,obtain,Positiv,,Strong,,Active,,"| verb: To acquire, to procure",
+OCCASION#2,occasion,occas,,,Strong,,Active,,"| 7% verb: To give cause for, to bring about",7.0
+OCCUPY,occupy,occupi,,,Strong,,,,|,
+OCCUR#1,occur,occur,,,,,,Passive,"| 86% verb: To happen, take place",86.0
+OFFEND,offend,offend,,Negativ,,,Active,,|,
+OFFER#1,offer,offer,Positiv,,,,Active,,"| 84% verb: To present, propose, give",84.0
+OFFICIATE,officiate,offici,,,Strong,,,,|,
+OFFSET,offset,offset,Positiv,,,,,Passive,|,
+OMIT,omit,omit,,Negativ,,Weak,,Passive,|,
+OPEN#4,open,open,,,,,Active,,| 39% verb: To render open,39.0
+OPERATE#1,operate,oper,,,Strong,,Active,,"| 65% verb: To work, perform, function, manage",65.0
+OPERATE#2,operate,oper,,,,,Active,,| 24% verb: To perform surgery,24.0
+OPPOSE#1,oppose,oppos,,Negativ,Strong,,Active,,"| 41% verb: To resist, combat, place opposite",41.0
+OPPRESS,oppress,oppress,,Negativ,,,Active,,|,
+ORDAIN,ordain,ordain,,,,,,,,
+ORGANIZE#1,organize,organ,Positiv,,Strong,,Active,,"| 75% verb: To establish, to systematize",75.0
+ORIENT#2,orient,orient,,,,,,,|,
+ORIGINATE,originate,origin,,,Strong,,Active,,|,
+ORNAMENT#2,ornament,ornament,,,,,,,|,
+OSTRACIZE,ostracize,ostrac,,Negativ,,,Active,,|,
+OUST,oust,oust,,Negativ,Strong,,Active,,|,
+OUTFIT#2,outfit,outfit,,,Strong,,Active,,|,
+OUTLINE#2,outline,outlin,,,,,Active,,|,
+OUTLIVE,outlive,outliv,Positiv,,Strong,,,Passive,|,
+OUTPUT#2,output,output,,,Strong,,Active,,|,
+OUTREACH,outreach,outreach,,,Strong,,Active,,|,
+OUTRUN,outrun,outrun,Positiv,,Strong,,Active,,|,
+OUTWIT,outwit,outwit,Positiv,,,,Active,,|,
+OVERCAME,overcame,overcom,,,Strong,,Active,,|,
+OVERCOME,overcome,overcom,Positiv,,Strong,,Active,,|,
+OVERFLOW,overflow,overflow,,Negativ,,,,Passive,|,
+OVERHAUL,overhaul,overhaul,,,Strong,,Active,,|,
+OVERJOY,overjoy,overjoy,,,,,,,,
+OVERLAP,overlap,overlap,,,,,,,,
+OVERLOOK,overlook,overlook,,Negativ,,,,Passive,|,
+OVERPOWER,overpower,overpow,,Negativ,Strong,,Active,,|,
+OVERRIDE,override,overrid,,,,,,,,
+OVERRODE,overrode,overrid,,,,,,,,
+OVERRUN,overrun,overrun,,Negativ,Strong,,Active,,|,
+OVERSIMPLIFY,oversimplify,oversimplifi,,,,,,,,
+OVERTHROW,overthrow,overthrow,,Negativ,Strong,,Active,,|,
+OVERTURN,overturn,overturn,,Negativ,,,Active,,|,
+OVERWHELM,overwhelm,overwhelm,,,Strong,,,,|,
+OWE,owe,owe,,Negativ,,Weak,,,|,
+PACE#3,pace,pace,,,,,Active,,| 17% verb: To move with slow or measured steps,17.0
+PACIFY,pacify,pacifi,,,,,,,,
+PACK#2,pack,pack,,,,,Active,,"| 38% verb: To bundle together, put up for preservation or transportation, crowd",38.0
+PAGE#2,page,page,,,,,,,|,
+PAINT#2,paint,paint,,,,,Active,,"| 39% verb: To apply this substance, or represent with a paintbrush",39.0
+PAMPER,pamper,pamper,Positiv,,,,Active,,|,
+PAN#2,pan,pan,,,,,,,|,
+PARACHUTE#2,parachute,parachut,,,,,,,"| 6% verb: To jump at a high altitude, using the apparatus above.",6.0
+PARADE#2,parade,parad,,,,,Active,,|,
+PARDON#2,pardon,pardon,Positiv,,Strong,,Active,,|,
+PARK#2,park,park,,,,,,Passive,|,
+PART#3,part,part,,,Strong,,Active,,| 1% verb: To separate or divide,1.0
+PARTAKE,partake,partak,,,,,Active,,|,
+PARTICIPATE#1,participate,particip,,,,,Active,,"| 95% verb: To partake of, to share in some action",95.0
+PARTITION,partition,partit,,Negativ,,,,,|,
+PARTOOK,partook,partook,,,,,Active,,|,
+PASS#1,pass,pass,,,,,Active,,"| 60% verb: Indicates a general sense of motion in relationship to the speaker,  thus, in particular, circulate, leave behind, exceed",60.0
+PASS#2,pass,pass,Positiv,,Strong,,,,"| 11% verb-adj: To undergo successfully (""pass an exam"")",11.0
+PASTE#2,paste,past,,,,,,,|,
+PATCH#2,patch,patch,,,,,Active,,|,
+PATROL#2,patrol,patrol,,,Strong,,,,|,
+PATRONIZE,patronize,patron,,Negativ,,,Active,,|,
+PAUSE#2,pause,paus,,,,Weak,,,|,
+PAY#1,pay,pay,,,,,Active,,| 80% verb: To give or yield as recompense or return,80.0
+PEACE#2,peace,peac,Positiv,,,,Active,,"| 11% idiom-verb: ""Make peace,"" to end strife",11.0
+PEAK#2,peak,peak,,,Strong,,,,|,
+PEEL#2,peel,peel,,,,,Active,,|,
+PEND#2,pend,pend,,,,,,Passive,|,
+PENETRATE,penetrate,penetr,,,Strong,,Active,,|,
+PEOPLE#2,people,peopl,,,,,,,| 0% verb: To populate,0.0
+PERCEIVE,perceive,perceiv,,,,,,Passive,|,
+PERFECT#3,perfect,perfect,Positiv,,Strong,,Active,,"| 3% verb: To make perfect, complete",3.0
+PERFORM,perform,perform,,,,,Active,,|,
+PERISH,perish,perish,,Negativ,,,,,|,
+PERMIT#1,permit,permit,Positiv,,Strong,,,Passive,"| 94% verb: To allow, to make possible",94.0
+PERPETUATE,perpetuate,perpetu,,,Strong,,Active,,|,
+PERPLEX,perplex,perplex,,Negativ,,Weak,,,|,
+PERSECUTE,persecute,persecut,,Negativ,,,Active,,|,
+PERSEVERE,persevere,persever,Positiv,,Strong,,Active,,|,
+PERSIST,persist,persist,,,Strong,,Active,,|,
+PERSUADE,persuade,persuad,,,Strong,,Active,,|,
+PERTURB,perturb,perturb,,Negativ,,,,,|,
+PERVADE,pervade,pervad,,,,,,,,
+PETITION#2,petition,petit,,,,Weak,Active,,|,
+PHONE#2,phone,phone,,,,,,,|,
+PHOTOGRAPH#2,photograph,photograph,,,,,,,|,
+PICK#2,pick,pick,,,,,Active,,"| 59% verb: ""To pick up""--take up, gather or acquire; to give a ride to--  ""i went and picked him up at the station"" (11); to become more frequent  or rapid (0); to tidy (0); to be",59.0
+PIN#2,pin,pin,,,,,,,|,
+PINCH#2,pinch,pinch,,Negativ,,,Active,,|,
+PIT#2,pit,pit,,,,,Active,,|,
+PITCH#2,pitch,pitch,,,,,Active,,|,
+PITY#2,pity,piti,,,,,,Passive,|,
+PLACE#2,place,place,,,,,Active,,"| 11% verb: To put something in position, to arrange, to dispose",11.0
+PLAGUE#2,plague,plagu,,Negativ,Strong,,,,|,
+PLAN#2,plan,plan,,,Strong,,Active,,| 35% verb: To construct such a program,35.0
+PLANE#3,plane,plane,,,,,Active,,| 0% verb: To level,0.0
+PLANT#1,plant,plant,,,,,Active,,"| 42% verb: To put or set in the ground for growth, also to establish (0)  or implant (0)",42.0
+PLAY#1,play,play,,,,,Active,,"| 87% verb: To perform some activity for recreation--playing games, sports,  also, playing a musical instrument (27)",87.0
+PLEAD,plead,plead,,,,Weak,,Passive,|,
+PLEASE#2,please,pleas,Positiv,,,,,,"| 23% verb: To satisfy, to make enjoyable for",23.0
+PLEDGE,pledge,pledg,Positiv,,,,Active,,|,
+PLOD,plod,plod,,Negativ,,Weak,Active,,|,
+PLOT#2,plot,plot,,Negativ,Strong,,Active,,|,
+PLOW#2,plow,plow,,,,,Active,,|,
+PLUG#2,plug,plug,,,,,Active,,|,
+PLUNDER,plunder,plunder,,,,,,,,
+PLUNGE#2,plunge,plung,,,,,,Passive,|,
+POINT#3,point,point,,,,,Active,,"| 23% verb: To observe, note, indicate, call attention to, emphasize",23.0
+POISE#2,poise,pois,,,,,,Passive,|,
+POLARIZE,polarize,polar,,,,,,,,
+POLISH,polish,polish,Positiv,,,,Active,,|,
+POLLUTE,pollute,pollut,,Negativ,,,Active,,|,
+PONDER,ponder,ponder,,,,,,Passive,|,
+POOL#2,pool,pool,,,,,,,|,
+POPULATE,populate,popul,,,,,,,|,
+POSE#2,pose,pose,,,,,,Passive,|,
+POSSESS,possess,possess,,,Strong,,,,|,
+POST#4,post,post,,,,,Active,,"| 7% verb: To affix to a post, wall, etc. for public notices; publicly (0);  to mail (0)",7.0
+POSTPONE#2,postpone,postpon,,,,,Active,,|,
+POUND#2,pound,pound,,Negativ,Strong,,Active,,"| 27% verb: To strike heavily or repeatedly, pommel",27.0
+POUR,pour,pour,,,,,Active,,"| verb: To cause to flow or flood, to give or come forth freely or abundantly",
+POUT,pout,pout,,Negativ,,,,,|,
+PRACTICE#1,practice,practic,,,,,Active,,"| 61% verb: To repeatedly or customarily perform an act or custom, often  for the sake of improvement",61.0
+PRAISE#2,praise,prais,Positiv,,,,Active,,|,
+PRANCE,prance,pranc,Positiv,,,,Active,,|,
+PRAY,pray,pray,,,,,,,| verb: To offer devout petition,
+PRECEDE#2,precede,preced,,,,,,,|,
+PRECIPITATE,precipitate,precipit,,Negativ,,,,,|,
+PREDICT,predict,predict,,,,,,Passive,|,
+PREDOMINATE,predominate,predomin,,,Strong,,,,|,
+PREFER,prefer,prefer,,,,,,Passive,"| verb: Like better, have preference for",
+PREOCCUPY,preoccupy,preoccupi,,,,,,,|,
+PREPARE#1,prepare,prepar,,,Strong,,Active,,"| 73% verb: To put things or oneself in readiness, to compose beforehand",73.0
+PRESCRIBE,prescribe,prescrib,,,,,,,,
+PRESENT#3,present,present,,,,,Active,,"| 20% verb: To bestow, proffer, show, introduce, manifest",20.0
+PRESERVE,preserve,preserv,,,Strong,,Active,,|,
+PRESIDE,preside,presid,,,Strong,,Active,,|,
+PRESS#3,press,press,,,Strong,,Active,,| 43% verb: To exert pressure physically or verbally,43.0
+PRESSURE#2,pressure,pressur,,,Strong,,Active,,| 14% verb: To attempt to influence or force,14.0
+PRESUME,presume,presum,,,,,,Passive,|,
+PRETEND,pretend,pretend,,Negativ,,,Active,,"| verb: To hold out the appearance of being, doing, having, feeling, etc., feign.",
+PREVAIL,prevail,prevail,,,Strong,,Active,,|,
+PREVENT,prevent,prevent,,,Strong,,Active,,"| verb: Hinder, keep from occurring",
+PREVENTION,prevention,prevent,,,Strong,,,,|,
+PRINT#2,print,print,,,,,Active,,|,
+PROCEED#1,proceed,proceed,,,,,Active,,"| 86% verb: To move, pass, or go forward or onward, to advance, to begin or carry on",86.0
+PROCESS#2,process,process,,,,,Active,,| 3% verb: To prepare by some particular series of actions,3.0
+PROCLAIM,proclaim,proclaim,,,Strong,,,,|,
+PROCRASTINATE,procrastinate,procrastin,,Negativ,,Weak,Active,,|,
+PROCURE,procure,procur,,,Strong,,Active,,|,
+PROD,prod,prod,,Negativ,Strong,,,,|,
+PRODUCE#1,produce,produc,,,Strong,,Active,,"| 89% verb: To bring into existence or sight, create, make",89.0
+PROFESS,profess,profess,Positiv,,,,Active,,|,
+PROFFER,proffer,proffer,Positiv,,,,Active,,|,
+PROFIT#2,profit,profit,Positiv,,Strong,,,,|,
+PROGRAM#2,program,program,,,,,Active,,| 0% verb: To prepare a program for (computer or otherwise),0.0
+PROGRESS#2,progress,progress,Positiv,,Strong,,Active,,| 27% verb: To move towards a goal or generally forward,27.0
+PROHIBIT,prohibit,prohibit,,Negativ,Strong,,Active,,|,
+PROJECT#2,project,project,,,Strong,,Active,,"| 4% verb: To forecast, look forward, extrapolate, externalize onto, place  onto (abstract)",4.0
+PROLONG,prolong,prolong,,,Strong,,Active,,|,
+PROMISE#2,promise,promis,,,,,,,| 48% verb: To make such a declaration,48.0
+PROMOTE,promote,promot,,,Strong,,Active,,|,
+PROMPT#2,prompt,prompt,Positiv,,Strong,,,,|,
+PROMULGATE,promulgate,promulg,,,,,,,,
+PROPHESIZE,prophesize,prophes,,,,,,,,
+PROPOSE#1,propose,propos,,,,,Active,,| verb: To offer or suggest for consideration,
+PROSECUTE,prosecute,prosecut,Positiv,,,,Active,,|,
+PROSPER,prosper,prosper,Positiv,,,,,Passive,|,
+PROTECT,protect,protect,Positiv,,Strong,,Active,,"| verb: To defend or guard from attack, damage, loss, etc.",
+PROTEST#2,protest,protest,,Negativ,,,Active,,|,
+PROVE#1,prove,prove,,,Strong,,Active,,| 65% verb: To establish beyond all reasonable doubt,65.0
+PROVE#2,prove,prove,,,Strong,,,Passive,"| 33% verb: Turn out (to be)--""prove difficult,"" ""prove to be""",33.0
+PROVIDE#1,provide,provid,Positiv,,Strong,,,,"| 97% verb: To furnish, supply, afford",97.0
+PROVOKE,provoke,provok,,Negativ,Strong,,Active,,|,
+PROWL,prowl,prowl,,Negativ,,,Active,,|,
+PRY,pry,pri,,Negativ,,,,,|,
+PUBLISH,publish,publish,,,,,Active,,|,
+PULL,pull,pull,,,Strong,,Active,,"| verb: To tug at, draw, drag, move",
+PUMP#2,pump,pump,,,,,Active,,|,
+PUNCH,punch,punch,,Negativ,,,Active,,|,
+PUNISH,punish,punish,,Negativ,Strong,,Active,,|,
+PURCHASE#2,purchase,purchas,,,,,Active,,|,
+PURIFY,purify,purifi,Positiv,,,,Active,,|,
+PURR,purr,purr,Positiv,,,,Active,,|,
+PURSUE,pursue,pursu,,,Strong,,Active,,"| verb: To chase, follow, follow up",
+PUSH#1,push,push,,Negativ,Strong,,Active,,| 89% verb-adj: To exert force or pressure on something (or someone) in  order to move it (them),89.0
+PUT#1,put,put,,,,,Active,,"| 98% verb: To place, present, or thrust something",98.0
+PUZZLE#2,puzzle,puzzl,,,,,,,|,
+QUALIFY#1,qualify,qualifi,Positiv,,Strong,,,,"| 28% verb: To meet some set of standards, ensure satisfaction of such standards",28.0
+QUALIFY#2,qualify,qualifi,,,Strong,,,,| 16% verb: To impose conditions on the validity of a statement,16.0
+QUARREL#2,quarrel,quarrel,,Negativ,,,Active,,|,
+QUARTER#3,quarter,quarter,,,,,,,| 4% verb: To provide with housing,4.0
+QUENCH,quench,quench,Positiv,,,,,Passive,|,
+QUESTION#2,question,question,,,,,,,"| 10% verb: To ask, interrogate, raise doubts",10.0
+QUIBBLE,quibble,quibbl,,Negativ,,,Active,,|,
+QUICKEN,quicken,quicken,Positiv,,,,Active,,|,
+QUIET#2,quiet,quiet,,,Strong,,Active,,| 7% verb: To silence,7.0
+QUIT,quit,quit,,Negativ,,Weak,,Passive,"| verb: To stop, cease, give up; to leave (2)",
+QUOTE#2,quote,quot,,,,,,,|,
+RACE#3,race,race,,,,,Active,,"| 11% verb: To run or move rapidly, usually competitively",11.0
+RADIATE,radiate,radiat,Positiv,,,,,Passive,|,
+RAID,raid,raid,,Negativ,Strong,,Active,,|,
+RAIN#2,rain,rain,,,,,,,| 29% verb: To fall (as drops of water from the sky),29.0
+RAISE#1,raise,rais,,,Strong,,Active,,"| 57% verb: To elevate, to make rise, to increase in number or volume; in  relation to money",57.0
+RAISE#4,raise,rais,,,,,Active,,"| 19% verb: To introduce, bring forward--""raise the question""",19.0
+RAKE#2,rake,rake,,,,,Active,,|,
+RAMBLE,ramble,rambl,,Negativ,,,Active,,|,
+RANG,rang,ring,,,,,,,|,
+RANGE#2,range,rang,,,,,,,"| 13% verb: To extend, rank",13.0
+RAPT,rapt,rapt,Positiv,,,,,Passive,|,
+RATE#2,rate,rate,,,,,Active,,|,
+RATIFY,ratify,ratifi,,,,,,,,
+RATION,ration,ration,,Negativ,,,Active,,|,
+RATTLE#2,rattle,rattl,,Negativ,Strong,,,,|,
+RAVAGE,ravage,ravag,,Negativ,,,Active,,|,
+RAVE,rave,rave,Positiv,,Strong,,Active,,|,
+RE-ESTABLISH,re-establish,re,,,,,,,,
+REACH#1,reach,reach,,,Strong,,Active,,"| 80% verb: To attain, arrive at, come to, get to, extend to",80.0
+REACH#3,reach,reach,,,,,Active,,"| 11% verb: To extend the hand, to extend",11.0
+REACT,react,react,,,,,,Passive,|,
+REACTIVATE,reactivate,reactiv,,,,,,,,
+REAFFIRM,reaffirm,reaffirm,,,Strong,,,,|,
+REALIZE#1,realize,realiz,,,,,,Passive,"| 88% verb: To apprehend, come to see or know",88.0
+REALIZE#2,realize,realiz,,,Strong,,Active,,"| 11% verb: To make real, see come true or happen--""he realized his dreams""",11.0
+REAP,reap,reap,Positiv,,,,Active,,|,
+REAR#2,rear,rear,,,,,Active,,|,
+REASON#3,reason,reason,,,Strong,,Active,,| 3% verb: To think or argue in a logical manner,3.0
+REASSERT,reassert,reassert,,,,,,,,
+REASSURE,reassure,reassur,Positiv,,Strong,,,,|,
+REBEL#2,rebel,rebel,,Negativ,Strong,,Active,,|,
+REBUFF,rebuff,rebuff,,Negativ,,,Active,,|,
+REBUILD,rebuild,rebuild,,,Strong,,Active,,|,
+REBUKE,rebuke,rebuk,,Negativ,,,Active,,|,
+REBUT,rebut,rebut,,Negativ,,,Active,,|,
+RECALL#2,recall,recal,,,,,,Passive,|,
+RECEDE,recede,reced,,Negativ,,,,Passive,|,
+RECEIVE,receive,receiv,,,,,,Passive,"| verb: To get, accept, admit, apprehend",
+RECLAIM,reclaim,reclaim,Positiv,,,,Active,,|,
+RECLINE,recline,reclin,Positiv,,,,Active,,|,
+RECOGNIZE,recognize,recogn,,,,,,Passive,"| verb: To perceive, identify, acknowledge",
+RECOIL,recoil,recoil,,Negativ,,Weak,Active,,|,
+RECOMMEND,recommend,recommend,,,Strong,,,,|,
+RECONCILE,reconcile,reconcil,Positiv,,,,,,|,
+RECONSIDER,reconsider,reconsid,,,,,,,,
+RECONSTITUTE,reconstitute,reconstitut,,,,,,,,
+RECONSTRUCT,reconstruct,reconstruct,,,Strong,,Active,,|,
+RECORD#3,record,record,,,,,,,"| 9% verb: To set down in writing, to imprint sound on a disk or tape",9.0
+RECOVER,recover,recov,,,Strong,,,,|,
+RECREATE,recreate,recreat,,,,,,,,
+RECRIMINATE,recriminate,recrimin,,,,,,,,
+RECRUIT#2,recruit,recruit,,,Strong,,Active,,|,
+RECUR,recur,recur,,,,,,,,
+REDEEM,redeem,redeem,Positiv,,Strong,,Active,,|,
+REDRESS,redress,redress,,,,,,,,
+REDUCE,reduce,reduc,,,Strong,,,,"| verb: To diminish, degrade, subdue",
+REEMPLOY,reemploy,reemploy,,,,,,,,
+REESTABLISH,reestablish,reestablish,Positiv,,Strong,,Active,,|,
+REEXAMINE,reexamine,reexamin,,,,,,,,
+REFER,refer,refer,,,,,,Passive,| verb: To direct attention or a person to someone or something; to mention  or allude to,
+REFINE,refine,refin,Positiv,,,,Active,,|,
+REFLECT,reflect,reflect,,,,,,Passive,|,
+REFORM#2,reform,reform,,,,,Active,,|,
+REFRAIN,refrain,refrain,,Negativ,,,Active,,|,
+REFUND#2,refund,refund,,,,,Active,,|,
+REFUSE#1,refuse,refus,,Negativ,,,,,"| 97% verb: To decline, to reject, to deny",97.0
+REGAIN,regain,regain,,,Strong,,Active,,|,
+REGARD#2,regard,regard,,,,,,Passive,"| 41% verb: To conceive of, look upon in a particular way",41.0
+REGIONALIZATION,regionalization,region,,,,,,,,
+REGISTER#2,register,regist,,,,,,Passive,|,
+REGRESS,regress,regress,,Negativ,,Weak,,Passive,|,
+REGRET#1,regret,regret,,Negativ,,Weak,,Passive,| 79% verb: To feel sorry about,79.0
+REGROUP,regroup,regroup,,,,,,,,
+REGULATE,regulate,regul,,,Strong,,Active,,|,
+REHABILITATE,rehabilitate,rehabilit,,,,,,,,
+REINFORCE,reinforce,reinforc,,,Strong,,Active,,|,
+REINSTATE,reinstate,reinstat,Positiv,,,,Active,,|,
+REITERATE,reiterate,reiter,,,Strong,,Active,,|,
+REJECT,reject,reject,,Negativ,Strong,,Active,,"| verb: To refuse, cast off, rebuff",
+REJOICE,rejoice,rejoic,Positiv,,,,Active,,|,
+RELAPSE,relapse,relaps,,Negativ,,Weak,,Passive,|,
+RELAUNCH,relaunch,relaunch,,,,,,,,
+RELAX,relax,relax,,,,Weak,,Passive,|,
+RELEASE#1,release,releas,,,,,Active,,"| 68% verb: To let out, let go, free",68.0
+RELIANCE,reliance,relianc,,,,Weak,,,|,
+RELIEVE#1,relieve,reliev,,,Strong,,,,"| 75% verb: To alleviate, disburden, ease",75.0
+RELINQUISH,relinquish,relinquish,,,,Weak,,Passive,|,
+RELISH,relish,relish,Positiv,,,,,Passive,|,
+RELY,rely,reli,,,,Weak,,Passive,|,
+REMAIN#1,remain,remain,,,,,,Passive,"| 94% verb: To stay, to continue in the same condition, to be left or left over",94.0
+REMARK#2,remark,remark,,,,,,,"| 25% verb: To comment, point out",25.0
+REMEMBER,remember,rememb,,,,,,Passive,| verb: Bear in mind or call to mind,
+REMIND,remind,remind,,,,,,,| verb: To cause to remember,
+REMODEL,remodel,remodel,Positiv,,,,Active,,|,
+REMOVE,remove,remov,,,Strong,,Active,,"| verb: Take away or off, dismiss, eliminate",
+RENDER,render,render,,,Strong,,,,|,
+RENEW,renew,renew,,,Strong,,,,|,
+RENOUNCE,renounce,renounc,,Negativ,,,Active,,|,
+RENOVATE,renovate,renov,Positiv,,,,Active,,|,
+RENT#2,rent,rent,,,,,,,| 43% verb: To hire,43.0
+REORGANIZE,reorganize,reorgan,,,,,,,,
+REPAID,repaid,repay,,,,,Active,,|,
+REPAIR#2,repair,repair,Positiv,,Strong,,Active,,|,
+REPAY,repay,repay,,,,,Active,,|,
+REPEAL,repeal,repeal,,Negativ,,,,,|,
+REPEAT#1,repeat,repeat,,,,,Active,,"| 55% verb: To do again, especially to say again",55.0
+REPEL,repel,repel,,,Strong,,Active,,|,
+REPENT,repent,repent,Positiv,,,,Active,,|,
+REPLACE,replace,replac,,,,,Active,,|,
+REPLENISH,replenish,replenish,,,Strong,,Active,,|,
+REPLY#1,reply,repli,,,,,,Passive,| 79% verb: To respond,79.0
+REPORT#3,report,report,,,,,Active,,"| 44% verb: To relate some fact or situation, usually to an authority or  the general public",44.0
+REPOSE,repose,repos,Positiv,,,,,Passive,|,
+REPRESENT,represent,repres,,,,,Active,,"| verb: To describe, to stand or act for",
+REPRESS,repress,repress,,Negativ,,,Active,,|,
+REPROACH,reproach,reproach,,Negativ,,,Active,,|,
+REPUDIATE,repudiate,repudi,,Negativ,Strong,,Active,,|,
+REPULSE,repulse,repuls,,Negativ,Strong,,Active,,|,
+REQUEST#2,request,request,,,,Weak,,Passive,"| 40% verb: To ask for, to petition",40.0
+REQUIRE#1,require,requir,,,Strong,,Active,,"| 98% verb: To need, demand, compel",98.0
+RESCUE#2,rescue,rescu,Positiv,,,,Active,,|,
+RESEMBLE,resemble,resembl,,,,,,,,
+RESENT,resent,resent,,Negativ,,,,Passive,"| verb: To react with displeasure or indignation from a sense of injury,  especially towards someone",
+RESERVE#1,reserve,reserv,,,Strong,,Active,,"| 35% verb: Save, withhold, restrain",35.0
+RESIGN,resign,resign,,,,Weak,,Passive,|,
+RESIST,resist,resist,,,Strong,,Active,,|,
+RESOLVE#2,resolve,resolv,Positiv,,Strong,,Active,,|,
+RESORT#2,resort,resort,,,,,,,,
+RESOUND,resound,resound,Positiv,,Strong,,Active,,|,
+RESPECT#1,respect,respect,Positiv,,,,,Passive,| 48% verb-adj: To hold in esteem--esteemed,48.0
+RESPOND,respond,respond,,,,,,Passive,|,
+REST#3,rest,rest,,,,,,Passive,"| 25% verb: To relax, be at ease or inactive, to be set",25.0
+RESTORE,restore,restor,Positiv,,Strong,,Active,,|,
+RESTRAIN,restrain,restrain,,,Strong,,Active,,|,
+RESTRICT#1,restrict,restrict,,Negativ,Strong,,Active,,| 96% verb: To confine or limit,96.0
+RESULT#2,result,result,,,,,,,| 26% verb: To yield an outcome,26.0
+RESUME#2,resume,resum,,,,,Active,,|,
+RESURRECT,resurrect,resurrect,Positiv,,,,Active,,|,
+RETAIL#2,retail,retail,,,,,,,|,
+RETAIN,retain,retain,,,Strong,,,,|,
+RETALIATE,retaliate,retali,,Negativ,,,Active,,|,
+RETARD,retard,retard,,Negativ,,,Active,,|,
+RETIRE,retire,retir,,Negativ,,,Active,,|,
+RETREAT#2,retreat,retreat,,Negativ,,Weak,Active,,|,
+RETURN#1,return,return,,,,,Active,,"| 79% verb: To go or come back, revert, recur",79.0
+REUNIFY,reunify,reunifi,,,,,,,,
+REUNITE,reunite,reunit,Positiv,,,,Active,,|,
+REVEAL#1,reveal,reveal,,,,,,,"| 85% verb: To make known, disclose",85.0
+REVEL,revel,revel,Positiv,,,,Active,,|,
+REVERE,revere,rever,Positiv,,,,Active,,|,
+REVERSE#2,reverse,revers,,,,,Active,,|,
+REVERT,revert,revert,,Negativ,,Weak,Active,,|,
+REVIEW#2,review,review,,,,,,,|,
+REVISE#2,revise,revis,,,,,Active,,|,
+REVISIT,revisit,revisit,,,,,,,,
+REVITALIZE,revitalize,revit,Positiv,,,,Active,,|,
+REVIVE,revive,reviv,Positiv,,Strong,,Active,,|,
+REVOKE,revoke,revok,,Negativ,,,Active,,|,
+REVOLT,revolt,revolt,,Negativ,,,Active,,|,
+REWARD#2,reward,reward,Positiv,,Strong,,Active,,"| 19% verb: To compensate, to give positive reinforcement",19.0
+RID,rid,rid,,Negativ,,,Active,,|,
+RIDE#1,ride,ride,,,,,Active,,| 70% verb: To travel on or in some form of conveyance,70.0
+RIDICULE#2,ridicule,ridicul,,Negativ,,,Active,,|,
+RIGHT#6,right,right,Positiv,,Strong,,,,| 0% verb: To set something right,0.0
+RING#2,ring,ring,,,,,,,| 15% verb: To telephone (2); to produce a resonant sound (1); to summon (1),15.0
+RIP#2,rip,rip,,Negativ,Strong,,Active,,|,
+RIPEN,ripen,ripen,Positiv,,,,,Passive,|,
+RISE#1,rise,rise,,,Strong,,Active,,"| 56% verb: To move upward or ahead, increase in degree or capacity, expand",56.0
+RISE#2,rise,rise,,,Strong,,,,| 16% verb: To return to life,16.0
+RISK#2,risk,risk,,,,,Active,,|,
+RIVAL#2,rival,rival,,Negativ,Strong,,,,|,
+ROAR#2,roar,roar,,,Strong,,Active,,|,
+ROB,rob,rob,,,,,,,,
+ROCK#2,rock,rock,,,,,Active,,| 1% verb: To move back and forth,1.0
+RODE,rode,ride,,,,,,,| verb: Past tense of ride; traveled on or in some form of conveyance,
+ROLL#1,roll,roll,,,,,Active,,"| 84% verb: To turn over, revolve, wind, undulate--move by revolving; collect--""roll  into one"" (1); start moving--""a program starts to roll"" (1); to produce  a roaring sound ",84.0
+ROMANTICIZE,romanticize,romantic,Positiv,,,,Active,,|,
+ROOF#2,roof,roof,,,,,Active,,| 5% verb: To cover or shelter,5.0
+ROOM#3,room,room,,,,,,,| 1% verb: To reside with or at,1.0
+ROPE#2,rope,rope,,,,,Active,,"| 2% verb: To lasso, to tie",2.0
+ROSE#1,rose,rise,,,Strong,,Active,,"| 75% verb: Moved upward or ahead, increased in degree or capacity, expanded",75.0
+ROT,rot,rot,,Negativ,,,,Passive,|,
+ROUGH#3,rough,rough,,,,,,,"| 0% verb: ""Rough it""--to live without customary comforts",0.0
+ROUSE,rouse,rous,Positiv,,,,Active,,|,
+ROW#2,row,row,,,,,Active,,|,
+RUB#2,rub,rub,,,,,Active,,|,
+RUE,rue,rue,,Negativ,,,,,|,
+RUIN#2,ruin,ruin,,Negativ,Strong,,Active,,| 65% verb: To destroy or spoil,65.0
+RULE#2,rule,rule,,,Strong,,Active,,"| 13% verb: To govern, guide, determine",13.0
+RUMPLE,rumple,rumpl,,Negativ,,,Active,,|,
+RUN#1,run,run,,,,,Active,,"| 61% verb: General sense of motion, defined differently for different classes  of moving things--to move quickly, proceed, extend, pass, flow, etc.",61.0
+RUN#6,run,run,,,,Weak,Active,,"| 16% verb: 'run away,' 'run off'--to flee, escape",16.0
+RUPTURE#2,rupture,ruptur,,Negativ,,Weak,,,|,
+RUSH#1,rush,rush,,,,,Active,,"| 94% verb: To hurry--infrequently-- to attack suddenly, ambush",94.0
+SABOTAGE,sabotage,sabotag,,Negativ,,,Active,,|,
+SACRIFICE#2,sacrifice,sacrific,,,,,,,|,
+SAFEGUARD,safeguard,safeguard,Positiv,,,,Active,,|,
+SAG,sag,sag,,Negativ,,Weak,,Passive,|,
+SAID#1,said,say,,,,,,,"| verb: Past tense of ""say""--to utter or pronounce, express in words, state, claim",
+SAIL#2,sail,sail,,,,,Active,,|,
+SALUTE,salute,salut,Positiv,,,,Active,,|,
+SALVAGE,salvage,salvag,,,,,,,,
+SAMPLE#2,sample,sampl,,,,,,,|,
+SANCTIFY,sanctify,sanctifi,Positiv,,,,Active,,|,
+SANCTION#2,sanction,sanction,,,Strong,,,Passive,|,
+SANG,sang,sing,,,,,Active,,|,
+SANK,sank,sink,,Negativ,,Weak,,,|,
+SATISFY#1,satisfy,satisfi,Positiv,,Strong,,,,"| 28% verb: To give enjoyment or contentment, to fulfill",28.0
+SAVE#1,save,save,Positiv,,Strong,,Active,,"| 79% verb-adj: To rescue, preserve, reserve, salvage, hold in safekeeping",79.0
+SAVOR,savor,savor,Positiv,,,,,Passive,|,
+SAW#1,saw,see,,,,,,Passive,"| 98% verb: Past tense of see, witnessed by sight, or inferred",98.0
+SAY#1,say,say,,,,,Active,,"| 91% verb: To utter or pronounce, express in words, state, claim",91.0
+SCALD,scald,scald,,Negativ,,,,Passive,|,
+SCALE#2,scale,scale,,,,,Active,,|,
+SCAMPER,scamper,scamper,Positiv,,,,Active,,|,
+SCARE#1,scare,scare,,Negativ,Strong,,Active,,| 83% verb: To frighten,83.0
+SCARED#2,scared,scar,,Negativ,Strong,,,,| 4% verb: To frighten (past tense),4.0
+SCATTER,scatter,scatter,,,Strong,,Active,,|,
+SCHEDULE#2,schedule,schedul,,,,,Active,,|,
+SCHEME#2,scheme,scheme,,Negativ,,,,,|,
+SCHOOL#2,school,school,,,,,Active,,| 0% verb: To teach,0.0
+SCOFF,scoff,scoff,,Negativ,,,,,|,
+SCOLD#1,scold,scold,,Negativ,,,Active,,| 95% verb: Admonish,95.0
+SCORCH,scorch,scorch,,Negativ,,,Active,,|,
+SCORE#2,score,score,,,,,,,|,
+SCOWL,scowl,scowl,,Negativ,,,Active,,|,
+SCRAMBLE,scramble,scrambl,,,,Weak,Active,,|,
+SCRAPE,scrape,scrape,,Negativ,,,Active,,|,
+SCRATCH,scratch,scratch,,,,Weak,Active,,|,
+SCRAWL,scrawl,scrawl,,,,Weak,,,|,
+SCREAM#2,scream,scream,,Negativ,,,,,"| 97% verb: To utter a sharp, piercing cry, to utter words in such a way",97.0
+SCREECH#2,screech,screech,,Negativ,,,,,|,
+SCREW#2,screw,screw,,Negativ,,,Active,,|,
+SCRUB#2,scrub,scrub,,,,,Active,,|,
+SCRUTINIZE,scrutinize,scrutin,,Negativ,,,Active,,|,
+SCULPTURE#2,sculpture,sculptur,,,,,,,|,
+SEAL#2,seal,seal,,,,,Active,,|,
+SEARCH#1,search,search,,,,,Active,,| 76% verb: To look for,76.0
+SEAT#4,seat,seat,,,,,Active,,"| 2% verb: To place, to position",2.0
+SECEDE,secede,seced,,Negativ,,,,,|,
+SECOND#4,second,second,,,Strong,,,,| 2% verb: To assist or support,2.0
+SECURE#1,secure,secur,,,Strong,,Active,,"| 79% verb: To obtain, insure, make fast",79.0
+SEDUCE,seduce,seduc,,,,,,,,
+SEE,see,see,,,,,,Passive,"| verb: To look at, witness, perceive, understand, imagine, visit",
+SEEK,seek,seek,,,,,Active,,"| verb: To go in search of, to attempt to obtain an object or a desired  goal; to attempt or try (8)",
+SEEM#1,seem,seem,,,,,,,| verb: To appear or appear to be,
+SEEN,seen,see,,,,,,Passive,|,
+SEETHE,seethe,seeth,,Negativ,,,Active,,|,
+SEIZE,seize,seiz,,Negativ,Strong,,Active,,| verb: To take possession or control of,
+SELECT,select,select,,,,,Active,,|,
+SELL#1,sell,sell,,,,,Active,,"| 95% verb: To offer for sale, dispose of for a price, deal in; persuade (infrequent)",95.0
+SEND#1,send,send,,,,,Active,,"| verb: To cause (permit or enable) to go, or to be taken",
+SENSE#6,sense,sens,,,,,,Passive,"| 10% verb: To note, perceive, feel, intuit",10.0
+SENT,sent,send,,,,,Active,,"| verb: Caused, permitted or enabled to go or be taken",
+SENTENCE#2,sentence,sentenc,,Negativ,Strong,,Active,,|,
+SEPARATE#1,separate,separ,,,,,Active,,"| 41% verb: To divide, to part company",41.0
+SEQUESTER,sequester,sequest,,Negativ,,,,,|,
+SERVE#1,serve,serv,,,,Weak,Active,,"| 82% verb: To work for, be of assistance, or do one's duty; to answer the  purpose of, function as (17)",82.0
+SERVE#2,serve,serv,,,,,Active,,| 13% verb: To furnish and distribute food,13.0
+SET#1,set,set,,,,,Active,,"| 45% verb: Put, place, cause a change in condition, determine, fix, put forward",45.0
+SETTLE#1,settle,settl,,,Strong,,Active,,"| 47% verb: To establish a household, to assume a certain form, to make  or become stable (3)",47.0
+SEW,sew,sew,,,,,,,,
+SHADE#2,shade,shade,,,,,,,|,
+SHADOW#2,shadow,shadow,,Negativ,,,Active,,|,
+SHAFT#2,shaft,shaft,,,,,,,|,
+SHAKE#1,shake,shake,,Negativ,,,Active,,"| 86% verb: To rapidly move back and forth; abstract--to loosen, weaken,  disrupt, upset (2)",86.0
+SHAPE#2,shape,shape,,,Strong,,Active,,"| 21% verb: To form, mold, determine",21.0
+SHARE#1,share,share,Positiv,,,,,,"| 67% verb: To have, use or experience in common",67.0
+SHARPEN,sharpen,sharpen,,,,,Active,,|,
+SHATTER,shatter,shatter,,,Strong,,Active,,|,
+SHED#2,shed,shed,,,,,,,|,
+SHELL#3,shell,shell,,Negativ,Strong,,Active,,| 5% verb: To use (an) artillery warhead(s),5.0
+SHELTER#2,shelter,shelter,Positiv,,Strong,,,,|,
+SHIELD,shield,shield,Positiv,,,,Active,,|,
+SHIFT#1,shift,shift,,,,,Active,,"| 55% verb: To change directions, to transfer, to switch",55.0
+SHINE#1,shine,shine,,,,,,,| 62% verb: To give off light,62.0
+SHIP#2,ship,ship,,,,,Active,,| 7% verb: To transport by naval vessel,7.0
+SHIRK,shirk,shirk,,Negativ,,Weak,Active,,|,
+SHIVER,shiver,shiver,,Negativ,,,,Passive,|,
+SHOCK#2,shock,shock,,Negativ,Strong,,Active,,"| 29% verb: To jar with intense surprise, horror, disgust",29.0
+SHOOT#1,shoot,shoot,,Negativ,Strong,,Active,,"| 68% verb: To send forth or discharge a projectile, generally with a gun,  in order to hit or damage some object; to take pictures (0)",68.0
+SHOP#2,shop,shop,,,,,Active,,| 17% verb: To look for articles in stores with intent to buy,17.0
+SHORTEN,shorten,shorten,,,,,Active,,|,
+SHOT#1,shot,shoot,,Negativ,Strong,,Active,,"| 81% verb: Past participle of ""shoot""--to launch or discharge a projectile;",81.0
+SHOULD,should,should,,,,,,,"| verb: Modal connoting duty or propriety--'ought to', would",
+SHOULDER#2,shoulder,shoulder,,,Strong,,Active,,"| 15% verb: To take upon, to support or carry, to apply the shoulder",15.0
+SHOUT#1,shout,shout,,,,,Active,,| 96% verb: To cry out or yell loudly,96.0
+SHOVE,shove,shove,,Negativ,,,Active,,|,
+SHOW#1,show,show,,,Strong,,Active,,"| 89% verb: To demonstrate, make evident, manifest, exhibit, often with  implication of guidance",89.0
+SHOWER#2,shower,shower,,,,,,,|,
+SHRANK,shrank,shrink,,,,Weak,,Passive,|,
+SHRED,shred,shre,,Negativ,,,Active,,|,
+SHRIEK,shriek,shriek,,Negativ,Strong,,,,|,
+SHRINK,shrink,shrink,,,,Weak,,Passive,|,
+SHRIVEL,shrivel,shrivel,,Negativ,,,,,|,
+SHRUG#2,shrug,shrug,,Negativ,,,,,|,
+SHRUNK,shrunk,shrink,,,,Weak,,Passive,|,
+SHUDDER#2,shudder,shudder,,,,,,Passive,|,
+SHUN,shun,shun,,Negativ,,,Active,,|,
+SHUT#1,shut,shut,,,Strong,,Active,,"| 35% verb: To close, keep enclosed",35.0
+SIGH#2,sigh,sigh,,,,,Active,Passive,|,
+SIGN#2,sign,sign,,,,,Active,,"| 19% verb: To affix a signature, thereby to endorse or certify",19.0
+SIGNAL#2,signal,signal,,,,,Active,,|,
+SIGNIFY,signify,signifi,Positiv,,,,,Passive,|,
+SIMPLIFY#2,simplify,simplifi,Positiv,,,,Active,,|,
+SIMULATE#2,simulate,simul,,,,,Active,,|,
+SIN#2,sin,sin,,Negativ,,,,,|,
+SING#1,sing,sing,,,,,Active,,| 69% verb: To produce melodious sounds,69.0
+SINGLE#2,single,singl,,,,,,,"| 4% verb-idiom: ""Single out""--to point out an individual item or group",4.0
+SINK#2,sink,sink,,,,Weak,,Passive,|,
+SIT#1,sit,sit,,,,,,,| 98% verb: To be or become seated (sense of becoming seated less frequent;  to be located or situated (1),98.0
+SITUATE,situate,situat,,,,,Active,,|,
+SIZE#2,size,size,,,,,Active,,| 10% verb: To gauge or measure,10.0
+SKI#2,ski,ski,,,,,Active,,|,
+SKIN#2,skin,skin,,,,,Active,,"| 12% verb: To remove skin from, to injure by abrasion",12.0
+SKULK,skulk,skulk,,Negativ,,,,,|,
+SLAM,slam,slam,,Negativ,Strong,,Active,,|,
+SLANDER,slander,slander,,Negativ,,,Active,,|,
+SLAP,slap,slap,,Negativ,,,Active,,|,
+SLASH,slash,slash,,Negativ,Strong,,Active,,|,
+SLAUGHTER,slaughter,slaughter,,Negativ,,,Active,,|,
+SLAVE#2,slave,slave,,,,,Active,,"| 10% verb: To work hard, as does a slave",10.0
+SLEEP#1,sleep,sleep,,,,,,Passive,"| 81% verb: To slumber, nap, doze, includes ""go to sleep""",81.0
+SLEPT,slept,sleep,,,,Weak,,Passive,| verb: Past participle of sleep,
+SLICE#2,slice,slice,,,,,Active,,|,
+SLID,slid,slide,,,,,,,|,
+SLIDE#2,slide,slide,,,,,,Passive,|,
+SLIGHT#4,slight,slight,,Negativ,,,Active,,| 8% verb: To malign or insult,8.0
+SLIP#1,slip,slip,,,,,,Passive,"| 88% verb: To slide, to move without control or friction, to move stealthily",88.0
+SLOW#5,slow,slow,,,,,,,| 3% verb: To decrease in speed or rate,3.0
+SLUMP,slump,slump,,Negativ,,,,Passive,|,
+SMACK,smack,smack,,Negativ,,,Active,,|,
+SMART#3,smart,smart,,,,,,,| 0% verb: To sting,0.0
+SMASH#1,smash,smash,,Negativ,Strong,,Active,,"| 85% verb: To strike violently, shatter, destroy",85.0
+SMEAR,smear,smear,,Negativ,,,Active,,|,
+SMELL#2,smell,smell,,,,,,Passive,|,
+SMILE#2,smile,smile,Positiv,,,,,Passive,| 46% verb: To form a smile,46.0
+SMITTEN,smitten,smite,Positiv,,,,,Passive,|,
+SMOKE#2,smoke,smoke,,,,,,,"| 32% verb: To consume tobacco, to exude smoke",32.0
+SMOOTH#4,smooth,smooth,,,,,Active,,| 17% verb: To eliminate roughness or difficulty,17.0
+SMOTHER,smother,smother,,Negativ,,,Active,,|,
+SMUGGLE,smuggle,smuggl,,Negativ,,,Active,,|,
+SNAP#2,snap,snap,,,,,Active,,|,
+SNARL,snarl,snarl,,Negativ,,,,,|,
+SNATCH,snatch,snatch,,Negativ,Strong,,Active,,|,
+SNEAK,sneak,sneak,,Negativ,,,Active,,|,
+SNEER,sneer,sneer,,Negativ,,,Active,,|,
+SNORE,snore,snore,,Negativ,,,Active,,|,
+SOAR,soar,soar,,,Strong,,,,|,
+SOB,sob,sob,,Negativ,,,Active,,|,
+SOLD#1,sold,sell,,,,,Active,,"| 82% verb: Past tense of ""sell"" - effected a sale, exchanged for money",82.0
+SOLVE,solve,solv,,,,,Active,,| verb: To find the remedy for or explanation of a problem,
+SOOTHE,soothe,sooth,Positiv,,,,Active,,|,
+SORT#4,sort,sort,,,,,Active,,"| 1% verb: To arrange or separate according to kind, species, etc.",1.0
+SOUGHT,sought,seek,Positiv,,,,,,|,
+SPAN#2,span,span,,,,,,,|,
+SPANK,spank,spank,,Negativ,,,Active,,|,
+SPARE#2,spare,spare,Positiv,,Strong,,,,| 48% verb: To save from ill fortune,48.0
+SPARKLE,sparkle,sparkl,Positiv,,,,,Passive,|,
+SPEAK#1,speak,speak,,,,,Active,,| 90% verb: To communicate or express oneself through vocal means,90.0
+SPEAR#2,spear,spear,,Negativ,Strong,,Active,,"| 12% verb: To lance someone, or something",12.0
+SPECIFY,specify,specifi,,,,,Active,,|,
+SPECULATE,speculate,specul,,,,,,,|,
+SPEED#2,speed,speed,,,Strong,,Active,,|,
+SPELL#2,spell,spell,,,,,,,|,
+SPEND#1,spend,spend,,,,,,,"| 94% verb: To consume, especially time or money",94.0
+SPILL,spill,spill,,Negativ,,,Active,,|,
+SPIN,spin,spin,,,,,,,|,
+SPIT#2,spit,spit,,,,,,,|,
+SPLIT#1,split,split,,,Strong,,Active,,| 68% verb: To divide or to cut apart,68.0
+SPOIL,spoil,spoil,,Negativ,,,,,|,
+SPOKE#1,spoke,speak,,,,,Active,,"| 96% verb: Communicated or expressed through vocal means, past tense of ""speak""",96.0
+SPONSOR#2,sponsor,sponsor,,,Strong,,Active,,|,
+SPOT#2,spot,spot,,,,,,,| 4% verb: To discover by sight,4.0
+SPRAIN,sprain,sprain,,Negativ,,,,Passive,|,
+SPRANG,sprang,spring,,,,,Active,,|,
+SPRAWL,sprawl,sprawl,,,,,,Passive,|,
+SPRAY#2,spray,spray,,,,,,,|,
+SPREAD#1,spread,spread,,,,,,,"| 86% verb: To stretch out, extend, display, scatter",86.0
+SPRING#3,spring,spring,,,,,Active,,| 10% verb: To leap (2); to appear or emerge suddenly (0); to snap shut  (0); to bend or split (0),10.0
+SPRINKLE,sprinkle,sprinkl,,,,,,,|,
+SPRUNG,sprung,spring,,,,,Active,,|,
+SPUN#2,spun,spin,,,,,,,|,
+SPUR#2,spur,spur,,,,,,,|,
+SPUTTER,sputter,sputter,,Negativ,,,Active,,|,
+SQUANDER,squander,squander,,Negativ,,,Active,,|,
+SQUANDOR,squandor,squandor,,,,,,,,
+SQUAT#2,squat,squat,,,,,,Passive,|,
+SQUEEZE#2,squeeze,squeez,,,Strong,,Active,,|,
+STAB,stab,stab,,Negativ,,,Active,,|,
+STABILIZE,stabilize,stabil,Positiv,,Strong,,Active,,|,
+STAGE#3,stage,stage,,,,,Active,,| 4% verb: To organize and carry out some activity,4.0
+STAGGER,stagger,stagger,,,,Weak,,Passive,|,
+STAIN,stain,stain,,Negativ,,,,Passive,|,
+STALL#2,stall,stall,,,,Weak,,,|,
+STAMMER,stammer,stammer,,Negativ,,,Active,,|,
+STAMP#2,stamp,stamp,,Negativ,Strong,,Active,,|,
+STAND#1,stand,stand,,,Strong,,,,"| 71% verb: To be in or move into an upright position (182); abstract--  remain fixed, be in a specified condition or rank--""i stand convinced  of the fact,"" ""we stand in need of m",71.0
+STANDARDIZE,standardize,standard,Positiv,,,,Active,,|,
+STAR#3,star,star,,,,,,,| 4% verb: To play a leading role,4.0
+STARE#2,stare,stare,,,,,,,|,
+START#1,start,start,,,,,Active,,| 93% verb: To begin or commence,93.0
+STARTLE,startle,startl,,Negativ,,,,Passive,|,
+STARVE,starve,starv,,Negativ,,Weak,,Passive,|,
+STATE#3,state,state,,,,,Active,,| 6% verb-adj: To declare,6.0
+STATION#2,station,station,,,,,Active,,| 18% verb: To place or post in position,18.0
+STAY#1,stay,stay,,,,,,,"| 97% verb: To remain in a place, situation or condition or to dwell at  a particular place",97.0
+STEAL#1,steal,steal,,Negativ,,,Active,,"| 60% verb: To rob, thieve",60.0
+STEAM#2,steam,steam,,,,,,,|,
+STEER#2,steer,steer,,,,,Active,,|,
+STEM#2,stem,stem,,,,,,Passive,|,
+STEP#2,step,step,,,,,Active,,"| 29% verb: To walk, set the foot down, hurry (e.g. ""step on it,"" ""step it up"")",29.0
+STICK#2,stick,stick,,,Strong,,Active,,"| 27% verb: Thrust into, pierce, put, extend",27.0
+STIFLE,stifle,stifl,,Negativ,Strong,,Active,,|,
+STILL#5,still,still,,,Strong,,Active,,| 0% verb: To make quiet,0.0
+STIMULATE,stimulate,stimul,Positiv,,,,Active,,|,
+STING,sting,ste,,Negativ,,,Active,,|,
+STINK,stink,stink,,Negativ,,,,,|,
+STIPULATE,stipulate,stipul,,,,,,,|,
+STIR,stir,stir,,,,,,,|,
+STOLE,stole,steal,,Negativ,,,Active,,| verb: Past tense of steal,
+STOLEN#2,stolen,steal,,Negativ,,,,,|,
+STOMACH#2,stomach,stomach,,,Strong,,,,| 3% verb: To endure,3.0
+STONE#2,stone,stone,,,,,Active,,| 1% verb: To assail with rocks,1.0
+STOOD#1,stood,stand,,,Strong,,,,"| 92% verb: Was in or moved into an upright position (72); existed, remained  fixed (6)",92.0
+STOP#2,stop,stop,,,Strong,,Active,,"| 18% verb: To restrain, hinder, prevent",18.0
+STORE#2,store,store,,,,,,,| 4% verb: To supply or stock with something for future use,4.0
+STORM#2,storm,storm,,Negativ,Strong,,Active,,"| 7% verb: To rush, attack, rage",7.0
+STRAGGLE,straggle,straggl,,Negativ,,Weak,Active,,|,
+STRAIN#2,strain,strain,,Negativ,,,Active,,|,
+STRANGLE,strangle,strangl,,Negativ,,,Active,,|,
+STRAY,stray,stray,,Negativ,,,,,|,
+STREAM#3,stream,stream,,,,,,,| 13% verb: To flow as a stream,13.0
+STRENGTHEN#1,strengthen,strengthen,,,Strong,,Active,,| 91% verb: To make strong,91.0
+STRESS#2,stress,stress,,Negativ,,,Active,,|,
+STRETCH#2,stretch,stretch,,,,,Active,,|,
+STRIDE#2,stride,stride,,,,,,,|,
+STRIKE#1,strike,strike,,Negativ,Strong,,Active,,"| 56% verb: To attack, injure, hit (generally in retaliation and with speed),  hit upon and remove, move sharply, make an (physical) impact",56.0
+STRIP#2,strip,strip,,,Strong,,Active,,|,
+STRIVE,strive,strive,,,,,Active,,|,
+STRIVEN,striven,strive,,,,,Active,,|,
+STROKE#2,stroke,stroke,,,,,Active,,|,
+STROVE,strove,strove,,,,,Active,,|,
+STRUCK#1,struck,strike,,Negativ,Strong,,Active,,"| 82% verb: Hit, hit upon, made an impact, attacked",82.0
+STRUCTURE#2,structure,structur,,,,,Active,,| 3% verb: To organize,3.0
+STRUGGLE#2,struggle,struggl,,Negativ,,,Active,,"| 36% verb: To contend, fight",36.0
+STRUT,strut,strut,Positiv,,,,Active,,|,
+STUDY#1,study,studi,,,,,Active,,| 73% verb: To apply oneself to the acquisition of knowledge,73.0
+STUFF#2,stuff,stuff,,,Strong,,Active,,"| 7% verb: To fill, pack tight, cram",7.0
+STUMBLE,stumble,stumbl,,,,Weak,,Passive,|,
+STUN,stun,stun,,,Strong,,,,|,
+SUBDUE,subdue,subdu,,,Strong,,Active,,|,
+SUBJECT#3,subject,subject,,,,,,,,
+SUBJUGATE,subjugate,subjug,,Negativ,,Weak,,Passive,|,
+SUBMERGE,submerge,submerg,,,,,,,|,
+SUBMIT,submit,submit,,,,Weak,,Passive,|,
+SUBSCRIBE,subscribe,subscrib,Positiv,,,,Active,,|,
+SUBSIDE,subside,subsid,,Negativ,,,Active,,|,
+SUBSIDIZE,subsidize,subsid,Positiv,,,,Active,,|,
+SUBSIST,subsist,subsist,Positiv,,,,Active,,|,
+SUBSTANTIATE,substantiate,substanti,Positiv,,,,Active,,|,
+SUBSTITUTE#2,substitute,substitut,,,,,,,|,
+SUBTRACT,subtract,subtract,,Negativ,,,Active,,|,
+SUBVERT,subvert,subvert,,Negativ,,,Active,,|,
+SUCCEED#1,succeed,succeed,Positiv,,,,,,"| 94% verb: To turn out according to desire, to achieve success",94.0
+SUCCUMB,succumb,succumb,,Negativ,,Weak,,Passive,|,
+SUFFER#1,suffer,suffer,,Negativ,,Weak,,Passive,| 69% verb: To experience or tolerate physical or psychological pain or  other unpleasantness,69.0
+SUFFICE,suffice,suffic,Positiv,,Strong,,,,|,
+SUFFOCATE,suffocate,suffoc,,Negativ,,Weak,,Passive,|,
+SUGGEST#1,suggest,suggest,,,,,,Passive,"| 98% verb: To mention for consideration or possible action; to stimulate  certain thoughts, conclusions or Emotions",98.0
+SUIT#3,suit,suit,Positiv,,,,,,"| 17% verb: To please, conform to, satisfy, be agreeable to",17.0
+SUM#2,sum,sum,,,,,Active,,|,
+SUMMARIZE,summarize,summar,,,,,Active,,|,
+SUMMON#2,summon,summon,,,Strong,,Active,,|,
+SUNDER,sunder,sunder,,Negativ,,,Active,,|,
+SUNG,sung,sing,,,,,Active,,|,
+SUNK,sunk,sink,,,,Weak,,Passive,|,
+SUNKEN,sunken,sink,,,,Weak,,Passive,|,
+SUPERVISE,supervise,supervis,,,,,,,,
+SUPPLEMENT#2,supplement,supplement,,,Strong,,,,|,
+SUPPLY#2,supply,suppli,,,Strong,,Active,,| 32% verb: To provide,32.0
+SUPPORT#1,support,support,Positiv,,Strong,,Active,,"| 44% verb: Sustain, provide for, maintain, encourage, back--""i support  the program"" (48); to hold up (0)",44.0
+SUPPOSE#2,suppose,suppos,,,,,,Passive,"| 36% adj: ""Supposed (to)""--expected, under obligation",36.0
+SUPPRESS,suppress,suppress,,Negativ,Strong,,Active,,|,
+SURFACE#2,surface,surfac,,,,,,,"| 0% verb: To come to the top, to put a top on",0.0
+SURMISE,surmise,surmis,Positiv,,,,Active,,|,
+SURMOUNT,surmount,surmount,Positiv,,,,Active,,|,
+SURPASS,surpass,surpass,Positiv,,,,Active,,|,
+SURPRISE#2,surprise,surpris,,,,,Active,,"| 45% verb: To catch unprepared, to provoke a feeling of surprise or wonder",45.0
+SURRENDER#2,surrender,surrend,,,,Weak,,Passive,|,
+SURROUND#1,surround,surround,,,Strong,,Active,,| 66% verb: To enclose or encompass,66.0
+SURVEY#2,survey,survey,,,,,Active,,|,
+SURVIVE,survive,surviv,Positiv,,Strong,,,,|,
+SUSPECT#2,suspect,suspect,,Negativ,,,,,|,
+SUSPEND,suspend,suspend,,Negativ,,,Active,,|,
+SUSTAIN,sustain,sustain,,,Strong,,Active,,|,
+SWALLOW,swallow,swallow,,,,,,,|,
+SWAM,swam,swam,,,,,Active,,|,
+SWAY,sway,sway,,,,,,,,
+SWEAR,swear,swear,,Negativ,,,,,|,
+SWEAT#2,sweat,sweat,,,,,,Passive,|,
+SWEEP#2,sweep,sweep,,,,,Active,,|,
+SWEETEN,sweeten,sweeten,Positiv,,,,Active,,|,
+SWEPT,swept,sweep,,,,,Active,,|,
+SWIM#1,swim,swim,,,,,Active,,| 57% verb: To move in water by strokes,57.0
+SWING#1,swing,swing,,,,,Active,,"| 64% verb: To make or cause angular motion, to bring around",64.0
+SWITCH#2,switch,switch,,,,,Active,,|,
+SWOON,swoon,swoon,Positiv,,,,,Passive,|,
+SWORE,swore,swear,,Negativ,,,,,|,
+SWUNG,swung,swing,,,,,Active,,|,
+SYMBOLIZE,symbolize,symbol,Positiv,,,,,Passive,|,
+SYMPATHIZE,sympathize,sympath,Positiv,,,,,,|,
+TABLE#3,table,tabl,,,,,,,| 1% verb: To put away an issue for discussion in the future,1.0
+TAIL#2,tail,tail,,,,,Active,,| 2% verb: To follow,2.0
+TAILOR#2,tailor,tailor,,,,,,,|,
+TAINT,taint,taint,,Negativ,,,Active,,|,
+TAKE#1,take,take,,,,,Active,,"| 46% verb: Used to denote acquisition, adoption or assumption, thus seize,  obtain, employ, assume, choose, get, receive, execute; assume to be, understand  or interpret in a cert",46.0
+TALK#1,talk,talk,,,,,Active,,"| 83% verb: To communicate, discuss, speak; includes pseudo-adjectival forms  like ""they stood",83.0
+TAMPER,tamper,tamper,,Negativ,,,Active,,|,
+TAP#2,tap,tap,,,,,,,|,
+TASTE#3,taste,tast,,,,,,Passive,"| 50% verb: To savor or experience (transitive)--""i tasted the melon""",50.0
+TATTER,tatter,tatter,,Negativ,,,Active,,|,
+TAUGHT,taught,teach,,,,,Active,,| verb: Past tense of teach,
+TAUNT#2,taunt,taunt,,Negativ,,,Active,,|,
+TAX#2,tax,tax,,Negativ,,,,,"| 6% verb-adj: To burden or place a strain on, to demand taxes from (1)",6.0
+TEACH#1,teach,teach,,,,,Active,,"| 61% verb: Impart knowledge or skill, give instruction, train; includes  gerundive forms like ""he will start teaching soon.""",61.0
+TEAR#1,tear,tear,,Negativ,,,Active,,"| 59% verb: To rip, destroy, divide",59.0
+TEAR#3,tear,tear,,Negativ,,,,Passive,| 10% verb: To race around without apparent control,10.0
+TEASE,tease,teas,,Negativ,,,Active,,|,
+TELEGRAPH#2,telegraph,telegraph,,,,,,,|,
+TELL#1,tell,tell,,,,,Active,,"| 95% verb: To relate a story or any pertinent fact, to speak, instruct,  impart information",95.0
+TELLING,telling,tell,,,,,,,,
+TEMPER#2,temper,temper,,Negativ,,,,,|,
+TEMPT,tempt,tempt,Positiv,,,,Active,,|,
+TEND#1,tend,tend,,,,,,Passive,"| 92% verb: To be inclined, to habitually behave",92.0
+TERM#6,term,term,,,,,,,"| 0% verb: To denote, designate, call",0.0
+TERMINATE,terminate,termin,,,Strong,,Active,,|,
+TERRIFY,terrify,terrifi,,Negativ,,,Active,,|,
+TERRORIZE,terrorize,terror,,Negativ,,,Active,,|,
+TEST#2,test,test,,,,,Active,,"| 28% verb: To examine, to determine competence",28.0
+TESTIFY,testify,testifi,,,,,,,|,
+THANK#1,thank,thank,Positiv,,,,,,"| 49% verb: To express gratitude, give thanks to",49.0
+THICKEN,thicken,thicken,,,Strong,,Active,,|,
+THRASH,thrash,thrash,,Negativ,,,Active,,|,
+THREATEN,threaten,threaten,,Negativ,Strong,,,,| verb: To menace,
+THRIVE,thrive,thrive,Positiv,,Strong,,Active,,|,
+THROW#1,throw,throw,,,Strong,,Active,,"| 85% verb: To hurl, to toss",85.0
+THRUST#2,thrust,thrust,,,Strong,,Active,,|,
+THWART,thwart,thwart,,Negativ,Strong,,Active,,|,
+TIE#1,tie,tie,,,,,Active,,| 79% verb: To bind or connect with something,79.0
+TILL#3,till,till,,,Strong,,Active,,| 0% verb: To cultivate,0.0
+TINGLE#2,tingle,tingl,,,,,,Passive,|,
+TIRE#3,tire,tire,,Negativ,,Weak,,Passive,"| 13% verb: To become bored or disinterested--""tire of""",13.0
+TO#1,to,to,,,,,,,| 61% infinitive: Infinitive,61.0
+TOAST#2,toast,toast,,,,,,,|,
+TOIL,toil,toil,,Negativ,,,Active,,|,
+TOLD#1,told,tell,,,,,Active,,"| verb: Past tense of ""tell""--to relate a story or any pertinent fact, to speak",
+TOLERATE,tolerate,toler,Positiv,,,,Active,,|,
+TOP#2,top,top,,,,,,,| 3% verb: To cap or surpass,3.0
+TOPPLE,topple,toppl,,Negativ,,,,,|,
+TORMENT,torment,torment,,Negativ,,,Active,,|,
+TOSS,toss,toss,,,,,,,,
+TOTAL#2,total,total,,,,,Active,,"| 3% verb: To add, to add up to",3.0
+TOUCH#1,touch,touch,,,,,Active,,| 50% verb: To come into contact with,50.0
+TOUR#2,tour,tour,,,,,,,|,
+TRACE#2,trace,trace,,,,,,,|,
+TRACK#2,track,track,,,,,,,|,
+TRADE#2,trade,trade,,,,,Active,,"| 14% verb: To buy, sell, exchange",14.0
+TRAIL#2,trail,trail,,,,,Active,,|,
+TRAIN#2,train,train,,,,,,,,
+TRAMPLE,trample,trampl,,Negativ,,,Active,,|,
+TRANSFER#2,transfer,transfer,,,,,Active,,|,
+TRANSFORM,transform,transform,,,Strong,,Active,,|,
+TRANSGRESS,transgress,transgress,,Negativ,,,Active,,|,
+TRANSLATE,translate,translat,,,,,Active,,|,
+TRANSMIT,transmit,transmit,,,,,,,,
+TRANSPORT#2,transport,transport,,,,,Active,,|,
+TRAP#2,trap,trap,,Negativ,Strong,,Active,,| 43% verb: To capture or ensnare,43.0
+TRAVEL#1,travel,travel,,,,,Active,,| 80% verb: To journey from place to place,80.0
+TRAVERSE,traverse,travers,,,,,Active,,|,
+TREASURE#2,treasure,treasur,Positiv,,,,,,|,
+TREAT#1,treat,treat,,,,,Active,,"| 95% verb: To deal with in a specified manner, minister to, handle",95.0
+TREMBLE,tremble,trembl,,,,Weak,,Passive,|,
+TRESPASS,trespass,trespass,,Negativ,,,Active,,|,
+TRICK#2,trick,trick,,Negativ,,,Active,,|,
+TRIM,trim,trim,,,,,,,,
+TRIP#2,trip,trip,,,,,,,| 8% verb: To stumble,8.0
+TRIUMPH#2,triumph,triumph,Positiv,,Strong,,,,|,
+TROT#2,trot,trot,,,,,Active,,|,
+TROUBLE#2,trouble,troubl,,Negativ,,,,,| 5% verb: To disturb or worry,5.0
+TRUDGE,trudge,trudg,,Negativ,,,Active,,|,
+TRUST#1,trust,trust,Positiv,,,,,Passive,| 46% verb: To place or have confidence in someone or something,46.0
+TRY#1,try,tri,,,,,Active,,| 98% verb: To attempt (infrequently,98.0
+TUMBLE#2,tumble,tumbl,,,,,,Passive,|,
+TURN#2,turn,turn,,,,,Active,,"| 35% verb: Intransitive--to move around, shift one's course or position  in some direction (toward, from, etc.); includes ""turn to"" meaning appeal to (4)",35.0
+TWIST#2,twist,twist,,,,,Active,,|,
+TWITCH,twitch,twitch,,Negativ,,,,Passive,|,
+UNBIND,unbind,unbind,,,,,,,,
+UNDERGO,undergo,undergo,,,,,,Passive,|,
+UNDERGONE,undergone,undergo,,,,,,Passive,|,
+UNDERMINE,undermine,undermin,,Negativ,Strong,,Active,,|,
+UNDERSTAND#1,understand,understand,Positiv,,,,,,| 65% verb: To comprehend,65.0
+UNDERSTOOD,understood,understand,Positiv,,,,,,| verb: Past tense of 'understand',
+UNDERTAKE#2,undertake,undertak,,,Strong,,Active,,|,
+UNDERTAKEN,undertaken,undertak,,,Strong,,Active,,|,
+UNDERTOOK,undertook,undertak,,,Strong,,Active,,|,
+UNDERWENT,underwent,undergo,,,,,,Passive,|,
+UNDID,undid,undid,,Negativ,,,Active,,|,
+UNDO,undo,undo,,Negativ,,,Active,,|,
+UNDONE,undone,undo,,Negativ,,,,Passive,|,
+UNFINISHED,unfinished,unfinish,,,,Weak,,,|,
+UNIFY,unify,unifi,,,Strong,,Active,,|,
+UNITE#1,unite,unit,,,,,Active,,"| 4% verb: To join, combine, or incorporate so as to form a single whole or unit",4.0
+UNLEASH,unleash,unleash,,,Strong,,Active,,|,
+UNNERVE,unnerve,unnerv,,Negativ,,,,Passive,|,
+UPGRADE,upgrade,upgrad,Positiv,,,,Active,,|,
+UPHELD,upheld,uphold,Positiv,,,,Active,,,
+UPHOLD,uphold,uphold,Positiv,,,,Active,,,
+UPLIFT,uplift,uplift,Positiv,,,,Active,,|,
+UPROOT,uproot,uproot,,Negativ,,,Active,,|,
+UPSET#4,upset,upset,,Negativ,Strong,,Active,,| 14% verb: To disturb Emotionally (of persons),14.0
+URGE#2,urge,urg,,,Strong,,Active,,|,
+USE#1,use,use,,,,,Active,,| 48% verb: To employ,48.0
+USURP,usurp,usurp,,Negativ,,,Active,,|,
+UTILIZE,utilize,util,Positiv,,,,Active,,|,
+UTTER,utter,utter,,,,,,Passive,|,
+VACATION#2,vacation,vacat,,,,,,,| 0% verb: To take a holiday,0.0
+VACILLATE,vacillate,vacil,,,,Weak,,,|,
+VACUUM#2,vacuum,vacuum,,,,,,,|,
+VALUE#2,value,valu,Positiv,,,,,,"| 13% verb: To regard highly, esteem; to appraise the worth of something (0)",13.0
+VANISH,vanish,vanish,,Negativ,,,Active,,|,
+VANQUISH,vanquish,vanquish,Positiv,,,,Active,,|,
+VARY#2,vary,vari,,,,,,,|,
+VENERATE,venerate,vener,Positiv,,,,Active,,|,
+VENTURE#2,venture,ventur,,,,,Active,,|,
+VERIFY,verify,verifi,Positiv,,,,Active,,|,
+VETO,veto,veto,,Negativ,,,Active,,|,
+VEX,vex,vex,,Negativ,,,,,|,
+VIE,vie,vie,,Negativ,,,Active,,|,
+VIEW#3,view,view,,,,,,,"| 6% verb: To regard, observe, see",6.0
+VINDICATE,vindicate,vindic,,,,,,,,
+VIOLATE,violate,violat,,Negativ,,,Active,,|,
+VISIT#1,visit,visit,,,,,,,| 77% verb: To go and stay with someone or at some place for a short time,77.0
+VOICE#2,voice,voic,,,,,Active,,"| 7% verb: To give utterance or expression, to declare, proclaim",7.0
+VOLUNTEER#2,volunteer,volunt,,,,,,,| 4% verb: To offer oneself for a service or undertaking,4.0
+VOTE#2,vote,vote,,,,,Active,,| 69% verb: To cast a ballot,69.0
+VOUCHSAFE,vouchsafe,vouchsaf,Positiv,,,,Active,,|,
+WAGE#2,wage,wage,,,Strong,,Active,,|,
+WAIL,wail,wail,,Negativ,,,Active,,|,
+WAIT#1,wait,wait,,,,,,Passive,"| 91% verb: To stay or rest in expectation or inaction, to be available  or in readiness, to be neglected or to postpone temporarily",91.0
+WAKE#2,wake,wake,,,,,Active,,| 19% verb: Rouse from sleep,19.0
+WALK#1,walk,walk,,,,,Active,,"| 89% verb: To go or travel on foot at a moderate speed, proceed by steps",89.0
+WALLOW,wallow,wallow,,Negativ,,,Active,,|,
+WANDER,wander,wander,,,,,,Passive,"| verb: To move or go aimlessly about, roam, ramble",
+WANE,wane,wane,,Negativ,,,,Passive,|,
+WANT#2,want,want,,,,,,Passive,"| verb: To wish, desire, hope for",
+WARM#2,warm,warm,Positiv,,,,,,"| 19% verb: To make or become physically warm, heat; to inspire with friendly  feelings or incite enthusiasm (2)",19.0
+WARN#2,warn,warn,,,,,Active,,| 85% verb: To notify of impending danger or misfortune,85.0
+WARP,warp,warp,,Negativ,,,Active,,|,
+WARRANT#2,warrant,warrant,,,,,,,|,
+WASH#1,wash,wash,,,,,Active,,| 85% verb: To clean,85.0
+WASTE#2,waste,wast,,Negativ,,Weak,,,| 66% verb: To use inefficiently or unproductively,66.0
+WATCH#1,watch,watch,,,,,Active,,| 85% verb: To look at closely or attentively,85.0
+WATER#2,water,water,,,,,,,"| 4% verb: To give, shed, or spray with water",4.0
+WAVE#2,wave,wave,,,,,,,|,
+WAVER,waver,waver,,,,Weak,,,|,
+WAX#2,wax,wax,,,,,,,|,
+WEAKEN,weaken,weaken,,Negativ,,Weak,,,|,
+WEAR#1,wear,wear,,,,,Active,,| 93% verb: To have on,93.0
+WED,wed,-pron-,,,,,,,|,
+WEEP,weep,weep,,Negativ,,,Active,,|,
+WEIGH,weigh,weigh,,,,,,,|,
+WEIGHT#2,weight,weight,,,Strong,,,,| 9% verb: To add weight or importance,9.0
+WELCOME#1,welcome,welcom,Positiv,,,,,,"| 31% verb: To greet, receive or accept with pleasure",31.0
+WELL#6,well,well,,,Strong,,,,"| 0% verb: To overflow, gush",0.0
+WENT#1,went,go,,,,,,,|,
+WEPT,wept,weep,,,,,,,|,
+WHACK,whack,whack,,Negativ,Strong,,Active,,|,
+WHEEL#2,wheel,wheel,,,,,,,|,
+WHIMPER,whimper,whimper,,Negativ,,,Active,,|,
+WHINE,whine,whine,,Negativ,,Weak,,,|,
+WHIP#3,whip,whip,,Negativ,Strong,,Active,,"| 50% verb: To hit, beat, drive, vanquish",50.0
+WHIRL,whirl,whirl,,,Strong,,,,|,
+WHISPER#2,whisper,whisper,,,,,,,|,
+WHISTLE#2,whistle,whistl,,,,,Active,,|,
+WIDEN,widen,widen,,,Strong,,Active,,|,
+WIELD,wield,wield,,,,,,,,
+WILL#1,will,will,,,,,,,| 98% verb: Modal indicating future,98.0
+WILT,wilt,wilt,,Negativ,,,,Passive,|,
+WIN#1,win,win,,,Strong,,Active,,"| 93% verb: To gain, to gain a victory",93.0
+WINCE,wince,winc,,Negativ,,,,Passive,|,
+WIND#2,wind,wind,,,,,Active,,| 10% verb: To turn or twist,10.0
+WIPE,wipe,wipe,,,,,Active,,|,
+WIRE#2,wire,wire,,,,,Active,,|,
+WISE#5,wise,wise,Positiv,,,,,,"| 5% verb-idiom: ""Wise up"" - become aware of the true situation",5.0
+WISH#2,wish,wish,,,,Weak,,,| 91% verb: To desire or hope for something,91.0
+WITCH#3,witch,witch,,,,,,,| 9% verb: To cast spells upon,9.0
+WITHDRAW,withdraw,withdraw,,,,Weak,,,|,
+WITHDREW,withdrew,withdraw,,,,Weak,,,|,
+WITHER,wither,wither,,,,Weak,,Passive,|,
+WITHHELD,withheld,withhold,,Negativ,Strong,,Active,,|,
+WITHHOLD,withhold,withhold,,Negativ,Strong,,Active,,|,
+WITHSTAND,withstand,withstand,,,Strong,,Active,,|,
+WITNESS#2,witness,wit,,,,,,,|,
+WON,won,win,,,Strong,,Active,,"| verb: Past tense and past participle of ""win""--gained a victory",
+WON'T,won't,will,,,,,,,"| verb: Contraction for ""will not""",
+WONDER#2,wonder,wonder,,,,,,,"| 95% verb: To speculate, to be curious about",95.0
+WOO,woo,woo,Positiv,,,,Active,,|,
+WORD#5,word,word,,,,,,,| 1% verb: To phrase,1.0
+WORK#2,work,work,,,,,Active,,"| 40% verb: To do work, to be employed; to be in operation, to function  (much less frequent)",40.0
+WORN#2,worn,wear,,Negativ,,,,,"| 60% verb: Past tense of ""wear""--deteriorated, caused to deteriorate",60.0
+WORRY#1,worry,worri,,Negativ,,Weak,,Passive,"| 49% verb: To feel anxious (includes gerunds--""stop worrying"")",49.0
+WORRY#3,worry,worri,,Negativ,,,Active,,| 10% verb: To cause to feel anxious,10.0
+WORSEN,worsen,worsen,,Negativ,,Weak,,Passive,|,
+WORSHIP#2,worship,worship,,,,,,,|,
+WOULD,would,would,,,,,,,| verb: Present and past participle form of 'will',
+WOUND#1,wound,wound,,Negativ,Strong,,Active,,| 46% verb: Physically or Emotionally injure,46.0
+WRAP,wrap,wrap,,,,,Active,,|,
+WRECK,wreck,wreck,,Negativ,,,Active,,|,
+WRESTLE,wrestle,wrestl,,Negativ,,,Active,,|,
+WRETCH,wretch,wretch,,Negativ,,,Active,,|,
+WRITE#2,write,write,,,,,Active,,"| 82% verb: To form words, etc., on some material, or more generally to  express ideas, compose, produce",82.0
+WRITHE,writhe,writh,,Negativ,,,Active,,|,
+WRITTEN#1,written,write,,,,,,,| 77% verb: Past participle of write (includes post-nominal forms),77.0
+WRONG#2,wrong,wrong,,Negativ,,,,,"| 1% verb: To injure, malign, treat unfairly",1.0
+WROTE,wrote,write,,,,,,,"| verb: Past tense of ""write""--to form words, etc. on some material, or  more generally to express ideas, compose, produce",
+YAWN,yawn,yawn,,Negativ,,,,Passive,|,
+YEARN,yearn,yearn,,Negativ,,,Active,,|,
+YELL#2,yell,yell,,,,,Active,,|,
+YELP,yelp,yelp,,Negativ,,,Active,,|,
+YIELD#2,yield,yield,,,,Weak,,,|,

@@ -1,0 +1,59 @@
+--- start FOX----
+The leaders of the Senate intelligence committee said Tuesday they had subpoenaed two of former National Security Adviser Michael Flynn's businesses as part of the ongoing probe into Russian activity during last year's presidential campaign.
+Sen. Mark Warner, D-Va., the top Democrat on the committee, identified the businesses as Flynn Intel Group LLC and Flynn Intel Group Inc., both based in Alexandria, Va.
+The committee's action comes a day after Flynn’s lawyer notified the committee that his client will invoke his Fifth Amendment protection against self-incrimination and not comply with the committee’s subpoena seeking documents related to its investigation.
+"A business does not have the right to take the fifth," Warner told reporters.
+The investigation focuses on whether Flynn and other Trump associates colluded with Russia to boost the Republican candidate in the 2016 elections.
+Trump fired Flynn in February because he misled Vice President Mike Pence about conversations he had with Russia’s ambassador about potentially easing economic sanctions.
+Flynn is also being investigated over whether he was fully forthcoming about his foreign contacts and earnings from organizations linked to the governments of Russia and Turkey.
+Intelligence committee chairman Sen. Richard Burr, R-N.C., said Tuesday that the panel also sent a letter to Flynn’s lawyer questioning whether his client can indeed invoke the Fifth Amendment to avoid turning over documents.
+Burr added that if there is no response from Flynn, the committee may consider pursuing a contempt of Congress charge.
+"Everything is on the table," Burr said.
+Everything but immunity, he added.
+--- end FOX----
+
+--- start HPO----
+WASHINGTON ― The House intelligence committee is preparing to issue subpoenas against Michael Flynn after the former national security adviser denied a request to voluntarily turn over documents related to the committee’s Russia probe.
+Rep. Adam Schiff (Calif.), the ranking Democrat on the committee, said on Wednesday that the committee is prepared to use “whatever compulsory process we need” to obtain information from Flynn if he does not cooperate with the subpoenas.
+He added that the committee could issue additional subpoenas if other witnesses fail to cooperate, but did not name additional individuals.
+Citing the Fifth Amendment right against self-incrimination, Flynn’s lawyer said on Monday that Flynn would not comply with subpoenas from the Senate intelligence committee, which is conducting its own parallel investigation into Russia’s interference in the election and whether it colluded with President Donald Trump’s associates.
+The Senate committee responded with two additional subpoenas on Tuesday targeting Flynn’s businesses.
+The House committee’s subpoenas “will be designed to maximize our chance of getting the information that we need,” Schiff told reporters at a breakfast hosted by the Christian Science Monitor.
+“We need to use whatever compulsory mechanism necessary to get the information he possesses … the Fifth Amendment right not to provide materials or documents is limited,” he added.
+Schiff said he is “skeptical” that the committee would agree to grant Flynn immunity in the future in exchange for information.
+The committee is also looking for ways to obtain documentation of Trump’s conversations with top intelligence and law enforcement officials involved in a separate federal Russia probe.
+Trump implied earlier this month that he had “tapes” of discussions with recently fired FBI Director James Comey that would be damaging to Comey.
+And the Washington Post reported earlier this week that Trump asked Director of National Intelligence Dan Coats and National Security Agency Director Mike Rogers to push back on the FBI’s Russia investigation.
+“That could be further evidence of an attempt to interfere with the investigation,” Schiff said of Trump’s reported request to Coats and Rogers.
+He also referred to past reports that the White House asked allies on Capitol Hill to refute negative press stories about Trump associates’ ties to Russia.
+“If all of this is part of a pattern by the White House of interference or worse, that’s something that we have to find out about and it’s something we have to stop,” he said.
+Despite concerns about Trump interfering with ongoing investigations into his campaign, Schiff warned that it is premature for Democrats on Capitol Hill to push for impeachment.
+“There’s a legal standard that needs to be met for impeachment and then there’s a very practical standard that has to be met,” Schiff said.
+Practically speaking, he continued, impeachment is only possible if Republican lawmakers and the general public believe Trump is unfit for office.
+“If the Republicans in Congress or people at large in the country feel this is simply a way to nullify an election that others didn’t agree with, then you’re not going to meet the practical standards necessary,” Schiff said.
+--- end HPO----
+
+--- start NYT (w error) ----
+WASHINGTON — The House Intelligence Committee will issue subpoenas to Michael T. Flynn, President Trump’s first national security adviser, the committee’s senior Democrat said on Wednesday, escalating Mr. Flynn’s troubles with Congress.
+The Democrat, Representative Adam B. Schiff of California, said Mr. Flynn had declined the panel’s request for documents and an interview as part of its investigation into Russian meddling in last year’s election.
+“Those subpoenas will be designed to maximize our chance of getting the information that we need,” Mr. Schiff told reporters during a breakfast hosted by The Christian Science Monitor.
+“And I think we need to use whatever compulsory methods are necessary to get the information that he possesses.”
+Mr. Schiff said he hoped the committee would issue the subpoenas this week, before Congress leaves for a one-week recess.
+It was unclear whether the subpoenas would seek documents or Mr. Flynn’s testimony, or both.
+The subpoenas could not be issued without at least some support from Republicans, who make up the majority of the committee.
+A spokeswoman for Representative K. Michael Conaway of Texas, the Republican leading the investigation, did not immediately respond to a request for comment.
+Mr. Conaway has repeatedly refused to comment on the details of the investigation while it is continuing.
+The announcement was made mere hours after the top Republican and Democrat on the Senate Intelligence Committee issued subpoenas Tuesday afternoon to Mr. Flynn’s two firms, seeking information that could shed light on his lobbying work on behalf of Turkish interests last year, among other connections.
+On Monday, Mr. Flynn, in a letter from his legal team, rejected a subpoena for documents from the Senate committee, citing the Fifth Amendment’s protections against self-incrimination.
+He also declined the Senate committee’s invitation for an interview.
+Mr. Flynn’s rejection of the subpoena put him at risk of being held in contempt of Congress, a rarely invoked process that, should lawmakers choose to pursue it, could result in a criminal citation.
+The Flynn Intel Group was paid more than $500,000 to represent Turkey in a dispute with the United States government while Mr. Flynn was advising the Trump campaign.
+He belatedly registered as a foreign agent for that work after being forced out of the Trump administration for misrepresenting his communications with the Russian ambassador to Vice President Mike Pence.
+Mr. Flynn’s legal troubles have only mounted in recent days.
+On Monday, it was revealed that he had misled Pentagon investigators about his foreign contacts and sources of income while seeking a renewed security clearance in February 2016.
+Among the payments he did not disclose was a $45,000 fee from a Russian state-backed news organization for a speech he gave in Moscow two months before.
+During that trip, he was photographed at a gala sitting next to the Russian president, Vladimir V. Putin.
+(FP) Lying to federal officials is a felony, punishable by up to five years in prison.
+As recently as Monday, in his letter to the Senate committee, Mr. Flynn has reiterated his offer to testify in exchange for immunity from prosecution.
+Senator Richard M. Burr of North Carolina, the Republican chairman of the committee, has dismissed that option.
+--- end NYT (w error) ----

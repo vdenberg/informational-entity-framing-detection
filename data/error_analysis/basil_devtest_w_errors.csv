@@ -1,0 +1,813 @@
+uniq_idx,error,fold,sentence,bias,lex_bias
+53hpo10,tn,0.0,"He joins an already crowded 2016 Republican field, and will likely enlist support from the party's far right wing, where he faces competition from Sen. Ted Cruz (R-Texas), who has positioned himself as a tea party favorite.",0,1
+53hpo15,fn,0.0,"He was the longest-serving Arkansas governor, from 1996 to 2007.",1,0
+53hpo23,tn,,"He wrote in his memoir, ""From Hope to Higher Ground,"" that his work as a pastor helps him understand how politics and policy affect people.",0,0
+52hpo12,tn,0.0,Some top Democrats called on Mueller to release what his team knows about Trump’s Moscow deal as a matter of public duty.,0,0
+52hpo15,tn,0.0,"“We’ve previously known about attempts to develop Trump Tower Moscow and the misrepresentations surrounding those efforts,” Feinstein said.",0,0
+52hpo17,tn,,"“If true, the president committed a crime and must be held accountable.”",0,0
+2hpo0,tn,,President Donald Trump on Friday declared a national emergency at the southern U.S. border in an effort to unilaterally seize funding to begin building his long-promised wall between the U.S. and Mexico.,0,1
+3hpo1,fn,,"It wasn't quite the metaphorical flare of mushroom cloud imagery, but outgoing senior economic adviser Larry Summers offered a fairly dire assessment of the stakes in the tax cut debate.",1,0
+3hpo6,tn,0.0,"Summers himself, downplayed the significance of continuing the Bush tax cuts back in September -- though he was speaking, then, about the rates for the rich and the tax cut deal, at that point in time, did not include money for a 13-month extension of unemployment insurance or other tax incentives to help lower income workers.",0,0
+3hpo8,tn,,"""The wait would not cause a double dip,"" he said.",0,0
+3hpo28,fn,,"Added Gibbs: ""I think you would really have to ask somebody who says... lets have some eight week fight and on February the 15th come in and say, alright, now we are ready to make a compromise, who on earth, who on earth thinks that that is somehow going to be a fundamentally better agreement than the one we are looking at right now?",1,0
+66nyt0,tn,,"WASHINGTON — All same-sex couples who are legally married will be recognized as such for federal tax purposes, even if the state where they live does not recognize their union, the Treasury Department and the Internal Revenue Service said Thursday.",0,0
+66nyt1,tn,0.0,"It is the broadest federal rule change to come out of the landmark Supreme Court decision in June that struck down the 1996 Defense of Marriage Act, and a sign of how quickly the government is moving to treat gay couples in the same way that it does straight couples.",0,0
+66nyt2,tn,0.0,"The June decision found that same-sex couples were entitled to federal benefits, but left open the question of how Washington would actually administer them.",0,0
+66nyt7,tn,0.0,"“Today’s ruling provides certainty and clear, coherent tax-filing guidance for all legally married same-sex couples nationwide,” Treasury Secretary Jacob J. Lew said.",0,0
+66nyt13,fp,0.0,"Couples with similar incomes often pay the “marriage penalty,” with their tax liability as a couple being much higher than it would be if they were single.",0,0
+66nyt23,tn,0.0,"“These state taxing authorities will have to figure out how to deal with a same-sex married couple who file a joint income tax return for federal tax purposes.” He added,",0,0
+66nyt25,tn,0.0,"The rule change is likely to provide a small increase for federal revenue, as more same-sex couples pay the marriage penalty, Mr. Williams said, describing it as a “rounding error.”",0,0
+66nyt26,tn,,But it would be partly offset by new federal spending on benefits for same-sex spouses.,0,0
+66nyt31,tn,,But federal agencies are not moving in lock step.,0,0
+66nyt35,tn,,"But the Social Security Administration is now using a “place of residence” standard in determining spousal benefits, and a gay couple in Alabama might not receive the same benefits as a gay couple in New York until final determinations are made or Congress acts.",0,0
+88hpo2,tn,,"""Senate Bill 1062 does not address a specific or present concern related to religious liberty in Arizona,"" she said.",0,0
+67nyt0,tn,0.0,"WASHINGTON — AARP, the powerful lobby for older Americans that has been seen as one of the leading opponents of Social Security benefit cuts, said on Friday that it was open to modest reductions in benefits for future recipients.",0,1
+67nyt19,tn,0.0,Mr. Rother said AARP expected to hear criticism from some of its members over its position on possible cuts.,0,0
+89hpo17,tp,,"""I abhor discrimination.",1,0
+89hpo25,tn,,"“We hope to have a fix very soon.""",0,0
+62fox11,tn,,It was not immediately clear how the official defined “targeting.”,0,0
+62fox37,tn,0.0,"""In addition we only ever comply with orders for requests about specific accounts or identifiers,"" the spokesperson said.",0,0
+63fox0,tn,,Rep. Alexandria Ocasio-Cortez took a stand for fellow House freshman Rep. Rashida Tlaib on Saturday after the latter’s expletive-laced comments in favor of impeaching President Trump.,0,0
+63fox2,tp,,"“Republican hypocrisy at its finest: saying that Trump admitting to sexual assault on tape is just ‘locker room talk,’ but scandalizing themselves into faux-outrage when my sis says a curse word in a bar,” Ocasio-Cortez tweeted. ",1,0
+63fox12,tn,0.0,"“And when your son looks at you and says: ‘Momma, look you won. Bullies don’t win.’ ",0,0
+63fox13,tn,,"And I said, ‘Baby, they don’t, because we’re gonna go in there and we’re gonna impeach the motherf***er.’”",0,0
+83nyt2,tn,0.0,“President Obama and the Democrats have had their chance and they have failed.,0,0
+83nyt14,tn,,"But Mr. Labrador’s path to victory is steep, especially in the few days before House Republicans gather to elect Mr. Cantor’s replacement.",0,0
+83nyt19,tn,0.0,"For his part, Mr. Boehner has remained firm that he wanted to get it done quickly and minimize disruption.",0,0
+83nyt22,fn,0.0,Some lawmakers questioned whether his run was really a quest to win the majority leader’s post or merely to raise his own profile.,1,0
+82nyt6,fp,,Mr. Bloomberg made his billions in finance and technology; Mr. Trump got his start in real estate before becoming a casino magnate and then a reality-show celebrity.,0,0
+82nyt8,tn,0.0,"“I’ve been by Mike’s side for 19 years, and I’ve never met Donald Trump,” said Kevin Sheekey, an adviser to Mr. Bloomberg, underscoring the extent to which the men were not close.",0,0
+82nyt14,fn,0.0,"“How about the mayor starts it off in honor of the city?” Mr. Trump was quoted as saying, playing peacemaker and showing deference to Mr. Bloomberg.",1,0
+87fox4,tn,,The ad is a state-wide buy in Iowa that starts Wednesday.,0,0
+87fox5,tn,,"Perry ties his faith to his conservative stands on social issues, and the campaign has zeroed in on gay marriage and social issues recently, releasing several statements laying out its argument that Obama is attacking the fundamentals social conservative believe in.",0,0
+86fox3,tn,0.0,"He will be great!""",0,0
+86fox4,tn,,Shanahan is a former Boeing executive who joined the Pentagon in July 2017.,0,0
+86fox13,tn,,"Ground troops moved into Syria in 2015 to combat ISIS in the region, amid an escalating Syrian civil war. ",0,0
+86fox24,tp,0.0,"""If anybody but your favorite President, Donald J. Trump, announced that, after decimating ISIS in Syria, we were going to bring our troops back home (happy & healthy), that person would be the most popular hero in America,"" he continued in a follow-up tweet. ",1,0
+11nyt14,tn,,"Mr. Trump relented as the effects of the shutdown were rippling with ever greater force across the economy, with fallout far beyond paychecks.",0,0
+11nyt21,tn,,"“Have I not been clear on a wall?” Ms. Pelosi said at a news conference with Senator Chuck Schumer of New York, the Democratic leader.",0,0
+11nyt24,tn,,"She had rescinded her invitation this week to come to the House chamber until the government was reopened, and on Friday, she said she would work with Mr. Trump to find a new date.",0,0
+11nyt45,tn,,The president’s concession came a day after two competing measures to reopen the government failed on the Senate floor.,0,0
+10nyt2,tn,,"Before the reading began, Jay Inslee, Democrat of Washington, asked Republicans to illuminate exactly what part of the Constitution would be read, what parts would be deleted and who would decide how things would unfold.",0,0
+10nyt7,tn,,"And so, sentence by sentence, in accents that reflect the myriad districts that did not even exist when the document came into being, by women and African Americans whose full rights were not recognized at that time, the constitutional language fluttered through the chamber.",0,0
+10nyt12,tn,0.0,He added: “I think it is important that we send a message to people at home that the constitution is an important document.”,0,0
+10nyt17,tn,0.0,"According to the Office of the Historian of the House of Representatives, the only two prior instances in which a full or partial text of the Constitution was inserted into the Congressional Record was in 1882, when Roswell Flower of New York “appended” a text of the Constitution — minus the amendments — into the record, and in 1915, when Thomas Reilly of Connecticut inserted the full text of the Constitution into the Congressional Record as an extension of his remarks.",0,0
+14fox9,tn,0.0,"Holder also described how once, while living in the Georgetown neighborhood of Washington, he was running to catch a movie with his cousin when a squad car rolled up and flashed its lights at the pair.",0,0
+14fox11,tn,,"His cousin ""started mouthing off,"" and Holder urged him to be quiet.",0,0
+14fox12,tn,0.0,"""We negotiate the whole thing, and we walk to our movie.",0,0
+14fox17,tn,,"On Wednesday night, a diminished number of protesters marched around a single block in Ferguson as a thunderstorm filled the sky with lighting and dumped rain.",0,0
+14fox18,tn,,"Police still stood guard, but many wore regular uniforms rather than riot gear.",0,0
+9nyt5,tn,,"A grand jury indicted the officers on Friday, accusing them of conspiring to interfere with the outcome of the 2016 presidential election by hacking the Democratic National Committee, Hillary Clinton’s presidential campaign and the Democratic Congressional Campaign Committee.",0,0
+9nyt6,tn,,"The indictment is part of an open investigation led by Robert S. Mueller III, the special counsel, who is examining whether the Trump campaign colluded with Russia, and whether Mr. Trump obstructed justice.",0,0
+9nyt12,tp,,"“For the president to break with the normal practice and meet with the Russian president alone, I wouldn’t trust what he says there.”",1,0
+9nyt14,tn,,"“It’s important for us to avoid thinking politically, as Republicans or Democrats, and instead to think patriotically as Americans,” Mr. Rosenstein said.",0,0
+9nyt21,tn,,"But with the exception of Mr. McCain, Republicans steered clear of discussing whether Mr. Trump should cancel Monday’s meeting in Helsinki.",0,0
+9nyt24,tn,0.0,Mr. Jordan said the president has already “been clear he is going to ask Mr. Putin some tough questions.”,0,0
+24hpo0,tp,,"Roger Stone, an eccentric longtime Republican strategist with a tattoo of Richard Nixon’s face on his back, was arrested early Friday on criminal charges that include obstruction of an official proceeding, false statements and witness tampering.",1,1
+24hpo5,tn,,"Stone ― who worked on presidential campaigns for Nixon, Ronald Reagan, Bob Dole and others ― took credit for Donald Trump’s presidential run and served as an informal adviser after he left Trump’s campaign in August 2015.",0,0
+25hpo0,tn,,"WASHINGTON ― In a stinging blow to President Barack Obama, the Senate voted Wednesday to override his veto of a bill to let 9/11 victims sue Saudi Arabia for its alleged role in the terrorist attacks.",0,1
+25hpo3,tn,,"“This is pretty much close to a miraculous occurrence,” Cornyn said before the vote.",0,0
+25hpo11,tn,,"That puts him on the same page as Clinton, who has said she backs the bill.",0,0
+25hpo18,tn,0.0,"The White House has fought against the bill for months, to no avail.",0,0
+25hpo20,tn,,"The European Union and former top executive branch officials have urged Obama to stop it, in the name of protecting sovereign immunity.",0,0
+25hpo29,tn,,"White House press secretary Josh Earnest last week downplayed the significance of Obama getting such a strong rebuke from Congress, including from Democratic leaders.",0,0
+58nyt1,tn,0.0,"But the proposal, which Mr. Trump unveiled in a 13-minute address from the White House, appeared dead on arrival in the Capitol.",0,0
+58nyt2,fn,,"Speaker Nancy Pelosi rejected it even before Mr. Trump spoke, and Senator Chuck Schumer, the Democratic leader, denounced the offer as “not a compromise but more hostage taking.”",1,0
+58nyt8,tn,,But Democrats continued to insist they will not negotiate with Mr. Trump over border security until the government reopens.,0,0
+58nyt12,tn,,"In the deal he outlined on Saturday, Mr. Trump offered to restore T.P.S. protection for 300,000 people, and said he would allow 700,000 Dreamers to keep their protections for three more years in exchange for $5.7 billion for a border barrier.",0,0
+58nyt17,tn,0.0,The speech was the second time during the shutdown that the president addressed the nation about the immigration crisis.,0,0
+58nyt24,tn,,Mr. Trump noted that he had adopted some Democratic proposals on border security.,0,0
+58nyt36,tn,,"Mr. Pence, briefing reporters after Mr. Trump’s remarks, said the speech reflected a painstaking process of listening to lawmakers, including rank-and-file Democrats who made it clear they believed that protections for DACA and T.P.S. recipients must be included in a border security deal.",0,0
+58nyt38,tn,,"“There is no pathway to citizenship in this proposal,” Mr. Pence said.",0,0
+58nyt42,tn,,He also noted that the president’s ability to declare a national emergency was “absolutely” still a tool available to Mr. Trump to find funds to build the wall if a legislative agreement could not be reached.,0,0
+58nyt44,tn,0.0,"Mr. McConnell — who has insisted he will not put any legislation on the floor unless the president will sign it — spoke to Mr. Trump, Mr. Kushner and Mr. Pence on Thursday night about finding a way forward.",0,0
+58nyt48,tn,,"Despite Democrats’ vow to reject the measure, it could create an opening for negotiations between the two sides.",0,0
+59nyt0,tn,,"WASHINGTON — With just three weeks left for lawmakers to avert a fiscal crisis, President Obama and Speaker John A. Boehner met privately at the White House on Sunday as a top Republican senator suggested that his party should perhaps accede to Mr. Obama’s demand to raise the top tax rates so that the attention can shift to making serious cuts in benefit programs like Medicare and Medicaid.",0,0
+82hpo10,fn,0.0,The real-estate developer also reacts defensively when his success is questioned.,1,0
+83hpo8,tn,0.0,Eric is a good friend and I have tremendous respect for him.,0,0
+83hpo15,tn,0.0,Rep. Jeb Hensarling (R-Texas) was considered a front-runner to challenge McCarthy.,0,0
+83hpo25,tn,0.0,"A Labrador bid helps all parties regardless of the outcome -- including Labrador himself, since a run will elevate him as a leader inside the House GOP.",0,0
+83hpo34,tn,0.0,"I think Raul brings that,"" Paul told reporters, according to the Spokesman-Review.",0,0
+68fox2,tp,0.0,"""We are disappointed by the government's decision, but hardly surprised,"" said the statement from Grimm's attorney, William McGinley.",1,0
+68fox11,tp,,"If you ever do that to me again, I'll throw you off this (expletive) balcony.""",1,0
+69fox11,tn,,"For that year, the budget was $640 million.",0,0
+10hpo2,tn,0.0,Republicans have made strict adherence to the Constitution a key tenet of their effort to reduce the size of the federal government.,0,0
+10hpo5,tn,,“Call it the tea party-ization of Congress. ...,0,0
+10hpo10,tn,,"“Beyond its symbolic power, however, it is unclear what impact the new rule will have upon the nation.",0,0
+11hpo11,tn,,“I’m hopeful.”,0,0
+21fox7,tn,0.0,The lawsuit says Colorado marijuana flows into neighboring states undermining their efforts to enforce their anti-marijuana laws.,0,0
+21fox9,tp,0.0,"""While Colorado reaps millions from the sale of pot, Nebraska taxpayers have to bear the cost.""",1,0
+21fox20,tn,,"The Rocky Mountain High Intensity Drug Trafficking Area wrote in a recent report that the amount of Colorado pot seized on highways increased from an annual average of 2,763 pounds between 2005 and 2008 to a yearly average of 3,690 pounds from 2009 to 2013.",0,0
+21fox28,tn,,"""I'm not sure filing a lawsuit is the most constructive way to find a solution to whatever issues they are,"" he said.",0,0
+20fox2,tn,,He said he “respects” Grassley and proclaimed his support for Iowa’s farmers.,0,1
+20fox3,tn,0.0,"“I have tremendous respect for Iowa farmers and appreciate how important they are to our state, and I’m grateful to have the support of hundreds of farmers across Iowa,” he said.",0,0
+20fox7,fp,0.0,"“To put this in stark contrast, if you help me win this race you may have someone with your background, your experience, your voice, someone who’s been literally fighting tort reform for thirty years, in a visible or public way, on the Senate Judiciary Committee,” he said.",0,0
+8hpo9,fn,,"The son of Cuban immigrants, Rubio has challenged Obama's efforts to normalize diplomatic relations with the island, saying that closer ties would only help the communist Castro government keep power.",1,0
+8hpo17,tn,,Jeb Bush later said he had misunderstood the question.,0,0
+25nyt0,tn,,"As part of its final bit of business before the election, Congress is set to vote to override President Obama’s veto of a bill allowing families of those killed in the Sept. 11 attacks to sue Saudi Arabia for any role in the terrorist plot.",0,0
+25nyt3,fp,0.0,"But their efforts, which come after both chambers overwhelmingly passed the bill, are almost certain to be futile, and members of both parties have vowed to override the bill.",0,0
+9hpo2,tn,,"McCain tweeted that if Trump “is not prepared to hold Putin accountable,” the talks in Helsinki on Monday “should not move forward.”",0,0
+24nyt8,tn,,"Prosecutors sealed details of the case because they feared that public disclosure would increase the risk of Mr. Stone fleeing or destroying or tampering with evidence, according to court documents.",0,1
+24nyt15,tn,0.0,"In a brief interview later, Mr. Stone said he will plead not guilty, and people close to him have predicted that Mr. Trump could pardon Mr. Stone should he be convicted of any of the charges.",0,0
+24nyt21,tn,,"“A senior Trump campaign official was directed to contact Stone about any additional releases and what other damaging information Organization 1 had regarding the Clinton campaign,” the indictment said, referring to WikiLeaks.",0,0
+24nyt31,tn,0.0,"Still, it was revealed last year that, in the weeks before the election, Mr. Stone was messaging on Twitter with Guccifer 2.0, a pseudonym used by one or more operatives in the Russian intelligence scheme to steal the emails and funnel them to WikiLeaks.",0,0
+59hpo3,tn,0.0,"""The President and Speaker had a frank meeting in the Oval Office tonight,"" said the statements.",0,0
+56fox5,tp,0.0,The four-term New York senator and the dozens of other Democrats who initially voted Friday to block the spending bill had been lauded by their progressive base even as nearly 1 million federal workers were furloughed without pay.,1,0
+56fox15,tn,0.0,"Members of the “No, DREAM, No Deal” began stepping up their calls for Schumer and others to “stand strong” Sunday night, when Senate Majority Leader Mitch McConnell, R-Ky., suggested a compromise had been reached, without offering any solid commitment.",0,0
+56fox22,tn,0.0,"“Enough is enough,” said Lorella Praeli, director of immigration policy and campaigns at the American Civil Liberties Union.",0,0
+56fox25,tn,,"The short-term deal now only gives Congress until Feb. 8 to work out longer-term legislation, and an agreement on immigration.",0,0
+56fox28,tn,0.0,"The Dems have just learned that a Shutdown is not the answer!"" he said.",0,0
+57fox0,tp,0.0,"Supreme Court Justice Ruth Bader Ginsburg faced a growing and bipartisan backlash Wednesday -- including a call from Donald Trump to resign -- as she doubled down on her criticism of the presumptive GOP nominee, calling him a “faker” who is unqualified to be president.",1,1
+57fox13,tp,,... How has he gotten away with not turning over his tax returns?,1,0
+57fox14,tn,0.0,"The press seems to be very gentle with him on that,"" she said.",0,0
+57fox19,fn,0.0,Senate Majority Leader Mitch McConnell said Tuesday Ginsburg’s comments were “totally inappropriate.”,1,0
+57fox31,tn,,The board noted the Code of Conduct for U.S. judges says that a “judge should not ... publicly endorse or oppose a candidate for public office.”,0,0
+52nyt4,tp,,"The president himself responded on Twitter late Friday, calling the special counsel’s statement “a very sad day for journalism, but a great day for our Country!”",1,0
+52nyt24,tn,0.0,"“There was a good chance that I wouldn’t have won, in which case I would have gotten back into the business, and why should I lose lots of opportunities?” he told reporters.",0,0
+52nyt29,tn,0.0,"But he corrected himself during subsequent interviews and proved credible, the special counsel’s office said in a December sentencing memo.",0,0
+52nyt31,tn,0.0,"Subsequently, he took care “not to overstate his knowledge or the role of others in the conduct under investigation” and provided “useful information” about his contacts with “persons connected to the White House” in 2017 and 2018, the special counsel’s filing said.",0,0
+52nyt33,fn,,"Driven by greed, they said, he “repeatedly used his power and influence for deceptive ends.”",1,0
+53nyt13,tn,,Mr. Huckabee has focused his economic message on what he calls wage stagnation under Mr. Obama.,0,0
+7fox9,fp,,"""He's made some pretty outrageous comments that Mueller could not verify, Graham said.",0,1
+7fox10,fp,0.0,"""He's getting into conspiracy land and he's acting like an Oliver Stone type figure.",0,0
+7fox21,tn,0.0,Schiff on Monday signed a letter with his fellow House committee chairs demanding the full Mueller report by April 2.,0,0
+6fox20,tn,,"Walsh also suggested Reid would suffer politically from his allegiance to Obama on other issues, despite his stance on the mosque.",0,0
+6fox28,tn,0.0,"However, the poll showed that 64 percent think it would be wrong to build it, regardless of whether the developers are within their right to do so.",0,0
+3nyt14,tn,,"The Democratic National Committee alerted reporters that Jennifer Granholm, the Democratic governor of Michigan, also supports the deal.",0,0
+3nyt23,tn,,The letter says Mr. Obama “should not back down. Nor should we.”,0,0
+2nyt8,tp,,"“This is plainly a power grab by a disappointed president, who has gone outside the bounds of the law to try to get what he failed to achieve in the constitutional legislative process,” Speaker Nancy Pelosi of California and Senator Chuck Schumer of New York, the Democratic leader, said in a joint statement.",1,0
+2nyt22,tn,,"Indeed, Public Citizen, an advocacy group, filed suit by the end of the day on behalf of three Texas landowners whose property might be taken for a barrier.",0,0
+2nyt28,tn,0.0,"The House Judiciary Committee announced Friday that it would investigate the president’s emergency claim, while House Democrats plan to introduce legislation to block it.",0,0
+2nyt53,tn,,"“It actually creates zero precedent,” Mick Mulvaney, the acting White House chief of staff, told reporters.",0,0
+2nyt70,tn,,"But Mr. Trump sought to drive home the personal toll of illegal immigration, inviting to the Rose Garden several relatives of Americans killed by people in the country without authorization.",0,0
+67hpo7,tn,0.0,"""The reality is, we have more people older and who are living longer, so we need to make changes.",0,0
+67hpo9,tn,0.0,"And we're certainly willing to talk about a package of changes that will keep Social Security strong.""",0,0
+67hpo12,tn,,"Jonathan Cowan, president of centrist think tank Third Way, hailed AARP's apparent reversal, per the Journal story.",0,1
+67hpo14,tn,,"""For decades, AARP has stood against any substantial changes to Social Security.",0,0
+67hpo29,tn,0.0,"Rother's thinking, according to the paper, is that tax increases alone can't keep the program's $2.6 trillion trust fund from running out of money, so benefit cuts must be included as well.",0,0
+67hpo35,tn,0.0,"The problem with plans to hike taxes is that they're politically unfeasible because of congressional Republicans' adamant opposition to any sort of tax increase, much less a tax increase not accompanied by a spending cut.",0,1
+89nyt14,fn,0.0,"Marc Benioff, the chief executive officer of Salesforce.com, said on Thursday that his company would halt all corporate travel to Indiana.",1,0
+89nyt15,fn,,"On Saturday, Mayor Ed Murray of Seattle announced a ban on city employees traveling to Indiana for work using city funds.",1,0
+89nyt19,fn,,"In a statement on Thursday, the N.C.A.A. president, Mark Emmert, said the organization was “deeply concerned” about the legislation.",1,0
+66hpo2,tn,,"Prior to this spring, the Internal Revenue Service did not recognize same-sex married couples pursuant to section 3 of DOMA.",0,0
+66hpo18,tn,,The Treasury’s actions on Thursday are just the latest in a set of LGBT policies offered by agencies within the Obama administration following the DOMA ruling.,0,0
+88nyt14,tn,0.0,"Among the Republicans vying to succeed Ms. Brewer, who cannot run for re-election because of term limits, there was broad consensus against the measure, which would expand the state’s definition of “exercise of religion” to protect businesses and citizens from lawsuits after denying services on religious grounds.",0,0
+88nyt17,tn,,"Mr. Wilder, the governor’s spokesman, said Ms. Brewer’s office had received more than 10,000 calls and emails on the matter as of Monday morning.",0,0
+75fox21,tn,,"And Sen. Kirsten Gillibrand of New York also chimed in, demanding that the “Mueller report must be made public.",0,0
+75fox24,tn,,"South Bend, Ind., Mayor Pete Buttigieg, who’s seen his campaign surge in recent days, also called for the entire report to be released.",0,0
+74fox8,tn,,"The ACLU said it supports making organizations report spending for public communications like TV ads that expressly call for the election or defeat of a candidate for office, but it worries the DISCLOSE ACT goes beyond that.",0,0
+74fox10,fn,0.0,Republicans called the bill a Democratic power grab that amounts to a federal takeover of elections.,1,0
+74fox11,fn,,"“Now, instead of getting money out of politics, the Democrats on this committee voted to pass a bill that will publicly fund – campaign travel, campaign dinners, and in some cases, the politicians themselves,” Illinois Rep. Rodney Davis wrote in an op-ed for The Hill.",1,0
+71nyt13,tn,,"One Facebook user who lives near Austin, Tex., posted this status update:",0,0
+70nyt13,tn,0.0,"He got started right away with rolling back the policies of his predecessor, former President Barack Obama, by issuing orders freezing new regulations from recent weeks and ordering agencies to “ease the burden” of the Affordable Care Act during the transition from repealing to replacing the law.",0,0
+70nyt33,tn,0.0,"But the lingering animosity from the presidential campaign was on display, too.",0,0
+70nyt41,tn,,"Hours before his departure, Mr. Obama posted on Twitter to thank followers and hint that he would not fade away.",0,0
+70nyt55,tn,0.0,"He and Mrs. Trump, a former model from Slovenia who became the first foreign-born first lady since John Quincy Adams’s wife, Louisa, started the day with a service at St. John’s Episcopal Church adjacent to Lafayette Square, then joined the Obamas, Bidens and Pences for coffee at the White House.",0,0
+70nyt57,tn,0.0,"Former President George Bush remained hospitalized in Houston, recovering from pneumonia, but a spokesman said he watched the ceremony on television.",0,0
+70nyt61,tn,0.0,"Also there was Barron, his 10-year-old son with the first lady.",0,0
+70nyt70,tn,,"“For too long,” he continued, “a small group in our nation’s capital has reaped the rewards of government while the people have borne the cost.",0,0
+38nyt3,fn,0.0,"But while Ms. Pelosi won, 134 to 63, Mr. Ryan’s significant share of the total served as a measure of internal discontent and in some ways a repudiation of Ms. Pelosi’s leadership.",1,0
+38nyt6,fn,0.0,"For years, support for Ms. Pelosi has run so deep that few would even consider challenging her.",1,0
+38nyt18,tn,0.0,"After a dismal Election Day for Democrats, the fight for Ms. Pelosi’s post had become a proxy battle for the future of the party, with House Democrats agonizing over how to reconnect with the working-class voters who abandoned them.",0,0
+39nyt8,tn,,"Some Republicans have expressed reservations about changing the rules, but Senator Lindsey Graham of South Carolina said Thursday that he would relent if it meant seating Judge Gorsuch.",0,0
+39nyt33,fn,,"Two of Judge Gorsuch’s former colleagues on the United States Court of Appeals for the 10th Circuit, in Denver — Deanell Reece Tacha, appointed by President Ronald Reagan, and Robert Harlan Henry, appointed by President Bill Clinton — praised his intellect and temperament.",1,0
+44hpo8,tp,0.0,"""That that is just outrageous talk,"" Boehner said.",1,0
+44hpo9,fn,0.0,"""They’re trying to make this election, as I said earlier, about anything other than the president’s failed economic policies.",1,0
+45hpo3,tn,0.0,He faces up to 48 years in prison.,0,0
+45hpo7,tn,,"“The bottom line is that Americans must unify,” he went on.",0,0
+45hpo15,tn,,“We are seeing a systematic attack on our democracy and our rule of law that extends much further than just one isolated terrorist in Florida.,0,0
+33hpo11,tn,,"Her opposition also puts her at odds with her father, who offered support for gay marriage in 2009.",0,0
+33hpo13,tn,0.0,"""As many of you know, one of my daughters is gay and it is something we have lived with for a long time in our family.",0,0
+32hpo10,fp,,"While the Enquirer has an infamous reputation for tabloid journalism, it has also broken a number of major sex scandals over the years, including the extramarital affairs of former Sen. John Edwards (D-N.C.) and golfer Tiger Woods.",0,0
+90fox0,tn,,"National Security Adviser Susan Rice warned that Israeli Prime Minister Benjamin Netanyahu’s upcoming Capitol Hill address will be a “destructive” force in long-standing U.S.-Israel relations, adding more political acrimony to the already contentious visit.",0,0
+90fox6,tn,0.0,"Rice's statements were among the Obama administration's toughest on Netanyahu's speech, set for March 3.",0,0
+90fox13,tn,,"While Netanyahu has long been skeptical of the negotiations, his opposition has increased over what he sees as Obama's willingness to make concessions that would leave Iran on the brink of being able to build a nuclear weapon.",0,0
+90fox15,tn,0.0,Israeli officials warned this week that such a deal would allow Iran to become a nuclear threshold state.,0,0
+91fox11,tn,0.0,"The plan, though, does call for a range of measures to improve access to mental health services and improve safety at America's schools.",0,0
+91fox14,tn,0.0,Plus Obama is nominating ATF Acting Director Todd Jones to officially lead the agency,0,0
+91fox27,tn,0.0,Some local officials have vowed to resist federal action.,0,1
+94nyt12,fp,,“She has committed no crime except to follow me on Twitter.”,0,0
+94nyt14,tp,,"“I’m protecting my wife, who every day is waking up to these insane stories that are getting so far from reality,” he told CNN.",1,0
+94nyt16,tn,,"Asked on CNN whether he still wished to be mayor, he said, “Put it this way: It’s the only better job than the one I have.”",0,0
+94nyt21,tn,0.0,"Despite the swirl of events that has buffeted him for several days, Mr. Weiner has not abandoned his sharp humor.",0,0
+95NYT2,tn,0.0,"But they noticed that among the 15,000 documents they examined, there were no emails to or from an official departmental account for Mrs. Clinton.",0,0
+95NYT8,tn,,"Beginning in August, senior State Department officials held negotiations with Mrs. Clinton’s lawyers and advisers to gain access to her personal email records.",0,0
+95NYT24,tn,,Sensitive information is different from classified information.,0,0
+95NYT25,tn,0.0,"It can be personal data, like Social Security numbers, or information on matters that other countries consider classified or important to their national security.",0,0
+32nyt3,tn,,"Mr. Cruz has no affiliation with the super PAC, and he has denounced the ad.",0,0
+32nyt6,tn,0.0,"On Wednesday, Mr. Cruz repeatedly quoted from the movie “The American President” to defend his wife, as she held an event and faced questions about Mr. Trump’s threats.",0,0
+33nyt11,tn,0.0,"In an e-mail, Mary Cheney declined to comment further on her sister’s position, saying she would let her Facebook post speak for itself.",0,0
+37fox0,tn,,"Republican senators kept up pressure on party Chairman Michael Steele Sunday to better explain -- and publicly apologize for -- his on-camera claim that Afghanistan is a ""war of Obama's choosing"" and may not be winnable.",0,0
+37fox4,tn,0.0,"""This is America's war.",0,0
+37fox5,tn,0.0,"It's not Obama's war.""",0,0
+95HPO9,tn,,"Clinton responded to the controversy on Wednesday, tweeting that she had asked the State Department to make her private emails publicly available.",0,0
+95HPO10,tn,0.0,"While on Mitchell's show, McCain also raised the concern that there's no way of knowing if all of Clinton's emails have been saved, since they were not originally retained by the government.",0,0
+94hpo13,tn,0.0,"He insisted that he wanted to move on from the incident, which was distracting from his work on Capitol Hill.",0,0
+94hpo18,tn,0.0,"I'm going to get back to the conversation I care about.""",0,0
+94hpo20,tn,,Weiner was a Twitter follower of the female college student who received the photo.,0,0
+71hpo2,tn,0.0,"Bachmann asked her followers on what became an unofficial ""Chick-fil-A Appreciation Day.""",0,0
+39hpo5,tn,0.0,"That judges do not, as Chief Justice John Roberts once famously said, only call “balls and strikes.”",0,0
+39hpo25,tn,0.0,"Responding to Gorsuch’s stated belief that justices have no partisan leanings, Sen. Al Franken (D-Minn.) explained, “And you know, you said earlier, there are no Democratic judges, there are no Republican judges.",0,0
+39hpo27,fn,0.0,That’s what it was about.”,1,0
+39hpo36,tn,,"After Gorsuch repeatedly stated that there was ample room for Congress to legislate without worrying about court decisions, Democrats reminded him of how the court’s decisions play a key role in shaping who is elected to Congress and, therefore, what bills can be passed in the first place.",0,0
+38hpo2,tn,,"Pelosi defeated her lone challenger, Rep. Tim Ryan (Ohio), by a vote of 134 to 63.",0,0
+45nyt0,tn,0.0,"Federal authorities made an arrest on Friday in connection with the nationwide bombing campaign against outspoken critics of President Trump, a significant breakthrough in a case that has gripped the country in the days leading up to the midterm elections.",0,0
+45nyt5,tn,0.0,The records listed Mr. Sayoc’s occupation as “manager.”,0,0
+45nyt8,tn,0.0,“Has no furniture.”,0,0
+45nyt15,tn,0.0,"Sometimes the door would be ajar or a window would be open, which indicated to me that maybe somebody was living in the van.”",0,0
+45nyt32,tn,0.0,"All together, 12 crude explosive devices have been found since Monday, sent through the mail to a host of Democrats and other prominent figures who have been among Mr. Trump’s most vocal detractors. ",0,0
+45nyt37,tn,,The first package was discovered on Monday afternoon at the suburban New York home of Mr. Soros. ,0,0
+40fox4,fn,0.0,He chuckled and smirked through many of Ryan's responses.,1,0
+40fox13,tn,0.0,"""This is not what a real recovery looks like,"" Ryan said.",0,0
+40fox19,tn,0.0,Ryan opened the debate with tough criticism of the Obama administration over its handling of the Libya terror attack.,0,0
+40fox37,fp,,"Ryan shot back: ""They got caught with their hand in the cookie jar turning Medicare into a piggy bank for ObamaCare.""",0,0
+72fox2,tn,,"That’s why I know Hillary will be so good at it,"" the president said, in the video posted on Clinton's campaign site.",0,0
+72fox16,tn,,"He did not, however, say specifically whether he would still be an active candidate by then, taking no questions from the press before heading over to a meeting with Senate Minority Leader Harry Reid.",0,0
+72fox18,tn,,"They met for over an hour, and Fox News is told no staff or aides were present.",0,0
+72fox32,tn,,"Sanders and the DNC chairwoman have been at odds for months, with Sanders’ team long accusing her of helping now-presumptive nominee Clinton.",0,0
+73fox0,tn,0.0,"Democratic Attorney General Richard Blumenthal, once thought to be a shoo-in for the seat being vacated by Sen. Chris Dodd, D-CT, finds himself on the political ropes after a newspaper exposed a past incorrect statement regarding his service in Vietnam, and Republicans smell an opening.",0,0
+76nyt2,tn,,"The letter goes on: “With little time left in this Congressional session, legislative scheduling should be focused on these critical priorities. ",0,0
+76nyt3,tn,,"While there are other items that might ultimately be worthy of the Senate’s attention, we cannot agree to prioritize any matters above the critical issues of funding the government and preventing a job-killing tax hike.”",0,0
+98hpo8,tn,0.0,Immigration activists have targeted McCarthy specifically due to his high rank in the House GOP.,0,0
+77nyt1,tn,0.0,"Mr. Trump and his allies seized on the texts — exchanged during the 2016 campaign with a former F.B.I. lawyer, Lisa Page — in assailing the Russia investigation as an illegitimate “witch hunt.” ",0,0
+77nyt3,tn,0.0,"Along with writing the texts, Mr. Strzok was accused of sending a highly sensitive search warrant to his personal email account.",0,0
+77nyt4,tn,0.0,"The F.B.I. had been under immense political pressure by Mr. Trump to dismiss Mr. Strzok, who was removed last summer from the staff of the special counsel, Robert S. Mueller III. ",0,0
+77nyt16,tn,,Mr. Strzok’s text exchanges with Ms. Page demonstrated animosity toward Mr. Trump. ,0,0
+77nyt25,fp,0.0,Mr. Strzok became emblematic of Mr. Trump’s unfounded assertions that a so-called deep state of bureaucrats opposed to him was undermining his presidency. ,0,1
+77nyt27,tn,,"Mr. Strzok told lawmakers that he never leaked information about the Russia inquiry, which could have upended the election and hurt Mr. Trump’s chances of becoming president.",0,0
+77nyt35,tn,,"The delays were merely the “result of bureaucratic snafus,” Mr. Strzok’s lawyer wrote last month in USA Today.",0,0
+77nyt45,tn,0.0,"The firing was politically motivated, Mr. McCabe has said, as an effort to discredit him as a witness in the special counsel investigation.",0,0
+99hpo7,tn,0.0,"“And if I did” spend campaign funds improperly, he said, “it was an accident and I paid it back.”",0,0
+99hpo10,tn,,"“The Hunters knew that many of their desired purchases could be made only by using campaign funds, since they did not otherwise have sufficient personal funds to pay for their purchases.”",0,0
+99hpo17,tn,0.0,"“The Republicans left in California are pretty well-liked by their constituents,” he said.",0,0
+43hpo13,tn,0.0,"In a speech in Jakarta last year, Obama remarked that the American ""motto is E pluribus unum -- out of many, one.""",0,0
+43hpo15,tn,0.0,"Minnesota congresswoman and now-GOP presidential candidate Michele Bachmann and other members of the Congressional Prayer Caucus piled on weeks later, penning a letter to Obama chastising him for his alleged failure to the use the word ""God"" and ""Creator"" more in his public speeches, especially abroad.",0,0
+42HPO7,tn,,The final wording won't be released until the NAACP's national board of directors approves the resolution during its meeting in October.,0,0
+42HPO9,tn,,"It said something could evolve ""and become more dangerous for that small percentage of people that really think our country has been taken away from them.""",0,0
+42HPO15,tn,,Poulter said he has seen no evidence of racism within the movement.,0,0
+42HPO16,fp,0.0,"""It's unfounded, but people are running with these accusations like they are true,"" he said.",0,0
+35hpo1,tn,,"“I will no longer speak to the press ever again after today,” he told reporters Wednesday.",0,0
+35hpo9,tn,,I’m not saying that I am going to finish it.”,0,0
+35hpo23,tn,,“The Republican Senate caucus has clearly stated that we need an acceptable plan for corrective action before the determination of whether the Legislature should convene is made.”,0,0
+48nyt3,tn,,"No matter how intrusive and partisan our politics can become, this does not justify a poor response.”",0,0
+48nyt8,tn,,"“Tell me who you are,” Mr. Etheridge said. “Tell me who you are.”",0,0
+48nyt14,tp,0.0,“His conduct is unbecoming of a member of Congress.”,1,0
+49nyt14,tn,,The article itself seems to have spawned little outrage.,0,0
+49nyt16,tp,,"In 2009, the editors selected a photo of Sarah Palin in running shorts, which the former governor — and many others — called “sexist.”",1,0
+97fox4,tn,0.0,"The campaign and the state party intend to cooperate with the U.S. Attorney's office and the state legislative committee and will respond to the subpoenas accordingly.""",0,0
+93nyt13,tn,,"All but $190,450 of their personal charitable giving passed through their philanthropic entity, the Clinton Family Foundation, the returns show.",0,0
+93nyt17,tn,,"Her standard rate was $225,000.",0,0
+93nyt21,tn,0.0,"Besides the royalties from his books and his speaking fees, Mr. Clinton earned nearly $20 million between 2011 and 2014 for advising or consulting companies.",0,0
+93nyt22,tn,0.0,"“We’ve come a long way from my days going door to door for the Children’s Defense Fund and earning $16,450 as a young law professor in Arkansas — and we owe it to the opportunities America provides,” Mrs. Clinton said in her statement.",0,0
+92nyt3,tn,,"Mr. Cowan, 43, who is known as Mo, is a former partner in the politically connected law firm of Mintz Levin and will become Massachusetts’ first black senator since Edward Brooke, a Republican, held the seat from 1966 to 1978.",0,0
+92nyt17,tn,0.0,"The June 25 special election would be Mr. Brown’s third statewide Senate race in three years, starting with his win in a special election in January 2010 to finish Senator Edward M. Kennedy’s term.",0,0
+92nyt20,tn,0.0,"Several Democrats, including Mr. Kerry, have closed ranks behind him in the hopes of discouraging anyone else from getting in and avoiding a bruising primary.",0,0
+92nyt23,tn,,"The rough and tumble of the coming campaign seemed far away at Wednesday’s news conference, which was attended by Mr. Cowan’s wife, Stacey, and their two young sons.",0,0
+92nyt24,tn,0.0,"“He’s cool,” Lt. Gov. Timothy Murray said of Mr. Cowan. “Tom Brady, George Clooney, James Bond and the president have nothing on Mo.”",0,0
+35nyt5,fn,,"Behind the scenes, state lawmakers — Democrats and Senate Republicans — exasperated after six years of political controversies and what they saw as erratic behavior, were scrambling to figure out what, if anything, they could do to formally address this latest crisis.",1,0
+35nyt23,tn,0.0,"Mr. LePage’s six years in office here, which began as part of the Tea Party sweep in 2010, have been marked by controversy.",0,0
+34nyt13,tn,,But fellow Republicans suggested that he had not.,0,0
+31fox9,tn,,"Opening up about his troubled past, Beck told the crowd, ""People need to understand that life is not fair.",0,0
+31fox19,fn,,"""None of this would have happened without Glenn,"" she said.",1,0
+30fox2,tn,0.0,"Members of Congress are calling her evasive, and question why she didn't reveal the program sooner -- plus her history at the Federal Elections Commission is coming under scrutiny.",0,1
+30fox9,tn,0.0,"She said: ""Well there's a questionnaire that began this discussion and there's also a questionnaire out there that is seeking info from 501 c3,4,5 organizations.""",0,0
+30fox13,tn,0.0,"Under her direction, the FEC undertook the largest enforcement action in its history -- suing the Christian Coalition for violating campaign laws.",0,0
+30fox18,fn,0.0,"""She was in effect being promoted for what she had done at the Federal Election Commission and now was going to be expected ... to replicate that at the IRS and now we know that's exactly what happened,"" he said.",1,0
+30fox22,tn,0.0,"""I have not broken any laws. I have not violated any IRS rules or regulations, and I have not provided false information to this or any other congressional committee.""",0,0
+49hpo1,tn,,"The cover shows Bachmann standing against a stark blue background, looking directly into the camera with a wide-eyed expression.",0,0
+49hpo4,tp,,"Conservative websites are already crying foul over the cover, with some saying it makes Bachmann look ""crazy"" and one blogger asking, ""Can anyone really say with a straight face that the mainstream media is not totally biased against conservatives?""",1,0
+48hpo4,tn,,"In the next shot, Etheridge grabs the reporter’s wrist and continually asks him to identify himself.",0,0
+48hpo14,fn,,His response was to hit away a video camera and assault a student.,1,0
+48hpo31,tn,,"“Motives matter, and I think you can see who was behind this,” Woodhouse said.",0,0
+48hpo35,fp,,Republicans know if they admit their involvement in this game of gotcha it will undermine their credibility.,0,0
+48hpo42,tn,,"No matter how intrusive and partisan our politics can become, this does not justify a poor response.",0,0
+79fox0,tn,0.0,Lawmakers at the scene of Wednesday’s baseball practice shooting described themselves as “sitting ducks” and said the violence would have been a “massacre” if not for Majority Whip Steve Scalise's detail -- spurring new questions over whether congressional security practices should be overhauled.,0,0
+79fox3,tn,0.0,"The Congressman will require additional operations, and will be in the hospital for some time.""",0,0
+79fox4,tn,,"Scalise, R-La., like other members of leadership, is assigned a full-time security detail from U.S. Capitol Police, who guard him in Washington and at home in his district.",0,0
+79fox5,tn,0.0,His detail was credited with putting down the attacker and saving lives.,0,0
+79fox6,fn,,"“If Scalise was not there, he’s the one with security detail, we wouldn’t have had any protection and God knows how bad that might have been,” Rep. Brad Wenstrup, R-Ohio, told ""Fox & Friends.""",1,0
+79fox10,tn,0.0,"“Forty guys get together at the same time, that would be a major security event normally, but I think we got a little excited and didn’t think things through as well as we could have.”",0,0
+79fox13,tn,0.0,"The Wednesday attack injured Scalise; Matt Mika, a lobbyist for Tyson Foods; Zack Barth, a staffer from Texas Rep. Roger Williams’ office; and two U.S. Capitol Police officers, Special Agents Crystal Griner and David Bailey.",0,0
+79fox25,tn,0.0,Rogers was injured during the attack when he dove into the dugout “like a pool without water.”,0,0
+79fox29,tn,,"U.S. Capitol Police have not announced any increased security measures for congressional lawmakers, but said they will “continue to provide a robust and visible presence” around the Capitol.",0,0
+92hpo9,fp,,"Like Patrick, who grew up on the South Side of Chicago before attending Milton Academy, Harvard and Harvard Law, Cowan came from a poor background to Boston for education and made a career there.",0,0
+92hpo17,tn,,"Patrick on Wednesday was asked to reflect on the fact that eight years ago, the highest black official in the state was Suffolk County D.A. Ralph Martin.",0,0
+92hpo37,tn,0.0,"Former Sen. Scott Brown (R-Mass.) has not said what he will do, but the Associated Press reported Tuesday that he was ""leaning strongly"" towards a run and would likely announce his candidacy early next week.",0,0
+93hpo5,tn,0.0,"""We’ve come a long way from my days going door to door for the Children’s Defense Fund and earning $16,450 as a young law professor in Arkansas—and we owe it to the opportunities America provides,"" Clinton said in a statement accompanying the returns.",0,0
+77hpo11,tn,0.0,"Strzok subsequently joined the Mueller team, but left the team as soon as Mueller became aware of his anti-Trump texts.",0,0
+99nyt5,tn,,"Mr. Collins, who is accused of passing insider information to his son about a drug company on whose board he served, has said he expects to be “fully vindicated and exonerated.”",0,0
+99nyt16,tn,,"The indictment details scores of instances, beginning in 2009 and continuing through 2016, in which the Justice Department said the Hunters spent campaign money on themselves.",0,0
+99nyt27,tn,0.0,The Hunters are scheduled to be arraigned Thursday morning in San Diego.,0,0
+76hpo8,tn,0.0,"In addition, I intend to file cloture this week on the 9/11 health bill.",0,0
+98nyt18,tn,0.0,"Critics worry that House Republican leaders and Senate Democrats are essentially negotiating a final deal, bypassing formal House-Senate negotiations, where conservatives had hoped to derail the process.",0,0
+42NYT6,tn,,"He added: “Knowing that the consequence of silence is violence in these times, we’re saying stand up and say enough is enough.",0,0
+42NYT7,tn,0.0,They need to make clear that there is no place for the bigots in the Tea Party movement.”,0,0
+43nyt4,tn,0.0,"Invoking patriotism as well as divine intervention – Mr. Obama stood against the backdrop of a giant American flag – he spoke before an audience that included unemployed construction workers, whose industry is among the hardest hit by the housing bust.",0,0
+43nyt9,tn,,Mr. Obama said the two leaders and other Republicans had supported public-works investments in the past.,0,0
+43nyt18,tn,0.0,"Mr. Obama’s transportation secretary, Ray LaHood, a former Republican congressman from Illinois, appeared with him at the Key Bridge and then went to the Capitol to meet with lawmakers.",0,0
+46fox6,tn,0.0,Clinton was interviewed by FBI agents as part of the investigation into her exclusive use of a private email system while secretary of state. ,0,0
+46fox15,tn,,"That tweet immediately caused problems for the White House, as some legal experts said it potentially exposed the president to obstruction of justice allegations – since, according to the tweet, he would have known Flynn lied to agents when he allegedly asked Comey to lay off the Flynn investigation and later fired Comey. ",0,0
+46fox22,tn,0.0,"Sen. Dianne Feinstein, D-Calif., the top Democrat on the Senate Judiciary Committee, said on NBC’s “Meet the Press” on Sunday that the panel has begun to see ""the putting together of a case of obstruction of justice"" against Trump.",0,0
+47fox5,tn,0.0,"Trump uses Twitter on a daily basis, and his campaign was credited for its use of Facebook as one of the ways it secured its victory in November 2016.",0,0
+5hpo2,tn,0.0,"According to messages obtained by The Atlantic’s Julia Ioffe, Trump Jr. messaged with the WikiLeaks account between September 2016 and July 2017.",0,0
+5hpo4,fn,0.0,"(Federal officials believe WikiLeaks published material, including emails from the Democratic National Committee’s servers, that had been obtained via Russian hackers.)",1,0
+5hpo16,tn,,"“The vice president was never aware of anyone associated with the campaign being in contact with WikiLeaks,” said Pence press secretary Alyssa Farah.",0,0
+5hpo17,tn,,“He first learned of this news from a published report earlier tonight.”,0,0
+5hpo20,tn,0.0,"“I think all of us have, you know, have had concerns about WikiLeaks over the years, and it’s just a reality of American life today, and of life in the wider world.”",0,0
+5hpo25,tn,0.0,"Trump Jr. is expected to publicly testify before the Senate Judiciary Committee, according to the panel’s top Democrat, Sen. Dianne Feinstein of California.",0,0
+28nyt8,tn,,"It’s special,” he told reporters later at a joint East Room news conference with Mr. Santos.",0,0
+28nyt16,tn,,"All three men are under consideration, the administration officials said, even if Mr. Lieberman, who was Al Gore’s running mate in the 2000 presidential campaign, is the front-runner.",0,0
+4hpo0,tn,0.0,"A Republican staffer on Friday apologized for a Facebook post that criticized Malia and Sasha Obama's appearance at the annual White House turkey pardon ceremony, one of America's silliest holiday traditions.",0,0
+29nyt0,tn,0.0,"Republican officials in Alabama staunchly defended their party’s Senate nominee, Roy S. Moore, after a report that he had made sexual advances toward four teenage girls when he was in his 30s.",0,1
+29nyt6,fn,,"The story was met with immediate backlash from Republicans in Alabama, several of whom dismissed the women’s stories out of hand.",1,0
+29nyt11,tn,0.0,He said that he and other Alabama Republicans would continue to support their candidate and echoed Mr. Moore’s assertion that the Democratic Party had been behind the story.,0,0
+29nyt17,tn,0.0,"“If they believe this man is predatory, they are guilty of allowing him to exist for 40 years,” he said.",0,0
+29nyt20,tn,,"Daniel Dale, a reporter for The Toronto Star, contacted multiple Republican officials in the state and kept a running report of their responses to the story.",0,0
+29nyt26,tn,,"Riley Seibenhener, the party chairman in Geneva County, told Mr. Dale that if the allegations were true, he would not support the candidate.",0,0
+54hpo12,tn,0.0,The Georgetown scholars pointed to the devastating impact of cuts in food programs that keep the poor from starvation.,0,0
+55hpo0,tn,0.0,"Former Mexican President Vicente Fox says Mexico will not pay for a wall along the U.S. border, despite what GOP presidential hopeful Donald Trump may claim.",0,0
+55hpo10,tn,0.0,"""They're followers of a false prophet.""",0,1
+61nyt17,tn,,But Mr. Romney’s campaign is also trying hard to make sure that the convention projects an image that swing voters in battleground states will find appealing.,0,0
+60nyt2,fn,0.0,“It’s ridiculous. It’s ridiculous. And it has to end.”,1,0
+60nyt19,tp,,"“The notion that simply being born within the geographical limits of the United States automatically confers U.S. citizenship is an absurdity — historically, constitutionally, philosophically and practically,” Mr. Anton wrote in July.",1,0
+60nyt24,tn,0.0,"His discussion of the idea comes after the administration announced it was streaming more than 5,000 active-duty troops to the southern border, part of an election-season rash of executive action Mr. Trump has undertaken as he works to energize his anti-immigrant base.",0,0
+60nyt33,tn,0.0,"“We’re a nation of immigrants made better by the diversity of its people, especially in NJ.",0,0
+60nyt34,tn,0.0,We need compassionate comprehensive immigration reform now.”,0,0
+60nyt41,tn,0.0,“How would this be possible if the U.S. had no jurisdiction over them?”,0,0
+65FOX3,tn,0.0,"During a press conference in the state capital of Little Rock, Hutchinson said he wants to strike the ""right balance.""",0,0
+65FOX17,fn,0.0,"Little Rock's mayor, the city's Chamber of Commerce and Arkansas-based data services company Acxiom all urged the governor to reject the measure in recent days.",1,0
+65FOX18,tn,0.0,"The Human Rights Campaign, the nation's largest lesbian, gay, bisexual and transgender rights group, has run ads in Silicon Valley targeting technology firms Hutchinson hopes to attract to the state.",0,0
+65FOX21,tn,,"""Governor Pence falsely tried to suggest the law is the same as the 1993 law.",0,0
+65FOX22,fp,0.0,"That is not true.""",0,0
+65FOX23,tn,0.0,"Earnest also said the Indiana law was a ""significant expansion"" of current law.",0,0
+16nyt20,tn,,"The Justice Department is fighting the law, which has not taken effect yet.",0,0
+17nyt8,tn,0.0,“Thank you and I look forward to talking to you Monday evening.”,0,0
+17nyt15,tn,,The 168-member committee will elect a chairman during its meeting in January.,0,0
+12fox12,tn,,"While a few have focused on school security -- South Dakota has already approved legislation allowing for teachers to be armed -- many have concentrated on enacting or expanding assault weapons bans, strengthening background checks and passing other measures to restrict access to firearms.",0,0
+13fox13,tn,0.0,"""Legal, well-regulated sport hunting as part of a sound management program can benefit certain species by providing incentives to local communities to conserve those species and by putting much-needed revenue back into conservation,"" the agency said in a statement.",0,0
+13fox15,tn,,"As a result, the number of African elephants has shrunk from about 5 million a century ago to about 400,000 remaining.",0,0
+84nyt3,tn,0.0,"“Of course I was surprised, who wouldn’t be?” said the legislator, Representative Carl Seel.",0,0
+84nyt4,fn,,"“I’m honored to get the ability to meet with him and discuss it, and I want to thank him for being such a supporter of this issue.”",1,0
+84nyt10,tn,0.0,"Kelly Townsend, a founder of the Greater Phoenix Tea Party, said Mr. Trump told them that he was interested in learning more about the legislation in Arizona.",0,0
+84nyt13,tn,0.0,"“It’s not about Mr. Obama. It’s about preventing any questions from coming up in the future, putting something in place so no one could question it.”",0,0
+85nyt4,tn,,“I used money I shouldn’t have used for personal purposes.”,0,0
+85nyt12,fn,,"But as the federal authorities investigated Gov. Rod R. Blagojevich of Illinois over his efforts to sell the Senate seat that President Obama vacated in 2008, they uncovered evidence that one of Mr. Jackson’s friends had offered to make a contribution to Mr. Blagojevich’s campaign in exchange for the seat.",1,0
+85nyt15,tn,0.0,"After winning re-election in November, he resigned, citing his health and the federal investigation into his use of campaign money.",0,0
+85nyt22,tn,,"On at least two instances, Mr. Jackson and his wife used campaign money at Build-A-Bear Workshop, a store where patrons can create stuffed animals.",0,0
+80fox24,tn,0.0,Much of the hour-long argument delved into the tedious details of class action law and if the Wal-Mart women could properly certify their claims into a single case.,0,0
+81fox4,tn,0.0,"However, Brat offset the cash disadvantage with endorsements from conservative activists like radio host Laura Ingraham and with help from local Tea Party activists angry at Cantor.",0,0
+23hpo3,tn,,"Citing the Fifth Amendment right against self-incrimination, Flynn’s lawyer said on Monday that Flynn would not comply with subpoenas from the Senate intelligence committee, which is conducting its own parallel investigation into Russia’s interference in the election and whether it colluded with President Donald Trump’s associates.",0,0
+23hpo9,tn,,Trump implied earlier this month that he had “tapes” of discussions with recently fired FBI Director James Comey that would be damaging to Comey.,0,0
+22hpo10,fn,0.0,"House Democrats rejected Obama's trade agenda Friday by blocking a measure that would have granted him the power to fast-track sweeping, secretive international agreements through Congress.",1,0
+22hpo11,tn,,Clinton refrained from mentioning trade in her official campaign kickoff speech that took place at New York City's Roosevelt Island on Saturday.,0,0
+84hpo8,tp,,"""How come his own family doesn't know which hospital he was born in?",1,0
+84hpo11,tn,0.0,"In other words, it doesn't say how much they paid, where is the doctor, here's your room bill.""",0,0
+84hpo24,tn,0.0,"""I'm only interested in Libya if we get the oil,"" Trump said.",0,0
+26fox4,fn,,"He indicated he was not shifting on his demand for more than $5 billion for funding for a wall on the southern border, saying it was necessary as the border is a ""dangerous, horrible disaster.""",1,0
+26fox35,tn,0.0,"“We think we're hopeful because the people that elected Nancy Pelosi didn't elect her to come up here and do nothing and didn't elect her to play political games,” she said. ",0,0
+22nyt0,tn,,"DES MOINES – Hillary Rodham Clinton on Sunday urged President Obama to listen to congressional Democrats – particular the House minority leader, Nancy Pelosi – and make changes to the Trans-Pacific Partnership trade deal that reflect their concerns about protecting American jobs and wages.",0,0
+22nyt15,tn,,"I kind of fall in the group that says, ‘Let’s find out what’s in it, and let’s make it as good as it can be before we make the decision.’”",0,0
+22nyt23,tn,0.0,"“But now I think the president and his team could have a chance to drive a harder bargain, because they are now in the position of saying to all of these other countries ‘we need to maximize the number of winners.’”",0,0
+23nyt7,tn,0.0,"A spokeswoman for Representative K. Michael Conaway of Texas, the Republican leading the investigation, did not immediately respond to a request for comment.",0,0
+23nyt13,tn,0.0,"The Flynn Intel Group was paid more than $500,000 to represent Turkey in a dispute with the United States government while Mr. Flynn was advising the Trump campaign.",0,0
+23nyt19,fp,,"Lying to federal officials is a felony, punishable by up to five years in prison.",0,0
+0fox0,fn,0.0,"Paul Ryan went on offense Tuesday in response to criticism over his Medicare plan, using an interview with Fox News coupled with a new TV ad to claim President Obama’s health care plan treats the treasured entitlement like a “piggy bank,” while the “Romney-Ryan” plan preserves it.",1,0
+0fox1,tn,0.0,"Ryan, in his first one-on-one interview since being named Saturday as Mitt Romney’s running mate, told Fox News on Tuesday he thinks Medicare can be a winning issue for their campaign.",0,0
+0fox2,tn,,"""We're the ones who are offering a plan to save Medicare, to protect Medicare, to strengthen Medicare,"" Ryan said.",0,0
+0fox10,tn,0.0,The Romney campaign retorted with an ad of its own Tuesday.,0,0
+0fox22,tn,,"“The savings his ad attacks do not cut a single guaranteed Medicare benefit, and Mitt Romney embraced the very same savings when he promised he’d sign Paul Ryan’s budget,” Smith said.",0,0
+0fox30,tn,0.0,And the ObamaCare cuts he referenced would likely come in the form of lower payments to providers.,0,0
+0fox33,tn,,"Amplifying the Romney campaign message, he said Obama’s heavy borrowing is dragging down economic growth – he also claimed the “hope and change campaign of '08 has become the blame and attack campaign of 2012.”",0,0
+0fox39,tn,0.0,"And sooner or later, we basically started sharing the microphones at these town hall meetings and we just kind of developed a chemistry with one another and a mutual understanding with each other.”",0,0
+0fox45,tn,,"“You may have heard that Governor Romney just chose his running mate, Congressman Ryan.",0,0
+1fox0,fn,0.0,"Donald Trump announced Tuesday that he is bowing out as the moderator for a Republican presidential debate later this month, after most candidates in the field opted not to attend.",1,0
+1fox4,tn,,"""I am looking at it, if the Republicans choose the wrong candidate, which is a possibility, and if the economy continues to be bad, which I think it will be,"" Trump said.",0,0
+4nyt2,tp,0.0,"By Monday, Ms. Lauten had resigned as communications director to Representative Stephen Fincher, a farmer and gospel singer perhaps best known for his whimsically named hometown, Frog Jump.",1,0
+29hpo11,fn,0.0,"But after Moore won, Trump disavowed his endorsement of Strange, deleting tweets in support of him.",1,0
+29hpo12,tp,0.0,"And the day after the primary, the president tweeted in support of Moore, calling him “a really great guy.”",1,0
+5nyt12,tn,0.0,"“Already did that earlier today,” Mr. Trump said in response.",0,0
+28hpo7,fp,0.0,But it is his background in politics that had Democrats reacting with severe reservation.,0,1
+28hpo12,tn,0.0,"And more to the point, it is not as if there is no one else qualified to do this job.",0,0
+28hpo25,fn,0.0,"The need for a new FBI director came after Trump fired Comey last week, a stunning move that occurred amid the FBI’s ongoing investigation into the Trump campaign’s ties to Russia.",1,1
+51fox4,fn,,"According to the gossip site, Griffin joked with Shields on set they would need to move to Mexico after the photos were released or fear imprisonment.",1,0
+51fox9,tp,0.0,"Chelsea Clinton called it ""vile and wrong"" in a Twitter post.",1,0
+51fox13,tn,,"""We kind of figured out what would be the best image to make out of that.""",0,0
+51fox26,tn,,"He previously received death threats over a photo he took of ""Glee"" actress Heather Morris with bruises on her face.",0,0
+50fox11,tn,0.0,"""I can't help but think that those remarks are well over the line.",0,0
+50fox15,tn,0.0,"Obama campaign deputy press secretary Ben Labolt also issued a statement Saturday shortly after Santorum told voters that Obama's agenda is ""not about you.",0,0
+50fox16,tn,0.0,It's not about your quality of life. It's not about your jobs. It's about some phony ideal.,0,1
+50fox19,tp,0.0,"It was ""a stark contrast with the president who is focused everyday on creating jobs and restoring economic security for the middle class,"" LaBolt said.",1,0
+50fox23,tn,,Santorum said he never questioned the president's faith and repeatedly said he believes Obama is a Christian.,0,0
+55nyt16,fn,0.0,"Mr. Trump, who has been criticized for lacing his campaign speeches with profanity, called on Mr. Fox to apologize for using foul language when talking about the wall.",1,0
+54nyt7,fn,,"Their condemnation has grown so heated that this month, Bishop Daniel Jenky, of Peoria, Ill., said in a homily that President Obama was so intolerant of religion that he was “following a similar path” as Hitler and Stalin.",1,0
+60hpo7,tn,,Trump also falsely stated that the U.S. is “the only country in the world” that offers citizenship to those born here.,0,0
+60hpo13,tn,,"An executive order challenging birthright citizenship would ensure a legal battle, in which most experts think the president would fail.",0,0
+60hpo25,fn,,"“This policy is a magnet for illegal immigration, out of the mainstream of the developed world, and needs to come to an end,” Graham said in a statement on Tuesday.",1,0
+60hpo31,tn,,"He deployed 5,200 active-duty troops to the border on Monday in what officials of his administration described as a necessary national security measure.",0,0
+61hpo0,tn,0.0,Presumptive GOP presidential nominee Mitt Romney on Tuesday joined a chorus of Republicans calling for Rep. Todd Akin (R-Mo.) to drop out of the U.S. Senate race in Missouri.,0,1
+61hpo15,tn,0.0,Akin had also vowed to remain in the race earlier Tuesday on the radio show of former Republican presidential candidate Mike Huckabee.,0,0
+18fox13,tn,0.0,"The ad, reportedly to air in Miami, West Palm Beach and Fort Myers, is costing Secure America $1 million, the organization confirmed to Fox News.",0,0
+18fox19,fn,0.0,"To underscore that point, numerous polls have shown an erosion in Jewish support for the president.""",1,0
+18fox20,tn,,"Netanyahu also made an appearance on NBC's ""Meet the Press"" last Sunday, urging Obama to take a tougher line with Iran over its nuclear program.",0,0
+31nyt5,tn,,"Noting that he was a recovering alcoholic himself, he said that the party had to admit that it had a problem, which he had not heard it do.",0,0
+31nyt10,tn,,"People are losing a fundamental belief that things will get better, he said.",0,0
+31nyt15,tn,0.0,"Saying President Obama, he said, was “too simple an answer.”",0,0
+30nyt2,tn,0.0,"As the official, Lois Lerner, appeared under subpoena before the House Committee on Oversight and Government Reform, she sternly told her questioners that accusations that she had misled Congress in previous testimony were false.",0,0
+30nyt9,tn,0.0,"But that upset other Republicans, who said that Ms. Lerner should not be let go so quickly.",0,0
+30nyt11,tn,,“She ought to stand here and answer our questions.”,0,0
+30nyt17,tn,0.0,"And he may elect to do so, given the objections of some Republicans on Wednesday after he dismissed her.",0,0
+30nyt18,tn,0.0,"They argued that by making an opening statement, she had waived her Fifth Amendment right and could be compelled to testify, a contention Ms. Lerner’s lawyer disputed.",0,0
+30nyt27,tn,,"The hearing, the second this week on the I.R.S.’s efforts to target conservative groups, offered few new revelations.",0,0
+30nyt30,fp,,"At times, committee members could hardly conceal their contempt for the I.R.S. and the Obama White House.",0,0
+35fox17,tn,,"During his news conference Friday, LePage offered more racially charged comments that have drawn fire, saying, ""A bad guy is a bad guy.",0,0
+96HPO6,tn,0.0,"Trump also said in his tweet that the Justice Department must act on “Comey and others,” a reference to former FBI Director James Comey, who was leading the investigation into whether Trump’s campaign colluded with Russia to influence the election until Trump fired him in May.",0,0
+78nyt4,fn,,"But when the final draft of the talking points was sent to Mr. Petraeus, he dismissed them, saying “Frankly, I’d just as soon not use this,” adding that the heavily scrubbed account would not satisfy the House Democrat who had requested it.",1,0
+78nyt5,fn,0.0,"“This is certainly not what Vice Chairman Ruppersberger was hoping to get,” Mr. Petraeus wrote, referring to Representative C. A. Dutch Ruppersberger of Maryland, the top Democrat on the House Intelligence Committee, which had asked Mr. Petraeus for talking points to use with reporters in discussing the attack on Benghazi.",1,0
+78nyt12,tn,,"Republicans welcomed the release of the e-mails, saying they confirmed that the administration had airbrushed its account of the attack during an election campaign.",0,1
+78nyt16,fn,,"It drew attention to a draft of the talking points — the only document provided by the White House that was not part of an e-mail chain — in which Mr. Morell, in his own writing, crossed out five lines that referred to C.I.A. warnings about the threat of attacks by Al Qaeda-linked extremists in Benghazi and eastern Libya.",1,0
+78nyt20,tn,,"The process began in earnest at 4:20 p.m. on Friday, Sept. 14, when Stephen W. Preston, the C.I.A. general counsel, sent an e-mail to other agency officials warning them not to disclose information that might interfere with the F.B.I.’s investigation.",0,0
+78nyt31,tn,,"Mr. Obama’s national security deputies reviewed the talking points at a meeting the next day, Sept. 15, Mr. Rhodes said.",0,0
+97hpo0,tn,,"WASHINGTON -- The U.S. Attorney’s office in New Jersey has subpoenaed documents from the reelection campaign of New Jersey Gov. Chris Christie (R) and the New Jersey Republican State Committee, as part of its investigation into the ""Bridgegate"" scandal.",0,1
+97hpo4,tn,0.0,"The campaign and the state party intend to cooperate with the U.S. Attorney's office and the state legislative committee and will respond to the subpoenas accordingly.""",0,0
+79nyt0,tn,,"WASHINGTON — The lawmakers trotted from their dugouts at Nationals Park, together in a near-summer air that never quite felt swampy, united in a certainty that the game must go on, just not exactly as it had before.",0,0
+79nyt9,tn,0.0,"Some members of Congress had not expected to stay behind for the annual showdown, with families and district business waiting for them.",0,0
+79nyt11,tn,0.0,"“We come here, and these members become our family,” Representative John Lewis, Democrat of Georgia, said at the Capitol before a game he had not intended to see.",0,0
+79nyt18,tn,0.0,More sustainable.,0,0
+79nyt20,tn,,"“What’s the half-life?” asked Senator Roger Wicker, Republican of Mississippi, appraising how long the comity might last.",0,0
+79nyt36,tn,0.0,"Ms. Pelosi sat for an interview alongside Speaker Paul D. Ryan, Republican of Wisconsin.",0,0
+79nyt41,tn,,"David Bailey, a Capitol Police officer who was wounded while helping to stop the attack, threw out the ceremonial first pitch.",0,0
+79nyt42,fp,,"(The ball was delivered to the mound, in an apparent bit of sponsorship oddity, by a Budweiser Clydesdale.)",0,0
+99fox5,tn,,"Vega contended that there was a ""rush to indict"" after a two-year grand jury investigation.",0,0
+99fox15,tn,,The pair is due to be arraigned in court on Thursday morning.,0,0
+98fox14,tn,0.0,"Obama told Senate Democrats this week that he believes that Boehner will make sure immigration reform is passed this year, according to The Hill, a a political publication in Washington, D.C.",0,0
+73hpo2,tn,,Here's an excerpt from the Times report:,0,0
+73hpo4,tn,0.0,"""And you exemplify it.",0,0
+73hpo7,tn,,"He obtained at least five military deferments from 1965 to 1970 and took repeated steps that enabled him to avoid going to war, according to records.""",0,1
+73hpo15,tn,0.0,"McMahon, the CEO of World Wrestling Entertainment, is one of the Republican Senate candidates running to face Blumenthal in November.",0,0
+73hpo22,tn,0.0,"-Here are the facts: unlike many of his peers, Dick Blumenthal voluntarily joined the Marine Corps Reserves in 1970 and served for six months in Parris Island, SC and six years in the reserves.",0,0
+72hpo8,tn,,"In recent months, Obama has privately suggested that Sanders drop out of the race to help Democrats unite around Clinton and prepare for the general election.",0,0
+46nyt7,tn,,"“I feel badly for General Flynn,” Mr. Trump said on Monday. “I feel very badly.",0,0
+46nyt13,fn,0.0,"A few days later, the F.B.I. director at the time, James B. Comey, recommended no charges be filed against her in the matter.",1,0
+47nyt8,tn,0.0,"“All of the fools that are so focused on looking only at Russia should start also looking in another direction, China,” Mr. Trump wrote. ",0,1
+47nyt13,tn,0.0,"In the case of Mr. Jones, it did not initially join the other major platforms in removing his content, and has since taken relatively minor steps against him.",0,0
+42FOX10,tn,,"""We don't care about the pigment of one's skin,"" he said.",0,0
+42FOX15,tn,,The final wording won't be released until the NAACP's national board of directors approves the resolution during its meeting in October.,0,0
+42FOX17,tn,,"It said something could evolve ""and become more dangerous for that small percentage of people that really think our country has been taken away from them.""",0,0
+42FOX21,tn,0.0,"The NAACP resolution, first reported by the Kansas City Star, was expected to make reference to the March incident on Capitol Hill.",0,0
+42FOX23,fn,,"""When you look at the crime and poverty and family breakdown of the African-American community ... you see a half-century of failure by the NAACP,"" he wrote.",1,0
+43fox16,tn,0.0,House Republicans have argued that the procedural votes don't take up very much time.,0,0
+43fox22,tn,,"I mean, I know that Democrats would be out there pushing this, and certainly the president is,"" he said.",0,0
+76fox5,fp,0.0,"""This strategy is very cynical but very obvious and transparent,"" he said in a statement.",0,0
+77fox6,tn,0.0,"The Deputy Director, as the senior career FBI official, has the delegated authority to review and modify any disciplinary findings and/or penalty as deemed necessary in the best interest of the FBI.”",0,0
+77fox7,fn,0.0,"Strzok appeared to launch a new Twitter account to fire back, saying he's ""deeply saddened"" by the decision and linking to a GoFundMe page. ",1,0
+77fox8,fp,0.0,"President Trump and his allies for months, though, have hammered the former FBI agent and cast him as the poster child for anti-Trump bias within the bureau and Justice Department. ",0,0
+77fox16,fn,,Strzok was removed from the special counsel probe last year after the discovery that he exchanged anti-Trump and other politically charged messages with colleague and lover Lisa Page. ,1,0
+77fox37,tn,,Lisa Page left the bureau earlier this year. ,0,0
+72nyt1,tn,0.0,"After the meeting with Mr. Obama, which lasted more than an hour, Mr. Sanders gave no indication that he was ready to leave the race just yet, insisting that he would compete in next week’s primary contest here in Washington.",0,0
+72nyt7,fn,,He also praised the campaign that Mr. Sanders ran.,1,0
+72nyt12,tn,,"Mr. Obama was trying to negotiate, however gently, with him to exit the Democratic race without inflicting damage on efforts to unite the party.",0,0
+73nyt2,tn,0.0,“And you exemplify it.,0,0
+73nyt5,tn,,"He obtained at least five military deferments from 1965 to 1970 and took repeated steps that enabled him to avoid going to war, according to records.",0,1
+73nyt25,fp,0.0,But the way he speaks about his military service has led to confusion and frequent mischaracterizations of his biography in his home state newspapers.,0,0
+73nyt26,tn,0.0,"In at least eight newspaper articles published in Connecticut from 2003 to 2009, he is described as having served in Vietnam.",0,0
+46hpo0,tn,0.0,"WASHINGTON ― President Donald Trump on Monday defended his former national security adviser, Michael Flynn, by invoking his 2016 election opponent, Hillary Clinton.",0,0
+46hpo5,fn,0.0,"Flynn lied, and it’s like, it ruined his life.",1,0
+46hpo10,tn,,Trump and the White House have long claimed that the investigations into the campaign have nothing to do with Trump himself.,0,0
+46hpo13,tn,,"Trump and his lawyer, John Dowd, now claim that the president already knew about Flynn lying to the FBI, renewing questions of whether Trump obstructed justice in the investigation.",0,0
+48fox0,tn,,"Three days after an Internet video surfaced showing North Carolina Rep. Bob Etheridge in a physical confrontation with a young man, the lawmaker said he is ""profoundly"" sorry for the tussle on a Washington street.",0,0
+48fox2,tn,,"""No matter how partisan and no matter how difficult things get sometimes, that's no excuse for my response,"" he added, shortly after releasing a written statement in which he said he ""profoundly"" regrets the incident.",0,0
+48fox12,tp,0.0,"""His conduct is unbecoming of a member of Congress.",1,0
+48fox16,tn,,"Etheridge, who has represented North Carolina's 2nd Congressional District since 1997, is running for re-election against Republican Renee Ellmers, a registered nurse, in November.",0,0
+49fox12,tn,0.0,"""Well, we'll have to take a look at that, won't we?""",0,0
+30hpo6,tn,,"That apology was planned ahead of time by the IRS, and came in response to a planted question.",0,0
+30hpo8,tn,0.0,Lerner is a key figure in the unfolding IRS scandal.,0,0
+31hpo3,tp,,"Using hand gestures, multiple impersonations and his infamous chalkboard, he took the usual swipes at Democrats.",1,0
+31hpo4,tn,0.0,"""Progressivism,"" he declared, ""is eating the Constitution.""",0,0
+31hpo17,tn,0.0,'One party won't tax and will spend.,0,0
+31hpo22,fp,0.0,"I'm addicted to spending and big government,"" he declared, reading out the apology he wanted lawmakers to deliver.",0,0
+31hpo25,tn,,But was the message what the conservative movement needed to hear?,0,0
+93fox3,tn,0.0,"They also donated $15 million to charity, and paid an additional $13.6 million in state taxes.",0,0
+93fox8,tn,,"During Clinton’s follow-up evaluations, she was found to have a “transverse sinus venous thrombosis” and started “anticoagulation therapy” to dissolve the clot.",0,0
+92fox2,tn,,"Kerry, also a Democrat and the state’s senior U.S. senator, was confirmed Tuesday as the new secretary of state, following his nomination by President Obama to replace the retiring Hillary Clinton.",0,0
+92fox3,tn,0.0,Both political parties will hold special-election primaries in mid May.,0,0
+92fox19,tn,,"The only possible candidate he confirmed speaking with was former Democratic Rep. Barney Frank, and then only after Frank told reporters he'd spoken with Patrick.",0,0
+97nyt1,tn,,A person briefed on the matter said the prosecutors had also issued subpoenas to some of the 20 people and entities — including potential witnesses and people who have come under scrutiny in the inquiry — that received subpoenas last week from a New Jersey legislative committee whose investigation largely parallels the federal one.,0,0
+97nyt19,tn,,"Despite the inquiries, Mr. Christie seemed to be trying to conduct business as usual.",0,0
+79hpo34,tn,0.0,"He said he heard at least 30 shots and got down on the ground, but couldn’t see the shooter.",0,0
+79hpo38,tn,0.0,This year’s game is scheduled for Thursday night.,0,0
+79hpo42,tn,,"“They are shaken,” Rucker said of YMCA staff.",0,0
+79hpo54,tn,,"The FBI is taking over the investigation into the shooting, Alexandria Police Chief Michael Brown said.",0,0
+78hpo19,tn,,"A reference to another terrorist group, Ansar al-Sharia, was left in, but later removed at the request of the State Department; the CIA agreed with that decision, again so as not to hinder the FBI investigation.",0,0
+78hpo28,tn,,UPDATE: 9 p.m. -- White House spokesman Eric Schultz said he hoped Wednesday's disclosure would put to rest the Benghazi issue.,0,0
+78hpo32,tn,0.0,"After 11 hearings, 25,000 pages of documents, and now this release, we can hopefully spend our time working on what’s important – what we can do together to ensure those serving their nation overseas are better protected than they were last September.”",0,0
+81hpo7,tn,0.0,"""I think the people are just ready for some major changes in this country.""",0,0
+81hpo12,tn,,"""I've been a conservative my whole life,"" he added.",0,0
+81hpo13,tn,,"""There's nothing hard right or far right about anything.",0,0
+80hpo11,tn,,"He said Wal-Mart's strong corporate culture stereotypes women as less aggressive than men and that translates into individual pay and promotion decisions at the more than 4,300 Wal-Mart and Sam's Club stores across the country.",0,0
+80hpo20,tn,0.0,"But several of their more conservative colleagues appeared to agree with Theodore Boutrous Jr., representing Wal-Mart, that even subjecting the company to a trial would be unfair.",0,0
+80hpo22,tn,,Boutrous said the class-action nature of the case deprives the company of its legal rights because it is being forced to defend the treatment of female employees regardless of the jobs they hold or where they work.,0,0
+80hpo31,tn,,"Supporters of the women say that if the court sides with Wal-Mart, it could remove a valuable weapon for fighting all sorts of discrimination.",0,0
+13hpo10,tn,0.0,"The forum, which ended Friday, was hosted by the Safari Club International Foundation and the United Republic of Tanzania.",0,0
+13hpo11,fn,0.0,"The Safari Club’s political action committees donated a collective $24,500 to Trump’s presidential campaign and Zinke’s 2014 and 2016 congressional campaigns, according to Federal Election Commission data.",1,0
+13hpo19,tn,,Talk-show host Ellen DeGeneres launched a campaign called #BeKindToElephants.,0,0
+12hpo10,tn,0.0,The task force also suggested that states loosen current legal restrictions on who can carry a firearm on school property.,0,0
+22fox8,tn,0.0,The White House and Republican leaders in Congress now face long odds in trying to revive the trade legislation after congressional Democrats helped defeat a job retraining program to jeopardize Obama's attempt to secure the fast-track authority.,0,0
+23fox0,tn,,The leaders of the Senate intelligence committee said Tuesday they had subpoenaed two of former National Security Adviser Michael Flynn's businesses as part of the ongoing probe into Russian activity during last year's presidential campaign.,0,0
+23fox2,tn,0.0,The committee's action comes a day after Flynn’s lawyer notified the committee that his client will invoke his Fifth Amendment protection against self-incrimination and not comply with the committee’s subpoena seeking documents related to its investigation.,0,0
+23fox5,tn,0.0,Trump fired Flynn in February because he misled Vice President Mike Pence about conversations he had with Russia’s ambassador about potentially easing economic sanctions.,0,0
+26nyt3,tn,,"He said that the wall was why he was elected, one of the officials said.",0,0
+26nyt17,tn,0.0,"In her first legislative act as speaker, Ms. Pelosi plans on Thursday to bring up two bills to reopen the government.",0,0
+26nyt19,tn,,"The homeland security measure would devote $1.3 billion to border security measures, such as enhanced surveillance and fortified fencing, but not the wall.",0,0
+26nyt44,tn,,"“The United States needs a physical barrier,” the president said during the cabinet meeting, comparing the southern border to “a sieve” that allows criminals and drugs to enter the country and facilitates human trafficking.",0,0
+26nyt46,tn,,"(Parts of Mr. Obama’s home in the northwest section of the city are bordered by a low brick retaining wall, and others have iron or chain-link fencing.)",0,0
+55fox6,tn,,"They must open their eyes. Please, you Hispanics in the U.S. – open your eyes.""",0,0
+55fox27,fp,0.0,"""I'm here to tell you: They do not, they do not, they do not represent the view of the vast majority of the American people.”",0,0
+51nyt25,tn,0.0,"“He blows away their case against him & now wants to clear his name by showing ‘the false or misleading testimony by James Comey, John Brennan …’ Witch Hunt!”",0,0
+51nyt26,tn,,"In a letter to the House Intelligence Committee reported by Fox and other news organizations, Mr. Page wrote: “I have learned from your Committee staff on this Memorial Day holiday that I might not be immediately afforded the opportunity to address the false or misleading testimony by James Comey, John Brennan, et al. as per our previously scheduled appointment for next week.",0,0
+50nyt6,tn,0.0,“I can’t help but think that those remarks are well over the line.,0,1
+50nyt22,tp,0.0,"Asked whether he was suggesting that Mr. Obama lacked sympathy for the disabled, Mr. Santorum did not back down, saying, “I think the president has a very bad record on the issue of abortion and children who are disabled.”",1,0
+50nyt23,tn,,"One of Mr. Santorum’s rivals for the Republican nomination, Representative Ron Paul of Texas, scoffed at Mr. Santorum on Sunday for focusing on social issues like abortion and contraception – and for believing that he could defeat Mr. Obama.",0,0
+50nyt25,tn,,"“And this whole idea about talking about the social issues and who is going to pay for birth control pills,” Mr. Paul said.",0,0
+4fox2,tn,,"""Rise to the occasion.",0,0
+4fox5,tn,,"The girls accompanied their daughter to Wednesday's ceremony, in which he pardoned two turkeys named Mac and Cheese.",0,0
+4fox6,tn,0.0,"The tradition of Thanksgiving turkeys being presented to the president dates back to 1947, with the turkey pardon being permanently instituted in 1989.",0,0
+4fox7,tn,0.0,"Lauten later apologized for her original post, writing ""I quickly judged the two young ladies in a way that I would never have wanted to be judged myself as a teenager.",0,0
+5fox5,tn,,“The PAC is a recycled pro-Iraq war PAC.,0,0
+5fox24,tn,,In both cases WikiLeaks had publicly teased the publications.,0,0
+0nyt27,tn,,"The House approved the Ryan budget plan on March 29 by a vote of 228 to 191, with all but 10 Republicans voting for it.",0,0
+1nyt4,tn,,"“But if that Republican, in my opinion, is not the right candidate, I am not willing to give up my right to run as an independent candidate.”",0,0
+1nyt7,tn,0.0,"“I must leave all of my options open because, above all else, we must make America great again!” he said.",0,0
+1nyt9,tn,0.0,Newt Gingrich and Rick Santorum were the only two Republicans who agreed to participate.,0,0
+18nyt9,tn,,"Mitt Romney and other Republicans have criticized his foreign policy as apologetic, toward volatile countries like Iran.",0,0
+19nyt0,tn,0.0,"President Obama’s chief of staff used former President Bill Clinton as an intermediary to see if Representative Joe Sestak would drop out of Pennsylvania’s Democratic Senate primary if given a prominent, but unpaid, advisory position, the White House said on Friday.",0,0
+19nyt6,fn,0.0,Mr. Bauer went on to say that such horse-trading has been commonplace through history.,1,0
+19nyt17,tn,,"In a statement Friday, Mr. Sestak said Mr. Clinton had conveyed Mr. Emanuel’s suggestion that he join a “presidential board” while remaining in the House, but he declined.",0,0
+19nyt19,tn,,"“The former president said he knew I’d say that, and the conversation moved on to other subjects.”",0,0
+19nyt20,tn,0.0,"Mr. Sestak first mentioned publicly in February that he had been offered a job but provided no details, and the White House for three months had refused to discuss it, generating intense criticism from Republicans who accused it of trying to bribe a congressman and deep consternation among Democrats who called on the administration to answer questions.",0,0
+64hpo0,tn,,Presumptive Republican presidential nominee Donald Trump issued a bombastic call for President Barack Obama to resign on Sunday over the president’s response to a shooting at an Orlando night club that left 50 people dead and scores of others injured.,0,1
+64hpo4,fn,,"""If we do not get tough and smart real fast, we are not going to have a country anymore.",1,0
+64hpo6,tn,0.0,I am trying to save lives and prevent the next terrorist attack.,0,0
+64hpo10,fp,0.0,"Trump noted in his statement that the gunman, Omar Mateen, was ""the son of an immigrant from Afghanistan who openly published his support for the Afghanistani Taliban and even tried to run for President of Afghanistan.""",0,0
+65HPO10,fn,0.0,"CEO Doug McMillon called on the governor to veto the bill, which he said ""threatens to undermine the spirit of inclusion.""",1,0
+50hpo3,tn,,"But I am talking about his worldview, the way he addresses problems in this country, and they're different than most people view it in America.""",0,0
+50hpo13,tp,,"""Free prenatal testing ends up in more abortions and therefore less care that has to be done, because we cull the ranks of the disabled in our society,"" Santorum told the Ohio Christian Alliance conference.",1,0
+50hpo19,tn,,"""I'm saying that local communities and parents should be the ones in control over public education, certainly not the federal government, and I think the state governments have not done a particularly good job in public education, either,"" Santorum said.",0,0
+50hpo20,tn,,"Buying a car, by contrast he said, is ""designed to meet the needs of a customer.",0,0
+51hpo0,tn,0.0,Kathy Griffin Apologizes For Controversial Images Of Bloodied Trump Head,0,0
+51hpo4,tn,0.0,“Kathy is all about pushing the limits and she went above and beyond on this one.,0,0
+51hpo10,tn,0.0,"UPDATE - May 30, 10 p.m.: Kathy Griffin issued a formal apology for the controversial images on Twitter.",0,0
+28fox9,tn,0.0,"Some Republican senators called the idea of Lieberman replacing Comey “intriguing,” but Sen. Claire McCaskill, D-Mo., said it was a “mistake” to nominate him.",0,0
+29fox7,tn,,Our children and grandchildren’s futures are on the line.,0,0
+29fox9,tn,,"The Post story centered on allegations made by Leigh Corfman, now 53.",0,0
+0hpo2,tn,0.0,While the president's team has pointed to the Republican plan to turn Medicare into a quasi-voucher program -- in which recipients would receive a check to buy either insurance through the private market or traditional Medicare -- the Romney team has responded by noting that Obama took more than $700 billion out of Medicare as part of his health care overhaul.,0,0
+0hpo4,fn,,"""If any person in this entire debate has blood on their hands in regard to Medicare, it's Barack Obama.""",1,0
+0hpo17,tn,0.0,"""It turns out, Senator McCain would pay for part of his plan by making drastic cuts in Medicare: $882 billion worth -- $882 billion in Medicare cuts to pay for a ill-conceived, badly thought-through health care plan that won't provide more health care to people, even though Medicare is already facing a looming shortfall,"" Obama declared at a campaign stop in Roanoke, Va.",0,0
+0hpo18,tn,0.0,"Douglas Holtz-Eakin, McCain's policy director at the time, recalled that the attack originated with a Wall Street Journal article that referenced his saying that McCain would assume savings in Medicare and Medicaid spending to make his health care plan budget neutral.",0,0
+19hpo1,tn,,The offer was made by White House Chief of Staff Rahm Emanuel through a prominent intermediary -- former President Bill Clinton -- during the months of June and July of 2009.,0,0
+18hpo4,tn,0.0,Those markets house some of the state’s largest Jewish communities.,0,0
+18hpo6,fp,,"The ad features Netanyahu laying out Israel’s security concerns about Iran’s nuclear program, which Republicans have used to knock President Barack Obama’s sometimes frosty relationship with the Israeli prime minister. ",0,1
+18hpo10,tn,0.0,I’m not going to do that.”,0,0
+18hpo11,tn,,"He also rejected reports that Obama refused his request for a meeting, pinning the circumstances on a scheduling conflict, as has the White House when pressed on the subject.",0,0
+18hpo12,fn,,"“President Obama has said that he’s determined to prevent Iran from getting nuclear weapons and I appreciate that and I respect that,” Netanyahu said on NBC’s “Meet the Press.”",1,0
+65NYT4,tn,,"And so it was on Saturday, with lawmakers nearing a vote on the legislation that critics said would legalize discrimination against gay people, that the younger Mr. Hutchinson wrote to his father and warned that the proposal could damage Arkansas’s reputation and economy.",0,0
+65NYT9,tn,0.0,But we stay close.”,0,0
+65NYT19,tn,,"Mr. Hutchinson had robust political discussions with his father even as a high school student, long before their views diverged so vastly.",0,0
+65NYT23,tn,0.0,"He would contact a cousin, Tim C. Hutchinson, who sat in the State House of Representatives, to register his views.",0,0
+64nyt6,tn,,Mr. Obama vowed to respond forcefully to what he called a devastating “act of terror and an act of hate.”,0,0
+64nyt13,tn,0.0,"“If we do not get tough and smart real fast, we are not going to have a country anymore,” Mr. Trump said in a statement.",0,0
+64nyt15,tn,0.0,I am trying to save lives and prevent the next terrorist attack.”,0,0
+64nyt27,tn,0.0,"“The shooter targeted a nightclub where people came together to be with friends, to dance and to sing, and to live,” Mr. Obama said.",0,0
+61fox6,tp,0.0,"Romney released a statement late Tuesday saying: ""As I said yesterday, Todd Akin's comments were offensive and wrong and he should very seriously consider what course would be in the best interest of our country.",1,0
+60fox4,tn,,"He was referring to comments unearthed from 1993 in which Reid said that ""no sane country"" would award citizenship to children of illegal immigrants born on its soil and promoted legislation to end the practice.",0,0
+60fox12,fp,0.0,"“How ridiculous, we’re the only country in the world where a person comes in, has a baby, and the baby is essentially a citizen of the United States for 85 years with all of those benefits,” Trump said.",0,1
+60fox17,tn,,But many scholars counter that it would take a constitutional amendment to change the policy. ,0,0
+60fox20,tn,,"Senate Judiciary Chairman Chuck Grassley, R-Iowa, said he will ""closely review"" the proposed executive order, but said that ""as a general matter, this is an issue that Congress should take the lead to carefully consider and debate.""",0,0
+80nyt18,tn,,"Justice Ruth Bader Ginsburg agreed, saying that companies had a responsibility to make sure that women were treated fairly in local workplaces.",0,0
+80nyt22,tn,0.0,"“On the one hand, you say the problem is that they were utterly subjective, and on the other hand you say there is strong corporate culture that guides all of this. Well, which is it?”",0,0
+80nyt25,tn,0.0,"“If somebody tells you how to exercise discretion,” he said, “you don’t have discretion.”",0,0
+80nyt27,tn,,"“Each of the plaintiffs have very different stories,” he said.",0,0
+80nyt45,tn,,He added later that “Wal-Mart was behind the other large retailers.”,0,0
+80nyt46,tn,,The chief justice also asked Mr. Sellers “how many examples of abuse of the subjective discrimination delegation need to be shown before you can say that flows from the policy rather than from bad actors?”,0,0
+80nyt50,fp,,"“So, you have the company that is absolutely typical of the entire American work force,” Justice Alito said.",0,0
+80nyt51,tn,0.0,“Then you would say every single company is in violation of Title VII” of the Civil Rights Act?,0,0
+81nyt2,tn,,"With just over $200,000, David Brat, a professor at Randolph-Macon College in Ashland, Va., toppled Mr. Cantor, repeatedly criticizing him for being soft on immigration and contending that he supported what critics call amnesty for immigrants in the country illegally.",0,1
+81nyt14,tp,,"“He really just didn’t have very much money, but what he did have was a lot of heart,” she said of Mr. Brat.",1,0
+81nyt17,tn,,It is much rarer for a member of the congressional leadership to lose a primary.,0,0
+81nyt25,tn,0.0,"Mr. Cantor had won primaries in his district, which stretches from Richmond to the Washington suburbs, with as much as 79 percent of the vote, and he won the general election race for a seventh term in 2012 with 58 percent.",0,0
+81nyt29,tn,0.0,"Mr. Boehner said Tuesday that he and Mr. Cantor had “been through a lot together,” making “tough choices that come with governing.”",0,0
+84fox2,tn,0.0,"""I have people that actually have been studying it and they cannot believe what they're finding,"" Trump told NBC's ""Today"" show on Thursday.",0,0
+84fox3,tn,0.0,"Officials in Hawaii have certified Obama's citizenship, but a segment of society -- labeled ""birthers"" in the vernacular -- have demanded additional proof.",0,0
+84fox26,tn,0.0,"""I'm only interested in Libya if we get the oil,"" Trump said.",0,0
+85fox1,tn,,"The Illinois Democrat faces up to five years in prison, but guidelines recommend slightly less.",0,0
+85fox12,tn,0.0,"The Jacksons were appearing separately before U.S. District Judge Robert L. Wilkins in Washington, D.C. Jackson's wife spent $5,150 on fur capes and parkas, court documents said.",0,0
+85fox17,tn,0.0,"However, one of her lawyers, Tom Kirsch, says the plea agreement ""does not contemplate a sentence of that length.""",0,0
+12nyt4,tn,0.0,"Among the study’s central conclusions is that “the presence of armed security personnel adds a layer of security and diminishes response time” in a shooting, Mr. Hutchinson said.",0,0
+12nyt9,fn,0.0,I don’t think the proper response is to arm all the projectionists in the movie theaters or all the vendors in the mall.”,1,0
+12nyt19,tn,0.0,"On Tuesday, a proposal that would require public and charter schools to have an armed “protection officer” on school property during class hours passed a State House committee.",0,0
+13nyt6,tn,,"“As a result, in a manner compliant with all applicable laws, rules and regulations, the issuing of permits is being put on hold as the decision is being removed.”",0,0
+16fox1,tp,0.0,"The self-titled America's Toughest Sheriff, who famously re-instituted chain gangs in 1995 and has also been a major supporter of his state's controversial SB1070 immigration law, said that Perry has done more to combat illegal immigration along the U.S. border then any of the other candidates.",1,1
+16fox2,tn,,"""I'm endorsing Rick Perry because we need a tough-on-crime president who will champion and fund full-time border security operations from Brownsville to San Diego,"" Arpaio said.",0,0
+27hpo6,tn,,"The surprise meeting abroad with a foreign leader will be Trump’s first as a presidential nominee, and is not without risks to his candidacy.",0,0
+27hpo16,tn,,I think this is a big mistake on part of President Peña.”,0,0
+27hpo17,tp,0.0,"“It’s a very opportunistic move and I hope U.S. public opinion, U.S. citizens can see this and finally, and finally see what is behind Trump, this false prophet that is just cheating everybody,” he added.",1,0
+26hpo1,tn,,"Senate Minority Leader Chuck Schumer and House Speaker-to-be Nancy Pelosi made their first visit to the White House since their Dec. 11 meeting with Trump, when he said he would be “proud” to take responsibility for a government shutdown in his effort to force Congress to spend billions of dollars on a wall along the southern border.",0,1
+26hpo18,fn,,"Instead, Trump spent the first hour and a half of it complaining about a variety of issues, such as former Defense Secretary James Mattis’ performance and the late Sen. John McCain’s vote against Trump’s repeal of Obamacare, as well as offering his musings on such things as the utility of wheels and his desire for Russia to invade Afghanistan again.",1,1
+14hpo2,tn,0.0,"On Thursday, he told reporters in Washington that the Justice Department would thoroughly investigate the case, and would ""continue to stand with Ferguson.""",0,0
+14hpo6,tn,,"""He just let us speak, basically.",0,0
+14hpo8,tn,0.0,"He agreed somewhat to what everyone said,” McCoy added.",0,0
+14hpo36,tn,0.0,"“We need concrete action to change things in this country,” he said, according to excerpts provided by the Justice Department.",0,0
+14hpo38,tn,0.0,"As I was just telling these young people, change is possible.",0,0
+14hpo39,tn,,The same kid who got stopped on the New Jersey freeway is now the attorney general of the United States.,0,0
+14hpo42,tn,,He is talking with Brown's parents and with members of the local congressional delegation.,0,0
+15hpo7,tn,0.0,"""Both parties have failed our country... both parties have led us to believe that America, a country that was built on compromise -- that compromise is somehow a dirty word,"" Christie said.",0,0
+15hpo24,tn,0.0,"His image suffered a major blow in 2014, when it was revealed members of his administration, including his deputy chief of staff, were involved in a plot to cause traffic jams near the George Washington Bridge to retaliate against a mayor who hadn't supported Christie's 2013 re-election.",0,0
+86hpo9,tn,0.0,Mattis had previously argued that a small U.S. presence should remain because the counterterrorism mission there is ongoing and removing troops now would cause more problems for the region.,0,0
+86hpo16,fp,,The defense secretary has characterized Putin as trying to undermine NATO and assaulting Western democracies while violating international norms.,0,0
+86hpo23,tn,,"Mattis opposed Trump’s proposed ban on transgender service members, as well as the use of torture in the interrogation of terrorist suspects.",0,0
+68nyt7,tn,,"But on Friday, it did not appear that the indictment would include any campaign finance charges or accusations that the congressman had misused his office, although several of the people noted that the investigation was continuing.",0,0
+68nyt14,tn,,"Mr. Grimm, the only Republican member of New York City’s congressional delegation, is up for re-election in November and faces a potentially formidable challenger in former City Councilman Domenic M. Recchia Jr., a Democrat who headed the Council’s Finance Committee and was Christine C. Quinn’s chief lieutenant when she was Council speaker.",0,0
+87hpo4,tn,,"""Faith made America strong. It can make her strong again.""",0,0
+87hpo5,tn,0.0,Perry has recently stepped up his attacks on Obama for cultural issues.,0,0
+69nyt16,tn,0.0,They included the placement of a bomb at the outer wall of the compound in June and an ambush that month on the British ambassador.,0,0
+69nyt18,tn,0.0,Mrs. Clinton first publicly took responsibility for the Sept. 11 attack in an Oct. 15 interview with television reporters.,0,0
+69nyt37,tn,,"Mrs. Clinton sought to put the events in Benghazi in a regional context, noting the presence of a group in northern Mali affiliated with Al Qaeda.",0,0
+25fox6,tn,0.0,“It’s very simple.,0,0
+25fox14,tn,0.0,"In a letter to Senate Majority Leader Mitch McConnell and Reid, Obama warned the bill could cause chaos in U.S. foreign affairs, as other countries would use the measure to justify the creation of ways to target ""U.S. policies and activities that they oppose.""",0,0
+25fox17,tn,0.0,"But Cornyn, one of the bill's leading proponents, dismissed Obama's concerns as ""unpersuasive.""",0,0
+25fox20,tn,,"The bill cleared the House earlier this month, also by voice vote.",0,0
+25fox23,tn,0.0,"With the override, the bill will now become law.",0,0
+25fox26,tn,0.0,Fifteen of the 19 Sept. 11 hijackers were Saudi nationals.,0,0
+25fox31,tn,,"Kristen Breitweiser, a 9/11 widow and co-chair of September 11th Advocates, criticized Carter's assessment, saying that the defense secretary had testified before Congress last week that he wasn't an expert on the bill.",0,0
+24fox2,fn,,"CNN, which conveniently happened to be staking out Stone's Fort Lauderdale home, posted video of the arrest that showed a team of FBI agents with guns banging on Stone’s door and demanding that he come outside.",1,0
+24fox7,tp,,"“A SWAT team, searching the house, scaring his wife, scaring his dogs—it was completely unnecessary,” Stone’s attorney said. ",1,0
+24fox19,tn,0.0,"Instead, it accuses him of witness tampering, obstruction and false statements about his interactions related to WikiLeaks' release.",0,0
+24fox27,tn,,DiGenova likened the FBI arrest of Stone to the bureau’s early morning raid last summer of the home of former Trump campaign chairman Paul Manafort.,0,0
+21nyt8,tn,0.0,"“We’re seeing a lot of marijuana coming over from Colorado,” said Sheriff Adam Hayward of Deuel County, Neb., who said that he was gratified that the two states were challenging Colorado’s marijuana laws.",0,0
+21nyt16,tn,,But marijuana advocates said that the challenge — if it succeeds at shutting down marijuana retailers — could boost the black market.,0,0
+21nyt21,tn,,Nebraska and Oklahoma accused Colorado of leaving huge holes in marijuana rules that allowed the plant to flow out of state.,0,1
+21nyt27,tn,,"In earlier interviews, some local law-enforcement officers along Colorado’s borders said that they had not seen an increase in marijuana coming from Colorado.",0,0
+20nyt1,tn,,"The latest candidate to learn the hard way was Representative Bruce Braley, an Iowa Democrat running for Senate this year.",0,0
+20nyt4,tn,0.0,"But as the ranking Republican on the Judiciary Committee, Mr. Grassley could assume the chairmanship if his party takes control of the Senate this year.",0,0
+20nyt6,tn,0.0,"America Rising, a conservative political action committee that has vowed to use videos and opposition research to attack Democratic candidates, posted the footage on YouTube on Tuesday.",0,1
+20nyt11,tn,0.0,Ms. Ernst said that qualified her to “cut pork” in Washington.,0,0
+3fox6,tn,0.0,"But, in a surprise move, Senate Democrats, meeting behind closed doors to discuss the tax deal, have asked the administration for ""changes"" to the bill, according to Sen Dick Durbin, D-Ill., the No. 2 Democrat in the chamber.",0,0
+3fox11,fn,,Both provisions are seen by many Democrats as giveaways to the rich that will do little to help the economy.,1,0
+3fox25,tn,0.0,"Speaking to reporters at a joint appearance with Polish President Bronislaw Komorowski, Obama said economists predict higher job growth in 2011 and 2012 if Congress passes the agreement and urged lawmakers to examine the details of the deal and ""get this done.""",0,0
+2fox33,tn,,From Dec. 22 through Jan. 25—for 35 days—the White House and congressional Democrats battled over border security funding.,0,0
+7nyt5,tn,,"Representative Michael R. Turner, Republican of Ohio, played the same card in the hearing room, fuming that Mr. Schiff would not accept Attorney General William P. Barr’s word that Mr. Mueller had not found the Trump campaign to have taken part in a conspiracy to undermine the election.",0,0
+7nyt6,tn,,"“With McCarthyism,” a senator was “chasing after Russian Communists,” Mr. Turner, an Intelligence Committee member, said.",0,0
+7nyt12,tn,0.0,"I don’t think that’s O.K. You might think it’s O.K. that an associate of the president made direct contact with the G.R.U. through Guccifer 2.0 and WikiLeaks; that is considered a hostile intelligence agency,” Mr. Schiff said, referring to Russian military intelligence and a Russian intelligence hacker.",0,0
+7nyt13,fp,,He continued: “You might think that it’s O.K. that the national security-designate secretly conferred with the Russian ambassador about undermining U.S. sanctions.,0,0
+7nyt36,tn,,"“In the heat of the political moment just as the Republicans wanted to try to convict Hillary Clinton in the public sphere, Democrats probably contributed to the expectations that the outcome would be worse for the president than it was,” Mr. Himes said in an interview a day ahead of the hearing.",0,0
+6nyt15,tn,,But strategists said Democrats could counter the Republican offensive by labeling the mosque dispute as a local issue and saying Democrats remain focused on the economy.,0,0
+6nyt17,tn,,Other Democrats said they did not see the fight resonating strongly outside New York and did not expect it to become a defining campaign issue.,0,0
+6nyt18,tn,0.0,"Representative Jerrold Nadler, a Democrat who represents the district that includes ground zero, said he doubted that the fight over the mosque would inflict much damage on fellow Democrats in the November elections.",0,0
+6nyt27,tn,0.0,But Mr. Gingrich showed no sign of backing down on Monday.,0,0
+52fox7,tn,,Mueller’s team is investigating alleged Russian interference in the 2016 election and rarely issues statements about the state of the investigation or disputing reports in the press.,0,0
+53fox13,tn,,He also vowed to protect Medicare and give states more of a say in government and education.,0,0
+53fox15,tn,,And he was the state’s lieutenant governor from 1993 to 1996.,0,0
+53fox25,tn,0.0,"Campaign aides say Huckabee’s path to winning the party nomination this time will be to appeal to working-class cultural conservatives, pitching their candidate as an economic populist and foreign affairs hawk who holds deeply conservative views on social issues such as abortion and gay marriage.",0,0
+56nyt19,tn,,"Former Senator Byron L. Dorgan, Democrat of North Dakota, said Democrats from the more rural states that make up much of the 2018 map would prefer to battle over issues other than immigration.",0,0
+56nyt38,tn,,"“If you want results, you have to compromise, and if you’re unwilling to compromise, you won’t get results,” said Senator Heidi Heitkamp, Democrat of North Dakota.",0,0
+56nyt39,tn,0.0,"“You maybe get a political issue, but you won’t get results.",0,0
+63hpo1,tn,0.0,"Asked for her reaction to Tlaib’s “colorful language” ― the new Democratic congresswoman vowed to “impeach that motherfucker,” referring to Trump ― Pelosi said it was a free speech issue.",0,0
+63hpo2,tn,0.0,"“I probably have a generational reaction to it, but in any event I’m not in the censorship business,” she told MSNBC’s Joy Reid in a town hall interview set to air in full Friday evening.",0,0
+63hpo5,fn,,"“But I don’t think it’s any worse than what the president has said,” she concluded.",1,0
+63hpo14,tn,0.0,"Pelosi told Reid that the comment might fire up Trump’s base, but doesn’t actually make much of a difference to actual House business.",0,0
+62hpo2,tn,0.0,"They are not secret, in that every member of Congress has been briefed,"" he said during a speech in San Jose, Calif.",0,0
+62hpo10,tp,,"""Some of the hype we've been hearing over the past day or so -- nobody has listened to the content of people's phone calls,"" he said.",1,0
+62hpo15,tn,,"We're going to have to make some choices as a society,"" he said.",0,0
+62hpo20,fn,0.0,"Obama ran as an antidote to Bush's policies in 2008, but the reports reveal that he has continued many of them, leading to concerns over the reach of the national security state.",1,0
+89fox7,tp,,"“Seattleites know that discrimination has no place in our city,” he said in a statement.",1,0
+89fox8,fn,0.0,“That’s just equality 101.”,1,0
+89fox17,tn,0.0,"To the extent that we need to clarify through legislative action, we plan to do just that.”",0,0
+89fox21,tn,0.0,"Bosma acknowledged a major concern is whether businesses will now be legally permitted to deny services to some people, as a result of the law, and that even he is unclear.",0,0
+88fox10,tp,0.0,"""She's no rookie to these high-profile deals — she gives both sides their due,"" said Doug Cole, a political consultant whose firm has run all of Brewer's campaigns for decades.",1,0
+6hpo2,tn,,"By Saturday, the president clarified that he was not speaking about the ""wisdom"" of the Islamic cultural center per se, just the right of the group to build the Cordoba House in downtown Manhattan.",0,0
+7hpo6,fn,,"In a letter dated Thursday, the GOP committee members accused Schiff of standing “at the center of a well-orchestrated media campaign” about a possible Trump-Russia connection.",1,0
+7hpo8,tp,,"“Your willingness to continue to promote a demonstrably false narrative is alarming,” they said, joining other top Republican lawmakers demanding Schiff’s ouster.",1,0
+57hpo1,tp,0.0,"“I can’t imagine what this place would be ― I can’t imagine what the country would be ― with Donald Trump as our president,” Ginsburg told The New York Times in an article published Sunday.",1,0
+57hpo10,tn,,"“I think this is ultimately a question for judicial ethicists, but I do think following these comments it is a legitimate question to raise, should Donald Trump’s campaign come to the Court with any legal questions before the election,” he wrote in his widely read Election Law Blog.",0,0
+57hpo11,fn,0.0,"Dmitry Bam, a professor at the University of Maine School of Law who has written on judicial recusals and ethics, said “there is little question that she has crossed a line.”",1,0
+56hpo6,tn,0.0,"MoveOn.org, one of the most influential progressive organizations in Washington, similarly panned the agreement that 33 Senate Democrats voted to advance to a final vote on Monday.",0,0
+62nyt1,tn,0.0,"After rushing to declassify some carefully selected descriptions of the programs, James R. Clapper Jr., the director of national intelligence, conceded for the first time that the Prism program existed.",0,0
+62nyt14,tn,0.0,"In separate but identical letters sent on Oct. 19, 2011, Assistant Attorney General Ronald Weich told two of Congress’s most outspoken critics of the efforts, Senators Ron Wyden of Oregon and Mark Udall of Colorado, both Democrats, that in December 2009 and February 2011 the Justice Department and intelligence agencies provided a classified document to Congress describing the surveillance efforts in detail.",0,0
+62nyt24,tn,,"The list of briefings begins on May 12, 2009, with a classified hearing of the Senate Intelligence Committee involving Gen. Keith B. Alexander, the head of the United States Cyber Command, and David S. Kris, assistant attorney general for national security.",0,0
+62nyt29,tn,,"But Senator Richard J. Durbin of Illinois, the Senate’s No. 2 Democrat, draws a distinction between the holding of such briefings and the informed consent of Congress.",0,0
+63nyt1,tn,0.0,"But it took little more than 24 hours this week for a freshman House Democrat’s exuberant, expletive-laden impeachment promise to upend the bonhomie of a new Congress and prompt President Trump, by his own telling, to ask the newly elected speaker if Democrats planned to impeach him.",0,1
+63nyt7,tn,,"Democratic leaders, who view discussion of impeachment as politically dangerous and premature, offered worried words meant to tamp down speculation about their intentions.",0,0
+63nyt8,fn,,"Perhaps out of a belief that an impeachment fight would help him politically — as it did President Bill Clinton in the 1990s — or outright fear that newly empowered Democrats actually might threaten his presidency, Mr. Trump dived into the conversation head first.",1,0
+63nyt22,tn,0.0,"“And when your son looks at you and says: ’Momma, look, you won. Bullies don’t win.’",0,0
+63nyt42,tn,,“So we’ll just have to see how it comes.”,0,0
+66fox0,tn,0.0,"WASHINGTON – Legally married same-sex couples will now be allowed to file federal joint tax returns, the IRS and Treasury Department announced Thursday.",0,0
+66fox6,tn,0.0,"""Today's ruling provides certainty and clear, coherent tax filing guidance for all legally married same-sex couples nationwide.",0,0
+67fox9,tp,0.0,"""AARP's new and welcome position is a positive step towards the type of reforms I've championed, and I look forward to working with the organization to shape the changes in a way that makes the least detrimental impact to present and future retirees,"" she said in a statement.",1,0
+67fox16,tn,0.0,"Asked about the possibility of Social Security entering budget talks at some point, White House Press Secretary Jay Carney reiterated past statements in saying President Obama does not see Social Security as a ""driver"" of the country's near-term deficits.",0,0
+67fox18,tn,0.0,The back-and-forth comes amid new warnings about the future of Social Security.,0,0
+67fox20,tn,,"But the president's budget director told Fox News that even when the trust funds run out, both Social Security and Medicare would still have some income.",0,0
+15nyt3,tp,0.0,"Pacing the stage without a prepared text and raising his voice to a shout at times, he vowed to campaign and govern as a colorful teller of difficult truths, even if “it makes you cringe every once in a while.”",1,0
+15nyt12,fp,0.0,"Mr. Christie, whose dazzling rise as a national Republican in his first term was matched only by his spectacular loss of stature at home in his second, entered the presidential race bearing little resemblance to the candidate he once expected to be.",0,1
+15nyt15,tp,0.0,The administration he pledged would be a paragon of ethics has instead conspired to mire an entire town in traffic and the governor’s office in scandal.,1,0
+14nyt6,tn,0.0,"A grand jury has been convened and was scheduled to meet Wednesday to begin hearing evidence, said Edward Magee, a spokesman for Robert P. McCulloch, the prosecuting attorney for St. Louis County.",0,0
+14nyt9,tn,,"Mr. McCulloch, speaking to a local radio station, categorically rejected that notion.",0,0
+14nyt10,tn,0.0,"“I know the pain the Brown family is going through right now,” he said.",0,0
+14nyt22,tn,0.0,"“And beyond the investigation itself, we will work with the police, civil rights leaders, and members of the public to ensure that this tragedy can give rise to new understanding — and robust action — aimed at bridging persistent gaps between law enforcement officials and the communities we serve.”",0,0
+14nyt25,tn,,"In addition to the many lingering questions about the shooting, the local authorities have also come under criticism for how they have handled the protests.",0,0
+14nyt26,fn,0.0,"Norm Stamper, the former Seattle police chief who was in charge during the protests that rocked that city in 1999, said that the wrong tone was set from the first day in Ferguson.",1,0
+14nyt35,tn,,"“You get governors and police chiefs and everyone gnashing their teeth,” Mr. Stamper said.",0,0
+14nyt43,fn,0.0,"When a demonstration ended shortly before midnight, many of the demonstrators prayed.",1,0
+10fox7,tn,,"But all the original decisions remain in the Constitution, including in the copies authorized by Congress' Joint Committee on Printing and used in Thursday's reading.",0,0
+10fox9,tn,,"""This is very emotional for me,"" Rep. Jesse Jackson Jr., D-Ill., said on the floor before the reading began.",0,0
+10fox31,fp,0.0,"""Today the Congress regulates our lives and redistributes our wealth in ways that would shock the Founders,"" he said.",0,0
+87nyt0,fn,,"In an appeal to hard-right conservatives, Gov. Rick Perry of Texas is broadcasting a new campaign ad that seems to contrast Christianity with homosexuality, vows to end what he calls “Obama’s war on religion,” and highlights Mr. Perry’s criticism of overturning the “don’t ask, don’t tell” policy for gays serving in the military.",1,0
+87nyt6,tn,,Faith made America strong. It can make her strong again.”,0,0
+87nyt7,fn,0.0,"The Perry ad was denounced by the Log Cabin Republicans, a gay men and lesbian group, which said it was “wrong for Governor Perry to assume being a person of faith does not afford one to support equality.”",1,0
+69hpo3,tn,0.0,"""And I say that because in the unclassified ARB, it is -- I quote: 'Key questions surrounding the identity, actions and motivations of the perpetrators remain to be determined.'""",0,0
+86nyt6,tn,0.0,"“My views on treating allies with respect and also being cleareyed about both malign actors and strategic competitors are strongly held,” Mr. Mattis wrote.",0,0
+86nyt36,tn,,"Mr. Mattis commanded Marines in Afghanistan and in the 2003 invasion of Iraq before becoming the head of United States Central Command, overseeing all American troops in the Middle East.",0,0
+68hpo5,tn,0.0,Congressman Grimm asserts his innocence of any wrongdoing.,0,0
+68hpo8,tn,,"The New York Times reported the charges against Grimm ""will include mail fraud and wire fraud and focus on his conduct in connection with a health food restaurant he owned on the Upper East Side of Manhattan after he left the Federal Bureau of Investigation in 2006,"" citing someone familiar with the case.",0,0
+68hpo13,tn,,"UPDATE: 7:19 p.m. -- The Washington Post now reports that Grimm has already ""been secretly indicted by a federal grand jury in Brooklyn, according to people familiar with the case.",0,0
+83fox4,fn,0.0,Americans don’t believe their leaders in Washington are listening and now is the time to change that.,1,0
+83fox6,tn,,"On Friday morning, McCarthy, 49, appeared to be headed toward running unopposed after some rivals dropped out.",0,0
+83fox8,tn,0.0,“Eric is a good friend and I have tremendous respect for him.,0,0
+83fox12,tn,0.0,Americans don’t believe their leaders in Washington are listening and now is the time to change that.”,0,0
+83fox14,tn,0.0,"Economics professor Dave Brat, the Tea Party candidate who defeated Cantor, attacked the congressman as soft on border security and on people who come here illegally.",0,0
+83fox26,tn,0.0,"Labrador supports a path to legal status, but only after evidence that enforcement has been improved, he has said.",0,0
+83fox35,fp,,No fair trying to redefine amnesty.”,0,0
+82fox4,fp,,"Bloomberg, who has an estimated net worth of $48 billion, threw several jabs at Trump, whom he called a ""dangerous demagogue"" and a ""bomb-thrower.""",0,1
+82fox5,tp,0.0,"Bloomberg contrasted his business history with Trump's, saying ""I’ve built a business, and I didn’t start it with a million-dollar check from my father.""",1,0
+82fox10,tn,,"While in office, Bloomberg had a cordial relationship with Clinton, who, as a senator from New York, was involved in the city's post-9/11 rebuilding effort.",0,0
+82fox13,tp,0.0,"He deemed Trump's economic plan ""a con"" and ""a disaster in the making.""",1,0
+58fox8,fn,,"For his part, Chuck Schumer, the Senate minority leader, called Trump's proposal ""one-sided and ineffective.""",1,0
+58fox29,tn,0.0,"Fellow Democratic Sen. Chris Coons of Delaware slammed McConnell for refusing ""to meaningfully negotiate with Senate Democrats,"" but also called Trump's offer ""a first step toward comprehensive immigration reform.""",0,1
+58fox48,tn,0.0,"“Compromise is not a sign of weakness — it’s a sign of strength, particularly when hundreds of thousands of families are being harmed.",0,0
+58fox62,tn,0.0,,0,0
+59fox8,tn,0.0,Boehner last week put a counter-proposal on the table that included $800 billion in revenue increases over the next decade.,0,0
+59fox26,tn,,"His campaign-style visit to Detroit, though, threatens to muddy the waters on talks.",0,1
+9fox0,tn,,"Democrats urge Trump to cancel Putin summit, after indictment of Russian intel officers",0,0
+9fox11,tn,,"He warned, “I’m afraid the president could be taken advantage of.”",0,0
+8fox8,tp,0.0,"“[Obama] demonstrated a disregard for our moral purpose that at times flirted with disdain,” said Rubio, the son of Cuban immigrants.",1,0
+8fox18,tn,,Keeping Guantanamo Bay open.,0,0
+20hpo14,tn,,His race is one of a handful across the country that will determine control of the Senate.,0,0
+21hpo2,tn,,"""Federal law undisputedly prohibits the production and sale of marijuana,"" Nebraska Attorney General Jon Bruning said Thursday in a statement.",0,0
+21hpo5,tn,0.0,"In a statement, he said he intends to defend the state's marijuana laws.",0,0
+21hpo6,tn,,"“Because neighboring states have expressed concern about Colorado-grown marijuana coming into their states, we are not entirely surprised by this action,"" Suthers said.",0,0
+21hpo27,fn,,"""We support this action by the attorneys general of Oklahoma and Nebraska because Colorado's decisions regarding marijuana are not without consequences to neighboring states, and indeed all Americans,"" Sabet said.",1,0
+21hpo36,fp,,"Rep. Jared Polis (D-Colo.), a vocal supporter of drug policy reform who has sponsored multiple bills seeking protection for state-legal marijuana businesses and advocated full-scale federal legalization of the drug, told HuffPost that Nebraska and Oklahoma attempting to overturn the will of Colorado's voters is ""outrageous.""",0,0
+36nyt9,tn,0.0,"At a news conference at the United Nations a little more than a week after The Times’s report, Mrs. Clinton first said she “chose not to keep” her private personal emails.",0,0
+37nyt2,fn,,"“It was the president who was trying to be cute by half by flipping a script demonizing Iraq, while saying the battle really should be Afghanistan,” Mr. Steele said, according to a video of his remarks that was circulated by Democrats on Friday.",1,0
+37nyt3,tn,0.0,"“Well, if he’s such a student of history, has he not understood that you know that’s the one thing you don’t do, is engage in a land war in Afghanistan?”",0,0
+37nyt16,tn,0.0,"When Mr. Steele made the remarks, he was speaking to Republican contributors at a fund-raiser in Connecticut.",0,0
+32fox0,tn,0.0,Sen. Ted Cruz has laid down the gauntlet in the growing war of words with Donald Trump over the Republican presidential candidates’ wives.,0,0
+32fox19,tn,,"“Be careful, Lyin' Ted, or I will spill the beans on your wife!”",0,1
+33fox6,tn,,"“I am not pro-gay marriage,” Liz Cheney reportedly said.",0,0
+91hpo30,tn,0.0,But the organization has already harshly criticized the Obama administration for overreach.,0,1
+91hpo37,tn,0.0,"The president's plan also calls on Congress to allocate resources to help schools, other educational institutions and houses of worship develop emergency management plans.",0,0
+91hpo51,tn,0.0,We tried to be as comprehensive as possible.,0,0
+90hpo4,tn,0.0,"When it becomes injected or infused with politics, that's a problem.""",0,0
+90hpo6,fn,0.0,"Netanyahu was invited to speak in front of a joint session of Congress by House Speaker John Boehner (R-Ohio), who did not seek approval from the White House before sending the invitation.",1,0
+74hpo1,tn,,"The For The People Act, which passed 234-193, was Democrats’ top priority upon winning control of the House in the 2018 elections.",0,0
+74hpo11,tn,,"As a possible victory in the 2018 elections loomed, they made it clear that the reforms would be their No. 1 priority.",0,0
+75hpo12,tn,0.0,"Sen. Kirsten Gillibrand (D-N.Y.) said that the report should be released “without delay,” and House Speaker Nancy Pelosi (D-Calif.) and Senate Minority Leader Chuck Schumer (D-N.Y.) released a joint statement in agreement.",0,0
+41nyt1,tn,0.0,"Now that President Obama, long a supporter of civil unions, has publicly embraced same-sex marriage, the question of precisely what legal status and protections should be granted to gay couples is emerging as an issue of the starkest possible contrast between the two presidential candidates.",0,0
+41nyt6,tn,0.0,"“I don’t favor civil unions if it’s identical to marriage, and I don’t favor marriage between people of the same gender.”",0,0
+41nyt13,tn,0.0,"Republicans and Democrats, in their reactions to the president’s support for same-sex marriage, said they saw a newly wide, and seemingly unbridgeable, gap between the two leaders on the issue.",0,0
+40nyt1,tn,,Lloyd Bentsen was a friend of Joe Biden’s.,0,0
+40nyt9,fn,0.0,"Mr. Ryan tried to be respectful, listening to the vice president with a tilted head, choirboy smile and puppy-dog eyes, but he showed his irritation when Mr. Biden kept interrupting to attack his policy on Medicare.",1,0
+40nyt12,tn,0.0,"He had to be contained and courteous when he debated Sarah Palin four years ago, lest he look like a bully.",0,1
+45fox29,tn,,Johnson believes it’s “highly likely” the person who built the bombs will have been previously flagged by law enforcement. ,0,0
+45fox30,tn,0.0,"The Secret Service maintains a wide database of groups and individuals who have made threats in the past against presidents or other top political leaders and activists via email, letters or on social media.",0,0
+44fox5,tn,0.0,"Democrats face an uphill battle in their efforts to take back the House, where Republicans hold a 242-190 seat advantage.",0,0
+71fox1,tn,0.0,"Now it has become a symbol of whether you stand for or against same-sex marriage, or – alternately – the right to express your personal views without fear of retaliation.",0,0
+71fox4,tn,0.0,“So I came out here to support Chick-fil-A and the movement.”,0,0
+71fox19,tn,,"He is also puzzled as to why Dan Cathy is such a target, when other corporate CEOs who openly support same-sex marriage are not similarly criticized by conservatives.",0,0
+70fox2,tn,,"“The time for empty talk is over. Now arrives the hour of action,” he said.",0,0
+70fox10,fp,,"In blunt and unvarnished terms similar to the language used during his nomination acceptance address last summer, Trump on Friday lamented the jobs lost to foreign rivals – he described “rusted out factories scattered like tombstones” across the land – and the crime in America’s cities.",0,1
+75nyt20,fp,0.0,"No one, including the president, is above the law.”",0,0
+74nyt20,fn,,"Federal agencies spent about $13 million on four of Mr. Trump’s trips to his Mar-a-Lago resort in Florida in early 2017, according to a report by a nonpartisan congressional watchdog agency issued last month.",1,0
+40hpo3,tn,0.0,"Two instant surveys of Americans watching the debate -- one by CBS, one by CNN -- showed mixed results.",0,0
+40hpo30,tp,,"If it were anyone other than Biden, who is treated by the press as a lovable, half-crazy uncle, he would have been labeled insufferable.",1,0
+40hpo38,fp,,"But not even Gillespie, when he was asked by a reporter where he was going before he cut himself off, could resist getting some digs at Biden.",0,0
+40hpo53,fn,0.0,"But Biden, as expected, attempted to plow him over with broadsides.",1,0
+40hpo57,tn,,Biden didn’t worry so much about numbers.,0,0
+40hpo59,tn,0.0,"He acknowledged that Romney’s Medicare plan would not cost seniors an extra $6,400 a year, despite the claim in a recently launched Obama campaign ad.",0,0
+38fox8,tn,,“We knew it was going to be an uphill battle.,0,0
+38fox21,tn,0.0,“We’ve done it in the past and we’ll do it again.,0,0
+39fox1,tn,0.0,"Top Republican Sen. John Thune, of South Dakota, all but confirmed Wednesday that his party is willing to use what’s known as the “nuclear option,” to lower the vote threshold to confirm Judge Neil Gorsuch if Democrats try to filibuster.",0,0
+39fox7,tn,,"“You can bet if the shoe were on the other foot and a Democratic president was under investigation by the FBI the Republicans would be howling at the moon about filling a Supreme Court seat in such circumstances.""",0,1
+39fox12,tn,,"That's where the so-called ""nuclear option"" comes in.",0,0
+39fox18,tn,0.0,"“If they don’t find Gorsuch acceptable, are they taking the position the vacancy should never be filled? At all?”",0,0
+37hpo9,tn,0.0,"There are, of course, those who think we should pull out of Afghanistan, and they’re certainly entitled to make their case.",0,0
+37hpo17,tn,,"In a bit of irony, Steele’s most recent comments have actually resonated among anti-war Democrats who share the skepticism that Afghanistan is a winnable enterprise.",0,0
+36hpo12,fn,0.0,"She admitted that “looking back,” it would have been better to carry the second phone.",1,0
+94fox15,fp,,"At one point, Weiner referred to a reporter in the scrum as a ""jackass.""",0,1
+94fox28,tn,,"Breitbart's BigGovernment.com first reported that it was tweeted to a Seattle woman, later identified as Gennette Cordova.",0,0
+95FOX3,tn,,"Instead, the paper reports, Clinton's advisers selected which of her emails to turn over to the State Department for archival purposes after going through tens of thousands of pages of correspondence.",0,0
+95FOX7,tn,,"""When the Department asked former Secretaries last year for help ensuring their emails were in fact retained, we immediately said yes,"" he said.",0,0
+95FOX11,fp,0.0,"Harf added that the department turned over about 300 emails to the Benghazi select committee, and noted that Clinton's successor as secretary of state, John Kerry, ""is the first ... to rely primarily on a state.gov email account.""",0,0
+95FOX18,tn,,"He said the administration policy is that employees ""should use their official email accounts when they're conducting official government business.""",0,0
+95FOX19,tn,,He said personal emails also should be preserved and said Clinton's team responded to the request by the department seeking them.,0,0
+90nyt14,tn,,"The White House has also not committed to sending a representative next week to the American Israel Public Affairs Committee’s conference, where Mr. Netanyahu is also scheduled to appear.",0,0
+91nyt9,tn,0.0,The administration’s strategy reflects the uncertainty of gun politics in America and the desire by White House officials to address the Connecticut shooting while also confronting the broader deficiencies in the country’s criminal justice and mental health systems.,0,0
+91nyt11,tn,,"Representative Steve Stockman, Republican of Texas, threatened Monday to file articles of impeachment if the president seeks to regulate guns with executive orders.",0,1
